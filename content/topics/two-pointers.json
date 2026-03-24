@@ -1,0 +1,98 @@
+{
+  "id": "two-pointers",
+  "title": "Two Pointers",
+  "slug": "two-pointers",
+  "category": "algorithm",
+  "difficulty": "beginner",
+  "estimatedMinutes": 40,
+  "prerequisites": ["arrays"],
+  "tags": ["arrays", "strings", "sorting"],
+  "overview": {
+    "summary": "The Two Pointers pattern involves iterating through an array or string with two pointers at different positions to achieve linear time complexity without extra space.",
+    "learningObjectives": [
+      "Understand opposite directional pointers",
+      "Understand same directional pointers",
+      "Optimize O(N^2) naive nested loops to O(N)"
+    ],
+    "interviewRelevance": "The most fundamental pattern to know. Extremely common in array and string manipulation questions."
+  },
+  "content": [
+    {
+      "type": "theory",
+      "content": "When dealing with sorted arrays (or linked lists) and need to find a set of elements that fulfill certain constraints, Two Pointers is typically the optimal approach."
+    },
+    {
+      "type": "stepper",
+      "codeHtml": {
+        "python": "<pre class=\"shiki\"><code>def two_sum(nums, target):\\n  left, right = 0, len(nums) - 1\\n  while left < right:\\n    current = nums[left] + nums[right]\\n    if current == target:\\n      return [left, right]\\n    if current < target:\\n      left += 1\\n    else:\\n      right -= 1\\n  return [-1, -1]</code></pre>",
+        "javascript": "<pre class=\"shiki\"><code>function twoSum(nums, target) {\\n  let left = 0, right = nums.length - 1;\\n  while(left < right) {\\n    let cur = nums[left] + nums[right];\\n    if(cur === target) return [left, right];\\n    if(cur < target) left++;\\n    else right--;\\n  }\\n  return [-1, -1];\\n}</code></pre>",
+        "java": "<pre class=\"shiki\"><code>class Solution {}</code></pre>",
+        "cpp": "<pre class=\"shiki\"><code>class Solution {}</code></pre>"
+      },
+      "diagramType": "array",
+      "steps": [
+        {
+          "stepIndex": 0,
+          "diagramState": { "left": 0, "right": 4 },
+          "variables": { "left": 0, "right": 4, "sum": 10 },
+          "explanation": "Initialize pointers at both ends of the sorted array.",
+          "activeLine": 2
+        },
+        {
+          "stepIndex": 1,
+          "diagramState": { "left": 1, "right": 4 },
+          "variables": { "left": 1, "right": 4, "sum": 14 },
+          "explanation": "Since sum is less than target, move left pointer to increase sum.",
+          "activeLine": 7
+        }
+      ]
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "left, right = 0, len(arr) - 1\nwhile left < right:\n  if condition_met:\n    return success\n  if arr[left] + arr[right] < target:\n    left += 1\n  else:\n    right -= 1",
+    "whenToUse": "When dealing with sorted arrays or strings and need to find pairs/triplets that sum to a target, or when reversing elements.",
+    "timeComplexity": "O(N) - array is traversed at most once.",
+    "spaceComplexity": "O(1) - constant extra space used."
+  },
+  "examples": [
+    {
+      "title": "Two Sum II - Input Array Is Sorted",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+      "problemStatement": "Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number.",
+      "inputExample": "numbers = [2,7,11,15], target = 9",
+      "outputExample": "[1,2]",
+      "steps": ["Initialize left at 0, right at end", "Check sum of left and right", "If sum < target, increment left. Else decrement right"],
+      "code": {
+        "python": "def twoSum(numbers, target): pass",
+        "javascript": "var twoSum = function(numbers, target) {};",
+        "java": "public class Solution {}",
+        "cpp": "class Solution {};"
+      },
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(1)"
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Given a string s, return true if it is a palindrome, or false otherwise.",
+    "correctPatternId": "two-pointers",
+    "distractors": ["sliding-window", "binary-search"],
+    "explanation": "You can use two pointers, one at the start and one at the end, moving towards the center and comparing characters."
+  },
+  "conceptQuiz": [
+    {
+      "question": "What is the primary prerequisite for using opposite-directional Two Pointers for sum problems?",
+      "options": ["The array must be sorted.", "The array must contain only positive integers.", "The array must not contain duplicates."],
+      "correctIndex": 0,
+      "explanation": "If the array is not sorted, knowing whether the current sum is too big or too small gives no useful information about which pointer to move."
+    }
+  ],
+  "practice": [
+    {
+      "title": "3Sum",
+      "url": "https://leetcode.com/problems/3sum/",
+      "difficulty": "medium",
+      "patternTag": "Opposite Directional"
+    }
+  ]
+}
