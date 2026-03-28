@@ -1,0 +1,32 @@
+{
+  "id": "queues",
+  "slug": "queues",
+  "title": "Queues",
+  "category": "data-structure",
+  "difficulty": "beginner",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "queues"
+  ],
+  "overview": {
+    "summary": "Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Queues in interviews.",
+      "Review one short summary of Queues.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Queues remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Queues warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Queues."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

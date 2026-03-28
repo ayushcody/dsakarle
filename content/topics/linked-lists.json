@@ -1,0 +1,77 @@
+{
+  "id": "linked-lists",
+  "slug": "linked-lists",
+  "title": "Linked Lists",
+  "category": "data-structure",
+  "difficulty": "beginner",
+  "estimatedMinutes": 35,
+  "prerequisites": [],
+  "tags": [
+    "linked-lists",
+    "data-structure"
+  ],
+  "overview": {
+    "summary": "Linked Lists trade direct indexing for flexible pointer rewiring.",
+    "learningObjectives": [
+      "Build intuition for the topic.",
+      "Recognize interview triggers.",
+      "Review one representative example."
+    ],
+    "interviewRelevance": "This topic appears regularly in coding interviews."
+  },
+  "realWorldHook": {
+    "paragraphs": [
+      "Linked Lists shows up in practical systems whenever we need to organize or process data efficiently."
+    ],
+    "ahaMoment": "Linked Lists becomes easier once you stop memorizing and start tracking the invariant."
+  },
+  "definition": {
+    "technicalDefinition": "Linked Lists is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "vocabulary": [
+      {
+        "term": "invariant",
+        "definition": "The condition that remains true as the algorithm runs."
+      },
+      {
+        "term": "state",
+        "definition": "The pieces of information that must be tracked at runtime."
+      }
+    ],
+    "keyProperties": [
+      "Understand the shape of the data.",
+      "Understand the cost of the main operation.",
+      "Understand the common interview pattern."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Reverse Linked List",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/reverse-linked-list/",
+      "problemStatement": "A representative Linked Lists problem.",
+      "inputExample": "See problem statement",
+      "outputExample": "Depends on the prompt",
+      "steps": [
+        "Recognize the topic trigger.",
+        "Apply the core invariant.",
+        "Return the requested answer."
+      ],
+      "code": {
+        "python": "arr = [4, 8, 15, 16, 23, 42]",
+        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
+        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
+        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+      },
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)"
+    }
+  ],
+  "practice": [
+    {
+      "title": "Reverse Linked List",
+      "url": "https://leetcode.com/problems/reverse-linked-list/",
+      "difficulty": "medium",
+      "keyInsight": "Representative Linked Lists reasoning."
+    }
+  ]
+}

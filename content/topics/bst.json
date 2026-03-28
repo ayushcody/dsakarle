@@ -1,0 +1,32 @@
+{
+  "id": "bst",
+  "slug": "bst",
+  "title": "Binary Search Trees",
+  "category": "data-structure",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "bst"
+  ],
+  "overview": {
+    "summary": "Binary Search Trees is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Binary Search Trees in interviews.",
+      "Review one short summary of Binary Search Trees.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Binary Search Trees remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Binary Search Trees warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Binary Search Trees."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

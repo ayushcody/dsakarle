@@ -1,5 +1,6 @@
 import React from 'react';
 import CourseCatalog from '@/components/home/CourseCatalog';
+import SearchBar from '@/components/ui/SearchBar';
 
 export default function LearnPage() {
   return (
@@ -9,6 +10,9 @@ export default function LearnPage() {
         <p className="font-dmsans text-[var(--text-secondary)] text-lg max-w-2xl">
           Master the core patterns of computer science. Select a topic below to jump into the visual guides and interactive steppers.
         </p>
+        <div className="mt-6 flex justify-center md:justify-start">
+          <SearchBar />
+        </div>
       </div>
       <CourseCatalog />
     </div>

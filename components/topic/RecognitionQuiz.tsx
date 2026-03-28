@@ -1,105 +1,90 @@
 'use client';
-import React, { useState } from 'react';
 
-interface RecognitionQuizProps {
-  problemStatement: string;
-  correctPatternId: string;
-  distractors: string[];
-  explanation: string;
-}
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
 
-export default function RecognitionQuiz({ problemStatement, correctPatternId, distractors, explanation }: RecognitionQuizProps) {
-  const [selectedMatch, setSelectedMatch] = useState<string | null>(null);
-  const [isRevealed, setIsRevealed] = useState(false);
+import { getBadgeForSlug } from '@/components/badges/registry';
+import { saveQuizScore } from '@/lib/progress';
+import type { RecognitionQuizData } from '@/types/learning';
 
-  const patternOptions = [
-    { id: 'sliding-window', label: 'Sliding Window', icon: 'M4 4h4v16H4zM16 4h4v16h-4zM10 4h4v16h-4z' },
-    { id: 'two-pointers', label: 'Two Pointers', icon: 'M5 12h14M12 5l7 7-7 7' },
-    { id: 'binary-search', label: 'Binary Search', icon: 'M12 2v20M2 12h20' },
-    { id: 'hash-maps', label: 'Hash Maps', icon: 'M4 4h16v16H4z' },
-    { id: 'fast-and-slow-pointers', label: 'Fast & Slow', icon: 'M4 12h8M12 12h8M8 8l4 4-4 4M16 6l4 6-4 6' },
-  ];
+export function RecognitionQuiz({ quiz, topicId }: { quiz: RecognitionQuizData; topicId: string }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
+  const [pendingReveal, setPendingReveal] = useState(false);
 
-  const currentOptions = patternOptions.filter(p => p.id === correctPatternId || distractors.includes(p.id));
+  const options = useMemo(() => {
+    const unique = Array.from(new Set([quiz.correctPatternId, ...quiz.distractors]));
+    return unique.slice(0, 4);
+  }, [quiz.correctPatternId, quiz.distractors]);
 
-  const handleSelect = (id: string) => {
-    if (isRevealed) return;
-    setSelectedMatch(id);
-    setIsRevealed(true);
+  const handleSelect = (slug: string) => {
+    if (revealed) {
+      return;
+    }
+
+    setSelected(slug);
+    saveQuizScore(topicId, 'recognition', slug === quiz.correctPatternId);
+
+    if (slug === quiz.correctPatternId) {
+      setRevealed(true);
+      return;
+    }
+
+    setPendingReveal(true);
+    window.setTimeout(() => {
+      setPendingReveal(false);
+      setRevealed(true);
+    }, 800);
   };
 
   return (
-    <div className="surface-muted my-12 rounded-[var(--radius)] border border-[var(--border)] p-6 shadow-[var(--shadow-card)] md:p-8">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-teal)] text-[var(--accent-teal)]">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 11 12 14 22 4"></polyline>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-          </svg>
-        </div>
-        <h3 className="font-lora text-xl md:text-2xl font-bold text-[var(--text-primary)]">Pattern Recognition Check</h3>
-      </div>
-      
-      <p className="font-dmsans text-[var(--text-secondary)] text-[15px] leading-relaxed mb-8">
-        Read the problem statement below. Which pattern is the most appropriate approach to solve it?
-      </p>
-
-      <div className="relative mb-8 overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border)] bg-white p-6 shadow-[var(--shadow-card)]">
-        <div className="absolute top-0 left-0 w-1 h-full bg-[var(--accent-teal)]"></div>
-        <p className="font-dmsans font-medium text-[var(--text-primary)] leading-relaxed italic">
-          &quot;{problemStatement}&quot;
-        </p>
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
+      <h2 className="section-heading">Section 09 — Recognition Quiz</h2>
+      <div className="rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] p-5">
+        <p className="font-dmsans text-[15px] leading-relaxed text-[var(--text-primary)]">{quiz.problemStatement}</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        {currentOptions.map(opt => {
-          const isSelected = selectedMatch === opt.id;
-          const isCorrect = opt.id === correctPatternId;
-          
-          let stateStyles = 'bg-white border-[var(--border)] text-[var(--text-secondary)] cursor-pointer hover:border-[var(--accent-teal)] hover:shadow-[var(--shadow-card-hover)]';
-          
-          if (isRevealed) {
-            if (isCorrect) {
-              stateStyles = 'bg-[var(--surface-success)] border-[var(--state-success)] text-[var(--state-success)] cursor-default';
-            } else if (isSelected && !isCorrect) {
-              stateStyles = 'bg-[var(--surface-danger)] border-[var(--state-danger)] text-[var(--state-danger)] cursor-default';
-            } else {
-              stateStyles = 'cursor-default border-[var(--border)] bg-white text-[var(--text-muted)] opacity-50';
-            }
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        {options.map((slug) => {
+          const Badge = getBadgeForSlug(slug);
+          const isCorrect = slug === quiz.correctPatternId;
+          const isSelected = selected === slug;
+
+          let className = 'border-[var(--border)] bg-white';
+          if (revealed && isCorrect) {
+            className = 'border-[var(--state-success)] bg-[var(--surface-success)]';
+          } else if ((revealed || pendingReveal) && isSelected) {
+            className = 'border-[var(--state-danger)] bg-[var(--surface-danger)]';
           }
 
           return (
-            <button 
-              key={opt.id}
-              onClick={() => handleSelect(opt.id)}
-              disabled={isRevealed}
-              className={`relative flex flex-col items-center justify-center gap-3 rounded-[var(--radius-sm)] border p-4 transition-all duration-300 ${stateStyles}`}
+            <button
+              key={slug}
+              className={`rounded-[var(--radius-sm)] border p-4 text-center transition-colors ${className}`}
+              onClick={() => handleSelect(slug)}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity="0.8">
-                <path d={opt.icon} />
-              </svg>
-              <span className="font-dmsans font-medium text-sm text-center">{opt.label}</span>
-              
-              {isRevealed && isCorrect && (
-                <div className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--state-success)] text-white shadow-[var(--shadow-card)]">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </div>
-              )}
+              <Badge className="mx-auto h-20 w-20" />
+              <p className="mt-3 font-dmsans text-sm font-medium text-[var(--text-primary)]">
+                {slug.replace(/-/g, ' ')}
+              </p>
             </button>
           );
         })}
       </div>
 
-      {isRevealed && (
-        <div className={`rounded-[var(--radius-sm)] border-l-4 p-5 ${selectedMatch === correctPatternId ? 'border-l-[var(--state-success)] bg-[var(--surface-success)]' : 'border-l-[var(--state-danger)] bg-[var(--surface-danger)]'}`}>
-          <h4 className={`mb-2 font-dmsans font-bold ${selectedMatch === correctPatternId ? 'text-[var(--state-success)]' : 'text-[var(--state-danger)]'}`}>
-            {selectedMatch === correctPatternId ? 'Correct!' : 'Not quite.'}
-          </h4>
-          <p className="font-dmsans text-[15px] text-[var(--text-primary)] leading-relaxed">
-            {explanation}
+      {revealed && (
+        <div className="mt-6 rounded-[var(--radius-sm)] bg-[var(--bg-primary)] px-5 py-4">
+          <p className="font-dmmono text-[11px] uppercase tracking-[0.1em] text-[var(--text-muted)]">
+            {selected === quiz.correctPatternId ? 'Correct' : 'Correct Pattern'}
           </p>
+          <p className="mt-2 font-dmsans text-[15px] leading-relaxed text-[var(--text-primary)]">{quiz.explanation}</p>
+          <Link href={`#worked-examples`} className="button-primary mt-4 inline-flex px-5 py-2.5">
+            Continue to Examples →
+          </Link>
         </div>
       )}
-    </div>
+    </section>
   );
 }
+
+export default RecognitionQuiz;

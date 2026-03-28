@@ -1,0 +1,421 @@
+{
+  "id": "arrays",
+  "slug": "arrays",
+  "title": "Arrays",
+  "category": "data-structure",
+  "difficulty": "beginner",
+  "estimatedMinutes": 45,
+  "prerequisites": [],
+  "tags": [
+    "array",
+    "indexing",
+    "contiguous-memory"
+  ],
+  "overview": {
+    "summary": "Arrays store same-type values in contiguous memory, making index-based access extremely fast.",
+    "learningObjectives": [
+      "Understand contiguous memory layout.",
+      "Explain why random access is O(1).",
+      "Recognize why inserts and deletes in the middle cost more."
+    ],
+    "interviewRelevance": "Arrays are the default storage model for most interview problems."
+  },
+  "realWorldHook": {
+    "paragraphs": [
+      "Every pixel in an image, every row in a spreadsheet, and every daily temperature reading can be modeled as an array.",
+      "Arrays are the simplest mental model for “a list of values with positions.”"
+    ],
+    "ahaMoment": "An array is powerful because the computer can jump straight to any position by arithmetic."
+  },
+  "definition": {
+    "technicalDefinition": "An array is a fixed-size contiguous block of memory that stores values of the same type and supports direct index-based access.",
+    "vocabulary": [
+      {
+        "term": "index",
+        "definition": "The zero-based position of a value in the array."
+      },
+      {
+        "term": "contiguous",
+        "definition": "Stored in one continuous span of memory."
+      },
+      {
+        "term": "random access",
+        "definition": "Directly jumping to an index without walking through earlier values."
+      }
+    ],
+    "keyProperties": [
+      "Values sit next to each other in memory.",
+      "Access by index is constant time.",
+      "Middle insert/delete requires shifting later values."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "Picture a row of labeled lockers. Each locker has a number, and the label lets you jump to it instantly."
+    ],
+    "clickSentence": "The value is easy to access because its address is base + offset.",
+    "diagramType": "ArrayDiagram",
+    "cells": [
+      4,
+      8,
+      15,
+      16,
+      23,
+      42
+    ],
+    "diagramState": {
+      "left": 0,
+      "right": 5,
+      "highlighted": [
+        2
+      ]
+    }
+  },
+  "structure": {
+    "memoryDescription": [
+      "Arrays reserve one continuous memory region large enough for every element.",
+      "Because every slot has the same size, the address of index i can be calculated directly."
+    ],
+    "definitionCode": {
+      "python": "arr = [4, 8, 15, 16, 23, 42]",
+      "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
+      "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
+      "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+    },
+    "memoryLayout": [
+      {
+        "label": "base address",
+        "value": "where the array starts in memory"
+      },
+      {
+        "label": "element size",
+        "value": "how many bytes each value occupies"
+      },
+      {
+        "label": "index offset",
+        "value": "index × element size"
+      }
+    ]
+  },
+  "stepper": {
+    "diagramType": "ArrayDiagram",
+    "array": [
+      4,
+      8,
+      15,
+      16,
+      23,
+      42
+    ],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {
+          "left": 0,
+          "right": 0,
+          "highlighted": [],
+          "comparing": [
+            0,
+            0
+          ]
+        },
+        "variables": {
+          "index": 0,
+          "target": 23,
+          "current_value": 4,
+          "found": "no"
+        },
+        "explanation": "Scan index 0. The value 4 is not the target yet.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "left": 1,
+          "right": 1,
+          "highlighted": [],
+          "comparing": [
+            1,
+            1
+          ]
+        },
+        "variables": {
+          "index": 1,
+          "target": 23,
+          "current_value": 8,
+          "found": "no"
+        },
+        "explanation": "Scan index 1. The value 8 is not the target yet.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "left": 2,
+          "right": 2,
+          "highlighted": [],
+          "comparing": [
+            2,
+            2
+          ]
+        },
+        "variables": {
+          "index": 2,
+          "target": 23,
+          "current_value": 15,
+          "found": "no"
+        },
+        "explanation": "Scan index 2. The value 15 is not the target yet.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "left": 3,
+          "right": 3,
+          "highlighted": [],
+          "comparing": [
+            3,
+            3
+          ]
+        },
+        "variables": {
+          "index": 3,
+          "target": 23,
+          "current_value": 16,
+          "found": "no"
+        },
+        "explanation": "Scan index 3. The value 16 is not the target yet.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "left": 4,
+          "right": 4,
+          "highlighted": [
+            4
+          ],
+          "comparing": [
+            4,
+            4
+          ]
+        },
+        "variables": {
+          "index": 4,
+          "target": 23,
+          "current_value": 23,
+          "found": "yes"
+        },
+        "explanation": "We reached index 4 and found the target value 23.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "left": 5,
+          "right": 5,
+          "highlighted": [],
+          "comparing": [
+            5,
+            5
+          ]
+        },
+        "variables": {
+          "index": 5,
+          "target": 23,
+          "current_value": 42,
+          "found": "no"
+        },
+        "explanation": "Scan index 5. The value 42 is not the target yet.",
+        "activeLine": 4
+      }
+    ]
+  },
+  "operations": [
+    {
+      "name": "Access",
+      "description": "Compute the offset and jump directly to the requested index.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "arr = [4, 8, 15, 16, 23, 42]",
+        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
+        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
+        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+      },
+      "visualNote": "Only one cell is highlighted because direct access does not scan earlier values."
+    },
+    {
+      "name": "Insert in Middle",
+      "description": "To insert in the middle, every later value shifts right by one slot.",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "arr = [4, 8, 15, 16, 23, 42]",
+        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
+        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
+        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+      },
+      "visualNote": "Cells after the insertion point visibly shift right."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "address = base + index * element_size\nreturn memory[address]",
+    "whenToUse": "Use arrays when position matters and fast index lookup is more important than cheap middle insertions.",
+    "timeComplexity": "Access O(1), search O(n), insert/delete in middle O(n).",
+    "spaceComplexity": "O(n) for n stored values."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You need the fastest possible lookup by numeric position in a dense sequence.",
+    "correctPatternId": "arrays",
+    "distractors": [
+      "linked-lists",
+      "hash-maps",
+      "trees"
+    ],
+    "explanation": "Arrays are the best fit when direct indexing is the core requirement."
+  },
+  "examples": [
+    {
+      "title": "Linear Search in an Array",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/search-insert-position/",
+      "problemStatement": "Scan the array from left to right until you find the target.",
+      "inputExample": "nums = [4,8,15,16,23,42], target = 23",
+      "outputExample": "4",
+      "steps": [
+        "Start at index 0.",
+        "Compare each value to the target.",
+        "Stop when the target is found."
+      ],
+      "code": {
+        "python": "arr = [4, 8, 15, 16, 23, 42]",
+        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
+        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
+        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+      },
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "rationale": "In the worst case every element is compared."
+    },
+    {
+      "title": "Remove Duplicates from Sorted Array",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/",
+      "problemStatement": "Rewrite the array in-place so each distinct value appears once.",
+      "inputExample": "nums = [1,1,2,2,3]",
+      "outputExample": "3",
+      "steps": [
+        "Keep a write pointer.",
+        "Copy forward each new value.",
+        "Return the new logical length."
+      ],
+      "code": {
+        "python": "arr = [4, 8, 15, 16, 23, 42]",
+        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
+        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
+        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+      },
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "rationale": "Each element is inspected once."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "Why is array access O(1)?",
+      "options": [
+        "Contiguous memory with fixed-size offsets",
+        "It uses hashing",
+        "It uses recursion",
+        "Values are linked"
+      ],
+      "correctIndex": 0,
+      "explanation": "The address calculation is arithmetic, not traversal."
+    },
+    {
+      "question": "Why is inserting in the middle expensive?",
+      "options": [
+        "Later elements must shift",
+        "The array sorts itself",
+        "Pointers must reverse",
+        "Hash buckets resize"
+      ],
+      "correctIndex": 0,
+      "explanation": "Contiguous layout means later elements must move to preserve order."
+    },
+    {
+      "question": "What is the biggest strength of arrays?",
+      "options": [
+        "Fast indexing",
+        "Fast middle deletion",
+        "Automatic balancing",
+        "Cycle detection"
+      ],
+      "correctIndex": 0,
+      "explanation": "Arrays dominate when direct positional access matters most."
+    },
+    {
+      "question": "What is stored at an array index?",
+      "options": [
+        "A value of the element type",
+        "A linked list head",
+        "A heap root",
+        "A tree edge"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each slot contains one value of the array element type."
+    }
+  ],
+  "practice": [
+    {
+      "title": "Search Insert Position",
+      "url": "https://leetcode.com/problems/search-insert-position/",
+      "difficulty": "easy",
+      "keyInsight": "Indexed linear or binary reasoning depending on sortedness."
+    },
+    {
+      "title": "Remove Element",
+      "url": "https://leetcode.com/problems/remove-element/",
+      "difficulty": "easy",
+      "keyInsight": "Rewrite in-place while preserving a valid prefix."
+    },
+    {
+      "title": "Plus One",
+      "url": "https://leetcode.com/problems/plus-one/",
+      "difficulty": "easy",
+      "keyInsight": "Carry propagates through array digits."
+    },
+    {
+      "title": "Best Time to Buy and Sell Stock",
+      "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+      "difficulty": "easy",
+      "keyInsight": "Track the best prior value while scanning forward."
+    },
+    {
+      "title": "Move Zeroes",
+      "url": "https://leetcode.com/problems/move-zeroes/",
+      "difficulty": "easy",
+      "keyInsight": "Keep a compacted prefix of non-zero values."
+    },
+    {
+      "title": "Merge Sorted Array",
+      "url": "https://leetcode.com/problems/merge-sorted-array/",
+      "difficulty": "easy",
+      "keyInsight": "Fill from the back to avoid overwriting values."
+    },
+    {
+      "title": "Product of Array Except Self",
+      "url": "https://leetcode.com/problems/product-of-array-except-self/",
+      "difficulty": "medium",
+      "keyInsight": "Use prefix and suffix products."
+    },
+    {
+      "title": "Container With Most Water",
+      "url": "https://leetcode.com/problems/container-with-most-water/",
+      "difficulty": "medium",
+      "keyInsight": "Array positions define the geometry of the answer."
+    }
+  ]
+}

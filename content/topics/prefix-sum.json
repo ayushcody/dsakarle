@@ -1,0 +1,32 @@
+{
+  "id": "prefix-sum",
+  "slug": "prefix-sum",
+  "title": "Prefix Sum",
+  "category": "algorithm",
+  "difficulty": "beginner",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "prefix-sum"
+  ],
+  "overview": {
+    "summary": "Prefix Sum is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Prefix Sum in interviews.",
+      "Review one short summary of Prefix Sum.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Prefix Sum remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Prefix Sum warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Prefix Sum."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

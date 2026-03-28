@@ -1,0 +1,32 @@
+{
+  "id": "bfs-dfs",
+  "slug": "bfs-dfs",
+  "title": "BFS & DFS",
+  "category": "algorithm",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "bfs-dfs"
+  ],
+  "overview": {
+    "summary": "BFS & DFS is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of BFS & DFS in interviews.",
+      "Review one short summary of BFS & DFS.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "BFS & DFS remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "BFS & DFS warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for BFS & DFS."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

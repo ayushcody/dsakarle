@@ -1,98 +1,32 @@
 {
   "id": "fast-and-slow-pointers",
-  "title": "Fast and Slow Pointers",
   "slug": "fast-and-slow-pointers",
+  "title": "Fast and Slow Pointers",
   "category": "algorithm",
   "difficulty": "intermediate",
-  "estimatedMinutes": 45,
-  "prerequisites": ["linked-lists", "two-pointers"],
-  "tags": ["linked-lists", "cycle-detection", "two-pointers"],
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "fast-and-slow-pointers"
+  ],
   "overview": {
-    "summary": "The Fast and Slow Pointers pattern (also known as Floyd's Cycle Detection Algorithm) uses two pointers moving at different speeds to detect cycles or find specific elements in a cyclic data structure.",
+    "summary": "Fast and Slow Pointers is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
     "learningObjectives": [
-      "Understand cycle detection mechanics",
-      "Calculate meeting points in cycles",
-      "Find middle of linked list in one pass"
+      "Recognize the role of Fast and Slow Pointers in interviews.",
+      "Review one short summary of Fast and Slow Pointers.",
+      "Use the practice list to keep momentum."
     ],
-    "interviewRelevance": "Crucial for linked list questions involving cycles or finding the middle node without knowing the length."
+    "interviewRelevance": "Fast and Slow Pointers remains part of the long-form curriculum roadmap."
   },
-  "content": [
-    {
-      "type": "theory",
-      "content": "By moving one pointer at twice the speed of another, they are mathematically guaranteed to meet if a cycle exists. If there is no cycle, the fast pointer will simply reach the end."
-    },
-    {
-      "type": "stepper",
-      "codeHtml": {
-        "python": "<pre class=\"shiki\"><code>def has_cycle(head):\\n  slow, fast = head, head\\n  while fast and fast.next:\\n    slow = slow.next\\n    fast = fast.next.next\\n    if slow == fast:\\n      return True\\n  return False</code></pre>",
-        "javascript": "<pre class=\"shiki\"><code>function hasCycle(head) {\\n  let slow = head, fast = head;\\n  while (fast && fast.next) {\\n    slow = slow.next;\\n    fast = fast.next.next;\\n    if (slow === fast) return true;\\n  }\\n  return false;\\n}</code></pre>",
-        "java": "<pre class=\"shiki\"><code>class Solution {}</code></pre>",
-        "cpp": "<pre class=\"shiki\"><code>class Solution {}</code></pre>"
-      },
-      "diagramType": "linked-list",
-      "steps": [
-        {
-          "stepIndex": 0,
-          "diagramState": { "left": 0, "right": 0 },
-          "variables": { "slow": "head", "fast": "head" },
-          "explanation": "Initialize slow and fast pointers at the head of the linked list.",
-          "activeLine": 2
-        },
-        {
-          "stepIndex": 1,
-          "diagramState": { "left": 1, "right": 2 },
-          "variables": { "slow": "Node(2)", "fast": "Node(3)" },
-          "explanation": "Move slow by 1, fast by 2. Compare if they meet.",
-          "activeLine": 4
-        }
-      ]
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "slow, fast = head, head\nwhile fast and fast.next:\n  slow = slow.next\n  fast = fast.next.next\n  if slow == fast:\n    handle cycle",
-    "whenToUse": "Dealing with Linked Lists or arrays where indices point to other indices, and you need to detect a cycle or find the middle.",
-    "timeComplexity": "O(N) - fast pointer traverses list at most twice.",
-    "spaceComplexity": "O(1) - only two pointers used regardless of list size."
-  },
-  "examples": [
-    {
-      "title": "Linked List Cycle",
-      "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/linked-list-cycle/",
-      "problemStatement": "Given head, the head of a linked list, determine if the linked list has a cycle in it.",
-      "inputExample": "head = [3,2,0,-4], pos = 1",
-      "outputExample": "true",
-      "steps": ["Initialize slow and fast at head", "Move slow by 1, fast by 2", "If they meet, return true"],
-      "code": {
-        "python": "def hasCycle(head):\n    slow, fast = head, head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast:\n            return True\n    return False",
-        "javascript": "var hasCycle = function(head) {};",
-        "java": "public class Solution {}",
-        "cpp": "class Solution {};"
-      },
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)"
-    }
-  ],
-  "recognitionQuiz": {
-    "problemStatement": "Find the middle node of a Linked List in a single pass without storing nodes in an array.",
-    "correctPatternId": "fast-and-slow-pointers",
-    "distractors": ["sliding-window", "binary-search"],
-    "explanation": "A slow pointer moving at 1x speed will exactly reach the middle when a fast pointer moving at 2x speed reaches the end."
-  },
-  "conceptQuiz": [
-    {
-      "question": "Why does the fast pointer move exactly twice as fast?",
-      "options": ["It guarantees they will meet in O(N) time without skipping each other.", "It is required for O(1) space.", "It is the only speed that works."],
-      "correctIndex": 0,
-      "explanation": "If fast moved 3x as fast, it could potentially 'skip' the slow pointer in certain cycle lengths."
-    }
-  ],
   "practice": [
     {
-      "title": "Linked List Cycle II",
-      "url": "https://leetcode.com/problems/linked-list-cycle-ii/",
-      "difficulty": "medium",
-      "patternTag": "Cycle Detection"
+      "title": "Fast and Slow Pointers warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Fast and Slow Pointers."
     }
-  ]
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
 }

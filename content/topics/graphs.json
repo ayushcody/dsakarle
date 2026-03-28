@@ -1,0 +1,32 @@
+{
+  "id": "graphs",
+  "slug": "graphs",
+  "title": "Graphs",
+  "category": "data-structure",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "graphs"
+  ],
+  "overview": {
+    "summary": "Graphs is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Graphs in interviews.",
+      "Review one short summary of Graphs.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Graphs remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Graphs warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Graphs."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

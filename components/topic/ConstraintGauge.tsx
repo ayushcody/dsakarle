@@ -1,55 +1,77 @@
-import React from 'react';
+'use client';
+
+import { motion } from 'framer-motion';
 
 interface ConstraintGaugeProps {
-  value: number;
-  max: number;
-  label?: string;
+  currentValue: number
+  maxValue: number
+  label?: string
 }
 
-export default function ConstraintGauge({ value, max, label = "Constraint" }: ConstraintGaugeProps) {
-  // Calculate percentage (clamped 0-100)
-  const pct = Math.min(100, Math.max(0, (value / max) * 100));
-  
-  // Color logic
-  let color = '#16A34A'; // Green (Safe)
-  if (pct > 75) color = '#CA8A04'; // Amber (Warning)
-  if (pct >= 100) color = '#DC2626'; // Red (Violation)
-
-  // SVG Gauge metrics
-  const radius = 40;
-  const dashArray = Math.PI * radius; // Half circle
-  const dashOffset = dashArray - (dashArray * pct) / 100;
+export function ConstraintGauge({ currentValue, maxValue, label = 'constraint' }: ConstraintGaugeProps) {
+  const ratio = Math.min(currentValue / maxValue, 1.1);
+  const violated = currentValue > maxValue;
+  const fillColor = ratio < 0.7 ? '#16A34A' : ratio < 0.9 ? '#CA8A04' : '#DC2626';
+  const fillWidth = Math.min(ratio, 1) * 280;
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-24 h-14 overflow-hidden">
-        <svg viewBox="0 0 100 60" className="w-full h-full">
-          {/* Background Arc */}
-          <path
-            d="M 10 50 A 40 40 0 0 1 90 50"
-            fill="none"
-            stroke="#E5E0D8"
-            strokeWidth="12"
-            strokeLinecap="round"
-          />
-          {/* Fill Arc */}
-          <path
-            d="M 10 50 A 40 40 0 0 1 90 50"
-            fill="none"
-            stroke={color}
-            strokeWidth="12"
-            strokeLinecap="round"
-            strokeDasharray={dashArray}
-            strokeDashoffset={dashOffset}
-            style={{ transition: 'stroke-dashoffset 0.5s ease-out, stroke 0.3s ease' }}
-          />
-        </svg>
-        <div className="absolute bottom-0 left-0 right-0 text-center">
-           <span className="font-dmmono font-bold text-lg" style={{ color }}>{value}</span>
-           <span className="font-dmmono text-xs text-[var(--text-muted)]">/{max}</span>
-        </div>
+    <div
+      style={{
+        padding: '12px 16px',
+        background: 'var(--bg-secondary)',
+        borderRadius: 'var(--radius-sm)',
+        border: `1px solid ${violated ? '#DC2626' : 'var(--border)'}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: 'var(--font-dmmono)',
+          fontSize: 11,
+          color: 'var(--text-muted)',
+          marginBottom: 8,
+        }}
+      >
+        {label}: {currentValue} / {maxValue}
       </div>
-      <span className="font-dmsans text-xs font-medium text-[var(--text-secondary)] mt-1">{label}</span>
+      <svg width={300} height={24}>
+        <rect x={0} y={0} width={300} height={24} rx={12} fill="#E5E0D8" />
+        <motion.rect
+          x={0}
+          y={0}
+          height={24}
+          rx={12}
+          animate={{ width: fillWidth, fill: fillColor }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        />
+        {violated && (
+          <motion.rect
+            x={0}
+            y={0}
+            width={300}
+            height={24}
+            rx={12}
+            fill="transparent"
+            stroke="#DC2626"
+            strokeWidth={2}
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ duration: 0.4, repeat: 2 }}
+          />
+        )}
+      </svg>
+      {violated && (
+        <div
+          style={{
+            fontFamily: 'var(--font-dmmono)',
+            fontSize: 11,
+            color: '#DC2626',
+            marginTop: 6,
+          }}
+        >
+          CONSTRAINT VIOLATED → SHRINK LEFT
+        </div>
+      )}
     </div>
   );
 }
+
+export default ConstraintGauge;

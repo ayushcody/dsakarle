@@ -1,0 +1,36 @@
+{
+  "groups": [
+    {
+      "title": "Data Structures",
+      "topics": [
+        { "slug": "arrays", "title": "Arrays" },
+        { "slug": "vectors", "title": "Vectors" },
+        { "slug": "strings", "title": "Strings" },
+        { "slug": "linked-lists", "title": "Linked Lists" },
+        { "slug": "stacks", "title": "Stacks" },
+        { "slug": "queues", "title": "Queues" },
+        { "slug": "hash-maps", "title": "Hash Maps & Hash Sets" },
+        { "slug": "trees", "title": "Binary Trees" },
+        { "slug": "bst", "title": "Binary Search Trees" },
+        { "slug": "heaps", "title": "Heaps" },
+        { "slug": "graphs", "title": "Graphs" },
+        { "slug": "tries", "title": "Tries" }
+      ]
+    },
+    {
+      "title": "Algorithms",
+      "topics": [
+        { "slug": "sliding-window", "title": "Sliding Window" },
+        { "slug": "two-pointers", "title": "Two Pointers" },
+        { "slug": "prefix-sum", "title": "Prefix Sum" },
+        { "slug": "binary-search", "title": "Binary Search Pattern" },
+        { "slug": "sorting", "title": "Sorting Algorithms" },
+        { "slug": "searching", "title": "Searching Algorithms" },
+        { "slug": "recursion", "title": "Recursion & Backtracking" },
+        { "slug": "dynamic-programming", "title": "Dynamic Programming" },
+        { "slug": "greedy", "title": "Greedy Algorithms" },
+        { "slug": "bfs-dfs", "title": "BFS & DFS" }
+      ]
+    }
+  ]
+}

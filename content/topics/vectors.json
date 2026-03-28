@@ -1,0 +1,32 @@
+{
+  "id": "vectors",
+  "slug": "vectors",
+  "title": "Vectors (Dynamic Arrays)",
+  "category": "data-structure",
+  "difficulty": "beginner",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "vectors"
+  ],
+  "overview": {
+    "summary": "Vectors (Dynamic Arrays) is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Vectors (Dynamic Arrays) in interviews.",
+      "Review one short summary of Vectors (Dynamic Arrays).",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Vectors (Dynamic Arrays) remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Vectors (Dynamic Arrays) warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Vectors (Dynamic Arrays)."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

@@ -1,0 +1,32 @@
+{
+  "id": "dynamic-programming",
+  "slug": "dynamic-programming",
+  "title": "Dynamic Programming",
+  "category": "algorithm",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "dynamic-programming"
+  ],
+  "overview": {
+    "summary": "Dynamic Programming is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Dynamic Programming in interviews.",
+      "Review one short summary of Dynamic Programming.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Dynamic Programming remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Dynamic Programming warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Dynamic Programming."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

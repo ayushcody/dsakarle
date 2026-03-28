@@ -1,0 +1,32 @@
+{
+  "id": "recursion",
+  "slug": "recursion",
+  "title": "Recursion & Backtracking",
+  "category": "algorithm",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "recursion"
+  ],
+  "overview": {
+    "summary": "Recursion & Backtracking is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Recursion & Backtracking in interviews.",
+      "Review one short summary of Recursion & Backtracking.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Recursion & Backtracking remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Recursion & Backtracking warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Recursion & Backtracking."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

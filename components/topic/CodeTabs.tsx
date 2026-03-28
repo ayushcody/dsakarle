@@ -1,43 +1,86 @@
 'use client';
-import React, { useState } from 'react';
-import { Language } from '@/types';
+
+import { useEffect, useRef } from 'react';
+
+import { useStepperStore } from '@/lib/stepper-store';
+import type { CodeLanguage } from '@/types/learning';
 
 interface CodeTabsProps {
-  code: Record<Language, string>;
+  code: Record<CodeLanguage, string>
+  renderedCode: Record<CodeLanguage, string>
+  activeLine?: number
 }
 
-export default function CodeTabs({ code }: CodeTabsProps) {
-  const [activeTab, setActiveTab] = useState<Language>('python');
-  
-  const tabs: {id: Language, label: string}[] = [
-    { id: 'python', label: 'Python' },
-    { id: 'javascript', label: 'JavaScript' },
-    { id: 'java', label: 'Java' },
-    { id: 'cpp', label: 'C++' }
-  ];
+const TABS: CodeLanguage[] = ['python', 'javascript', 'java', 'cpp'];
+const TAB_LABELS: Record<CodeLanguage, string> = {
+  python: 'Python',
+  javascript: 'JavaScript',
+  java: 'Java',
+  cpp: 'C++',
+};
+
+export function CodeTabs({ renderedCode, activeLine }: CodeTabsProps) {
+  const { selectedLanguage, setLanguage, currentStep } = useStepperStore();
+  const codeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!codeRef.current) {
+      return;
+    }
+
+    const lines = Array.from(codeRef.current.querySelectorAll('[data-line]'));
+    for (const line of lines) {
+      line.classList.remove('active-line');
+    }
+
+    if (activeLine === undefined) {
+      return;
+    }
+
+    const targetLine = codeRef.current.querySelector(`[data-line="${activeLine}"]`);
+    targetLine?.classList.add('active-line');
+    targetLine?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [activeLine, currentStep, selectedLanguage]);
 
   return (
-    <div className="bg-[var(--bg-dark)] rounded-[var(--radius)] overflow-hidden shadow-sm border border-[#404040]">
-      <div className="flex bg-[#262626] border-b border-[#404040] overflow-x-auto scrolbar-hide">
-        {tabs.map((tab) => (
+    <div>
+      <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--border)' }}>
+        {TABS.map((lang) => (
           <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-3 font-dmmono text-[11px] tracking-widest uppercase transition-colors whitespace-nowrap outline-none ${
-              activeTab === tab.id 
-                ? 'bg-[#171717] text-[var(--accent-coral)] border-t-[3px] border-t-[var(--accent-coral)] pt-[9px]' 
-                : 'text-[#A3A3A3] hover:bg-[#333333] hover:text-[#D4D4D4] border-t-[3px] border-t-transparent pt-[9px]'
-            }`}
+            key={lang}
+            onClick={() => setLanguage(lang)}
+            style={{
+              padding: '8px 16px',
+              fontFamily: 'var(--font-dmmono)',
+              fontSize: 13,
+              background: selectedLanguage === lang ? 'var(--accent-coral)' : 'transparent',
+              color: selectedLanguage === lang ? 'white' : 'var(--text-secondary)',
+              border: 'none',
+              cursor: 'pointer',
+              borderBottom:
+                selectedLanguage === lang
+                  ? '2px solid var(--accent-coral)'
+                  : '2px solid transparent',
+            }}
           >
-            {tab.label}
+            {TAB_LABELS[lang]}
           </button>
         ))}
       </div>
-      <div className="p-4 bg-[#171717] overflow-x-auto">
-        <pre className="font-dmmono text-[13px] leading-relaxed text-[#D4D4D4]">
-          <code>{code[activeTab] || 'Code coming soon...'}</code>
-        </pre>
-      </div>
+
+      <div
+        ref={codeRef}
+        style={{
+          overflow: 'auto',
+          maxHeight: '400px',
+          background: '#F5F2ED',
+          padding: '16px',
+          borderRadius: '0 0 8px 8px',
+        }}
+        dangerouslySetInnerHTML={{ __html: renderedCode[selectedLanguage] }}
+      />
     </div>
   );
 }
+
+export default CodeTabs;

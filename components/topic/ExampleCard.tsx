@@ -1,99 +1,106 @@
 'use client';
-import React, { useState } from 'react';
-import { Example } from '@/types';
-import CodeTabs from './CodeTabs';
 
-export default function ExampleCard({ example }: { example: Example }) {
+import { useState } from 'react';
+
+import type { CodeLanguage, WorkedExample } from '@/types/learning';
+
+const LANGUAGES: CodeLanguage[] = ['python', 'javascript', 'java', 'cpp'];
+
+const labels: Record<CodeLanguage, string> = {
+  python: 'Python',
+  javascript: 'JavaScript',
+  java: 'Java',
+  cpp: 'C++',
+};
+
+export function ExampleCard({ example }: { example: WorkedExample }) {
   const [expanded, setExpanded] = useState(false);
+  const [language, setLanguage] = useState<CodeLanguage>('python');
 
-  const badgeMap = {
+  const difficultyClass = {
     easy: 'badge-pill badge-pill-teal',
     medium: 'badge-pill badge-pill-amber',
-    hard: 'badge-pill badge-pill-coral'
-  };
+    hard: 'badge-pill badge-pill-coral',
+  }[example.difficulty];
 
   return (
-    <div className={`my-4 overflow-hidden rounded-[var(--radius)] border bg-white shadow-[var(--shadow-card)] transition-all duration-300 ${expanded ? 'border-[var(--accent-coral)] shadow-[var(--shadow-card-hover)]' : 'border-[var(--border)] hover:border-[var(--text-muted)]'}`}>
-      <div 
-        className="p-4 md:p-6 flex items-center justify-between cursor-pointer select-none"
-        onClick={() => setExpanded(!expanded)}
+    <article className="overflow-hidden rounded-[var(--radius)] border border-[var(--border)] bg-[var(--bg-primary)]">
+      <button
+        className="flex w-full items-center justify-between px-5 py-4 text-left"
+        onClick={() => setExpanded((value) => !value)}
       >
         <div className="flex items-center gap-4">
-          <span className={badgeMap[example.difficulty]}>
-            {example.difficulty}
-          </span>
-          <h3 className="font-dmsans font-bold text-lg text-[var(--text-primary)]">{example.title}</h3>
+          <span className={difficultyClass}>{example.difficulty}</span>
+          <div>
+            <h3 className="font-dmsans text-lg font-semibold text-[var(--text-primary)]">{example.title}</h3>
+            <span className="font-dmmono text-[11px] uppercase tracking-[0.1em] text-[var(--text-muted)]">
+              {expanded ? 'Collapse' : 'Expand'} →
+            </span>
+          </div>
         </div>
-        <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition-colors">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}>
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-      </div>
+        <span className={`text-xl text-[var(--text-muted)] transition-transform ${expanded ? 'rotate-180' : ''}`}>⌄</span>
+      </button>
 
       {expanded && (
-        <div className="mt-2 border-t border-[var(--border)] bg-[var(--bg-primary)]/50 p-4 pt-0 md:p-6">
-          
-          <div className="my-6 p-4 bg-[var(--bg-secondary)] rounded-[var(--radius-sm)] border-l-4 border-l-[var(--text-muted)] shadow-inner">
-            <h4 className="font-dmmono text-[11px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Problem Statement</h4>
-            <p className="font-dmsans text-[var(--text-primary)] text-[15px] leading-relaxed">{example.problemStatement}</p>
-            <div className="mt-4 flex flex-col sm:flex-row gap-4">
-              <div className="flex-1 overflow-x-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-card)]">
-                <span className="font-dmmono text-[10px] uppercase text-[var(--text-muted)] block mb-1">Input</span>
-                <code className="font-dmmono text-[13px] text-[var(--text-primary)]">{example.inputExample}</code>
-              </div>
-              <div className="flex-1 overflow-x-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-card)]">
-                <span className="font-dmmono text-[10px] uppercase text-[var(--text-muted)] block mb-1">Output</span>
-                <code className="font-dmmono text-[13px] text-[var(--text-primary)]">{example.outputExample}</code>
-              </div>
+        <div className="border-t border-[var(--border)] bg-white px-5 py-5">
+          <div className="rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] p-4">
+            <p className="font-dmsans text-[15px] leading-relaxed text-[var(--text-primary)]">{example.problemStatement}</p>
+          </div>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-[var(--radius-sm)] border border-[var(--border)] p-4">
+              <span className="font-dmmono text-[11px] uppercase tracking-[0.1em] text-[var(--text-muted)]">Input</span>
+              <p className="mt-2 font-dmmono text-sm text-[var(--text-primary)]">{example.inputExample}</p>
+            </div>
+            <div className="rounded-[var(--radius-sm)] border border-[var(--border)] p-4">
+              <span className="font-dmmono text-[11px] uppercase tracking-[0.1em] text-[var(--text-muted)]">Output</span>
+              <p className="mt-2 font-dmmono text-sm text-[var(--text-primary)]">{example.outputExample}</p>
             </div>
           </div>
 
-          <div className="mb-8">
-            <h4 className="font-dmsans font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--accent-coral)]">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.26l5.43-5.43"/>
-              </svg>
-              Walkthrough
-            </h4>
-            <ul className="space-y-3 pl-2">
-              {example.steps.map((step, i) => (
-                <li key={i} className="flex gap-4 text-[15px] font-dmsans text-[var(--text-secondary)] leading-relaxed items-start">
-                  <span className="flex-shrink-0 flex items-center justify-center w-[22px] h-[22px] rounded-full bg-[var(--accent-coral)] text-white text-[10px] font-bold mt-0.5">{i + 1}</span>
-                  {step}
-                </li>
+          <ol className="mt-5 space-y-3">
+            {example.steps.map((step, index) => (
+              <li key={step} className="flex gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--accent-coral)] font-dmmono text-xs text-white">
+                  {index + 1}
+                </span>
+                <span className="font-dmsans text-[15px] leading-relaxed text-[var(--text-secondary)]">{step}</span>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-6">
+            <div className="flex flex-wrap gap-2 border-b border-[var(--border)] pb-2">
+              {LANGUAGES.map((tab) => (
+                <button
+                  key={tab}
+                  className={`rounded-full px-3 py-1.5 font-dmmono text-xs uppercase tracking-[0.08em] ${
+                    language === tab
+                      ? 'bg-[var(--accent-coral)] text-white'
+                      : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
+                  }`}
+                  onClick={() => setLanguage(tab)}
+                >
+                  {labels[tab]}
+                </button>
               ))}
-            </ul>
-          </div>
-
-          <div className="mb-6">
-            <CodeTabs code={example.code} />
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between pt-6 border-t border-[var(--border)]">
-            <div className="flex gap-8">
-              <div className="flex flex-col">
-                <span className="font-dmmono text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-1">Time</span>
-                <span className="font-dmmono text-[15px] font-bold text-[var(--accent-teal)]">{example.timeComplexity}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-dmmono text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-1">Space</span>
-                <span className="font-dmmono text-[15px] font-bold text-[var(--accent-amber)]">{example.spaceComplexity}</span>
-              </div>
             </div>
-            
-            <a href={example.leetcodeUrl} target="_blank" rel="noreferrer" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--bg-dark)] px-5 py-2.5 font-dmsans text-[14px] font-medium text-white shadow-[var(--shadow-card)] transition-colors hover:bg-black sm:w-auto">
-              Solve on LeetCode
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </a>
+            <pre className="mt-4 overflow-x-auto rounded-[var(--radius-sm)] bg-[var(--bg-dark)] p-4 font-dmmono text-[13px] leading-relaxed text-white">
+              {example.code[language]}
+            </pre>
           </div>
 
+          <div className="mt-5 flex flex-wrap items-center gap-4">
+            <span className="badge-pill badge-pill-teal">Time {example.timeComplexity}</span>
+            <span className="badge-pill badge-pill-amber">Space {example.spaceComplexity}</span>
+            {example.rationale && (
+              <span className="font-dmsans text-sm text-[var(--text-secondary)]">{example.rationale}</span>
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </article>
   );
 }
+
+export default ExampleCard;

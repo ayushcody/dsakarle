@@ -22,7 +22,8 @@ export function ArrayDiagram({
   cellWidth = 64,
   showIndices = true,
 }: ArrayDiagramProps) {
-  const { left, right, windowStart, windowEnd, highlighted = [], comparing = [] } = diagramState;
+  const { left, right, windowStart, windowEnd, highlighted = [], comparing } = diagramState;
+  const comparingIndices = comparing ? [...comparing] : [];
   const cellGap = 6;
   const totalWidth = cells.length * (cellWidth + cellGap) - cellGap;
   const svgHeight = 140;
@@ -63,7 +64,7 @@ export function ArrayDiagram({
             index >= windowStart &&
             index <= windowEnd;
           const isHighlighted = highlighted.includes(index);
-          const isComparing = comparing.includes(index);
+          const isComparing = comparingIndices.includes(index);
 
           return (
             <g key={`${value}-${index}`}>

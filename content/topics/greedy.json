@@ -1,0 +1,32 @@
+{
+  "id": "greedy",
+  "slug": "greedy",
+  "title": "Greedy Algorithms",
+  "category": "algorithm",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "greedy"
+  ],
+  "overview": {
+    "summary": "Greedy Algorithms is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Greedy Algorithms in interviews.",
+      "Review one short summary of Greedy Algorithms.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Greedy Algorithms remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Greedy Algorithms warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Greedy Algorithms."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

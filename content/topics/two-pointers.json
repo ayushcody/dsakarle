@@ -1,98 +1,515 @@
 {
   "id": "two-pointers",
-  "title": "Two Pointers",
   "slug": "two-pointers",
+  "title": "Two Pointers",
   "category": "algorithm",
   "difficulty": "beginner",
-  "estimatedMinutes": 40,
-  "prerequisites": ["arrays"],
-  "tags": ["arrays", "strings", "sorting"],
+  "estimatedMinutes": 45,
+  "prerequisites": [],
+  "tags": [
+    "array",
+    "sorted-array",
+    "pointers"
+  ],
   "overview": {
-    "summary": "The Two Pointers pattern involves iterating through an array or string with two pointers at different positions to achieve linear time complexity without extra space.",
+    "summary": "Two Pointers uses two moving indices to narrow the search space without nested loops.",
     "learningObjectives": [
-      "Understand opposite directional pointers",
-      "Understand same directional pointers",
-      "Optimize O(N^2) naive nested loops to O(N)"
+      "Know when opposite-direction pointers are valid.",
+      "Explain why sorted order makes pointer moves meaningful.",
+      "Trace pointer movement visually before reading code."
     ],
-    "interviewRelevance": "The most fundamental pattern to know. Extremely common in array and string manipulation questions."
+    "interviewRelevance": "It is one of the most reused linear-time interview patterns."
   },
-  "content": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Imagine two people scanning a queue from opposite ends to find a pair that meets a rule. They do not need to restart from scratch every time.",
+      "Whenever the data is ordered, pointer movement tells you which side can be safely discarded."
+    ],
+    "ahaMoment": "One comparison can eliminate an entire set of impossible pairs."
+  },
+  "definition": {
+    "technicalDefinition": "Two Pointers is a pattern that maintains two indices whose movement is guided by the relationship between the current state and the target condition.",
+    "vocabulary": [
+      {
+        "term": "left pointer",
+        "definition": "The index tracking the low side of the search."
+      },
+      {
+        "term": "right pointer",
+        "definition": "The index tracking the high side of the search."
+      },
+      {
+        "term": "discard",
+        "definition": "Move one pointer because a whole region can no longer contain the answer."
+      }
+    ],
+    "keyProperties": [
+      "Most useful on sorted arrays or when relative order has meaning.",
+      "Often replaces O(n²) pair scanning with O(n).",
+      "Each move removes impossible candidates."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "Two people walk toward each other across a bridge, comparing notes at each meeting point."
+    ],
+    "clickSentence": "If the array is sorted, moving one side changes the sum in a predictable direction.",
+    "diagramType": "TwoPointersDiagram",
+    "cells": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      10,
+      15
+    ],
+    "diagramState": {
+      "left": 0,
+      "right": 6,
+      "comparing": [
+        0,
+        6
+      ]
+    }
+  },
+  "structure": {
+    "memoryDescription": [
+      "Two Pointers uses only the original array plus two integer indices.",
+      "The pattern is cheap in memory because the state is mostly positional."
+    ],
+    "definitionCode": {
+      "python": "left = 0\nright = len(nums) - 1",
+      "javascript": "let left = 0;\nlet right = nums.length - 1;",
+      "java": "int left = 0;\nint right = nums.length - 1;",
+      "cpp": "int left = 0;\nint right = nums.size() - 1;"
+    },
+    "memoryLayout": [
+      {
+        "label": "left",
+        "value": "low-side candidate index"
+      },
+      {
+        "label": "right",
+        "value": "high-side candidate index"
+      },
+      {
+        "label": "sorted array",
+        "value": "gives meaning to pointer movement"
+      }
+    ]
+  },
+  "stepper": {
+    "diagramType": "TwoPointersDiagram",
+    "array": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      10,
+      15
+    ],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {
+          "left": 0,
+          "right": 6,
+          "comparing": [
+            0,
+            6
+          ]
+        },
+        "variables": {
+          "left": 0,
+          "right": 6,
+          "current_sum": 16,
+          "target": 18
+        },
+        "explanation": "Compare nums[0] + nums[6] = 16 against target 18.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "left": 1,
+          "right": 6
+        },
+        "variables": {
+          "left": 1,
+          "right": 6,
+          "current_sum": 17,
+          "target": 18
+        },
+        "explanation": "The sum is too small, so move the left pointer right to increase it.",
+        "activeLine": 7
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "left": 1,
+          "right": 6,
+          "comparing": [
+            1,
+            6
+          ]
+        },
+        "variables": {
+          "left": 1,
+          "right": 6,
+          "current_sum": 17,
+          "target": 18
+        },
+        "explanation": "Compare nums[1] + nums[6] = 17 against target 18.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "left": 2,
+          "right": 6
+        },
+        "variables": {
+          "left": 2,
+          "right": 6,
+          "current_sum": 19,
+          "target": 18
+        },
+        "explanation": "The sum is too small, so move the left pointer right to increase it.",
+        "activeLine": 7
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "left": 2,
+          "right": 6,
+          "comparing": [
+            2,
+            6
+          ]
+        },
+        "variables": {
+          "left": 2,
+          "right": 6,
+          "current_sum": 19,
+          "target": 18
+        },
+        "explanation": "Compare nums[2] + nums[6] = 19 against target 18.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "left": 2,
+          "right": 5
+        },
+        "variables": {
+          "left": 2,
+          "right": 5,
+          "current_sum": 14,
+          "target": 18
+        },
+        "explanation": "The sum is too large, so move the right pointer left to decrease it.",
+        "activeLine": 9
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "left": 2,
+          "right": 5,
+          "comparing": [
+            2,
+            5
+          ]
+        },
+        "variables": {
+          "left": 2,
+          "right": 5,
+          "current_sum": 14,
+          "target": 18
+        },
+        "explanation": "Compare nums[2] + nums[5] = 14 against target 18.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "left": 3,
+          "right": 5
+        },
+        "variables": {
+          "left": 3,
+          "right": 5,
+          "current_sum": 16,
+          "target": 18
+        },
+        "explanation": "The sum is too small, so move the left pointer right to increase it.",
+        "activeLine": 7
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "left": 3,
+          "right": 5,
+          "comparing": [
+            3,
+            5
+          ]
+        },
+        "variables": {
+          "left": 3,
+          "right": 5,
+          "current_sum": 16,
+          "target": 18
+        },
+        "explanation": "Compare nums[3] + nums[5] = 16 against target 18.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "left": 4,
+          "right": 5
+        },
+        "variables": {
+          "left": 4,
+          "right": 5,
+          "current_sum": 18,
+          "target": 18
+        },
+        "explanation": "The sum is too small, so move the left pointer right to increase it.",
+        "activeLine": 7
+      },
+      {
+        "stepIndex": 10,
+        "diagramState": {
+          "left": 4,
+          "right": 5,
+          "comparing": [
+            4,
+            5
+          ]
+        },
+        "variables": {
+          "left": 4,
+          "right": 5,
+          "current_sum": 18,
+          "target": 18
+        },
+        "explanation": "Compare nums[4] + nums[5] = 18 against target 18.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 11,
+        "diagramState": {
+          "left": 4,
+          "right": 5,
+          "comparing": [
+            4,
+            5
+          ],
+          "highlighted": [
+            4,
+            5
+          ]
+        },
+        "variables": {
+          "left": 4,
+          "right": 5,
+          "current_sum": 18,
+          "target": 18
+        },
+        "explanation": "The pair matches the target, so we can stop here.",
+        "activeLine": 5
+      }
+    ]
+  },
+  "operations": [
     {
-      "type": "theory",
-      "content": "When dealing with sorted arrays (or linked lists) and need to find a set of elements that fulfill certain constraints, Two Pointers is typically the optimal approach."
+      "name": "Compare Pair",
+      "description": "Inspect the current left/right pair to see how it relates to the target.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "current = nums[left] + nums[right]",
+        "javascript": "const current = nums[left] + nums[right];",
+        "java": "int current = nums[left] + nums[right];",
+        "cpp": "int current = nums[left] + nums[right];"
+      },
+      "visualNote": "Both pointer markers stay in view while the compared cells are tinted."
     },
     {
-      "type": "stepper",
-      "codeHtml": {
-        "python": "<pre class=\"shiki\"><code>def two_sum(nums, target):\\n  left, right = 0, len(nums) - 1\\n  while left < right:\\n    current = nums[left] + nums[right]\\n    if current == target:\\n      return [left, right]\\n    if current < target:\\n      left += 1\\n    else:\\n      right -= 1\\n  return [-1, -1]</code></pre>",
-        "javascript": "<pre class=\"shiki\"><code>function twoSum(nums, target) {\\n  let left = 0, right = nums.length - 1;\\n  while(left < right) {\\n    let cur = nums[left] + nums[right];\\n    if(cur === target) return [left, right];\\n    if(cur < target) left++;\\n    else right--;\\n  }\\n  return [-1, -1];\\n}</code></pre>",
-        "java": "<pre class=\"shiki\"><code>class Solution {}</code></pre>",
-        "cpp": "<pre class=\"shiki\"><code>class Solution {}</code></pre>"
+      "name": "Move the Correct Pointer",
+      "description": "Shift the pointer that can improve the answer while preserving correctness.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "if current < target:\n    left += 1\nelse:\n    right -= 1",
+        "javascript": "if (current < target) left += 1;\nelse right -= 1;",
+        "java": "if (current < target) left++;\nelse right--;",
+        "cpp": "if (current < target) left++;\nelse right--;"
       },
-      "diagramType": "array",
-      "steps": [
-        {
-          "stepIndex": 0,
-          "diagramState": { "left": 0, "right": 4 },
-          "variables": { "left": 0, "right": 4, "sum": 10 },
-          "explanation": "Initialize pointers at both ends of the sorted array.",
-          "activeLine": 2
-        },
-        {
-          "stepIndex": 1,
-          "diagramState": { "left": 1, "right": 4 },
-          "variables": { "left": 1, "right": 4, "sum": 14 },
-          "explanation": "Since sum is less than target, move left pointer to increase sum.",
-          "activeLine": 7
-        }
-      ]
+      "visualNote": "Only one pointer moves after each comparison."
     }
   ],
   "patternTemplate": {
-    "pseudocode": "left, right = 0, len(arr) - 1\nwhile left < right:\n  if condition_met:\n    return success\n  if arr[left] + arr[right] < target:\n    left += 1\n  else:\n    right -= 1",
-    "whenToUse": "When dealing with sorted arrays or strings and need to find pairs/triplets that sum to a target, or when reversing elements.",
-    "timeComplexity": "O(N) - array is traversed at most once.",
-    "spaceComplexity": "O(1) - constant extra space used."
+    "pseudocode": "left = 0\nright = n - 1\nwhile left < right:\n  evaluate(left, right)\n  move the pointer that discards impossible answers",
+    "whenToUse": "Use Two Pointers when pair relationships matter and order lets you reason about which side to move.",
+    "timeComplexity": "O(n) because each pointer crosses the array at most once.",
+    "spaceComplexity": "O(1) extra memory."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "A sorted array contains numbers. Find whether any pair sums to a target value.",
+    "correctPatternId": "two-pointers",
+    "distractors": [
+      "sliding-window",
+      "binary-search",
+      "prefix-sum"
+    ],
+    "explanation": "Sorted order lets one comparison tell you which side to move next."
   },
   "examples": [
     {
-      "title": "Two Sum II - Input Array Is Sorted",
-      "difficulty": "medium",
+      "title": "Two Sum II",
+      "difficulty": "easy",
       "leetcodeUrl": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
-      "problemStatement": "Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number.",
-      "inputExample": "numbers = [2,7,11,15], target = 9",
-      "outputExample": "[1,2]",
-      "steps": ["Initialize left at 0, right at end", "Check sum of left and right", "If sum < target, increment left. Else decrement right"],
+      "problemStatement": "Find two numbers in a sorted array that add up to a target.",
+      "inputExample": "numbers = [1,2,4,6,8,10,15], target = 18",
+      "outputExample": "[2, 6]",
+      "steps": [
+        "Start with the widest possible pair.",
+        "If the sum is too large, decrease the right side.",
+        "If the sum is too small, increase the left side.",
+        "Stop when the pair matches the target."
+      ],
       "code": {
-        "python": "def twoSum(numbers, target): pass",
-        "javascript": "var twoSum = function(numbers, target) {};",
-        "java": "public class Solution {}",
-        "cpp": "class Solution {};"
+        "python": "left, right = 0, len(nums) - 1",
+        "javascript": "let left = 0, right = nums.length - 1;",
+        "java": "int left = 0, right = nums.length - 1;",
+        "cpp": "int left = 0, right = nums.size() - 1;"
       },
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)"
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "rationale": "Each comparison removes one impossible side."
+    },
+    {
+      "title": "Valid Palindrome",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/valid-palindrome/",
+      "problemStatement": "Compare a string from both ends until the middle.",
+      "inputExample": "s = \"racecar\"",
+      "outputExample": "true",
+      "steps": [
+        "Compare the outermost characters.",
+        "Move inward when they match.",
+        "Fail immediately on a mismatch."
+      ],
+      "code": {
+        "python": "left, right = 0, len(s) - 1",
+        "javascript": "let left = 0, right = s.length - 1;",
+        "java": "int left = 0, right = s.length() - 1;",
+        "cpp": "int left = 0, right = s.size() - 1;"
+      },
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "rationale": "You only compare matching symmetric positions."
     }
   ],
-  "recognitionQuiz": {
-    "problemStatement": "Given a string s, return true if it is a palindrome, or false otherwise.",
-    "correctPatternId": "two-pointers",
-    "distractors": ["sliding-window", "binary-search"],
-    "explanation": "You can use two pointers, one at the start and one at the end, moving towards the center and comparing characters."
-  },
   "conceptQuiz": [
     {
-      "question": "What is the primary prerequisite for using opposite-directional Two Pointers for sum problems?",
-      "options": ["The array must be sorted.", "The array must contain only positive integers.", "The array must not contain duplicates."],
+      "question": "Why does sorted order matter?",
+      "options": [
+        "It makes pointer moves meaningful",
+        "It guarantees recursion",
+        "It uses more memory",
+        "It avoids loops"
+      ],
       "correctIndex": 0,
-      "explanation": "If the array is not sorted, knowing whether the current sum is too big or too small gives no useful information about which pointer to move."
+      "explanation": "Without sorted order, moving left or right would not predictably change the result."
+    },
+    {
+      "question": "What happens if the current sum is too large?",
+      "options": [
+        "Move right leftward",
+        "Move left leftward",
+        "Sort again",
+        "Use a stack"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reducing the larger side decreases the sum on a sorted array."
+    },
+    {
+      "question": "Why is the runtime O(n)?",
+      "options": [
+        "Each pointer moves at most n steps",
+        "The array is hashed",
+        "We recurse on halves",
+        "We skip memory"
+      ],
+      "correctIndex": 0,
+      "explanation": "Neither pointer ever moves backward."
+    },
+    {
+      "question": "What does each move do conceptually?",
+      "options": [
+        "Discard impossible answers",
+        "Add a new subtree",
+        "Resize the array",
+        "Sort the input"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pointer movement removes regions that cannot contain the answer anymore."
     }
   ],
   "practice": [
     {
+      "title": "Two Sum II",
+      "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+      "difficulty": "easy",
+      "keyInsight": "Move one side based on the current sum."
+    },
+    {
+      "title": "Valid Palindrome",
+      "url": "https://leetcode.com/problems/valid-palindrome/",
+      "difficulty": "easy",
+      "keyInsight": "Compare symmetric positions."
+    },
+    {
+      "title": "Squares of a Sorted Array",
+      "url": "https://leetcode.com/problems/squares-of-a-sorted-array/",
+      "difficulty": "easy",
+      "keyInsight": "Largest square comes from one of the ends."
+    },
+    {
+      "title": "Container With Most Water",
+      "url": "https://leetcode.com/problems/container-with-most-water/",
+      "difficulty": "medium",
+      "keyInsight": "Discard the shorter wall."
+    },
+    {
       "title": "3Sum",
       "url": "https://leetcode.com/problems/3sum/",
       "difficulty": "medium",
-      "patternTag": "Opposite Directional"
+      "keyInsight": "Fix one value and run two pointers inside."
+    },
+    {
+      "title": "3Sum Closest",
+      "url": "https://leetcode.com/problems/3sum-closest/",
+      "difficulty": "medium",
+      "keyInsight": "Pointer movement continuously improves the candidate."
+    },
+    {
+      "title": "Sort Colors",
+      "url": "https://leetcode.com/problems/sort-colors/",
+      "difficulty": "medium",
+      "keyInsight": "Same-direction pointers also count as two-pointer thinking."
+    },
+    {
+      "title": "Trapping Rain Water",
+      "url": "https://leetcode.com/problems/trapping-rain-water/",
+      "difficulty": "hard",
+      "keyInsight": "Move the side with the smaller boundary."
     }
   ]
 }

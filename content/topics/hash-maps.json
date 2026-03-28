@@ -1,0 +1,77 @@
+{
+  "id": "hash-maps",
+  "slug": "hash-maps",
+  "title": "Hash Maps & Hash Sets",
+  "category": "data-structure",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 35,
+  "prerequisites": [],
+  "tags": [
+    "hash-maps",
+    "data-structure"
+  ],
+  "overview": {
+    "summary": "Hash-based lookup trades ordering for near-constant-time membership and retrieval.",
+    "learningObjectives": [
+      "Build intuition for the topic.",
+      "Recognize interview triggers.",
+      "Review one representative example."
+    ],
+    "interviewRelevance": "This topic appears regularly in coding interviews."
+  },
+  "realWorldHook": {
+    "paragraphs": [
+      "Hash Maps & Hash Sets shows up in practical systems whenever we need to organize or process data efficiently."
+    ],
+    "ahaMoment": "Hash Maps & Hash Sets becomes easier once you stop memorizing and start tracking the invariant."
+  },
+  "definition": {
+    "technicalDefinition": "Hash Maps & Hash Sets is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "vocabulary": [
+      {
+        "term": "invariant",
+        "definition": "The condition that remains true as the algorithm runs."
+      },
+      {
+        "term": "state",
+        "definition": "The pieces of information that must be tracked at runtime."
+      }
+    ],
+    "keyProperties": [
+      "Understand the shape of the data.",
+      "Understand the cost of the main operation.",
+      "Understand the common interview pattern."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Two Sum",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/two-sum/",
+      "problemStatement": "A representative Hash Maps & Hash Sets problem.",
+      "inputExample": "See problem statement",
+      "outputExample": "Depends on the prompt",
+      "steps": [
+        "Recognize the topic trigger.",
+        "Apply the core invariant.",
+        "Return the requested answer."
+      ],
+      "code": {
+        "python": "arr = [4, 8, 15, 16, 23, 42]",
+        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
+        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
+        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+      },
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)"
+    }
+  ],
+  "practice": [
+    {
+      "title": "Two Sum",
+      "url": "https://leetcode.com/problems/two-sum/",
+      "difficulty": "medium",
+      "keyInsight": "Representative Hash Maps & Hash Sets reasoning."
+    }
+  ]
+}

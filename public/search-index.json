@@ -1,0 +1,339 @@
+[
+  {
+    "id": "arrays",
+    "slug": "arrays",
+    "title": "Arrays",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "tags": [
+      "array",
+      "indexing",
+      "contiguous-memory"
+    ],
+    "overview": {
+      "summary": "Arrays store same-type values in contiguous memory, making index-based access extremely fast."
+    }
+  },
+  {
+    "id": "backtracking",
+    "slug": "backtracking",
+    "title": "Backtracking",
+    "category": "algorithm",
+    "difficulty": "advanced",
+    "tags": [
+      "backtracking"
+    ],
+    "overview": {
+      "summary": "Backtracking is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "bfs-dfs",
+    "slug": "bfs-dfs",
+    "title": "BFS & DFS",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "tags": [
+      "bfs-dfs"
+    ],
+    "overview": {
+      "summary": "BFS & DFS is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "binary-search",
+    "slug": "binary-search",
+    "title": "Binary Search Pattern",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "tags": [
+      "binary-search",
+      "algorithm"
+    ],
+    "overview": {
+      "summary": "Binary Search repeatedly discards half the search space when the search predicate is monotonic."
+    }
+  },
+  {
+    "id": "bst",
+    "slug": "bst",
+    "title": "Binary Search Trees",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "tags": [
+      "bst"
+    ],
+    "overview": {
+      "summary": "Binary Search Trees is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "dynamic-programming",
+    "slug": "dynamic-programming",
+    "title": "Dynamic Programming",
+    "category": "algorithm",
+    "difficulty": "advanced",
+    "tags": [
+      "dynamic-programming"
+    ],
+    "overview": {
+      "summary": "Dynamic Programming is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "fast-and-slow-pointers",
+    "slug": "fast-and-slow-pointers",
+    "title": "Fast and Slow Pointers",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "tags": [
+      "fast-and-slow-pointers"
+    ],
+    "overview": {
+      "summary": "Fast and Slow Pointers is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "graphs",
+    "slug": "graphs",
+    "title": "Graphs",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "tags": [
+      "graphs"
+    ],
+    "overview": {
+      "summary": "Graphs is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "greedy",
+    "slug": "greedy",
+    "title": "Greedy Algorithms",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "tags": [
+      "greedy"
+    ],
+    "overview": {
+      "summary": "Greedy Algorithms is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "hash-maps",
+    "slug": "hash-maps",
+    "title": "Hash Maps & Hash Sets",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "tags": [
+      "hash-maps",
+      "data-structure"
+    ],
+    "overview": {
+      "summary": "Hash-based lookup trades ordering for near-constant-time membership and retrieval."
+    }
+  },
+  {
+    "id": "heaps",
+    "slug": "heaps",
+    "title": "Heaps",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "tags": [
+      "heaps"
+    ],
+    "overview": {
+      "summary": "Heaps is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "linked-lists",
+    "slug": "linked-lists",
+    "title": "Linked Lists",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "tags": [
+      "linked-lists",
+      "data-structure"
+    ],
+    "overview": {
+      "summary": "Linked Lists trade direct indexing for flexible pointer rewiring."
+    }
+  },
+  {
+    "id": "prefix-sum",
+    "slug": "prefix-sum",
+    "title": "Prefix Sum",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "tags": [
+      "prefix-sum"
+    ],
+    "overview": {
+      "summary": "Prefix Sum is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "queues",
+    "slug": "queues",
+    "title": "Queues",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "tags": [
+      "queues"
+    ],
+    "overview": {
+      "summary": "Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "recursion",
+    "slug": "recursion",
+    "title": "Recursion & Backtracking",
+    "category": "algorithm",
+    "difficulty": "advanced",
+    "tags": [
+      "recursion"
+    ],
+    "overview": {
+      "summary": "Recursion & Backtracking is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "searching",
+    "slug": "searching",
+    "title": "Searching Algorithms",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "tags": [
+      "searching"
+    ],
+    "overview": {
+      "summary": "Searching Algorithms is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "sliding-window",
+    "slug": "sliding-window",
+    "title": "Sliding Window",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "tags": [
+      "array",
+      "subarray",
+      "window"
+    ],
+    "overview": {
+      "summary": "Sliding Window turns repeated contiguous-range work into a single flowing pass across the data."
+    }
+  },
+  {
+    "id": "sorting",
+    "slug": "sorting",
+    "title": "Sorting Algorithms",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "tags": [
+      "sorting",
+      "algorithm"
+    ],
+    "overview": {
+      "summary": "Sorting rearranges data so later queries and scans become easier."
+    }
+  },
+  {
+    "id": "stacks-queues",
+    "slug": "stacks-queues",
+    "title": "Stacks & Queues",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "tags": [
+      "stacks-queues"
+    ],
+    "overview": {
+      "summary": "Stacks & Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "stacks",
+    "slug": "stacks",
+    "title": "Stacks",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "tags": [
+      "stacks"
+    ],
+    "overview": {
+      "summary": "Stacks is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "strings",
+    "slug": "strings",
+    "title": "Strings",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "tags": [
+      "strings",
+      "data-structure"
+    ],
+    "overview": {
+      "summary": "Strings are arrays of characters with pattern-heavy traversal rules."
+    }
+  },
+  {
+    "id": "trees",
+    "slug": "trees",
+    "title": "Binary Trees",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "tags": [
+      "trees",
+      "data-structure"
+    ],
+    "overview": {
+      "summary": "Trees model hierarchical structure and recursive decomposition."
+    }
+  },
+  {
+    "id": "tries",
+    "slug": "tries",
+    "title": "Tries",
+    "category": "data-structure",
+    "difficulty": "advanced",
+    "tags": [
+      "tries"
+    ],
+    "overview": {
+      "summary": "Tries is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  },
+  {
+    "id": "two-pointers",
+    "slug": "two-pointers",
+    "title": "Two Pointers",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "tags": [
+      "array",
+      "sorted-array",
+      "pointers"
+    ],
+    "overview": {
+      "summary": "Two Pointers uses two moving indices to narrow the search space without nested loops."
+    }
+  },
+  {
+    "id": "vectors",
+    "slug": "vectors",
+    "title": "Vectors (Dynamic Arrays)",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "tags": [
+      "vectors"
+    ],
+    "overview": {
+      "summary": "Vectors (Dynamic Arrays) is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+    }
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "id": "tries",
+  "slug": "tries",
+  "title": "Tries",
+  "category": "data-structure",
+  "difficulty": "advanced",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "tries"
+  ],
+  "overview": {
+    "summary": "Tries is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Tries in interviews.",
+      "Review one short summary of Tries.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Tries remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Tries warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Tries."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

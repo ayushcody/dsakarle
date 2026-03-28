@@ -1,0 +1,32 @@
+{
+  "id": "stacks-queues",
+  "slug": "stacks-queues",
+  "title": "Stacks & Queues",
+  "category": "data-structure",
+  "difficulty": "beginner",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "tags": [
+    "stacks-queues"
+  ],
+  "overview": {
+    "summary": "Stacks & Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "learningObjectives": [
+      "Recognize the role of Stacks & Queues in interviews.",
+      "Review one short summary of Stacks & Queues.",
+      "Use the practice list to keep momentum."
+    ],
+    "interviewRelevance": "Stacks & Queues remains part of the long-form curriculum roadmap."
+  },
+  "practice": [
+    {
+      "title": "Stacks & Queues warm-up",
+      "url": "https://leetcode.com/problemset/",
+      "difficulty": "easy",
+      "keyInsight": "Use the DSAKarle route as a stable entry point for Stacks & Queues."
+    }
+  ],
+  "examples": [],
+  "conceptQuiz": [],
+  "recognitionQuiz": null
+}

@@ -139,6 +139,18 @@
     border-left-color: var(--accent-coral);
     background: rgba(212, 96, 58, 0.15);
   }
+
+  .code-line {
+    display: block;
+    margin: 0 -8px;
+    padding: 1px 8px;
+  }
+
+  .code-line.active-line {
+    background: rgba(212, 96, 58, 0.12);
+    border-left: 2px solid var(--accent-coral);
+    border-radius: 2px;
+  }
 }
 
 @keyframes fade-up {
