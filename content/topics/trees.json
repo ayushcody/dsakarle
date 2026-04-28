@@ -1,77 +1,71 @@
 {
   "id": "trees",
   "slug": "trees",
-  "title": "Binary Trees",
+  "title": "Trees",
   "category": "data-structure",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 35,
-  "prerequisites": [],
-  "tags": [
-    "trees",
-    "data-structure"
-  ],
+  "difficulty": "medium",
+  "estimatedMinutes": 60,
+  "prerequisites": ["linked-lists"],
+  "tags": ["tree", "recursion", "hierarchical"],
   "overview": {
-    "summary": "Trees model hierarchical structure and recursive decomposition.",
-    "learningObjectives": [
-      "Build intuition for the topic.",
-      "Recognize interview triggers.",
-      "Review one representative example."
-    ],
-    "interviewRelevance": "This topic appears regularly in coding interviews."
+    "summary": "Trees are hierarchical data structures modeling relationships rather than flat lists.",
+    "learningObjectives": ["Understand tree terminology", "Master tree traversal algorithms (DFS, BFS)"],
+    "interviewRelevance": "The most common recursive interview questions heavily feature trees."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Binary Trees shows up in practical systems whenever we need to organize or process data efficiently."
+      "File system directories are trees. HTML DOM is a tree. Every chess engine evaluates positions in a game tree.",
+      "The reason folder navigation is fast is that your OS stores directory metadata in a B-tree, allowing binary search through millions of files."
     ],
-    "ahaMoment": "Binary Trees becomes easier once you stop memorizing and start tracking the invariant."
+    "ahaMoment": "A tree is just a linked list that branches out. Instead of pointing to one 'next' node, it points to multiple 'children'."
   },
   "definition": {
-    "technicalDefinition": "Binary Trees is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "technicalDefinition": "A tree is an undirected, connected, acyclic graph consisting of a root node and children nodes, forming a hierarchy.",
     "vocabulary": [
-      {
-        "term": "invariant",
-        "definition": "The condition that remains true as the algorithm runs."
-      },
-      {
-        "term": "state",
-        "definition": "The pieces of information that must be tracked at runtime."
-      }
+      { "term": "Root", "definition": "The top-most node in the tree." },
+      { "term": "Leaf", "definition": "A node with no children." },
+      { "term": "Height", "definition": "The length of the longest path from the root to a leaf." }
     ],
     "keyProperties": [
-      "Understand the shape of the data.",
-      "Understand the cost of the main operation.",
-      "Understand the common interview pattern."
+      "Every node has exactly one parent (except the root).",
+      "No cycles are allowed.",
+      "Recursive structure: every child node is the root of a subtree."
     ]
   },
-  "examples": [
+  "operations": [
     {
-      "title": "Maximum Depth of Binary Tree",
-      "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
-      "problemStatement": "A representative Binary Trees problem.",
-      "inputExample": "See problem statement",
-      "outputExample": "Depends on the prompt",
-      "steps": [
-        "Recognize the topic trigger.",
-        "Apply the core invariant.",
-        "Return the requested answer."
-      ],
+      "name": "Depth-First Search (DFS)",
+      "description": "Traverse deeply into branches before backtracking. Can be Pre-order, In-order, or Post-order.",
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(H) recursion stack",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "def dfs(node):\n    if not node: return\n    dfs(node.left)\n    dfs(node.right)",
+        "javascript": "function dfs(node) {\n  if (!node) return;\n  dfs(node.left);\n  dfs(node.right);\n}",
+        "java": "void dfs(Node node) {\n  if (node == null) return;\n  dfs(node.left);\n  dfs(node.right);\n}",
+        "cpp": "void dfs(Node* node) {\n  if (!node) return;\n  dfs(node->left);\n  dfs(node->right);\n}"
       },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)"
+      "visualNote": "The search plunges to the deepest leaf before coming back up."
+    },
+    {
+      "name": "Breadth-First Search (BFS)",
+      "description": "Traverse level by level using a queue.",
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(W) max width",
+      "code": {
+        "python": "q = deque([root])\nwhile q:\n    node = q.popleft()\n    if node.left: q.append(node.left)\n    if node.right: q.append(node.right)",
+        "javascript": "const q = [root];\nwhile (q.length) {\n  const node = q.shift();\n  if (node.left) q.push(node.left);\n  if (node.right) q.push(node.right);\n}",
+        "java": "Queue<Node> q = new LinkedList<>();\nq.offer(root);\nwhile (!q.isEmpty()) {\n  Node node = q.poll();\n  if (node.left != null) q.offer(node.left);\n  if (node.right != null) q.offer(node.right);\n}",
+        "cpp": "queue<Node*> q;\nq.push(root);\nwhile (!q.empty()) {\n  Node* node = q.front(); q.pop();\n  if (node->left) q.push(node->left);\n  if (node->right) q.push(node->right);\n}"
+      },
+      "visualNote": "The search sweeps horizontally across each level."
     }
   ],
   "practice": [
-    {
-      "title": "Maximum Depth of Binary Tree",
-      "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
-      "difficulty": "medium",
-      "keyInsight": "Representative Binary Trees reasoning."
-    }
+    { "title": "Maximum Depth of Binary Tree", "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/", "difficulty": "easy", "keyInsight": "Recursively take the max of left and right heights plus 1." },
+    { "title": "Invert Binary Tree", "url": "https://leetcode.com/problems/invert-binary-tree/", "difficulty": "easy", "keyInsight": "Swap the left and right pointers at every node." },
+    { "title": "Same Tree", "url": "https://leetcode.com/problems/same-tree/", "difficulty": "easy", "keyInsight": "Traverse both trees simultaneously." },
+    { "title": "Subtree of Another Tree", "url": "https://leetcode.com/problems/subtree-of-another-tree/", "difficulty": "easy", "keyInsight": "Recursively check if current tree equals the subRoot." },
+    { "title": "Lowest Common Ancestor of a Binary Tree", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/", "difficulty": "medium", "keyInsight": "Bubble up boolean values indicating if targets were found." },
+    { "title": "Binary Tree Level Order Traversal", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "medium", "keyInsight": "A standard BFS queue ensures level-by-level tracking." }
   ]
 }

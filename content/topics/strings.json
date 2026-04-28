@@ -4,74 +4,81 @@
   "title": "Strings",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 35,
-  "prerequisites": [],
-  "tags": [
-    "strings",
-    "data-structure"
-  ],
+  "estimatedMinutes": 45,
+  "prerequisites": ["arrays"],
+  "tags": ["string", "text", "character"],
   "overview": {
-    "summary": "Strings are arrays of characters with pattern-heavy traversal rules.",
-    "learningObjectives": [
-      "Build intuition for the topic.",
-      "Recognize interview triggers.",
-      "Review one representative example."
-    ],
-    "interviewRelevance": "This topic appears regularly in coding interviews."
+    "summary": "Strings are arrays of characters under the hood, but often have special immutable properties.",
+    "learningObjectives": ["Understand string immutability", "Master common string searching / manipulation patterns"],
+    "interviewRelevance": "Many problems test your knowledge of strings and their standard library functions."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Strings shows up in practical systems whenever we need to organize or process data efficiently."
+      "Every autocomplete suggestion, every password validation, every plagiarism detector works on strings.",
+      "Google's search index stores trillions of character sequences."
     ],
-    "ahaMoment": "Strings becomes easier once you stop memorizing and start tracking the invariant."
+    "ahaMoment": "The reason 'Two Sum' has a trivial solution but 'Longest Palindrome' does not is entirely about how string memory works."
   },
   "definition": {
-    "technicalDefinition": "Strings is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "technicalDefinition": "A string is a sequential collection of characters used to represent text. In languages like Python and Java, they are immutable.",
     "vocabulary": [
-      {
-        "term": "invariant",
-        "definition": "The condition that remains true as the algorithm runs."
-      },
-      {
-        "term": "state",
-        "definition": "The pieces of information that must be tracked at runtime."
-      }
+      { "term": "Immutable", "definition": "Once created, the contents cannot be changed. Any modification creates a new string." },
+      { "term": "Substring", "definition": "A contiguous sequence of characters within a string." },
+      { "term": "Anagram", "definition": "A string formed by rearranging the letters of another string." }
     ],
     "keyProperties": [
-      "Understand the shape of the data.",
-      "Understand the cost of the main operation.",
-      "Understand the common interview pattern."
+      "Accessing a character by index is O(1).",
+      "Concatenating two strings is O(N + M) time.",
+      "Because they are immutable (in many languages), repetitive concatenation in a loop is computationally expensive O(N^2)."
     ]
   },
-  "examples": [
+  "operations": [
     {
-      "title": "Longest Common Prefix",
-      "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/longest-common-prefix/",
-      "problemStatement": "A representative Strings problem.",
-      "inputExample": "See problem statement",
-      "outputExample": "Depends on the prompt",
-      "steps": [
-        "Recognize the topic trigger.",
-        "Apply the core invariant.",
-        "Return the requested answer."
-      ],
+      "name": "Access Character",
+      "description": "Get the character at a specific index.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "char = s[4]",
+        "javascript": "const char = s[4];",
+        "java": "char c = s.charAt(4);",
+        "cpp": "char c = s[4];"
       },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)"
+      "visualNote": "Jumps directly to the physical address in memory."
+    },
+    {
+      "name": "Concatenation",
+      "description": "Appends a string to another. In python/java this copies both strings.",
+      "timeComplexity": "O(N+M)",
+      "spaceComplexity": "O(N+M)",
+      "code": {
+        "python": "s = 'Hello ' + 'World'",
+        "javascript": "const s = 'Hello ' + 'World';",
+        "java": "String s = \"Hello \" + \"World\";",
+        "cpp": "std::string s = \"Hello \" + \"World\";"
+      },
+      "visualNote": "A completely new larger string is allocated in memory."
+    },
+    {
+      "name": "Substring",
+      "description": "Extract a continuous slice of the string.",
+      "timeComplexity": "O(K) where K is length",
+      "spaceComplexity": "O(K)",
+      "code": {
+        "python": "sub = s[1:4]",
+        "javascript": "const sub = s.slice(1, 4);",
+        "java": "String sub = s.substring(1, 4);",
+        "cpp": "std::string sub = s.substr(1, 3);"
+      },
+      "visualNote": "A region is copied out to form the new string."
     }
   ],
   "practice": [
-    {
-      "title": "Longest Common Prefix",
-      "url": "https://leetcode.com/problems/longest-common-prefix/",
-      "difficulty": "medium",
-      "keyInsight": "Representative Strings reasoning."
-    }
+    { "title": "Valid Anagram", "url": "https://leetcode.com/problems/valid-anagram/", "difficulty": "easy", "keyInsight": "Count character frequencies." },
+    { "title": "Valid Palindrome", "url": "https://leetcode.com/problems/valid-palindrome/", "difficulty": "easy", "keyInsight": "Two pointers from the outside in." },
+    { "title": "Longest Palindromic Substring", "url": "https://leetcode.com/problems/longest-palindromic-substring/", "difficulty": "medium", "keyInsight": "Expand around centers." },
+    { "title": "Find All Anagrams in a String", "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/", "difficulty": "medium", "keyInsight": "Sliding window with frequency maps." },
+    { "title": "Longest Substring Without Repeating Characters", "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/", "difficulty": "medium", "keyInsight": "Sliding window using a set." },
+    { "title": "Encode and Decode Strings", "url": "https://leetcode.com/problems/encode-and-decode-strings/", "difficulty": "medium", "keyInsight": "Length delimiters prevent ambiguity." }
   ]
 }

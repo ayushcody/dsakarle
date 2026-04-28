@@ -1,32 +1,85 @@
 {
   "id": "vectors",
   "slug": "vectors",
-  "title": "Vectors (Dynamic Arrays)",
+  "title": "Dynamic Arrays (Vectors)",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "vectors"
-  ],
+  "estimatedMinutes": 45,
+  "prerequisites": ["arrays"],
+  "tags": ["array", "dynamic", "amortized"],
   "overview": {
-    "summary": "Vectors (Dynamic Arrays) is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
-    "learningObjectives": [
-      "Recognize the role of Vectors (Dynamic Arrays) in interviews.",
-      "Review one short summary of Vectors (Dynamic Arrays).",
-      "Use the practice list to keep momentum."
-    ],
-    "interviewRelevance": "Vectors (Dynamic Arrays) remains part of the long-form curriculum roadmap."
+    "summary": "Vectors are arrays that grow automatically when they run out of space.",
+    "learningObjectives": ["Understand amortized O(1) insertion", "Learn how resizing works"],
+    "interviewRelevance": "Python lists and JS arrays are vectors. Using them effectively is crucial."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Python lists grow dynamically because they are vectors under the hood.",
+      "When you append to a list and it runs out of space, Python allocates a new buffer 1.125x larger and copies everything over.",
+      "This mechanism is hidden, but understanding it is essential for reasoning about performance in tight loops."
+    ],
+    "ahaMoment": "This is why append is O(1) amortized — most appends are free, occasional copies are shared across many operations."
+  },
+  "definition": {
+    "technicalDefinition": "A dynamic array (vector) is a resizable array that manages its own memory buffer, allocating a larger buffer and copying elements when capacity is exhausted.",
+    "vocabulary": [
+      { "term": "Length", "definition": "The number of items currently stored in the vector." },
+      { "term": "Capacity", "definition": "The maximum number of items the current memory buffer can hold before it needs to resize." },
+      { "term": "Amortized Time", "definition": "The average time per operation evaluated over a sequence of operations." }
+    ],
+    "keyProperties": [
+      "Provides O(1) access by index.",
+      "Appending to the end is O(1) amortized time.",
+      "Inserting in the middle is O(n) because subsequent elements must shift."
+    ]
+  },
+  "operations": [
     {
-      "title": "Vectors (Dynamic Arrays) warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Vectors (Dynamic Arrays)."
+      "name": "Append (Push Back)",
+      "description": "Add an element to the end of the array. If capacity is reached, allocate a new wider array and copy.",
+      "timeComplexity": "O(1) amortized",
+      "spaceComplexity": "O(n) on resize, else O(1)",
+      "code": {
+        "python": "arr.append(10)",
+        "javascript": "arr.push(10);",
+        "java": "list.add(10);",
+        "cpp": "vec.push_back(10);"
+      },
+      "visualNote": "Element slots into the next free index. On resize, the whole array jumps."
+    },
+    {
+      "name": "Pop from End",
+      "description": "Remove the last element and decrease length.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "arr.pop()",
+        "javascript": "arr.pop();",
+        "java": "list.remove(list.size() - 1);",
+        "cpp": "vec.pop_back();"
+      },
+      "visualNote": "The length counter shrinks. The memory capacity is unchanged."
+    },
+    {
+      "name": "Insert/Delete Middle",
+      "description": "Insert or delete at a specific index, shifting all later elements.",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "arr.insert(2, 'new')\narr.pop(2)",
+        "javascript": "arr.splice(2, 0, 'new');",
+        "java": "list.add(2, 'new');\nlist.remove(2);",
+        "cpp": "vec.insert(vec.begin() + 2, 'new');"
+      },
+      "visualNote": "All subsequent elements move right or left to accommodate the change."
     }
   ],
-  "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "practice": [
+    { "title": "Concatenation of Array", "url": "https://leetcode.com/problems/concatenation-of-array/", "difficulty": "easy", "keyInsight": "Vector resizing makes this simple." },
+    { "title": "Build Array from Permutation", "url": "https://leetcode.com/problems/build-array-from-permutation/", "difficulty": "easy", "keyInsight": "Creates a new vector dynamically." },
+    { "title": "Design Dynamic Array", "url": "https://leetcode.com/problems/design-dynamic-array/", "difficulty": "medium", "keyInsight": "Implement your own resizing logic." },
+    { "title": "Insert Delete GetRandom O(1)", "url": "https://leetcode.com/problems/insert-delete-getrandom-o1/", "difficulty": "medium", "keyInsight": "Combine a vector for O(1) random access with a hash map." },
+    { "title": "Design Browser History", "url": "https://leetcode.com/problems/design-browser-history/", "difficulty": "medium", "keyInsight": "Vectors simulate the back/forward history array." },
+    { "title": "Find All Numbers Disappeared in an Array", "url": "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/", "difficulty": "easy", "keyInsight": "In-place modifications of a fixed vector." }
+  ]
 }

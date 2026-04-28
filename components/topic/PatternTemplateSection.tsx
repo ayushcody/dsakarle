@@ -9,8 +9,8 @@ export function PatternTemplateSection({
   }
 }) {
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 08 — Pattern Template</h2>
+    <section className="topic-section">
+      <h2 className="topic-h2">Pattern Template</h2>
       <pre className="overflow-x-auto rounded-[var(--radius-sm)] bg-[var(--bg-dark)] p-5 font-dmmono text-[13px] leading-relaxed text-white">
         {template.pseudocode}
       </pre>

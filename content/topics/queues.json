@@ -4,29 +4,81 @@
   "title": "Queues",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "queues"
-  ],
+  "estimatedMinutes": 30,
+  "prerequisites": ["arrays", "linked-lists"],
+  "tags": ["queue", "FIFO"],
   "overview": {
-    "summary": "Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
-    "learningObjectives": [
-      "Recognize the role of Queues in interviews.",
-      "Review one short summary of Queues.",
-      "Use the practice list to keep momentum."
-    ],
-    "interviewRelevance": "Queues remains part of the long-form curriculum roadmap."
+    "summary": "Queues are FIFO (First-In-First-Out) data structures, just like a line at a store.",
+    "learningObjectives": ["Understand FIFO property", "Learn to use queues for breadth first search and scheduling"],
+    "interviewRelevance": "Crucial for Breadth-First Search (BFS) and concurrent systems scheduling."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Print queues, CPU process scheduling, BFS graph search, and rate limiters all use queues.",
+      "The reason your 100 print jobs come out in order is because the print spooler enqueues each job and processes them FIFO."
+    ],
+    "ahaMoment": "A queue ensures fair processing: the first task that arrives is guaranteed to be the first task completed."
+  },
+  "definition": {
+    "technicalDefinition": "A queue is a linear data structure that follows the First-In-First-Out (FIFO) principle, where elements are added at the rear and removed from the front.",
+    "vocabulary": [
+      { "term": "Enqueue", "definition": "Add an element to the rear of the queue." },
+      { "term": "Dequeue", "definition": "Remove an element from the front of the queue." },
+      { "term": "Front / Tail", "definition": "Front is where exits happen, Tail is where entrances happen." }
+    ],
+    "keyProperties": [
+      "Enqueue and Dequeue are O(1) time.",
+      "Maintains the strict chronological arrival order.",
+      "Requires a linked list or circular array to achieve O(1) dequeue."
+    ]
+  },
+  "operations": [
     {
-      "title": "Queues warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Queues."
+      "name": "Enqueue",
+      "description": "Place an item at the back of the line.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "queue.append(5)",
+        "javascript": "queue.push(5);",
+        "java": "queue.offer(5);",
+        "cpp": "queue.push(5);"
+      },
+      "visualNote": "A new block enters from the right."
+    },
+    {
+      "name": "Dequeue",
+      "description": "Remove the item at the front of the line.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "val = queue.popleft()  # collections.deque",
+        "javascript": "const val = queue.shift(); // Warning: O(N) in JS arrays",
+        "java": "int val = queue.poll();",
+        "cpp": "int val = queue.front();\nqueue.pop();"
+      },
+      "visualNote": "The leftmost block exits the sequence."
+    },
+    {
+      "name": "Front / Peek",
+      "description": "Look at the front item without removing it.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "val = queue[0]",
+        "javascript": "const val = queue[0];",
+        "java": "int val = queue.peek();",
+        "cpp": "int val = queue.front();"
+      },
+      "visualNote": "The leftmost block flashes briefly."
     }
   ],
-  "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "practice": [
+    { "title": "Number of Islands (BFS)", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "A queue explores the grid layer by layer." },
+    { "title": "Implement Stack using Queues", "url": "https://leetcode.com/problems/implement-stack-using-queues/", "difficulty": "easy", "keyInsight": "Rotate the queue after every push to simulate LIFO." },
+    { "title": "Design Circular Queue", "url": "https://leetcode.com/problems/design-circular-queue/", "difficulty": "medium", "keyInsight": "Use an array with wrap-around pointers." },
+    { "title": "Binary Tree Level Order Traversal", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "medium", "keyInsight": "Queue tracks nodes of current depth." },
+    { "title": "Rotting Oranges", "url": "https://leetcode.com/problems/rotting-oranges/", "difficulty": "medium", "keyInsight": "Multi-source BFS using a queue of initial rotted coords." },
+    { "title": "Sliding Window Maximum", "url": "https://leetcode.com/problems/sliding-window-maximum/", "difficulty": "hard", "keyInsight": "Monotonic double-ended queue (deque)." }
+  ]
 }

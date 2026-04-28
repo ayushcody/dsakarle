@@ -1,132 +1,97 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo } from 'react';
-
 import { getChapterProgress, getProgress } from '@/lib/progress';
-import type { CourseStructure, CourseStructureGroup } from '@/types/learning';
-
-function completionDot(slug: string) {
-  const progress = getProgress();
-  if (progress.completedSections.includes(slug)) {
-    return 'bg-[var(--accent-teal)]';
-  }
-
-  if (progress.quizScores[slug]?.recognition || progress.quizScores[slug]?.concept) {
-    return 'bg-[var(--accent-amber)]';
-  }
-
-  return 'bg-[var(--border)]';
-}
-
-function GroupBlock({
-  group,
-  currentSlug,
-  onNavigate,
-}: {
-  group: CourseStructureGroup
-  currentSlug: string
-  onNavigate?: () => void
-}) {
-  const chapterProgress = useMemo(
-    () => getChapterProgress(group.topics.map((topic) => topic.slug)),
-    [group.topics]
-  );
-
-  return (
-    <div className="rounded-[var(--radius-sm)] border border-[var(--border)] bg-white p-4">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-dmsans text-sm font-semibold text-[var(--text-primary)]">{group.title}</h3>
-        <span className="font-dmmono text-[11px] uppercase tracking-[0.1em] text-[var(--text-muted)]">
-          {chapterProgress}% complete
-        </span>
-      </div>
-      <div className="space-y-2">
-        {group.topics.map((topic) => {
-          const active = topic.slug === currentSlug;
-          return (
-            <Link
-              key={topic.slug}
-              href={`/learn/${topic.slug}`}
-              onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2 transition-colors ${
-                active ? 'border-l-2 border-[var(--accent-coral)] bg-[var(--surface-coral)]' : 'hover:bg-[var(--bg-secondary)]'
-              }`}
-            >
-              <span className={`h-2.5 w-2.5 rounded-full ${completionDot(topic.slug)}`} />
-              <span className="font-dmsans text-sm text-[var(--text-primary)]">{topic.title}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+import type { CourseStructure } from '@/types/learning';
 
 export function Sidebar({
   currentSlug,
   courseStructure,
-  mode = 'desktop',
-  open = false,
-  onClose,
 }: {
   currentSlug: string
   courseStructure: CourseStructure
-  mode?: 'desktop' | 'drawer'
-  open?: boolean
-  onClose?: () => void
 }) {
-  if (mode === 'drawer') {
-    return (
-      <div
-        className={`fixed inset-0 z-40 bg-[rgba(26,26,24,0.42)] transition-opacity lg:hidden ${
-          open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-      >
-        <button
-          type="button"
-          aria-label="Close course sidebar"
-          className="absolute inset-0 h-full w-full cursor-default"
-          onClick={onClose}
-        />
-        <aside
-          className={`absolute left-0 top-0 h-full w-[86vw] max-w-[320px] overflow-y-auto border-r border-[var(--border)] bg-[var(--bg-primary)] px-4 pb-6 pt-24 shadow-[var(--shadow-card-hover)] transition-transform ${
-            open ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="font-dmmono text-[11px] uppercase tracking-[0.1em] text-[var(--text-muted)]">
-                Course Map
-              </p>
-              <p className="mt-1 font-dmsans text-sm text-[var(--text-secondary)]">
-                Jump between patterns and topics.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="rounded-[var(--radius-sm)] border border-[var(--border)] bg-white px-3 py-2 font-dmmono text-xs text-[var(--text-primary)]"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
-          <div className="space-y-4">
-            {courseStructure.groups.map((group) => (
-              <GroupBlock key={group.title} group={group} currentSlug={currentSlug} onNavigate={onClose} />
-            ))}
-          </div>
-        </aside>
-      </div>
-    );
-  }
+  const progress = getProgress();
 
   return (
-    <aside className="hidden w-[280px] shrink-0 lg:block">
-      <div className="sticky top-24 space-y-4">
-        {courseStructure.groups.map((group) => (
-          <GroupBlock key={group.title} group={group} currentSlug={currentSlug} />
-        ))}
+    <aside style={{
+      position: 'fixed',
+      left: 0,
+      top: '64px',  // below navbar
+      width: '280px',
+      height: 'calc(100vh - 64px)',
+      overflowY: 'auto',
+      background: 'var(--bg-secondary)',
+      borderRight: '1px solid var(--border)',
+      zIndex: 40,
+      // Custom scrollbar
+      scrollbarWidth: 'thin',
+      scrollbarColor: 'var(--border) transparent',
+    }}>
+      <div style={{ padding: '20px 0 40px' }}>
+        {courseStructure.groups.map((group, groupIndex) => {
+          const chapterProgress = getChapterProgress(group.topics.map((t) => t.slug));
+          
+          return (
+            <div key={group.title}>
+              {/* Group Header */}
+              <div style={{
+                position: 'sticky',
+                top: 0,
+                background: 'var(--bg-secondary)',
+                borderBottom: '1px solid var(--border)',
+                borderTop: groupIndex > 0 ? '1px solid var(--border)' : 'none',
+                padding: '12px 20px 10px',
+                marginTop: groupIndex > 0 ? 16 : 0,
+                zIndex: 10,
+              }}>
+                <span style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>
+                  {group.title}
+                </span>
+                <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'var(--text-muted)', marginLeft: 8 }}>
+                  {chapterProgress}% COMPLETE
+                </span>
+              </div>
+
+              {/* Topics */}
+              {group.topics.map(topic => {
+                const isActive = topic.slug === currentSlug;
+                const isComplete = progress.completedSections.includes(topic.slug);
+                const hasQuiz = progress.quizScores[topic.slug]?.recognition || progress.quizScores[topic.slug]?.concept;
+
+                return (
+                  <Link key={topic.slug} href={`/learn/${topic.slug}`} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '9px 20px',
+                    background: isActive ? 'rgba(212,96,58,0.08)' : 'transparent',
+                    borderLeft: isActive ? '3px solid var(--accent-coral)' : '3px solid transparent',
+                    textDecoration: 'none',
+                    transition: 'background 0.15s',
+                  }}>
+                    {/* Completion dot */}
+                    <span style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      flexShrink: 0,
+                      background: isComplete ? '#1D7A6B' : hasQuiz ? '#CA8A04' : '#D4D0C8',
+                    }} />
+                    <span style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontSize: 14,
+                      color: isActive ? 'var(--accent-coral)' : 'var(--text-secondary)',
+                      fontWeight: isActive ? 500 : 400,
+                    }}>
+                      {topic.title}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </aside>
   );

@@ -2,8 +2,8 @@ import type { OperationBlock } from '@/types/learning';
 
 export function OperationsSection({ operations }: { operations: OperationBlock[] }) {
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 07 — Operations Deep Dive</h2>
+    <section className="topic-section">
+      <h2 className="topic-h2">Operations Deep Dive</h2>
       <div className="space-y-8">
         {operations.map((operation) => (
           <article key={operation.name} className="rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg-primary)] p-5">

@@ -1,77 +1,85 @@
 {
   "id": "hash-maps",
   "slug": "hash-maps",
-  "title": "Hash Maps & Hash Sets",
+  "title": "Hash Maps",
   "category": "data-structure",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 35,
-  "prerequisites": [],
-  "tags": [
-    "hash-maps",
-    "data-structure"
-  ],
+  "difficulty": "beginner",
+  "estimatedMinutes": 45,
+  "prerequisites": ["arrays"],
+  "tags": ["hash-table", "mapping", "key-value"],
   "overview": {
-    "summary": "Hash-based lookup trades ordering for near-constant-time membership and retrieval.",
-    "learningObjectives": [
-      "Build intuition for the topic.",
-      "Recognize interview triggers.",
-      "Review one representative example."
-    ],
-    "interviewRelevance": "This topic appears regularly in coding interviews."
+    "summary": "Hash maps store data in key-value pairs, allowing lightning-fast data retrieval.",
+    "learningObjectives": ["Understand hash functions", "Master key-value storage patterns"],
+    "interviewRelevance": "The most commonly used data structure in coding interviews to achieve O(1) lookups."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Hash Maps & Hash Sets shows up in practical systems whenever we need to organize or process data efficiently."
+      "Python's dict, JavaScript's object, and Java's HashMap are all hash maps.",
+      "O(1) lookup powers every database index, every cache, and every language's symbol table.",
+      "Git stores every commit by its SHA-256 hash in a hash map of the object store."
     ],
-    "ahaMoment": "Hash Maps & Hash Sets becomes easier once you stop memorizing and start tracking the invariant."
+    "ahaMoment": "Hash maps skip the search process entirely by mathematically calculating exactly where the answer lives."
   },
   "definition": {
-    "technicalDefinition": "Hash Maps & Hash Sets is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "technicalDefinition": "A hash map is a data structure that implements an associative array, mapping keys to values. A hash function computes an index into an array of buckets, from which the desired value can be found.",
     "vocabulary": [
-      {
-        "term": "invariant",
-        "definition": "The condition that remains true as the algorithm runs."
-      },
-      {
-        "term": "state",
-        "definition": "The pieces of information that must be tracked at runtime."
-      }
+      { "term": "Hash Function", "definition": "A mathematical algorithm that maps data of arbitrary size to a fixed-size integer." },
+      { "term": "Collision", "definition": "When two different keys generate the same hash index." },
+      { "term": "Chaining", "definition": "A collision resolution technique where each bucket is a linked list of entries." }
     ],
     "keyProperties": [
-      "Understand the shape of the data.",
-      "Understand the cost of the main operation.",
-      "Understand the common interview pattern."
+      "Average O(1) time complexity for search, insert, and delete.",
+      "Worst-case O(N) if many collisions occur or resizing is triggered.",
+      "Keys are generally unordered."
     ]
   },
-  "examples": [
+  "operations": [
     {
-      "title": "Two Sum",
-      "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/two-sum/",
-      "problemStatement": "A representative Hash Maps & Hash Sets problem.",
-      "inputExample": "See problem statement",
-      "outputExample": "Depends on the prompt",
-      "steps": [
-        "Recognize the topic trigger.",
-        "Apply the core invariant.",
-        "Return the requested answer."
-      ],
+      "name": "Insert",
+      "description": "Hash the key to find the index, then store the key-value pair.",
+      "timeComplexity": "O(1) average",
+      "spaceComplexity": "O(1)",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "map['key'] = 'value'",
+        "javascript": "map.set('key', 'value');",
+        "java": "map.put(\"key\", \"value\");",
+        "cpp": "map[\"key\"] = \"value\";"
       },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)"
+      "visualNote": "The key is transformed, mapped to a bucket, and stored."
+    },
+    {
+      "name": "Lookup",
+      "description": "Hash the key, go directly to the index, and retrieve the value.",
+      "timeComplexity": "O(1) average",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "val = map['key']\n# or map.get('key')",
+        "javascript": "const val = map.get('key');",
+        "java": "String val = map.get(\"key\");",
+        "cpp": "std::string val = map[\"key\"];"
+      },
+      "visualNote": "Jumps straight to the exact bucket containing the value."
+    },
+    {
+      "name": "Delete",
+      "description": "Hash the key, locate the entry, and remove it.",
+      "timeComplexity": "O(1) average",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "del map['key']",
+        "javascript": "map.delete('key');",
+        "java": "map.remove(\"key\");",
+        "cpp": "map.erase(\"key\");"
+      },
+      "visualNote": "The precise sub-item in the bucket is removed."
     }
   ],
   "practice": [
-    {
-      "title": "Two Sum",
-      "url": "https://leetcode.com/problems/two-sum/",
-      "difficulty": "medium",
-      "keyInsight": "Representative Hash Maps & Hash Sets reasoning."
-    }
+    { "title": "Two Sum", "url": "https://leetcode.com/problems/two-sum/", "difficulty": "easy", "keyInsight": "Store seen values and their indices to achieve O(N) total runtime." },
+    { "title": "Group Anagrams", "url": "https://leetcode.com/problems/group-anagrams/", "difficulty": "medium", "keyInsight": "Use a sorted string or character count tuple as the hash map key." },
+    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Hash map tallies frequencies, followed by a heap or bucket sort." },
+    { "title": "Longest Consecutive Sequence", "url": "https://leetcode.com/problems/longest-consecutive-sequence/", "difficulty": "medium", "keyInsight": "A Set (hash map without values) allows O(1) checks for neighboring numbers." },
+    { "title": "Subarray Sum Equals K", "url": "https://leetcode.com/problems/subarray-sum-equals-k/", "difficulty": "medium", "keyInsight": "Store running prefix sums in a hash map to look back for exact differences." },
+    { "title": "Valid Sudoku", "url": "https://leetcode.com/problems/valid-sudoku/", "difficulty": "medium", "keyInsight": "Multiple coordinate sets/hash maps enforce uniqueness rules." }
   ]
 }

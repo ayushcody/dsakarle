@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+
 
 import courseStructure from '@/content/course-structure.json';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -27,6 +27,17 @@ const emptyCode = {
   cpp: '',
 } satisfies Record<CodeLanguage, string>;
 
+function Placeholder({ title }: { title: string }) {
+  return (
+    <section className="stepper-card">
+      <h2 className="topic-h2" style={{ marginTop: 0 }}>{title}</h2>
+      <div className="rounded-[16px] border border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-center text-[var(--text-muted)] font-dmsans h-[200px] flex items-center justify-center mt-6">
+        <p>Coming Soon: {title} for this topic.</p>
+      </div>
+    </section>
+  );
+}
+
 export function TopicPageRenderer({
   topic,
   renderedCode,
@@ -34,51 +45,13 @@ export function TopicPageRenderer({
   topic: LearningTopicPage
   renderedCode: Record<CodeLanguage, string>
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    if (!sidebarOpen) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setSidebarOpen(false);
-      }
-    };
-
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleEscape);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [sidebarOpen]);
-
   return (
-    <div className="mx-auto flex max-w-[1360px] gap-8 px-4 py-10 sm:px-6">
+    <>
       <Sidebar currentSlug={topic.slug} courseStructure={courseStructure as CourseStructure} />
-      <Sidebar
-        currentSlug={topic.slug}
-        courseStructure={courseStructure as CourseStructure}
-        mode="drawer"
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
 
-      <main className="mx-auto flex w-full max-w-[960px] flex-col gap-8">
-        <div className="lg:hidden">
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(true)}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-sm)] border border-[var(--border)] bg-white px-4 py-2.5 font-dmmono text-xs uppercase tracking-[0.08em] text-[var(--text-primary)] shadow-[var(--shadow-card)]"
-          >
-            <span className="text-[var(--accent-coral)]">≡</span>
-            Open Course Map
-          </button>
-        </div>
+      <div style={{ marginLeft: '280px', minHeight: 'calc(100vh - 64px)' }}>
+        <main className="mx-auto flex w-full max-w-[960px] flex-col gap-8 px-8 py-10">
+
 
         <HeroBlock topic={topic} />
 
@@ -115,34 +88,59 @@ export function TopicPageRenderer({
           />
         )}
 
-        {topic.stepper && topic.stepper.steps.length > 0 && (
-          <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-            <h2 className="section-heading">Section 06 — StepperBlock</h2>
+        {topic.stepper && topic.stepper.steps.length > 0 ? (
+          <section className="stepper-card">
+            <h2 className="topic-h2" style={{ marginTop: 0 }}>Interactive Visualization</h2>
             <StepperBlock
               stepperData={topic.stepper}
               code={topic.examples?.[0]?.code || emptyCode}
               renderedCode={renderedCode}
             />
           </section>
+        ) : (
+          <Placeholder title="Interactive Visualization" />
         )}
 
-        {topic.operations && topic.operations.length > 0 && <OperationsSection operations={topic.operations} />}
+        {topic.operations && topic.operations.length > 0 ? (
+          <OperationsSection operations={topic.operations} />
+        ) : (
+          <Placeholder title="Operations Deep Dive" />
+        )}
 
-        {topic.patternTemplate && <PatternTemplateSection template={topic.patternTemplate} />}
+        {topic.patternTemplate ? (
+          <PatternTemplateSection template={topic.patternTemplate} />
+        ) : (
+          <Placeholder title="Pattern Template" />
+        )}
 
-        {topic.recognitionQuiz && <RecognitionQuiz quiz={topic.recognitionQuiz} topicId={topic.id} />}
+        {topic.recognitionQuiz ? (
+          <RecognitionQuiz quiz={topic.recognitionQuiz} topicId={topic.id} />
+        ) : (
+          <Placeholder title="Recognition Quiz" />
+        )}
 
-        {topic.examples && topic.examples.length > 0 && <WorkedExamplesSection examples={topic.examples} />}
+        {topic.examples && topic.examples.length > 0 ? (
+          <WorkedExamplesSection examples={topic.examples} />
+        ) : (
+          <Placeholder title="Worked Examples" />
+        )}
 
-        {topic.conceptQuiz && topic.conceptQuiz.length > 0 && (
+        {topic.conceptQuiz && topic.conceptQuiz.length > 0 ? (
           <ConceptQuiz questions={topic.conceptQuiz} topicId={topic.id} />
+        ) : (
+          <Placeholder title="Concept Quiz" />
         )}
 
-        {topic.practice && topic.practice.length > 0 && <PracticeList problems={topic.practice} />}
+        {topic.practice && topic.practice.length > 0 ? (
+          <PracticeList problems={topic.practice} />
+        ) : (
+          <Placeholder title="Practice Problems" />
+        )}
 
         <MarkCompleteButton topicId={topic.id} />
       </main>
-    </div>
+      </div>
+    </>
   );
 }
 

@@ -12,13 +12,13 @@
     "build:search-index": "node scripts/build-search-index.mjs"
   },
   "dependencies": {
+    "@xyflow/react": "^12.10.2",
     "framer-motion": "^12.38.0",
     "fuse.js": "^7.1.0",
     "next": "14.2.35",
     "react": "^18",
     "react-dom": "^18",
     "shiki": "^4.0.2",
-    "zod": "^4.3.6",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

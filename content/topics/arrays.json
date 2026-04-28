@@ -23,7 +23,7 @@
   "realWorldHook": {
     "paragraphs": [
       "Every pixel in an image, every row in a spreadsheet, and every daily temperature reading can be modeled as an array.",
-      "Arrays are the simplest mental model for “a list of values with positions.”"
+      "Arrays are the simplest mental model for \u201ca list of values with positions.\u201d"
     ],
     "ahaMoment": "An array is powerful because the computer can jump straight to any position by arithmetic."
   },
@@ -93,7 +93,7 @@
       },
       {
         "label": "index offset",
-        "value": "index × element size"
+        "value": "index \u00d7 element size"
       }
     ]
   },
@@ -112,12 +112,13 @@
         "stepIndex": 0,
         "diagramState": {
           "left": 0,
-          "right": 0,
+          "right": -1,
           "highlighted": [],
           "comparing": [
-            0,
             0
-          ]
+          ],
+          "windowStart": -1,
+          "windowEnd": -1
         },
         "variables": {
           "index": 0,
@@ -132,12 +133,13 @@
         "stepIndex": 1,
         "diagramState": {
           "left": 1,
-          "right": 1,
+          "right": -1,
           "highlighted": [],
           "comparing": [
-            1,
             1
-          ]
+          ],
+          "windowStart": -1,
+          "windowEnd": -1
         },
         "variables": {
           "index": 1,
@@ -152,12 +154,13 @@
         "stepIndex": 2,
         "diagramState": {
           "left": 2,
-          "right": 2,
+          "right": -1,
           "highlighted": [],
           "comparing": [
-            2,
             2
-          ]
+          ],
+          "windowStart": -1,
+          "windowEnd": -1
         },
         "variables": {
           "index": 2,
@@ -172,12 +175,13 @@
         "stepIndex": 3,
         "diagramState": {
           "left": 3,
-          "right": 3,
+          "right": -1,
           "highlighted": [],
           "comparing": [
-            3,
             3
-          ]
+          ],
+          "windowStart": -1,
+          "windowEnd": -1
         },
         "variables": {
           "index": 3,
@@ -192,14 +196,15 @@
         "stepIndex": 4,
         "diagramState": {
           "left": 4,
-          "right": 4,
+          "right": -1,
           "highlighted": [
             4
           ],
           "comparing": [
-            4,
             4
-          ]
+          ],
+          "windowStart": -1,
+          "windowEnd": -1
         },
         "variables": {
           "index": 4,
@@ -214,12 +219,13 @@
         "stepIndex": 5,
         "diagramState": {
           "left": 5,
-          "right": 5,
+          "right": -1,
           "highlighted": [],
           "comparing": [
-            5,
             5
-          ]
+          ],
+          "windowStart": -1,
+          "windowEnd": -1
         },
         "variables": {
           "index": 5,

@@ -4,29 +4,82 @@
   "title": "Stacks",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "stacks"
-  ],
+  "estimatedMinutes": 30,
+  "prerequisites": ["arrays", "linked-lists"],
+  "tags": ["stack", "LIFO"],
   "overview": {
-    "summary": "Stacks is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
-    "learningObjectives": [
-      "Recognize the role of Stacks in interviews.",
-      "Review one short summary of Stacks.",
-      "Use the practice list to keep momentum."
-    ],
-    "interviewRelevance": "Stacks remains part of the long-form curriculum roadmap."
+    "summary": "Stacks are simple LIFO (Last-In-First-Out) data structures, like a stack of plates.",
+    "learningObjectives": ["Understand LIFO property", "Learn to use stacks for reversing and nesting"],
+    "interviewRelevance": "Essential for parsing tasks like parenthesis matching and tree traversal."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Your CPU maintains a call stack right now. Every function call pushes a stack frame. Every return pops it.",
+      "When you get a StackOverflowError, the call stack physically ran out of memory.",
+      "The brackets validator in your IDE uses an explicit stack to track nesting."
+    ],
+    "ahaMoment": "A stack perfectly models 'returning to where I was recently' because the last thing pushed is the first thing popped."
+  },
+  "definition": {
+    "technicalDefinition": "A stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle, meaning elements are added and removed from the same end (the 'top').",
+    "vocabulary": [
+      { "term": "Push", "definition": "Add an element to the top of the stack." },
+      { "term": "Pop", "definition": "Remove the element from the top of the stack." },
+      { "term": "Peek (or Top)", "definition": "Look at the top element without removing it." }
+    ],
+    "keyProperties": [
+      "Elements are added and removed in O(1) time.",
+      "Random access to elements in the middle is not allowed.",
+      "LIFO behavior inherently reverses the order of items."
+    ]
+  },
+  "operations": [
     {
-      "title": "Stacks warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Stacks."
+      "name": "Push",
+      "description": "Place an item on the top of the stack.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "stack.append(5)",
+        "javascript": "stack.push(5);",
+        "java": "stack.push(5);",
+        "cpp": "stack.push(5);"
+      },
+      "visualNote": "A new block appears exactly on top of the pile."
+    },
+    {
+      "name": "Pop",
+      "description": "Remove the top item from the stack.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "val = stack.pop()",
+        "javascript": "const val = stack.pop();",
+        "java": "int val = stack.pop();",
+        "cpp": "int val = stack.top();\nstack.pop();"
+      },
+      "visualNote": "The topmost block vanishes."
+    },
+    {
+      "name": "Peek",
+      "description": "Return the top item without removing it.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "val = stack[-1]",
+        "javascript": "const val = stack[stack.length - 1];",
+        "java": "int val = stack.peek();",
+        "cpp": "int val = stack.top();"
+      },
+      "visualNote": "The topmost block is highlighted, but remains in place."
     }
   ],
-  "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "practice": [
+    { "title": "Valid Parentheses", "url": "https://leetcode.com/problems/valid-parentheses/", "difficulty": "easy", "keyInsight": "Push openers, pop closers to verify match." },
+    { "title": "Min Stack", "url": "https://leetcode.com/problems/min-stack/", "difficulty": "medium", "keyInsight": "Store a tuple of (val, current_min)." },
+    { "title": "Evaluate Reverse Polish Notation", "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/", "difficulty": "medium", "keyInsight": "Operands go on the stack, operators pop two and push one." },
+    { "title": "Daily Temperatures", "url": "https://leetcode.com/problems/daily-temperatures/", "difficulty": "medium", "keyInsight": "Monotonic decreasing stack to resolve 'next greater' queries." },
+    { "title": "Generate Parentheses", "url": "https://leetcode.com/problems/generate-parentheses/", "difficulty": "medium", "keyInsight": "Implicit call stack via recursion." },
+    { "title": "Implement Queue using Stacks", "url": "https://leetcode.com/problems/implement-queue-using-stacks/", "difficulty": "easy", "keyInsight": "Pour from an 'in' stack to an 'out' stack." }
+  ]
 }

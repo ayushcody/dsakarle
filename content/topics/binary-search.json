@@ -1,77 +1,58 @@
 {
   "id": "binary-search",
   "slug": "binary-search",
-  "title": "Binary Search Pattern",
+  "title": "Binary Search",
   "category": "algorithm",
-  "difficulty": "beginner",
-  "estimatedMinutes": 35,
-  "prerequisites": [],
-  "tags": [
-    "binary-search",
-    "algorithm"
-  ],
+  "difficulty": "medium",
+  "estimatedMinutes": 45,
+  "prerequisites": ["arrays"],
+  "tags": ["search", "logN", "sorted"],
   "overview": {
-    "summary": "Binary Search repeatedly discards half the search space when the search predicate is monotonic.",
-    "learningObjectives": [
-      "Build intuition for the topic.",
-      "Recognize interview triggers.",
-      "Review one representative example."
-    ],
-    "interviewRelevance": "This topic appears regularly in coding interviews."
+    "summary": "Binary Search finds elements in a sorted array by repeatedly halving the search window.",
+    "learningObjectives": ["Master loop initialization and termination", "Understand mid calculation", "Identify when to apply binary search on abstract search spaces"],
+    "interviewRelevance": "Critical for optimizing O(N) search to O(log N)."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Binary Search Pattern shows up in practical systems whenever we need to organize or process data efficiently."
+      "Looking up a word in a physical dictionary uses binary search. You don't read page 1, 2, 3.",
+      "You open to the middle, decide if your word is earlier or later, and discard half the book instantly."
     ],
-    "ahaMoment": "Binary Search Pattern becomes easier once you stop memorizing and start tracking the invariant."
+    "ahaMoment": "In a sorted sequence, knowing you are at the wrong value automatically tells you which half contains the right value."
   },
   "definition": {
-    "technicalDefinition": "Binary Search Pattern is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "technicalDefinition": "Binary search is a search algorithm that finds the position of a target value within a sorted array by comparing the target to the middle element.",
     "vocabulary": [
-      {
-        "term": "invariant",
-        "definition": "The condition that remains true as the algorithm runs."
-      },
-      {
-        "term": "state",
-        "definition": "The pieces of information that must be tracked at runtime."
-      }
+      { "term": "Search Space", "definition": "The range of possible valid indices (or values) currently being considered." },
+      { "term": "Monotonicity", "definition": "A sequence that is entirely non-decreasing or non-increasing. A strict requirement for binary search." },
+      { "term": "Midpoint", "definition": "The calculated center index of the current search window." }
     ],
     "keyProperties": [
-      "Understand the shape of the data.",
-      "Understand the cost of the main operation.",
-      "Understand the common interview pattern."
+      "Always requires a sorted space.",
+      "Runs in O(log N) time.",
+      "Takes O(1) auxiliary space."
     ]
   },
-  "examples": [
+  "operations": [
     {
-      "title": "Binary Search",
-      "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/binary-search/",
-      "problemStatement": "A representative Binary Search Pattern problem.",
-      "inputExample": "See problem statement",
-      "outputExample": "Depends on the prompt",
-      "steps": [
-        "Recognize the topic trigger.",
-        "Apply the core invariant.",
-        "Return the requested answer."
-      ],
+      "name": "Search Target",
+      "description": "Standard binary search. Left and right bound the window. Compare target to mid.",
+      "timeComplexity": "O(log N)",
+      "spaceComplexity": "O(1)",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "l, r = 0, len(arr) - 1\nwhile l <= r:\n    m = (l + r) // 2\n    if arr[m] == target:\n        return m\n    elif arr[m] < target:\n        l = m + 1\n    else:\n        r = m - 1\nreturn -1",
+        "javascript": "let l = 0, r = arr.length - 1;\nwhile (l <= r) {\n  let m = Math.floor((l + r) / 2);\n  if (arr[m] === target) return m;\n  if (arr[m] < target) l = m + 1;\n  else r = m - 1;\n}\nreturn -1;",
+        "java": "int l = 0, r = arr.length - 1;\nwhile (l <= r) {\n  int m = l + (r - l) / 2;\n  if (arr[m] == target) return m;\n  if (arr[m] < target) l = m + 1;\n  else r = m - 1;\n}\nreturn -1;",
+        "cpp": "int l = 0, r = arr.size() - 1;\nwhile (l <= r) {\n  int m = l + (r - l) / 2;\n  if (arr[m] == target) return m;\n  if (arr[m] < target) l = m + 1;\n  else r = m - 1;\n}\nreturn -1;"
       },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)"
+      "visualNote": "The unsearchable greyed out area grows logarithmically each step."
     }
   ],
   "practice": [
-    {
-      "title": "Binary Search",
-      "url": "https://leetcode.com/problems/binary-search/",
-      "difficulty": "medium",
-      "keyInsight": "Representative Binary Search Pattern reasoning."
-    }
+    { "title": "Binary Search", "url": "https://leetcode.com/problems/binary-search/", "difficulty": "easy", "keyInsight": "The most basic template implementation." },
+    { "title": "Search a 2D Matrix", "url": "https://leetcode.com/problems/search-a-2d-matrix/", "difficulty": "medium", "keyInsight": "Treat a 2D matrix conceptually as a 1D sorted array." },
+    { "title": "Koko Eating Bananas", "url": "https://leetcode.com/problems/koko-eating-bananas/", "difficulty": "medium", "keyInsight": "Binary searching over the answer space, not an array." },
+    { "title": "Find Minimum in Rotated Sorted Array", "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/", "difficulty": "medium", "keyInsight": "Compare mid to the right pointer to find the pivot." },
+    { "title": "Search in Rotated Sorted Array", "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/", "difficulty": "medium", "keyInsight": "Determine which half is properly sorted, then bound the target." },
+    { "title": "Median of Two Sorted Arrays", "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/", "difficulty": "hard", "keyInsight": "Binary search on the smaller array's partitioning line." }
   ]
 }

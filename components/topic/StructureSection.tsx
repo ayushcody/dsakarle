@@ -17,8 +17,8 @@ export function StructureSection({
   memoryLayout: MemoryLayoutRow[]
 }) {
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 05 — Structure / Memory Layout</h2>
+    <section className="topic-section">
+      <h2 className="topic-h2">Structure / Memory Layout</h2>
       <div className="space-y-4">
         {memoryDescription.map((paragraph) => (
           <p key={paragraph} className="font-dmsans text-[16px] leading-relaxed text-[var(--text-secondary)]">

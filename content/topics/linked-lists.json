@@ -3,75 +3,83 @@
   "slug": "linked-lists",
   "title": "Linked Lists",
   "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 35,
+  "difficulty": "easy",
+  "estimatedMinutes": 60,
   "prerequisites": [],
-  "tags": [
-    "linked-lists",
-    "data-structure"
-  ],
+  "tags": ["linked-list", "pointers", "nodes"],
   "overview": {
-    "summary": "Linked Lists trade direct indexing for flexible pointer rewiring.",
-    "learningObjectives": [
-      "Build intuition for the topic.",
-      "Recognize interview triggers.",
-      "Review one representative example."
-    ],
-    "interviewRelevance": "This topic appears regularly in coding interviews."
+    "summary": "Linked lists are chains of discrete nodes connected by pointers.",
+    "learningObjectives": ["Understand node/pointer structure", "Learn how to traverse iteratively and recursively", "Master pointer rewiring"],
+    "interviewRelevance": "The ultimate test of your attention to detail and null-pointer safety."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Linked Lists shows up in practical systems whenever we need to organize or process data efficiently."
+      "Browser history (back/forward), music playlists (skip to next), and undo/redo stacks all use linked lists.",
+      "The reason your browser's back button is instant — it just follows a pointer to the previous page node, no copying, no reindexing."
     ],
-    "ahaMoment": "Linked Lists becomes easier once you stop memorizing and start tracking the invariant."
+    "ahaMoment": "A linked list is just a scavenger hunt. The first clue is the 'head', and each clue points to the location of the next clue."
   },
   "definition": {
-    "technicalDefinition": "Linked Lists is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "technicalDefinition": "A linked list is a linear data structure where elements are not stored at contiguous memory locations. Instead, each element points to the next.",
     "vocabulary": [
-      {
-        "term": "invariant",
-        "definition": "The condition that remains true as the algorithm runs."
-      },
-      {
-        "term": "state",
-        "definition": "The pieces of information that must be tracked at runtime."
-      }
+      { "term": "Node", "definition": "An object containing data and a reference to the next node." },
+      { "term": "Head", "definition": "A reference to the very first node in the list." },
+      { "term": "Tail", "definition": "The last node in the list, its next pointer is null." },
+      { "term": "Pointer", "definition": "The memory address reference linking one node to another." }
     ],
     "keyProperties": [
-      "Understand the shape of the data.",
-      "Understand the cost of the main operation.",
-      "Understand the common interview pattern."
+      "Dynamic size, nodes are created individually in memory.",
+      "O(1) insertion and deletion at the current pointer.",
+      "O(N) search because you must traverse from the head sequentially."
     ]
   },
-  "examples": [
+  "operations": [
     {
-      "title": "Reverse Linked List",
-      "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/reverse-linked-list/",
-      "problemStatement": "A representative Linked Lists problem.",
-      "inputExample": "See problem statement",
-      "outputExample": "Depends on the prompt",
-      "steps": [
-        "Recognize the topic trigger.",
-        "Apply the core invariant.",
-        "Return the requested answer."
-      ],
+      "name": "Insert at Head",
+      "description": "Add a new node to the front of the list, making it the new head.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "new_node = Node(5)\nnew_node.next = head\nhead = new_node",
+        "javascript": "const newNode = new Node(5);\nnewNode.next = head;\nhead = newNode;",
+        "java": "Node newNode = new Node(5);\nnewNode.next = head;\nhead = newNode;",
+        "cpp": "Node* newNode = new Node(5);\nnewNode->next = head;\nhead = newNode;"
       },
+      "visualNote": "A new box appears on the left, an arrow points to the old head."
+    },
+    {
+      "name": "Delete Node",
+      "description": "Rewire the previous node to skip the deleted node.",
+      "timeComplexity": "O(1) if prev known, else O(n)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "prev.next = prev.next.next",
+        "javascript": "prev.next = prev.next.next;",
+        "java": "prev.next = prev.next.next;",
+        "cpp": "prev->next = prev->next->next;"
+      },
+      "visualNote": "The arrow from prev is repointed to bypass the target node."
+    },
+    {
+      "name": "Search / Traverse",
+      "description": "Follow next pointers continuously until a null or target is met.",
       "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)"
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "curr = head\nwhile curr:\n    curr = curr.next",
+        "javascript": "let curr = head;\nwhile (curr) {\n  curr = curr.next;\n}",
+        "java": "Node curr = head;\nwhile (curr != null) {\n  curr = curr.next;\n}",
+        "cpp": "Node* curr = head;\nwhile (curr != nullptr) {\n  curr = curr->next;\n}"
+      },
+      "visualNote": "A pointer marker slowly moves node by node along the chain."
     }
   ],
   "practice": [
-    {
-      "title": "Reverse Linked List",
-      "url": "https://leetcode.com/problems/reverse-linked-list/",
-      "difficulty": "medium",
-      "keyInsight": "Representative Linked Lists reasoning."
-    }
+    { "title": "Reverse Linked List", "url": "https://leetcode.com/problems/reverse-linked-list/", "difficulty": "easy", "keyInsight": "Track prev, curr, and next cautiously." },
+    { "title": "Merge Two Sorted Lists", "url": "https://leetcode.com/problems/merge-two-sorted-lists/", "difficulty": "easy", "keyInsight": "Merge like a zipper." },
+    { "title": "Linked List Cycle", "url": "https://leetcode.com/problems/linked-list-cycle/", "difficulty": "easy", "keyInsight": "Fast and slow pointers (tortoise and hare)." },
+    { "title": "Remove Nth Node From End of List", "url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/", "difficulty": "medium", "keyInsight": "Two pointers spaced exactly N nodes apart." },
+    { "title": "Copy List with Random Pointer", "url": "https://leetcode.com/problems/copy-list-with-random-pointer/", "difficulty": "medium", "keyInsight": "Hash map maps original nodes to cloned nodes." },
+    { "title": "LRU Cache", "url": "https://leetcode.com/problems/lru-cache/", "difficulty": "medium", "keyInsight": "Doubly linked list combined with a hash map." }
   ]
 }

@@ -39,7 +39,7 @@ export function RecognitionQuiz({ quiz, topicId }: { quiz: RecognitionQuizData; 
 
   return (
     <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 09 — Recognition Quiz</h2>
+      <h2 className="topic-h2" style={{ marginTop: 0 }}>Recognition Quiz</h2>
       <div className="rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] p-5">
         <p className="font-dmsans text-[15px] leading-relaxed text-[var(--text-primary)]">{quiz.problemStatement}</p>
       </div>

@@ -20,7 +20,7 @@ export function ConceptQuiz({ questions, topicId }: { questions: ConceptQuestion
 
   return (
     <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 11 — Concept Quiz</h2>
+      <h2 className="topic-h2" style={{ marginTop: 0 }}>Concept Quiz</h2>
       <div className="space-y-8">
         {questions.map((question, questionIndex) => (
           <div key={question.question} className="rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg-primary)] p-5">

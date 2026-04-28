@@ -184,3 +184,50 @@
 .fade-up-stagger-5 { animation: fade-up 0.6s ease-out 0.75s both; }
 .fade-up-stagger-6 { animation: fade-up 0.8s ease-out 0.9s both; }
 .pointer-bounce { animation: bounce-short 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+
+/* Topic page h2 */
+.topic-h2 {
+  font-family: 'Lora', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: #1A1A18;
+  margin-bottom: 20px;
+  margin-top: 56px;
+}
+/* Stepper card */
+.stepper-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background-color: white;
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  margin-top: 40px;
+}
+/* Section spacing (replaces cards) */
+.topic-section {
+  margin-top: 56px;
+}
+/* Pill badge */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-family: var(--font-dm-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+.badge-pill-teal {
+  background-color: var(--surface-teal);
+  color: var(--accent-teal);
+}
+.badge-pill-amber {
+  background-color: var(--surface-amber);
+  color: var(--accent-amber);
+}
+.badge-pill-coral {
+  background-color: var(--surface-coral);
+  color: var(--accent-coral);
+}

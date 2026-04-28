@@ -1,7 +1,7 @@
 export function RealWorldHookSection({ paragraphs, ahaMoment }: { paragraphs: string[]; ahaMoment: string }) {
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 02 — Real World Hook</h2>
+    <section className="topic-section">
+      <h2 className="topic-h2">Real World Hook</h2>
       <div className="space-y-4">
         {paragraphs.map((paragraph) => (
           <p key={paragraph} className="font-dmsans text-[16px] leading-relaxed text-[var(--text-secondary)]">

@@ -14,8 +14,8 @@ export function MentalModelSection({
   diagramState?: Record<string, unknown>
 }) {
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 04 — Mental Model</h2>
+    <section className="topic-section">
+      <h2 className="topic-h2">Mental Model</h2>
       <div className="space-y-4">
         {metaphor.map((line) => (
           <p key={line} className="font-dmsans text-[16px] leading-relaxed text-[var(--text-secondary)]">

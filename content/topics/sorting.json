@@ -1,77 +1,71 @@
 {
   "id": "sorting",
   "slug": "sorting",
-  "title": "Sorting Algorithms",
+  "title": "Sorting",
   "category": "algorithm",
-  "difficulty": "beginner",
-  "estimatedMinutes": 35,
-  "prerequisites": [],
-  "tags": [
-    "sorting",
-    "algorithm"
-  ],
+  "difficulty": "medium",
+  "estimatedMinutes": 45,
+  "prerequisites": ["arrays"],
+  "tags": ["sort", "divide-and-conquer", "merge"],
   "overview": {
-    "summary": "Sorting rearranges data so later queries and scans become easier.",
-    "learningObjectives": [
-      "Build intuition for the topic.",
-      "Recognize interview triggers.",
-      "Review one representative example."
-    ],
-    "interviewRelevance": "This topic appears regularly in coding interviews."
+    "summary": "Sorting arranges elements in a specific order, creating predictability.",
+    "learningObjectives": ["Understand O(N log N) sorting behavior", "Recognize when sorting simplifies a problem"],
+    "interviewRelevance": "Often the critical first step that turns an O(N^2) naive solution into an O(N log N) elegant one."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Sorting Algorithms shows up in practical systems whenever we need to organize or process data efficiently."
+      "Whether it's displaying e-commerce products by lowest price, ranking search results, or ordering an airline seating chart, sorting brings order.",
+      "Most languages have optimized highly-tuned hybrid sorts (like Timsort) built-in."
     ],
-    "ahaMoment": "Sorting Algorithms becomes easier once you stop memorizing and start tracking the invariant."
+    "ahaMoment": "Once data is sorted, finding duplicates, binary searching, and identifying near numbers becomes trivial O(N) or O(1)."
   },
   "definition": {
-    "technicalDefinition": "Sorting Algorithms is a core DSA topic with a reusable set of mental models and tradeoffs.",
+    "technicalDefinition": "Algorithm to arrange elements of a list in a certain order (typically numerical or lexicographical).",
     "vocabulary": [
-      {
-        "term": "invariant",
-        "definition": "The condition that remains true as the algorithm runs."
-      },
-      {
-        "term": "state",
-        "definition": "The pieces of information that must be tracked at runtime."
-      }
+      { "term": "In-place", "definition": "A sort that requires O(1) extra space." },
+      { "term": "Stable", "definition": "A sort that preserves the relative order of equal elements." },
+      { "term": "Divide and Conquer", "definition": "Recursively breaking a sequence down, sorting parts, and combining them." }
     ],
     "keyProperties": [
-      "Understand the shape of the data.",
-      "Understand the cost of the main operation.",
-      "Understand the common interview pattern."
+      "Optimal comparison sorts take O(N log N) time.",
+      "Non-comparison sorts (Counting, Radix) can achieve O(N).",
+      "Most library sorts are O(N log N) and stable."
     ]
   },
-  "examples": [
+  "operations": [
     {
-      "title": "Sort Colors",
-      "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/sort-colors/",
-      "problemStatement": "A representative Sorting Algorithms problem.",
-      "inputExample": "See problem statement",
-      "outputExample": "Depends on the prompt",
-      "steps": [
-        "Recognize the topic trigger.",
-        "Apply the core invariant.",
-        "Return the requested answer."
-      ],
+      "name": "Merge Sort",
+      "description": "Divide the array in half recursively, then merge sorted halves.",
+      "timeComplexity": "O(N log N)",
+      "spaceComplexity": "O(N)",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "def merge_sort(arr):\n    if len(arr) > 1:\n        mid = len(arr) // 2\n        L, R = arr[:mid], arr[mid:]\n        merge_sort(L); merge_sort(R)\n        # ... merge step ...",
+        "javascript": "function mergeSort(arr) {\n  if (arr.length <= 1) return arr;\n  const mid = Math.floor(arr.length / 2);\n  // ... recursive divide and merge ...\n}",
+        "java": "public void mergeSort(int[] arr) {\n  // Implementation...\n}",
+        "cpp": "void mergeSort(vector<int>& arr) {\n  // Implementation...\n}"
       },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)"
+      "visualNote": "Array breaks down into 1-element chunks, then combines gracefully."
+    },
+    {
+      "name": "Quick Sort",
+      "description": "Pick a pivot, partition smaller to left and larger to right, recurse.",
+      "timeComplexity": "O(N log N) average",
+      "spaceComplexity": "O(log N)",
+      "code": {
+        "python": "def quick_sort(arr):\n    if len(arr) <= 1: return arr\n    pivot = arr[len(arr) // 2]\n    # ... recursion ...",
+        "javascript": "function quickSort(arr) {\n  // Implementation...\n}",
+        "java": "public void quickSort(int[] arr, int low, int high) {\n  // Implementation...\n}",
+        "cpp": "void quickSort(vector<int>& arr, int low, int high) {\n  // Implementation...\n}"
+      },
+      "visualNote": "Pivots snap into their final global positions early on."
     }
   ],
   "practice": [
-    {
-      "title": "Sort Colors",
-      "url": "https://leetcode.com/problems/sort-colors/",
-      "difficulty": "medium",
-      "keyInsight": "Representative Sorting Algorithms reasoning."
-    }
+    { "title": "Merge Intervals", "url": "https://leetcode.com/problems/merge-intervals/", "difficulty": "medium", "keyInsight": "Sorting by start time naturally groups overlapping intervals." },
+    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Sort the frequency map counts, or use Bucket Sort in O(N)." },
+    { "title": "Sort Colors", "url": "https://leetcode.com/problems/sort-colors/", "difficulty": "medium", "keyInsight": "Dutch National Flag problem, sorting in O(N) via swapping 3 categories." },
+    { "title": "Kth Largest Element in an Array", "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/", "difficulty": "medium", "keyInsight": "Quickselect conceptually sorts only the half containing K." },
+    { "title": "Contains Duplicate", "url": "https://leetcode.com/problems/contains-duplicate/", "difficulty": "easy", "keyInsight": "Sorting makes duplicates sit directly next to each other." },
+    { "title": "Two Sum II - Input array is sorted", "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/", "difficulty": "medium", "keyInsight": "Sorting enables the fast two-pointer technique." }
   ]
 }

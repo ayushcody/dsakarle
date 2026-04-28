@@ -43,15 +43,16 @@
   {
     "id": "binary-search",
     "slug": "binary-search",
-    "title": "Binary Search Pattern",
+    "title": "Binary Search",
     "category": "algorithm",
-    "difficulty": "beginner",
+    "difficulty": "medium",
     "tags": [
-      "binary-search",
-      "algorithm"
+      "search",
+      "logN",
+      "sorted"
     ],
     "overview": {
-      "summary": "Binary Search repeatedly discards half the search space when the search predicate is monotonic."
+      "summary": "Binary Search finds elements in a sorted array by repeatedly halving the search window."
     }
   },
   {
@@ -122,15 +123,16 @@
   {
     "id": "hash-maps",
     "slug": "hash-maps",
-    "title": "Hash Maps & Hash Sets",
+    "title": "Hash Maps",
     "category": "data-structure",
-    "difficulty": "intermediate",
+    "difficulty": "beginner",
     "tags": [
-      "hash-maps",
-      "data-structure"
+      "hash-table",
+      "mapping",
+      "key-value"
     ],
     "overview": {
-      "summary": "Hash-based lookup trades ordering for near-constant-time membership and retrieval."
+      "summary": "Hash maps store data in key-value pairs, allowing lightning-fast data retrieval."
     }
   },
   {
@@ -151,13 +153,14 @@
     "slug": "linked-lists",
     "title": "Linked Lists",
     "category": "data-structure",
-    "difficulty": "beginner",
+    "difficulty": "easy",
     "tags": [
-      "linked-lists",
-      "data-structure"
+      "linked-list",
+      "pointers",
+      "nodes"
     ],
     "overview": {
-      "summary": "Linked Lists trade direct indexing for flexible pointer rewiring."
+      "summary": "Linked lists are chains of discrete nodes connected by pointers."
     }
   },
   {
@@ -180,10 +183,11 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "queues"
+      "queue",
+      "FIFO"
     ],
     "overview": {
-      "summary": "Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Queues are FIFO (First-In-First-Out) data structures, just like a line at a store."
     }
   },
   {
@@ -230,15 +234,16 @@
   {
     "id": "sorting",
     "slug": "sorting",
-    "title": "Sorting Algorithms",
+    "title": "Sorting",
     "category": "algorithm",
-    "difficulty": "beginner",
+    "difficulty": "medium",
     "tags": [
-      "sorting",
-      "algorithm"
+      "sort",
+      "divide-and-conquer",
+      "merge"
     ],
     "overview": {
-      "summary": "Sorting rearranges data so later queries and scans become easier."
+      "summary": "Sorting arranges elements in a specific order, creating predictability."
     }
   },
   {
@@ -261,10 +266,11 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "stacks"
+      "stack",
+      "LIFO"
     ],
     "overview": {
-      "summary": "Stacks is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Stacks are simple LIFO (Last-In-First-Out) data structures, like a stack of plates."
     }
   },
   {
@@ -274,25 +280,27 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "strings",
-      "data-structure"
+      "string",
+      "text",
+      "character"
     ],
     "overview": {
-      "summary": "Strings are arrays of characters with pattern-heavy traversal rules."
+      "summary": "Strings are arrays of characters under the hood, but often have special immutable properties."
     }
   },
   {
     "id": "trees",
     "slug": "trees",
-    "title": "Binary Trees",
+    "title": "Trees",
     "category": "data-structure",
-    "difficulty": "intermediate",
+    "difficulty": "medium",
     "tags": [
-      "trees",
-      "data-structure"
+      "tree",
+      "recursion",
+      "hierarchical"
     ],
     "overview": {
-      "summary": "Trees model hierarchical structure and recursive decomposition."
+      "summary": "Trees are hierarchical data structures modeling relationships rather than flat lists."
     }
   },
   {
@@ -326,14 +334,16 @@
   {
     "id": "vectors",
     "slug": "vectors",
-    "title": "Vectors (Dynamic Arrays)",
+    "title": "Dynamic Arrays (Vectors)",
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "vectors"
+      "array",
+      "dynamic",
+      "amortized"
     ],
     "overview": {
-      "summary": "Vectors (Dynamic Arrays) is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Vectors are arrays that grow automatically when they run out of space."
     }
   }
 ]

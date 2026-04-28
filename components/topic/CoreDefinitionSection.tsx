@@ -10,8 +10,8 @@ export function CoreDefinitionSection({
   keyProperties: string[]
 }) {
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="section-heading">Section 03 — Core Definition</h2>
+    <section className="topic-section">
+      <h2 className="topic-h2">Core Definition</h2>
       <p className="font-dmsans text-[16px] leading-relaxed text-[var(--text-secondary)]">{technicalDefinition}</p>
       <div className="mt-6 overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border)]">
         <table className="w-full border-collapse text-left">

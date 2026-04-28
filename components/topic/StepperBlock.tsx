@@ -59,8 +59,14 @@ export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockPr
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <DiagramRouter
         diagramType={stepperData.diagramType}
-        cells={stepperData.array || []}
+        cells={stepperData.array ?? []}
         diagramState={step.diagramState}
+        left={(step.diagramState as Record<string, unknown>)?.left as number | undefined ?? -1}
+        right={(step.diagramState as Record<string, unknown>)?.right as number | undefined ?? -1}
+        windowStart={(step.diagramState as Record<string, unknown>)?.windowStart as number | undefined}
+        windowEnd={(step.diagramState as Record<string, unknown>)?.windowEnd as number | undefined}
+        highlighted={(step.diagramState as Record<string, unknown>)?.highlighted as number[] | undefined ?? []}
+        comparing={(step.diagramState as Record<string, unknown>)?.comparing as number[] | undefined ?? []}
       />
 
       <p

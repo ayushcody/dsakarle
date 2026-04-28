@@ -132,7 +132,8 @@
           "windowEnd": 0,
           "highlighted": [
             0
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -154,7 +155,8 @@
           "windowEnd": 0,
           "highlighted": [
             0
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -173,7 +175,9 @@
           "left": 0,
           "right": 0,
           "windowStart": 0,
-          "windowEnd": 0
+          "windowEnd": 0,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -195,7 +199,8 @@
           "windowEnd": 1,
           "highlighted": [
             1
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -214,7 +219,9 @@
           "left": 0,
           "right": 1,
           "windowStart": 0,
-          "windowEnd": 1
+          "windowEnd": 1,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -236,7 +243,8 @@
           "windowEnd": 2,
           "highlighted": [
             2
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -255,7 +263,9 @@
           "left": 0,
           "right": 2,
           "windowStart": 0,
-          "windowEnd": 2
+          "windowEnd": 2,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -274,7 +284,9 @@
           "left": 0,
           "right": 2,
           "windowStart": 0,
-          "windowEnd": 2
+          "windowEnd": 2,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -296,7 +308,8 @@
           "windowEnd": 3,
           "highlighted": [
             3
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -315,7 +328,9 @@
           "left": 0,
           "right": 3,
           "windowStart": 0,
-          "windowEnd": 3
+          "windowEnd": 3,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -337,7 +352,8 @@
           "windowEnd": 3,
           "highlighted": [
             0
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -359,7 +375,8 @@
           "windowEnd": 3,
           "highlighted": [
             0
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 0,
@@ -378,7 +395,9 @@
           "left": 1,
           "right": 3,
           "windowStart": 1,
-          "windowEnd": 3
+          "windowEnd": 3,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 1,
@@ -397,7 +416,9 @@
           "left": 1,
           "right": 3,
           "windowStart": 1,
-          "windowEnd": 3
+          "windowEnd": 3,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 1,
@@ -419,7 +440,8 @@
           "windowEnd": 4,
           "highlighted": [
             4
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 1,
@@ -438,7 +460,9 @@
           "left": 1,
           "right": 4,
           "windowStart": 1,
-          "windowEnd": 4
+          "windowEnd": 4,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 1,
@@ -460,7 +484,8 @@
           "windowEnd": 4,
           "highlighted": [
             1
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 1,
@@ -482,7 +507,8 @@
           "windowEnd": 4,
           "highlighted": [
             1
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 1,
@@ -501,7 +527,9 @@
           "left": 2,
           "right": 4,
           "windowStart": 2,
-          "windowEnd": 4
+          "windowEnd": 4,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 2,
@@ -520,7 +548,9 @@
           "left": 2,
           "right": 4,
           "windowStart": 2,
-          "windowEnd": 4
+          "windowEnd": 4,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 2,
@@ -542,7 +572,8 @@
           "windowEnd": 5,
           "highlighted": [
             5
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 2,
@@ -561,7 +592,9 @@
           "left": 2,
           "right": 5,
           "windowStart": 2,
-          "windowEnd": 5
+          "windowEnd": 5,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 2,
@@ -583,7 +616,8 @@
           "windowEnd": 5,
           "highlighted": [
             2
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 2,
@@ -605,7 +639,8 @@
           "windowEnd": 5,
           "highlighted": [
             2
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 2,
@@ -624,7 +659,9 @@
           "left": 3,
           "right": 5,
           "windowStart": 3,
-          "windowEnd": 5
+          "windowEnd": 5,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 3,
@@ -643,7 +680,9 @@
           "left": 3,
           "right": 5,
           "windowStart": 3,
-          "windowEnd": 5
+          "windowEnd": 5,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 3,
@@ -665,7 +704,8 @@
           "windowEnd": 6,
           "highlighted": [
             6
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 3,
@@ -684,7 +724,9 @@
           "left": 3,
           "right": 6,
           "windowStart": 3,
-          "windowEnd": 6
+          "windowEnd": 6,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 3,
@@ -706,7 +748,8 @@
           "windowEnd": 6,
           "highlighted": [
             3
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 3,
@@ -728,7 +771,8 @@
           "windowEnd": 6,
           "highlighted": [
             3
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 3,
@@ -747,7 +791,9 @@
           "left": 4,
           "right": 6,
           "windowStart": 4,
-          "windowEnd": 6
+          "windowEnd": 6,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 4,
@@ -766,7 +812,9 @@
           "left": 4,
           "right": 6,
           "windowStart": 4,
-          "windowEnd": 6
+          "windowEnd": 6,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 4,
@@ -788,7 +836,8 @@
           "windowEnd": 7,
           "highlighted": [
             7
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 4,
@@ -807,7 +856,9 @@
           "left": 4,
           "right": 7,
           "windowStart": 4,
-          "windowEnd": 7
+          "windowEnd": 7,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 4,
@@ -829,7 +880,8 @@
           "windowEnd": 7,
           "highlighted": [
             4
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 4,
@@ -851,7 +903,8 @@
           "windowEnd": 7,
           "highlighted": [
             4
-          ]
+          ],
+          "comparing": []
         },
         "variables": {
           "left": 4,
@@ -870,7 +923,9 @@
           "left": 5,
           "right": 7,
           "windowStart": 5,
-          "windowEnd": 7
+          "windowEnd": 7,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 5,
@@ -889,7 +944,9 @@
           "left": 5,
           "right": 7,
           "windowStart": 5,
-          "windowEnd": 7
+          "windowEnd": 7,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 5,
@@ -908,7 +965,9 @@
           "left": 5,
           "right": 7,
           "windowStart": 5,
-          "windowEnd": 7
+          "windowEnd": 7,
+          "highlighted": [],
+          "comparing": []
         },
         "variables": {
           "left": 5,
