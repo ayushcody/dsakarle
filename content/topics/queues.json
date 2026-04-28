@@ -2,6 +2,8 @@
   "id": "queues",
   "slug": "queues",
   "title": "Queues",
+  "analogy": "A queue is like a line at a movie ticket counter — the first person in line gets served first, and new people join at the back.",
+  "analogyIcon": "🎬",
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 30,

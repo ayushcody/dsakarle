@@ -2,31 +2,83 @@
   "id": "greedy",
   "slug": "greedy",
   "title": "Greedy Algorithms",
+  "analogy": "A greedy algorithm is like always picking the biggest coin when making change — at each step you make the locally optimal choice, hoping it leads to a globally optimal solution.",
+  "analogyIcon": "💰",
   "category": "algorithm",
   "difficulty": "intermediate",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "greedy"
-  ],
+  "estimatedMinutes": 35,
+  "prerequisites": ["sorting"],
+  "tags": ["greedy", "optimization", "local-optimal"],
   "overview": {
-    "summary": "Greedy Algorithms is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "Greedy algorithms build solutions piece by piece, always choosing the option that looks best at the current moment without reconsidering past choices.",
     "learningObjectives": [
-      "Recognize the role of Greedy Algorithms in interviews.",
-      "Review one short summary of Greedy Algorithms.",
-      "Use the practice list to keep momentum."
+      "Understand the greedy-choice property.",
+      "Distinguish problems solvable by greedy vs those requiring DP.",
+      "Prove greedy correctness via exchange argument."
     ],
-    "interviewRelevance": "Greedy Algorithms remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "Greedy problems appear frequently in scheduling, interval, and optimization questions."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Huffman coding (used in ZIP compression) uses a greedy algorithm to assign shorter codes to more frequent characters.",
+      "Job scheduling in operating systems often uses greedy heuristics to maximize throughput."
+    ],
+    "ahaMoment": "Greedy works when making the locally best choice at each step guarantees the globally best outcome."
+  },
+  "definition": {
+    "technicalDefinition": "A greedy algorithm makes the locally optimal choice at each step with the hope of finding a global optimum. It never reconsiders previous decisions.",
+    "vocabulary": [
+      { "term": "Greedy Choice Property", "definition": "A global optimum can be reached by making locally optimal choices." },
+      { "term": "Exchange Argument", "definition": "A proof technique showing any non-greedy solution can be improved by swapping to the greedy choice." },
+      { "term": "Feasible Solution", "definition": "A solution that satisfies all problem constraints." }
+    ],
+    "keyProperties": [
+      "Makes irrevocable decisions at each step.",
+      "Usually runs in O(N log N) due to sorting.",
+      "Does NOT work for all optimization problems — DP may be needed."
+    ]
+  },
+  "operations": [
     {
-      "title": "Greedy Algorithms warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Greedy Algorithms."
+      "name": "Interval Scheduling",
+      "description": "Select the maximum number of non-overlapping intervals by always picking the one that ends earliest.",
+      "timeComplexity": "O(N log N)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "def max_meetings(intervals):\n    intervals.sort(key=lambda x: x[1])\n    count, end = 0, float('-inf')\n    for s, e in intervals:\n        if s >= end:\n            count += 1\n            end = e\n    return count",
+        "javascript": "function maxMeetings(intervals) {\n  intervals.sort((a, b) => a[1] - b[1]);\n  let count = 0, end = -Infinity;\n  for (const [s, e] of intervals) {\n    if (s >= end) { count++; end = e; }\n  }\n  return count;\n}",
+        "java": "int maxMeetings(int[][] intervals) {\n    Arrays.sort(intervals, (a, b) -> a[1] - b[1]);\n    int count = 0, end = Integer.MIN_VALUE;\n    for (int[] iv : intervals) {\n        if (iv[0] >= end) { count++; end = iv[1]; }\n    }\n    return count;\n}",
+        "cpp": "int maxMeetings(vector<pair<int,int>>& intervals) {\n    sort(intervals.begin(), intervals.end(),\n         [](auto& a, auto& b){ return a.second < b.second; });\n    int count = 0, end = INT_MIN;\n    for (auto& [s, e] : intervals) {\n        if (s >= end) { count++; end = e; }\n    }\n    return count;\n}"
+      },
+      "visualNote": "Intervals on a timeline, selected ones highlighted green, rejected ones crossed out."
     }
   ],
+  "practice": [
+    { "title": "Jump Game", "url": "https://leetcode.com/problems/jump-game/", "difficulty": "medium", "keyInsight": "Track the farthest reachable index greedily." },
+    { "title": "Non-overlapping Intervals", "url": "https://leetcode.com/problems/non-overlapping-intervals/", "difficulty": "medium", "keyInsight": "Sort by end time, count overlaps to remove." },
+    { "title": "Assign Cookies", "url": "https://leetcode.com/problems/assign-cookies/", "difficulty": "easy", "keyInsight": "Sort both arrays and match smallest cookie to smallest child." },
+    { "title": "Gas Station", "url": "https://leetcode.com/problems/gas-station/", "difficulty": "medium", "keyInsight": "If total gas >= total cost, a solution exists. Find the start greedily." },
+    { "title": "Task Scheduler", "url": "https://leetcode.com/problems/task-scheduler/", "difficulty": "medium", "keyInsight": "Greedy: schedule most frequent task first, fill cooling slots." },
+    { "title": "Partition Labels", "url": "https://leetcode.com/problems/partition-labels/", "difficulty": "medium", "keyInsight": "Extend partition greedily until all chars' last occurrences are included." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "When does greedy fail?",
+      "options": [
+        "When locally optimal choices don't lead to a global optimum",
+        "When the input is sorted",
+        "When there are no constraints",
+        "Greedy never fails"
+      ],
+      "correctIndex": 0,
+      "explanation": "Greedy fails when the problem lacks the greedy-choice property, e.g., 0/1 Knapsack."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Given a set of meetings with start and end times, find the maximum number of non-overlapping meetings you can attend.",
+    "correctPatternId": "greedy",
+    "distractors": ["dynamic-programming", "backtracking", "sliding-window"],
+    "explanation": "Interval scheduling with earliest-end-time selection is the textbook greedy problem."
+  }
 }

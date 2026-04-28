@@ -1,3 +1,5 @@
+'use client';
+
 import { ArrayDiagram } from './ArrayDiagram';
 import LinkedListDiagram from './LinkedListDiagram';
 import { TreeDiagram } from './TreeDiagram';

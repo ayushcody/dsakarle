@@ -2,31 +2,78 @@
   "id": "graphs",
   "slug": "graphs",
   "title": "Graphs",
+  "analogy": "A graph is like a social network — each person is a node and friendships are edges. Some friendships are one-way (directed), some are mutual (undirected).",
+  "analogyIcon": "🕸️",
   "category": "data-structure",
   "difficulty": "intermediate",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "graphs"
-  ],
+  "estimatedMinutes": 50,
+  "prerequisites": ["arrays", "hash-maps"],
+  "tags": ["graph", "adjacency-list", "adjacency-matrix", "connected-components"],
   "overview": {
-    "summary": "Graphs is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "Graphs are the most general data structure — they model relationships between pairs of objects using nodes (vertices) and edges.",
     "learningObjectives": [
-      "Recognize the role of Graphs in interviews.",
-      "Review one short summary of Graphs.",
-      "Use the practice list to keep momentum."
+      "Understand directed vs undirected, weighted vs unweighted graphs.",
+      "Represent graphs using adjacency lists and adjacency matrices.",
+      "Identify connected components and cycles."
     ],
-    "interviewRelevance": "Graphs remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "Graph problems appear in 20%+ of interviews — networks, dependencies, shortest paths, and topological ordering."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Google Maps models roads as a graph: intersections are nodes, roads are edges, and distances are weights.",
+      "Social networks, flight routes, package dependency trees, and neural networks are all graphs."
+    ],
+    "ahaMoment": "Any problem involving connections between entities — where you need to traverse, search, or find paths — is a graph problem in disguise."
+  },
+  "definition": {
+    "technicalDefinition": "A graph G = (V, E) consists of a set of vertices V and a set of edges E, where each edge connects two vertices. Edges can be directed or undirected, and optionally carry weights.",
+    "vocabulary": [
+      { "term": "Vertex (Node)", "definition": "A fundamental unit in the graph." },
+      { "term": "Edge", "definition": "A connection between two vertices." },
+      { "term": "Adjacency List", "definition": "A mapping from each vertex to its list of neighbors." },
+      { "term": "Degree", "definition": "Number of edges connected to a vertex." }
+    ],
+    "keyProperties": [
+      "Adjacency list: O(V + E) space. Adjacency matrix: O(V²) space.",
+      "Traversal (BFS/DFS) visits all vertices and edges: O(V + E).",
+      "Directed graphs can have cycles; DAGs (Directed Acyclic Graphs) cannot."
+    ]
+  },
+  "operations": [
     {
-      "title": "Graphs warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Graphs."
+      "name": "Build Adjacency List",
+      "description": "Convert edge pairs into a dictionary mapping each node to its neighbors.",
+      "timeComplexity": "O(V + E)",
+      "spaceComplexity": "O(V + E)",
+      "code": {
+        "python": "from collections import defaultdict\n\ndef build_graph(edges):\n    graph = defaultdict(list)\n    for u, v in edges:\n        graph[u].append(v)\n        graph[v].append(u)  # undirected\n    return graph",
+        "javascript": "function buildGraph(edges) {\n  const graph = {};\n  for (const [u, v] of edges) {\n    (graph[u] ||= []).push(v);\n    (graph[v] ||= []).push(u);\n  }\n  return graph;\n}",
+        "java": "Map<Integer, List<Integer>> buildGraph(int[][] edges) {\n    Map<Integer, List<Integer>> g = new HashMap<>();\n    for (int[] e : edges) {\n        g.computeIfAbsent(e[0], k -> new ArrayList<>()).add(e[1]);\n        g.computeIfAbsent(e[1], k -> new ArrayList<>()).add(e[0]);\n    }\n    return g;\n}",
+        "cpp": "unordered_map<int, vector<int>> buildGraph(vector<pair<int,int>>& edges) {\n    unordered_map<int, vector<int>> g;\n    for (auto& [u, v] : edges) {\n        g[u].push_back(v);\n        g[v].push_back(u);\n    }\n    return g;\n}"
+      },
+      "visualNote": "Nodes arranged in a circle with edges drawn between connected pairs."
     }
   ],
+  "practice": [
+    { "title": "Number of Islands", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "Grid as implicit graph, count connected components." },
+    { "title": "Clone Graph", "url": "https://leetcode.com/problems/clone-graph/", "difficulty": "medium", "keyInsight": "BFS/DFS with original→clone hash map." },
+    { "title": "Course Schedule", "url": "https://leetcode.com/problems/course-schedule/", "difficulty": "medium", "keyInsight": "Directed graph cycle detection via topological sort." },
+    { "title": "Graph Valid Tree", "url": "https://leetcode.com/problems/graph-valid-tree/", "difficulty": "medium", "keyInsight": "A tree is a connected acyclic graph with V-1 edges." },
+    { "title": "Network Delay Time", "url": "https://leetcode.com/problems/network-delay-time/", "difficulty": "medium", "keyInsight": "Dijkstra's algorithm with a min-heap." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "What is the space complexity of an adjacency list representation?",
+      "options": ["O(V + E)", "O(V²)", "O(E²)", "O(V)"],
+      "correctIndex": 0,
+      "explanation": "Each vertex has a list entry, and each edge is stored twice (once per endpoint)."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Given N cities and M roads between them, determine if you can reach every city from city 0.",
+    "correctPatternId": "graphs",
+    "distractors": ["arrays", "binary-search", "dynamic-programming"],
+    "explanation": "Connectivity in a network is a fundamental graph problem solved via BFS/DFS."
+  }
 }

@@ -1,32 +1,79 @@
 {
   "id": "stacks-queues",
   "slug": "stacks-queues",
-  "title": "Stacks & Queues",
+  "title": "Stacks & Queues Combined",
+  "analogy": "Think of stacks and queues as two different checkout systems — a stack is like a Pringles can (LIFO: last chip in is first chip out), while a queue is like a cafeteria line (FIFO: first in, first served).",
+  "analogyIcon": "🔄",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "stacks-queues"
-  ],
+  "estimatedMinutes": 35,
+  "prerequisites": ["arrays"],
+  "tags": ["stack", "queue", "LIFO", "FIFO", "deque"],
   "overview": {
-    "summary": "Stacks & Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "Stacks (LIFO) and Queues (FIFO) are the two fundamental restricted-access data structures. Understanding both and knowing when to use which is key.",
     "learningObjectives": [
-      "Recognize the role of Stacks & Queues in interviews.",
-      "Review one short summary of Stacks & Queues.",
-      "Use the practice list to keep momentum."
+      "Compare LIFO vs FIFO access patterns.",
+      "Implement one using the other (stack from queues, queue from stacks).",
+      "Apply monotonic stacks and deques to optimize problems."
     ],
-    "interviewRelevance": "Stacks & Queues remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "Implementing one ADT using the other is a classic interview question. Monotonic stacks appear in next-greater-element problems."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Your browser's back button is a stack (LIFO). A print queue is a queue (FIFO). Together they model most sequential processing patterns.",
+      "Monotonic stacks and deques power sliding-window maximum and stock span problems used in finance."
+    ],
+    "ahaMoment": "Stack = most recently added first. Queue = longest-waiting first. The choice depends on whether recency or fairness matters."
+  },
+  "definition": {
+    "technicalDefinition": "A stack supports push (add to top) and pop (remove from top) in LIFO order. A queue supports enqueue (add to back) and dequeue (remove from front) in FIFO order.",
+    "vocabulary": [
+      { "term": "LIFO", "definition": "Last In, First Out — the stack access pattern." },
+      { "term": "FIFO", "definition": "First In, First Out — the queue access pattern." },
+      { "term": "Deque", "definition": "Double-ended queue supporting push/pop from both ends in O(1)." },
+      { "term": "Monotonic Stack", "definition": "A stack that maintains elements in non-increasing or non-decreasing order." }
+    ],
+    "keyProperties": [
+      "All basic operations (push, pop, enqueue, dequeue) are O(1).",
+      "A stack from 2 queues: enqueue new item, rotate all old items behind it.",
+      "A queue from 2 stacks: push to 'in' stack, pop by pouring to 'out' stack when needed."
+    ]
+  },
+  "operations": [
     {
-      "title": "Stacks & Queues warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Stacks & Queues."
+      "name": "Queue from Two Stacks",
+      "description": "Use an 'in' stack for push and an 'out' stack for pop. Pour from in to out only when out is empty.",
+      "timeComplexity": "O(1) amortized per operation",
+      "spaceComplexity": "O(N)",
+      "code": {
+        "python": "class MyQueue:\n    def __init__(self):\n        self.stack_in = []\n        self.stack_out = []\n\n    def push(self, x):\n        self.stack_in.append(x)\n\n    def pop(self):\n        if not self.stack_out:\n            while self.stack_in:\n                self.stack_out.append(self.stack_in.pop())\n        return self.stack_out.pop()",
+        "javascript": "class MyQueue {\n  constructor() { this.inStack = []; this.outStack = []; }\n  push(x) { this.inStack.push(x); }\n  pop() {\n    if (!this.outStack.length) {\n      while (this.inStack.length) this.outStack.push(this.inStack.pop());\n    }\n    return this.outStack.pop();\n  }\n}",
+        "java": "class MyQueue {\n    Stack<Integer> in = new Stack<>(), out = new Stack<>();\n    void push(int x) { in.push(x); }\n    int pop() {\n        if (out.isEmpty()) while (!in.isEmpty()) out.push(in.pop());\n        return out.pop();\n    }\n}",
+        "cpp": "class MyQueue {\n    stack<int> in, out;\npublic:\n    void push(int x) { in.push(x); }\n    int pop() {\n        if (out.empty()) while (!in.empty()) { out.push(in.top()); in.pop(); }\n        int val = out.top(); out.pop(); return val;\n    }\n};"
+      },
+      "visualNote": "Items pour from one cylinder to another, reversing their order."
     }
   ],
+  "practice": [
+    { "title": "Implement Queue using Stacks", "url": "https://leetcode.com/problems/implement-queue-using-stacks/", "difficulty": "easy", "keyInsight": "Two stacks: push to in-stack, pour to out-stack on pop." },
+    { "title": "Implement Stack using Queues", "url": "https://leetcode.com/problems/implement-stack-using-queues/", "difficulty": "easy", "keyInsight": "After push, rotate all previous elements behind the new one." },
+    { "title": "Daily Temperatures", "url": "https://leetcode.com/problems/daily-temperatures/", "difficulty": "medium", "keyInsight": "Monotonic decreasing stack tracks unresolved days." },
+    { "title": "Sliding Window Maximum", "url": "https://leetcode.com/problems/sliding-window-maximum/", "difficulty": "hard", "keyInsight": "Monotonic deque maintains window max candidates." },
+    { "title": "Next Greater Element I", "url": "https://leetcode.com/problems/next-greater-element-i/", "difficulty": "easy", "keyInsight": "Monotonic stack processes elements right to left." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "What is the amortized time complexity of queue operations using two stacks?",
+      "options": ["O(1)", "O(N)", "O(log N)", "O(N²)"],
+      "correctIndex": 0,
+      "explanation": "Each element is moved from in-stack to out-stack at most once, so amortized cost per operation is O(1)."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Design a data structure that supports push, pop, peek, and empty operations following FIFO order, using only LIFO stacks.",
+    "correctPatternId": "stacks-queues",
+    "distractors": ["arrays", "linked-lists", "hash-maps"],
+    "explanation": "This is the classic 'implement queue using stacks' problem."
+  }
 }

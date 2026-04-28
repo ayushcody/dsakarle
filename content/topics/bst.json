@@ -2,31 +2,90 @@
   "id": "bst",
   "slug": "bst",
   "title": "Binary Search Trees",
+  "analogy": "A BST is like a library's card catalog sorted alphabetically — to find a book, you check the current card: if your book comes before it alphabetically, go left; otherwise go right.",
+  "analogyIcon": "📚",
   "category": "data-structure",
   "difficulty": "intermediate",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "bst"
-  ],
+  "estimatedMinutes": 45,
+  "prerequisites": ["trees", "binary-search"],
+  "tags": ["bst", "binary-search-tree", "in-order"],
   "overview": {
-    "summary": "Binary Search Trees is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "A BST is a binary tree where every left descendant is smaller and every right descendant is larger, enabling O(log N) search, insert, and delete on average.",
     "learningObjectives": [
-      "Recognize the role of Binary Search Trees in interviews.",
-      "Review one short summary of Binary Search Trees.",
-      "Use the practice list to keep momentum."
+      "Understand the BST property and its implications.",
+      "Implement search, insert, and delete operations.",
+      "Know when BSTs degenerate to O(N) and why balanced BSTs exist."
     ],
-    "interviewRelevance": "Binary Search Trees remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "BST operations, validation, and in-order traversal are common interview questions."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Database indexes often use balanced BSTs (Red-Black Trees, B-Trees) to enable fast lookups on sorted data.",
+      "C++ std::set and Java TreeSet are implemented as balanced BSTs."
+    ],
+    "ahaMoment": "In-order traversal of a BST produces a sorted sequence — the tree IS a sorted structure."
+  },
+  "definition": {
+    "technicalDefinition": "A Binary Search Tree is a binary tree where for every node, all values in the left subtree are strictly less and all values in the right subtree are strictly greater.",
+    "vocabulary": [
+      { "term": "BST Property", "definition": "Left < Node < Right for every node in the tree." },
+      { "term": "In-order Traversal", "definition": "Left → Node → Right — produces sorted output for a BST." },
+      { "term": "Balanced BST", "definition": "A BST with O(log N) height guarantee (AVL, Red-Black)." }
+    ],
+    "keyProperties": [
+      "Average case: O(log N) search, insert, delete.",
+      "Worst case (skewed): O(N) — degenerates to a linked list.",
+      "In-order traversal yields sorted order."
+    ]
+  },
+  "operations": [
     {
-      "title": "Binary Search Trees warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Binary Search Trees."
+      "name": "Search",
+      "description": "Compare target with current node, go left if smaller, right if larger.",
+      "timeComplexity": "O(log N) average, O(N) worst",
+      "spaceComplexity": "O(log N) recursive, O(1) iterative",
+      "code": {
+        "python": "def search(root, target):\n    if not root:\n        return None\n    if target == root.val:\n        return root\n    elif target < root.val:\n        return search(root.left, target)\n    else:\n        return search(root.right, target)",
+        "javascript": "function search(root, target) {\n  if (!root) return null;\n  if (target === root.val) return root;\n  if (target < root.val) return search(root.left, target);\n  return search(root.right, target);\n}",
+        "java": "TreeNode search(TreeNode root, int target) {\n    if (root == null) return null;\n    if (target == root.val) return root;\n    if (target < root.val) return search(root.left, target);\n    return search(root.right, target);\n}",
+        "cpp": "TreeNode* search(TreeNode* root, int target) {\n    if (!root) return nullptr;\n    if (target == root->val) return root;\n    if (target < root->val) return search(root->left, target);\n    return search(root->right, target);\n}"
+      },
+      "visualNote": "Path from root lights up as we descend left or right based on comparison."
+    },
+    {
+      "name": "Insert",
+      "description": "Navigate to the correct leaf position and add the new node.",
+      "timeComplexity": "O(log N) average",
+      "spaceComplexity": "O(log N) recursive",
+      "code": {
+        "python": "def insert(root, val):\n    if not root:\n        return TreeNode(val)\n    if val < root.val:\n        root.left = insert(root.left, val)\n    else:\n        root.right = insert(root.right, val)\n    return root",
+        "javascript": "function insert(root, val) {\n  if (!root) return new TreeNode(val);\n  if (val < root.val) root.left = insert(root.left, val);\n  else root.right = insert(root.right, val);\n  return root;\n}",
+        "java": "TreeNode insert(TreeNode root, int val) {\n    if (root == null) return new TreeNode(val);\n    if (val < root.val) root.left = insert(root.left, val);\n    else root.right = insert(root.right, val);\n    return root;\n}",
+        "cpp": "TreeNode* insert(TreeNode* root, int val) {\n    if (!root) return new TreeNode(val);\n    if (val < root->val) root->left = insert(root->left, val);\n    else root->right = insert(root->right, val);\n    return root;\n}"
+      },
+      "visualNote": "New node appears at the correct leaf position with a spring animation."
     }
   ],
+  "practice": [
+    { "title": "Validate Binary Search Tree", "url": "https://leetcode.com/problems/validate-binary-search-tree/", "difficulty": "medium", "keyInsight": "Pass min/max bounds downward or use in-order traversal." },
+    { "title": "Kth Smallest Element in a BST", "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/", "difficulty": "medium", "keyInsight": "In-order traversal gives sorted order; return the Kth element." },
+    { "title": "Lowest Common Ancestor of a BST", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/", "difficulty": "medium", "keyInsight": "If both values < node, go left. If both > node, go right. Else, current node is LCA." },
+    { "title": "Delete Node in a BST", "url": "https://leetcode.com/problems/delete-node-in-a-bst/", "difficulty": "medium", "keyInsight": "Three cases: leaf, one child, or two children (replace with in-order successor)." },
+    { "title": "Convert Sorted Array to BST", "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/", "difficulty": "easy", "keyInsight": "Pick middle element as root, recurse on left and right halves." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "What does in-order traversal of a BST produce?",
+      "options": ["A sorted sequence", "A reverse-sorted sequence", "A level-order sequence", "A random sequence"],
+      "correctIndex": 0,
+      "explanation": "In-order visits left-node-right, which for a BST means ascending order."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Given a binary tree, determine if it's a valid BST.",
+    "correctPatternId": "bst",
+    "distractors": ["arrays", "hash-maps", "graphs"],
+    "explanation": "Validating the BST property (left < node < right for all nodes) is a classic BST problem."
+  }
 }

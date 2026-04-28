@@ -2,6 +2,8 @@
   "id": "linked-lists",
   "slug": "linked-lists",
   "title": "Linked Lists",
+  "analogy": "A linked list is like a scavenger hunt — each clue card tells you the location of the next clue. You must follow the chain, one step at a time.",
+  "analogyIcon": "🔗",
   "category": "data-structure",
   "difficulty": "easy",
   "estimatedMinutes": 60,

@@ -2,31 +2,95 @@
   "id": "fast-and-slow-pointers",
   "slug": "fast-and-slow-pointers",
   "title": "Fast and Slow Pointers",
+  "analogy": "Imagine two runners on a circular track — the fast runner goes twice as fast. Eventually the fast runner laps the slow runner, proving the track has a loop.",
+  "analogyIcon": "🐢🐇",
   "category": "algorithm",
   "difficulty": "intermediate",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "fast-and-slow-pointers"
-  ],
+  "estimatedMinutes": 30,
+  "prerequisites": ["linked-lists"],
+  "tags": ["tortoise-hare", "cycle-detection", "linked-list"],
   "overview": {
-    "summary": "Fast and Slow Pointers is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "The fast-and-slow pointer technique (Floyd's Tortoise and Hare) uses two pointers moving at different speeds to detect cycles, find midpoints, and solve linked list problems.",
     "learningObjectives": [
-      "Recognize the role of Fast and Slow Pointers in interviews.",
-      "Review one short summary of Fast and Slow Pointers.",
-      "Use the practice list to keep momentum."
+      "Detect cycles in O(1) space using Floyd's algorithm.",
+      "Find the start of a cycle.",
+      "Find the middle of a linked list in one pass."
     ],
-    "interviewRelevance": "Fast and Slow Pointers remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "Cycle detection and midpoint-finding are top-tier linked list interview problems."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Deadlock detection in operating systems uses cycle detection in resource allocation graphs.",
+      "Finding the duplicate number in an array (where values are in range 1..N) can be solved with Floyd's cycle detection."
+    ],
+    "ahaMoment": "If a fast pointer (2× speed) ever meets a slow pointer, there MUST be a cycle — they can't meet on a straight path."
+  },
+  "definition": {
+    "technicalDefinition": "Two pointers traverse a sequence at different speeds (typically 1 step vs 2 steps). If a cycle exists, the fast pointer will eventually catch up to the slow pointer.",
+    "vocabulary": [
+      { "term": "Slow Pointer", "definition": "Advances one step at a time." },
+      { "term": "Fast Pointer", "definition": "Advances two steps at a time." },
+      { "term": "Floyd's Algorithm", "definition": "Phase 1: detect cycle (meeting point). Phase 2: find cycle start." }
+    ],
+    "keyProperties": [
+      "Cycle detection: O(N) time, O(1) space.",
+      "Finding middle: when fast reaches end, slow is at the middle.",
+      "Finding cycle start: reset one pointer to head, advance both at speed 1."
+    ]
+  },
+  "operations": [
     {
-      "title": "Fast and Slow Pointers warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Fast and Slow Pointers."
+      "name": "Detect Cycle",
+      "description": "Move slow by 1 and fast by 2. If they meet, there's a cycle. If fast reaches null, there's no cycle.",
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "def has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast:\n            return True\n    return False",
+        "javascript": "function hasCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}",
+        "java": "boolean hasCycle(ListNode head) {\n    ListNode slow = head, fast = head;\n    while (fast != null && fast.next != null) {\n        slow = slow.next;\n        fast = fast.next.next;\n        if (slow == fast) return true;\n    }\n    return false;\n}",
+        "cpp": "bool hasCycle(ListNode* head) {\n    auto slow = head, fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n        if (slow == fast) return true;\n    }\n    return false;\n}"
+      },
+      "visualNote": "Two pointers advance at different speeds along the linked list, meeting inside the cycle."
+    },
+    {
+      "name": "Find Middle",
+      "description": "When fast reaches the end, slow is at the middle of the list.",
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "def find_middle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    return slow",
+        "javascript": "function findMiddle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n  }\n  return slow;\n}",
+        "java": "ListNode findMiddle(ListNode head) {\n    ListNode slow = head, fast = head;\n    while (fast != null && fast.next != null) {\n        slow = slow.next;\n        fast = fast.next.next;\n    }\n    return slow;\n}",
+        "cpp": "ListNode* findMiddle(ListNode* head) {\n    auto slow = head, fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n    }\n    return slow;\n}"
+      },
+      "visualNote": "Slow pointer ends up in the middle when fast reaches the end."
     }
   ],
+  "practice": [
+    { "title": "Linked List Cycle", "url": "https://leetcode.com/problems/linked-list-cycle/", "difficulty": "easy", "keyInsight": "Fast and slow meet → cycle exists." },
+    { "title": "Linked List Cycle II", "url": "https://leetcode.com/problems/linked-list-cycle-ii/", "difficulty": "medium", "keyInsight": "Phase 2: reset one to head, advance both by 1, they meet at cycle start." },
+    { "title": "Middle of the Linked List", "url": "https://leetcode.com/problems/middle-of-the-linked-list/", "difficulty": "easy", "keyInsight": "Slow pointer is at middle when fast reaches end." },
+    { "title": "Find the Duplicate Number", "url": "https://leetcode.com/problems/find-the-duplicate-number/", "difficulty": "medium", "keyInsight": "Model the array as a linked list where val = next index, find cycle." },
+    { "title": "Happy Number", "url": "https://leetcode.com/problems/happy-number/", "difficulty": "easy", "keyInsight": "Digit-square sequence forms a linked list — detect if it cycles back to non-1." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "Why does the fast-and-slow technique guarantee cycle detection?",
+      "options": [
+        "The fast pointer closes the gap by 1 each step, so they must meet inside the cycle",
+        "It uses extra memory to track visited nodes",
+        "It sorts the list first",
+        "It only works on arrays"
+      ],
+      "correctIndex": 0,
+      "explanation": "In each iteration, the distance between fast and slow decreases by 1, guaranteeing they meet within the cycle."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Given a singly linked list, determine if it contains a cycle, using O(1) extra space.",
+    "correctPatternId": "fast-and-slow-pointers",
+    "distractors": ["hash-maps", "two-pointers", "binary-search"],
+    "explanation": "O(1) space cycle detection is the defining application of Floyd's Tortoise and Hare algorithm."
+  }
 }

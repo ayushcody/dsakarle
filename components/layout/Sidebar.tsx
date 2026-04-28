@@ -1,8 +1,15 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getChapterProgress, getProgress } from '@/lib/progress';
-import type { CourseStructure } from '@/types/learning';
+import { getProgress } from '@/lib/progress';
+import type { CourseStructure, ProgressData } from '@/types/learning';
+
+const EMPTY_PROGRESS: ProgressData = {
+  completedSections: [],
+  quizScores: {},
+  lastVisited: '',
+};
 
 export function Sidebar({
   currentSlug,
@@ -11,7 +18,20 @@ export function Sidebar({
   currentSlug: string
   courseStructure: CourseStructure
 }) {
-  const progress = getProgress();
+  const [mounted, setMounted] = useState(false);
+  const [progress, setProgress] = useState<ProgressData>(EMPTY_PROGRESS);
+
+  useEffect(() => {
+    setMounted(true);
+    setProgress(getProgress());
+  }, []);
+
+  // Calculate chapter progress only on client after mount
+  function getChapterProgressSafe(slugs: string[]): number {
+    if (!mounted || slugs.length === 0) return 0;
+    const completed = slugs.filter((slug) => progress.completedSections.includes(slug)).length;
+    return Math.round((completed / slugs.length) * 100);
+  }
 
   return (
     <aside style={{
@@ -30,7 +50,7 @@ export function Sidebar({
     }}>
       <div style={{ padding: '20px 0 40px' }}>
         {courseStructure.groups.map((group, groupIndex) => {
-          const chapterProgress = getChapterProgress(group.topics.map((t) => t.slug));
+          const chapterProgress = getChapterProgressSafe(group.topics.map((t) => t.slug));
           
           return (
             <div key={group.title}>
@@ -49,15 +69,15 @@ export function Sidebar({
                   {group.title}
                 </span>
                 <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'var(--text-muted)', marginLeft: 8 }}>
-                  {chapterProgress}% COMPLETE
+                  {mounted ? `${chapterProgress}% COMPLETE` : '—'}
                 </span>
               </div>
 
               {/* Topics */}
               {group.topics.map(topic => {
                 const isActive = topic.slug === currentSlug;
-                const isComplete = progress.completedSections.includes(topic.slug);
-                const hasQuiz = progress.quizScores[topic.slug]?.recognition || progress.quizScores[topic.slug]?.concept;
+                const isComplete = mounted && progress.completedSections.includes(topic.slug);
+                const hasQuiz = mounted && (progress.quizScores[topic.slug]?.recognition || progress.quizScores[topic.slug]?.concept);
 
                 return (
                   <Link key={topic.slug} href={`/learn/${topic.slug}`} style={{

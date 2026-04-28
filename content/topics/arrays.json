@@ -2,6 +2,8 @@
   "id": "arrays",
   "slug": "arrays",
   "title": "Arrays",
+  "analogy": "An array is like a row of numbered lockers at a gym — each locker has a fixed address and you can jump directly to locker #5 without checking #1 through #4.",
+  "analogyIcon": "🔐",
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 45,

@@ -2,31 +2,108 @@
   "id": "dynamic-programming",
   "slug": "dynamic-programming",
   "title": "Dynamic Programming",
+  "analogy": "DP is like filling out a multiplication table — instead of recalculating 7×8 every time, you look up the answer you already computed in the table.",
+  "analogyIcon": "📊",
   "category": "algorithm",
   "difficulty": "advanced",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "dynamic-programming"
-  ],
+  "estimatedMinutes": 60,
+  "prerequisites": ["recursion"],
+  "tags": ["dp", "memoization", "tabulation", "optimization"],
   "overview": {
-    "summary": "Dynamic Programming is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "Dynamic Programming solves complex problems by breaking them into overlapping subproblems, solving each once, and storing the result to avoid redundant computation.",
     "learningObjectives": [
-      "Recognize the role of Dynamic Programming in interviews.",
-      "Review one short summary of Dynamic Programming.",
-      "Use the practice list to keep momentum."
+      "Identify overlapping subproblems and optimal substructure.",
+      "Implement both top-down (memoization) and bottom-up (tabulation) approaches.",
+      "Derive recurrence relations from problem constraints."
     ],
-    "interviewRelevance": "Dynamic Programming remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "DP is one of the most frequently tested advanced topics at FAANG companies, appearing in 20-30% of medium/hard interview problems."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Spell-checkers use DP (edit distance) to suggest corrections. GPS navigation uses DP to find shortest paths. Text diff tools (git diff) use DP (LCS) to show what changed.",
+      "Your phone's keyboard predictions use DP-based sequence models to predict the next word."
+    ],
+    "ahaMoment": "DP trades memory for time — by remembering past results, it transforms exponential brute-force into polynomial elegance."
+  },
+  "definition": {
+    "technicalDefinition": "Dynamic Programming is a method for solving optimization problems by combining solutions to overlapping subproblems. It requires two properties: optimal substructure and overlapping subproblems.",
+    "vocabulary": [
+      { "term": "Memoization", "definition": "Top-down approach: solve recursively and cache results in a hash map." },
+      { "term": "Tabulation", "definition": "Bottom-up approach: fill a table iteratively from the smallest subproblems." },
+      { "term": "Recurrence Relation", "definition": "A formula expressing the solution in terms of solutions to smaller instances." },
+      { "term": "State", "definition": "The set of variables that uniquely define a subproblem." }
+    ],
+    "keyProperties": [
+      "Optimal substructure: an optimal solution contains optimal solutions to subproblems.",
+      "Overlapping subproblems: the same subproblems are solved multiple times.",
+      "Transforms exponential recursion into polynomial time by caching."
+    ]
+  },
+  "operations": [
     {
-      "title": "Dynamic Programming warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Dynamic Programming."
+      "name": "Top-Down (Memoization)",
+      "description": "Solve recursively but cache results so each subproblem is computed only once.",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)",
+      "code": {
+        "python": "def fib(n, memo={}):\n    if n <= 1: return n\n    if n not in memo:\n        memo[n] = fib(n-1, memo) + fib(n-2, memo)\n    return memo[n]",
+        "javascript": "function fib(n, memo = {}) {\n  if (n <= 1) return n;\n  if (!(n in memo)) {\n    memo[n] = fib(n-1, memo) + fib(n-2, memo);\n  }\n  return memo[n];\n}",
+        "java": "int fib(int n, Map<Integer,Integer> memo) {\n    if (n <= 1) return n;\n    if (!memo.containsKey(n)) {\n        memo.put(n, fib(n-1,memo) + fib(n-2,memo));\n    }\n    return memo.get(n);\n}",
+        "cpp": "int fib(int n, unordered_map<int,int>& memo) {\n    if (n <= 1) return n;\n    if (!memo.count(n)) {\n        memo[n] = fib(n-1,memo) + fib(n-2,memo);\n    }\n    return memo[n];\n}"
+      },
+      "visualNote": "Recursion tree with grayed-out branches for cached subproblems."
+    },
+    {
+      "name": "Bottom-Up (Tabulation)",
+      "description": "Build a table from the base cases upward, filling each cell using the recurrence.",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n) or O(1) with space optimization",
+      "code": {
+        "python": "def fib(n):\n    if n <= 1: return n\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i-1] + dp[i-2]\n    return dp[n]",
+        "javascript": "function fib(n) {\n  if (n <= 1) return n;\n  const dp = new Array(n + 1).fill(0);\n  dp[1] = 1;\n  for (let i = 2; i <= n; i++) {\n    dp[i] = dp[i-1] + dp[i-2];\n  }\n  return dp[n];\n}",
+        "java": "int fib(int n) {\n    if (n <= 1) return n;\n    int[] dp = new int[n + 1];\n    dp[1] = 1;\n    for (int i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}",
+        "cpp": "int fib(int n) {\n    if (n <= 1) return n;\n    vector<int> dp(n + 1, 0);\n    dp[1] = 1;\n    for (int i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}"
+      },
+      "visualNote": "A 1D array fills left-to-right, each cell derived from previous cells."
     }
   ],
+  "practice": [
+    { "title": "Climbing Stairs", "url": "https://leetcode.com/problems/climbing-stairs/", "difficulty": "easy", "keyInsight": "dp[i] = dp[i-1] + dp[i-2] — pure Fibonacci." },
+    { "title": "Coin Change", "url": "https://leetcode.com/problems/coin-change/", "difficulty": "medium", "keyInsight": "dp[amount] = min(dp[amount - coin] + 1) for each coin." },
+    { "title": "Longest Common Subsequence", "url": "https://leetcode.com/problems/longest-common-subsequence/", "difficulty": "medium", "keyInsight": "2D table where dp[i][j] considers first i chars of s1 and first j chars of s2." },
+    { "title": "0/1 Knapsack", "url": "https://leetcode.com/problems/partition-equal-subset-sum/", "difficulty": "medium", "keyInsight": "Include or exclude each item, track remaining capacity." },
+    { "title": "House Robber", "url": "https://leetcode.com/problems/house-robber/", "difficulty": "medium", "keyInsight": "dp[i] = max(dp[i-1], dp[i-2] + nums[i])." },
+    { "title": "Edit Distance", "url": "https://leetcode.com/problems/edit-distance/", "difficulty": "medium", "keyInsight": "Three operations: insert, delete, replace — min of all three transitions." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "What two properties must a problem have to be solvable by DP?",
+      "options": [
+        "Optimal substructure and overlapping subproblems",
+        "Sorting and binary search",
+        "Greedy choice and matroid structure",
+        "Divide and conquer only"
+      ],
+      "correctIndex": 0,
+      "explanation": "DP requires that optimal solutions contain optimal sub-solutions AND that subproblems recur."
+    },
+    {
+      "question": "What is the difference between memoization and tabulation?",
+      "options": [
+        "Memoization is top-down recursive; tabulation is bottom-up iterative",
+        "They are the same thing",
+        "Memoization is faster than tabulation",
+        "Tabulation uses recursion"
+      ],
+      "correctIndex": 0,
+      "explanation": "Memoization starts from the original problem and caches. Tabulation builds from base cases upward."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Find the minimum cost to reach the top of a staircase where each step has an associated cost, and you can climb 1 or 2 steps at a time.",
+    "correctPatternId": "dynamic-programming",
+    "distractors": ["greedy", "binary-search", "two-pointers"],
+    "explanation": "The problem has overlapping subproblems (ways to reach step i) and optimal substructure (min cost uses min of sub-costs)."
+  }
 }

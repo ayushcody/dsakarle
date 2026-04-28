@@ -6,6 +6,7 @@ import courseStructure from '@/content/course-structure.json';
 import { Sidebar } from '@/components/layout/Sidebar';
 import type { CourseStructure, LearningTopicPage, CodeLanguage } from '@/types/learning';
 
+import { TopicHero } from './TopicHero';
 import { HeroBlock } from './HeroBlock';
 import { RealWorldHookSection } from './RealWorldHookSection';
 import { CoreDefinitionSection } from './CoreDefinitionSection';
@@ -19,6 +20,7 @@ import { WorkedExamplesSection } from './WorkedExamplesSection';
 import { ConceptQuiz } from './ConceptQuiz';
 import { PracticeList } from './PracticeList';
 import { MarkCompleteButton } from './MarkCompleteButton';
+import { TopicNavigation } from './TopicNavigation';
 
 const emptyCode = {
   python: '',
@@ -45,6 +47,9 @@ export function TopicPageRenderer({
   topic: LearningTopicPage
   renderedCode: Record<CodeLanguage, string>
 }) {
+  // Access analogy fields (may not exist on all topics)
+  const topicAny = topic as LearningTopicPage & { analogy?: string; analogyIcon?: string };
+
   return (
     <>
       <Sidebar currentSlug={topic.slug} courseStructure={courseStructure as CourseStructure} />
@@ -52,6 +57,15 @@ export function TopicPageRenderer({
       <div style={{ marginLeft: '280px', minHeight: 'calc(100vh - 64px)' }}>
         <main className="mx-auto flex w-full max-w-[960px] flex-col gap-8 px-8 py-10">
 
+        {/* Animated Topic Hero (if analogy exists, show new hero; else classic) */}
+        {topicAny.analogy ? (
+          <TopicHero
+            slug={topic.slug}
+            title={topic.title}
+            analogy={topicAny.analogy}
+            analogyIcon={topicAny.analogyIcon}
+          />
+        ) : null}
 
         <HeroBlock topic={topic} />
 
@@ -138,6 +152,8 @@ export function TopicPageRenderer({
         )}
 
         <MarkCompleteButton topicId={topic.id} />
+
+        <TopicNavigation currentSlug={topic.slug} />
       </main>
       </div>
     </>

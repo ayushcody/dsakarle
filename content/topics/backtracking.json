@@ -2,31 +2,94 @@
   "id": "backtracking",
   "slug": "backtracking",
   "title": "Backtracking",
+  "analogy": "Backtracking is like navigating a maze — you walk down a path until you hit a dead end, then retrace your steps and try the next branch.",
+  "analogyIcon": "🔙",
   "category": "algorithm",
   "difficulty": "advanced",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "backtracking"
-  ],
+  "estimatedMinutes": 40,
+  "prerequisites": ["recursion"],
+  "tags": ["backtracking", "recursion", "constraint-satisfaction"],
   "overview": {
-    "summary": "Backtracking is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "Backtracking systematically explores all candidate solutions by building partial solutions incrementally and abandoning them ('pruning') as soon as they violate constraints.",
     "learningObjectives": [
-      "Recognize the role of Backtracking in interviews.",
-      "Review one short summary of Backtracking.",
-      "Use the practice list to keep momentum."
+      "Understand the difference between brute-force and backtracking.",
+      "Learn to recognize constraint-satisfaction problems.",
+      "Implement the choose-explore-unchoose pattern."
     ],
-    "interviewRelevance": "Backtracking remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "Backtracking powers classic interview problems like N-Queens, Sudoku, and all permutation/combination generators."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Sudoku solvers, crossword generators, and chess engines all use backtracking to explore moves and undo bad ones.",
+      "Your phone's autocorrect tries different letter combinations using backtracking to find valid words."
+    ],
+    "ahaMoment": "Backtracking is brute-force with a brain — it abandons dead ends early instead of exhausting every possibility."
+  },
+  "definition": {
+    "technicalDefinition": "Backtracking is a depth-first search algorithm that builds candidate solutions incrementally and abandons a candidate as soon as it determines the candidate cannot lead to a valid solution.",
+    "vocabulary": [
+      { "term": "State Space Tree", "definition": "A tree of all possible states/choices that the algorithm explores." },
+      { "term": "Pruning", "definition": "Cutting off branches of the state space tree that cannot lead to valid solutions." },
+      { "term": "Base Case", "definition": "The condition that stops recursion, either a valid solution or an invalid state." }
+    ],
+    "keyProperties": [
+      "Explores depth-first and backtracks on constraint violation.",
+      "Time complexity is often exponential but pruning significantly reduces actual work.",
+      "Space complexity is O(depth) for the recursion stack."
+    ]
+  },
+  "operations": [
     {
-      "title": "Backtracking warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Backtracking."
+      "name": "Choose-Explore-Unchoose",
+      "description": "Make a choice, recurse deeper, then undo the choice before trying the next option.",
+      "timeComplexity": "O(N!)",
+      "spaceComplexity": "O(N)",
+      "code": {
+        "python": "def backtrack(path, choices):\n    if is_solution(path):\n        result.append(path[:])\n        return\n    for choice in choices:\n        path.append(choice)\n        backtrack(path, remaining(choices, choice))\n        path.pop()  # unchoose",
+        "javascript": "function backtrack(path, choices) {\n  if (isSolution(path)) {\n    result.push([...path]);\n    return;\n  }\n  for (const choice of choices) {\n    path.push(choice);\n    backtrack(path, remaining(choices, choice));\n    path.pop(); // unchoose\n  }\n}",
+        "java": "void backtrack(List<Integer> path, List<Integer> choices) {\n    if (isSolution(path)) {\n        result.add(new ArrayList<>(path));\n        return;\n    }\n    for (int choice : choices) {\n        path.add(choice);\n        backtrack(path, remaining(choices, choice));\n        path.remove(path.size() - 1);\n    }\n}",
+        "cpp": "void backtrack(vector<int>& path, vector<int>& choices) {\n    if (isSolution(path)) {\n        result.push_back(path);\n        return;\n    }\n    for (int choice : choices) {\n        path.push_back(choice);\n        backtrack(path, remaining(choices, choice));\n        path.pop_back();\n    }\n}"
+      },
+      "visualNote": "The state space tree grows depth-first, and crossed-out branches represent pruned paths."
     }
   ],
+  "practice": [
+    { "title": "Permutations", "url": "https://leetcode.com/problems/permutations/", "difficulty": "medium", "keyInsight": "Choose each unused element, recurse, then unchoose." },
+    { "title": "Subsets", "url": "https://leetcode.com/problems/subsets/", "difficulty": "medium", "keyInsight": "At each index, include or exclude the element." },
+    { "title": "N-Queens", "url": "https://leetcode.com/problems/n-queens/", "difficulty": "hard", "keyInsight": "Place queens row by row, prune columns and diagonals." },
+    { "title": "Word Search", "url": "https://leetcode.com/problems/word-search/", "difficulty": "medium", "keyInsight": "DFS on the grid with visited tracking and backtrack on mismatch." },
+    { "title": "Combination Sum", "url": "https://leetcode.com/problems/combination-sum/", "difficulty": "medium", "keyInsight": "Allow re-using candidates, prune when sum exceeds target." },
+    { "title": "Sudoku Solver", "url": "https://leetcode.com/problems/sudoku-solver/", "difficulty": "hard", "keyInsight": "Try digits 1-9 in each empty cell, backtrack on row/col/box conflict." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "What makes backtracking different from brute-force?",
+      "options": [
+        "Backtracking prunes invalid paths early",
+        "Backtracking uses dynamic programming",
+        "Backtracking always runs in polynomial time",
+        "Backtracking requires sorting first"
+      ],
+      "correctIndex": 0,
+      "explanation": "Backtracking abandons partial solutions as soon as constraints are violated, avoiding exhaustive enumeration."
+    },
+    {
+      "question": "What is the typical time complexity of backtracking?",
+      "options": [
+        "Exponential (e.g., O(N!) or O(2^N))",
+        "O(N log N)",
+        "O(N)",
+        "O(1)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Backtracking explores a combinatorial state space, which is inherently exponential, though pruning helps in practice."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "You need to generate all valid arrangements of N items where each placement must satisfy multiple constraints simultaneously.",
+    "correctPatternId": "backtracking",
+    "distractors": ["dynamic-programming", "greedy", "binary-search"],
+    "explanation": "Constraint-satisfaction problems with multiple valid configurations are classic backtracking territory."
+  }
 }

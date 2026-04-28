@@ -2,31 +2,77 @@
   "id": "prefix-sum",
   "slug": "prefix-sum",
   "title": "Prefix Sum",
+  "analogy": "Prefix sum is like a running total on a receipt — to find how much you spent between items 3 and 7, just subtract the total at item 2 from the total at item 7.",
+  "analogyIcon": "🧾",
   "category": "algorithm",
   "difficulty": "beginner",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "prefix-sum"
-  ],
+  "estimatedMinutes": 30,
+  "prerequisites": ["arrays"],
+  "tags": ["prefix-sum", "cumulative-sum", "range-query"],
   "overview": {
-    "summary": "Prefix Sum is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "Prefix sums precompute cumulative totals so any range sum can be answered in O(1) time after O(N) preprocessing.",
     "learningObjectives": [
-      "Recognize the role of Prefix Sum in interviews.",
-      "Review one short summary of Prefix Sum.",
-      "Use the practice list to keep momentum."
+      "Build a prefix sum array from an input array.",
+      "Answer range sum queries in O(1).",
+      "Extend to 2D prefix sums for matrix region queries."
     ],
-    "interviewRelevance": "Prefix Sum remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "Prefix sums are a foundational technique that appears in subarray sum problems and as a building block for more complex algorithms."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Financial dashboards compute running totals so 'revenue from Q2 to Q4' is just one subtraction.",
+      "Image processing uses 2D prefix sums (integral images) to compute average brightness of any rectangle in O(1)."
+    ],
+    "ahaMoment": "Once you build the prefix sum array, any range sum is just prefix[right+1] - prefix[left] — no loop needed."
+  },
+  "definition": {
+    "technicalDefinition": "A prefix sum array P is defined as P[0] = 0, P[i] = P[i-1] + A[i-1]. The sum of A[l..r] equals P[r+1] - P[l].",
+    "vocabulary": [
+      { "term": "Prefix Sum", "definition": "P[i] = sum of A[0..i-1]. Enables O(1) range sum queries." },
+      { "term": "Range Query", "definition": "Computing the sum of a contiguous subarray A[l..r]." },
+      { "term": "Preprocessing", "definition": "One-time O(N) work to build the prefix array before queries." }
+    ],
+    "keyProperties": [
+      "Build time: O(N). Query time: O(1).",
+      "Space: O(N) for the prefix array.",
+      "Extends to 2D for matrix region sums."
+    ]
+  },
+  "operations": [
     {
-      "title": "Prefix Sum warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Prefix Sum."
+      "name": "Build Prefix Sum",
+      "description": "Create an array where each element is the cumulative sum of all prior elements.",
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(N)",
+      "code": {
+        "python": "def build_prefix(arr):\n    prefix = [0] * (len(arr) + 1)\n    for i in range(len(arr)):\n        prefix[i + 1] = prefix[i] + arr[i]\n    return prefix\n\n# Range sum [l, r]: prefix[r+1] - prefix[l]",
+        "javascript": "function buildPrefix(arr) {\n  const prefix = [0];\n  for (let i = 0; i < arr.length; i++) {\n    prefix.push(prefix[i] + arr[i]);\n  }\n  return prefix;\n}\n// Range sum [l, r]: prefix[r+1] - prefix[l]",
+        "java": "int[] buildPrefix(int[] arr) {\n    int[] prefix = new int[arr.length + 1];\n    for (int i = 0; i < arr.length; i++) {\n        prefix[i + 1] = prefix[i] + arr[i];\n    }\n    return prefix;\n}",
+        "cpp": "vector<int> buildPrefix(vector<int>& arr) {\n    vector<int> prefix(arr.size() + 1, 0);\n    for (int i = 0; i < arr.size(); i++) {\n        prefix[i + 1] = prefix[i] + arr[i];\n    }\n    return prefix;\n}"
+      },
+      "visualNote": "Values accumulate left to right, each cell showing the running total."
     }
   ],
+  "practice": [
+    { "title": "Subarray Sum Equals K", "url": "https://leetcode.com/problems/subarray-sum-equals-k/", "difficulty": "medium", "keyInsight": "prefix[j] - prefix[i] = K → use a hash map to count prefix sums." },
+    { "title": "Range Sum Query - Immutable", "url": "https://leetcode.com/problems/range-sum-query-immutable/", "difficulty": "easy", "keyInsight": "Classic prefix sum application: precompute and answer in O(1)." },
+    { "title": "Product of Array Except Self", "url": "https://leetcode.com/problems/product-of-array-except-self/", "difficulty": "medium", "keyInsight": "Prefix and suffix products instead of sums." },
+    { "title": "Contiguous Array", "url": "https://leetcode.com/problems/contiguous-array/", "difficulty": "medium", "keyInsight": "Convert 0s to -1s, then find longest subarray with sum 0 using prefix sums." },
+    { "title": "Find Pivot Index", "url": "https://leetcode.com/problems/find-pivot-index/", "difficulty": "easy", "keyInsight": "Left sum = total sum - left sum - nums[i] at pivot." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "After building a prefix sum array, what is the time to compute sum(arr[l..r])?",
+      "options": ["O(1)", "O(N)", "O(log N)", "O(N²)"],
+      "correctIndex": 0,
+      "explanation": "Range sum = prefix[r+1] - prefix[l], which is one subtraction."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Given an array, answer 10,000 queries of the form 'what is the sum of elements from index l to r?'",
+    "correctPatternId": "prefix-sum",
+    "distractors": ["sliding-window", "binary-search", "two-pointers"],
+    "explanation": "Multiple range sum queries on a static array is the textbook prefix sum use case."
+  }
 }

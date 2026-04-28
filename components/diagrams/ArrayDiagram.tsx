@@ -73,7 +73,7 @@ export function ArrayDiagram({
               animate={{
                 fill: isHL ? 'rgba(202,138,4,0.18)' : isCmp ? 'rgba(212,96,58,0.12)' : '#FFFFFF',
                 stroke: inWin ? '#D4603A' : '#E5E0D8',
-                strokeWidth: inWin ? 0 : 1,  // window rect covers the border
+                strokeWidth: inWin ? 0.5 : 1,  // window rect covers the border
               }}
               transition={{ duration: 0.25 }}
               style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.06))' }}

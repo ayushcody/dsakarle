@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useStepperStore } from '@/lib/stepper-store';
 import type { CodeLanguage, StepperData } from '@/types/learning';
@@ -16,6 +16,8 @@ interface StepperBlockProps {
   renderedCode: Record<CodeLanguage, string>
 }
 
+const SPEED_OPTIONS = [0.5, 1, 2] as const;
+
 export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockProps) {
   const {
     currentStep,
@@ -26,7 +28,11 @@ export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockPr
     setTotalSteps,
     isPlaying,
     togglePlay,
+    speed,
+    setSpeed,
   } = useStepperStore();
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setTotalSteps(stepperData.steps.length);
@@ -35,19 +41,29 @@ export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockPr
 
   useEffect(() => {
     if (!isPlaying) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
       return;
     }
 
-    const interval = setInterval(() => {
-      if (currentStep >= totalSteps - 1) {
-        togglePlay();
+    intervalRef.current = setInterval(() => {
+      const store = useStepperStore.getState();
+      if (store.currentStep >= store.totalSteps - 1) {
+        store.togglePlay();
       } else {
-        nextStep();
+        store.nextStep();
       }
-    }, 1200);
+    }, 1200 / speed);
 
-    return () => clearInterval(interval);
-  }, [currentStep, isPlaying, nextStep, togglePlay, totalSteps]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isPlaying, speed]);
 
   const step = stepperData.steps[currentStep];
 
@@ -150,6 +166,47 @@ export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockPr
             {isPlaying ? '⏸ Pause' : '▶ Play'}
           </button>
         </div>
+
+        {/* Speed controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', justifyContent: 'center' }}>
+          {SPEED_OPTIONS.map((s) => (
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              style={{
+                padding: '4px 12px',
+                borderRadius: 'var(--radius-sm)',
+                fontFamily: 'var(--font-dmmono)',
+                fontSize: 11,
+                fontWeight: speed === s ? 600 : 400,
+                background: speed === s ? 'var(--accent-teal)' : 'transparent',
+                color: speed === s ? 'white' : 'var(--text-muted)',
+                border: speed === s ? '1px solid transparent' : '1px solid var(--border)',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {s}×
+            </button>
+          ))}
+          <button
+            onClick={() => { setStep(0); if (isPlaying) togglePlay(); }}
+            style={{
+              marginLeft: 'auto',
+              padding: '4px 12px',
+              borderRadius: 'var(--radius-sm)',
+              fontFamily: 'var(--font-dmmono)',
+              fontSize: 11,
+              background: 'transparent',
+              color: 'var(--text-muted)',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            ↺ Reset
+          </button>
+        </div>
+
         <p
           style={{
             textAlign: 'center',

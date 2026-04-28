@@ -231,3 +231,30 @@
   background-color: var(--surface-coral);
   color: var(--accent-coral);
 }
+
+/* DSAKarle Pre-attentive Color Encoding System */
+:root {
+  --color-pointer: #22C55E;       /* Green: pointers, insertions, success */
+  --color-active: #F59E0B;        /* Amber: currently evaluated */
+  --color-error: #EF4444;         /* Red: out-of-bounds, deletion, failure */
+  --color-target: #3B82F6;        /* Blue: target value, finalized */
+  --color-neutral: #E5E7EB;       /* Gray: unvisited, default */
+}
+
+/* Stepper cell states — use these classes in all DiagramBlock SVGs */
+.cell-pointer  { fill: var(--color-pointer); }
+.cell-active   { fill: var(--color-active); }
+.cell-error    { fill: var(--color-error); }
+.cell-target   { fill: var(--color-target); }
+.cell-neutral  { fill: var(--color-neutral); }
+
+/* Shiki highlighted line — stepper active line */
+.shiki-wrapper .shiki .line.highlighted {
+  background-color: rgba(248, 163, 35, 0.15);
+  border-left: 3px solid #F5A623;
+  padding-left: 1rem;
+  display: block;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+

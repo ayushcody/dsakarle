@@ -1,32 +1,101 @@
 {
   "id": "tries",
   "slug": "tries",
-  "title": "Tries",
+  "title": "Tries (Prefix Trees)",
+  "analogy": "A Trie is like an autocomplete dictionary — each letter you type narrows down the branch you're on, until you reach the end of a word.",
+  "analogyIcon": "🔤",
   "category": "data-structure",
   "difficulty": "advanced",
-  "estimatedMinutes": 20,
-  "prerequisites": [],
-  "tags": [
-    "tries"
-  ],
+  "estimatedMinutes": 40,
+  "prerequisites": ["trees"],
+  "tags": ["trie", "prefix-tree", "string-matching"],
   "overview": {
-    "summary": "Tries is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today.",
+    "summary": "A Trie is a tree-like data structure optimized for storing and searching strings, where each node represents a character and paths from root to leaf spell out stored words.",
     "learningObjectives": [
-      "Recognize the role of Tries in interviews.",
-      "Review one short summary of Tries.",
-      "Use the practice list to keep momentum."
+      "Understand the Trie node structure with children map and end-of-word flag.",
+      "Implement insert, search, and startsWith operations.",
+      "Recognize when Trie outperforms hash-based string storage."
     ],
-    "interviewRelevance": "Tries remains part of the long-form curriculum roadmap."
+    "interviewRelevance": "Tries appear in autocomplete, spell-check, IP routing, and word-game problems."
   },
-  "practice": [
+  "realWorldHook": {
+    "paragraphs": [
+      "Every time your phone autocompletes a word, it's walking down a Trie. DNS lookup tables use Tries for efficient domain resolution.",
+      "Search engines use Trie-based structures to suggest completions as you type each character."
+    ],
+    "ahaMoment": "A Trie lets you find all words starting with a prefix in O(prefix length) time, regardless of how many words are stored."
+  },
+  "definition": {
+    "technicalDefinition": "A Trie (pronounced 'try') is a tree-like data structure where each node represents a character. The root is empty, and each path from root to a marked node spells out a stored word.",
+    "vocabulary": [
+      { "term": "TrieNode", "definition": "A node containing a children map and an is_end flag." },
+      { "term": "Prefix", "definition": "A leading substring that may or may not be a complete word." },
+      { "term": "is_end", "definition": "A boolean flag marking whether the path to this node forms a complete word." }
+    ],
+    "keyProperties": [
+      "Insert, search, and startsWith all take O(m) time where m = word length.",
+      "Space: O(m × n) where n = number of words.",
+      "Shared prefixes are stored once, making it space-efficient for common prefixes."
+    ]
+  },
+  "operations": [
     {
-      "title": "Tries warm-up",
-      "url": "https://leetcode.com/problemset/",
-      "difficulty": "easy",
-      "keyInsight": "Use the DSAKarle route as a stable entry point for Tries."
+      "name": "Insert",
+      "description": "Walk down the Trie character by character, creating new nodes as needed, then mark the final node.",
+      "timeComplexity": "O(m)",
+      "spaceComplexity": "O(m)",
+      "code": {
+        "python": "class TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n\n    def insert(self, word: str) -> None:\n        node = self.root\n        for char in word:\n            if char not in node.children:\n                node.children[char] = TrieNode()\n            node = node.children[char]\n        node.is_end = True",
+        "javascript": "class TrieNode {\n  constructor() {\n    this.children = {};\n    this.isEnd = false;\n  }\n}\n\nclass Trie {\n  constructor() {\n    this.root = new TrieNode();\n  }\n  insert(word) {\n    let node = this.root;\n    for (const ch of word) {\n      if (!node.children[ch]) node.children[ch] = new TrieNode();\n      node = node.children[ch];\n    }\n    node.isEnd = true;\n  }\n}",
+        "java": "class TrieNode {\n    Map<Character, TrieNode> children = new HashMap<>();\n    boolean isEnd = false;\n}\n\nclass Trie {\n    TrieNode root = new TrieNode();\n    void insert(String word) {\n        TrieNode node = root;\n        for (char c : word.toCharArray()) {\n            node.children.putIfAbsent(c, new TrieNode());\n            node = node.children.get(c);\n        }\n        node.isEnd = true;\n    }\n}",
+        "cpp": "struct TrieNode {\n    unordered_map<char, TrieNode*> children;\n    bool isEnd = false;\n};\n\nclass Trie {\n    TrieNode* root = new TrieNode();\npublic:\n    void insert(string word) {\n        auto node = root;\n        for (char c : word) {\n            if (!node->children.count(c))\n                node->children[c] = new TrieNode();\n            node = node->children[c];\n        }\n        node->isEnd = true;\n    }\n};"
+      },
+      "visualNote": "Characters branch out from root, shared prefixes merge into single paths."
+    },
+    {
+      "name": "Search",
+      "description": "Walk down the Trie character by character. Return true only if the entire word exists and the final node is marked.",
+      "timeComplexity": "O(m)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "def search(self, word: str) -> bool:\n    node = self.root\n    for char in word:\n        if char not in node.children:\n            return False\n        node = node.children[char]\n    return node.is_end",
+        "javascript": "search(word) {\n  let node = this.root;\n  for (const ch of word) {\n    if (!node.children[ch]) return false;\n    node = node.children[ch];\n  }\n  return node.isEnd;\n}",
+        "java": "boolean search(String word) {\n    TrieNode node = root;\n    for (char c : word.toCharArray()) {\n        if (!node.children.containsKey(c)) return false;\n        node = node.children.get(c);\n    }\n    return node.isEnd;\n}",
+        "cpp": "bool search(string word) {\n    auto node = root;\n    for (char c : word) {\n        if (!node->children.count(c)) return false;\n        node = node->children[c];\n    }\n    return node->isEnd;\n}"
+      },
+      "visualNote": "Path lights up green for found characters, stops red at missing character."
     }
   ],
+  "practice": [
+    { "title": "Implement Trie", "url": "https://leetcode.com/problems/implement-trie-prefix-tree/", "difficulty": "medium", "keyInsight": "Build the basic Trie with insert, search, and startsWith." },
+    { "title": "Word Search II", "url": "https://leetcode.com/problems/word-search-ii/", "difficulty": "hard", "keyInsight": "Build a Trie from the word list, then DFS the board against the Trie." },
+    { "title": "Design Add and Search Words", "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/", "difficulty": "medium", "keyInsight": "Trie with wildcard DFS for '.' characters." },
+    { "title": "Replace Words", "url": "https://leetcode.com/problems/replace-words/", "difficulty": "medium", "keyInsight": "Store roots in a Trie, replace words with shortest matching root." }
+  ],
   "examples": [],
-  "conceptQuiz": [],
-  "recognitionQuiz": null
+  "conceptQuiz": [
+    {
+      "question": "What is the time complexity of searching for a word of length m in a Trie?",
+      "options": ["O(m)", "O(n)", "O(m × n)", "O(log n)"],
+      "correctIndex": 0,
+      "explanation": "Search follows m edges, one per character, regardless of total words stored."
+    },
+    {
+      "question": "What advantage does a Trie have over a hash set for string storage?",
+      "options": [
+        "Efficient prefix queries (autocomplete)",
+        "Lower memory usage for all cases",
+        "Faster exact-match lookup",
+        "Built-in sorting"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tries excel at prefix-based operations like autocomplete, which hash sets cannot do efficiently."
+    }
+  ],
+  "recognitionQuiz": {
+    "problemStatement": "Given a dictionary of words, implement an autocomplete system that returns all words starting with a given prefix.",
+    "correctPatternId": "tries",
+    "distractors": ["hash-maps", "binary-search", "sorting"],
+    "explanation": "Prefix-based queries are the core strength of Tries."
+  }
 }

@@ -21,10 +21,12 @@
     "category": "algorithm",
     "difficulty": "advanced",
     "tags": [
-      "backtracking"
+      "backtracking",
+      "recursion",
+      "constraint-satisfaction"
     ],
     "overview": {
-      "summary": "Backtracking is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Backtracking systematically explores all candidate solutions by building partial solutions incrementally and abandoning them ('pruning') as soon as they violate constraints."
     }
   },
   {
@@ -34,10 +36,13 @@
     "category": "algorithm",
     "difficulty": "intermediate",
     "tags": [
-      "bfs-dfs"
+      "bfs",
+      "dfs",
+      "graph-traversal",
+      "tree-traversal"
     ],
     "overview": {
-      "summary": "BFS & DFS is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental strategies to visit every node in a graph or tree."
     }
   },
   {
@@ -62,10 +67,12 @@
     "category": "data-structure",
     "difficulty": "intermediate",
     "tags": [
-      "bst"
+      "bst",
+      "binary-search-tree",
+      "in-order"
     ],
     "overview": {
-      "summary": "Binary Search Trees is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "A BST is a binary tree where every left descendant is smaller and every right descendant is larger, enabling O(log N) search, insert, and delete on average."
     }
   },
   {
@@ -75,10 +82,13 @@
     "category": "algorithm",
     "difficulty": "advanced",
     "tags": [
-      "dynamic-programming"
+      "dp",
+      "memoization",
+      "tabulation",
+      "optimization"
     ],
     "overview": {
-      "summary": "Dynamic Programming is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Dynamic Programming solves complex problems by breaking them into overlapping subproblems, solving each once, and storing the result to avoid redundant computation."
     }
   },
   {
@@ -88,10 +98,12 @@
     "category": "algorithm",
     "difficulty": "intermediate",
     "tags": [
-      "fast-and-slow-pointers"
+      "tortoise-hare",
+      "cycle-detection",
+      "linked-list"
     ],
     "overview": {
-      "summary": "Fast and Slow Pointers is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "The fast-and-slow pointer technique (Floyd's Tortoise and Hare) uses two pointers moving at different speeds to detect cycles, find midpoints, and solve linked list problems."
     }
   },
   {
@@ -101,10 +113,13 @@
     "category": "data-structure",
     "difficulty": "intermediate",
     "tags": [
-      "graphs"
+      "graph",
+      "adjacency-list",
+      "adjacency-matrix",
+      "connected-components"
     ],
     "overview": {
-      "summary": "Graphs is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Graphs are the most general data structure — they model relationships between pairs of objects using nodes (vertices) and edges."
     }
   },
   {
@@ -114,10 +129,12 @@
     "category": "algorithm",
     "difficulty": "intermediate",
     "tags": [
-      "greedy"
+      "greedy",
+      "optimization",
+      "local-optimal"
     ],
     "overview": {
-      "summary": "Greedy Algorithms is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Greedy algorithms build solutions piece by piece, always choosing the option that looks best at the current moment without reconsidering past choices."
     }
   },
   {
@@ -138,14 +155,17 @@
   {
     "id": "heaps",
     "slug": "heaps",
-    "title": "Heaps",
+    "title": "Heaps (Priority Queues)",
     "category": "data-structure",
     "difficulty": "intermediate",
     "tags": [
-      "heaps"
+      "heap",
+      "priority-queue",
+      "min-heap",
+      "max-heap"
     ],
     "overview": {
-      "summary": "Heaps is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "A Heap is a complete binary tree where every parent node satisfies the heap property (min or max), enabling efficient extraction of the extreme element."
     }
   },
   {
@@ -170,10 +190,12 @@
     "category": "algorithm",
     "difficulty": "beginner",
     "tags": [
-      "prefix-sum"
+      "prefix-sum",
+      "cumulative-sum",
+      "range-query"
     ],
     "overview": {
-      "summary": "Prefix Sum is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Prefix sums precompute cumulative totals so any range sum can be answered in O(1) time after O(N) preprocessing."
     }
   },
   {
@@ -193,14 +215,17 @@
   {
     "id": "recursion",
     "slug": "recursion",
-    "title": "Recursion & Backtracking",
+    "title": "Recursion",
     "category": "algorithm",
-    "difficulty": "advanced",
+    "difficulty": "intermediate",
     "tags": [
-      "recursion"
+      "recursion",
+      "base-case",
+      "call-stack",
+      "divide-and-conquer"
     ],
     "overview": {
-      "summary": "Recursion & Backtracking is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Recursion is a technique where a function calls itself with a smaller input, building solutions by combining results from sub-calls."
     }
   },
   {
@@ -210,10 +235,12 @@
     "category": "algorithm",
     "difficulty": "beginner",
     "tags": [
-      "searching"
+      "search",
+      "linear-search",
+      "binary-search"
     ],
     "overview": {
-      "summary": "Searching Algorithms is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Searching algorithms find the location of a target value within a data structure. Linear search scans sequentially; binary search halves the range on sorted data."
     }
   },
   {
@@ -249,14 +276,18 @@
   {
     "id": "stacks-queues",
     "slug": "stacks-queues",
-    "title": "Stacks & Queues",
+    "title": "Stacks & Queues Combined",
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "stacks-queues"
+      "stack",
+      "queue",
+      "LIFO",
+      "FIFO",
+      "deque"
     ],
     "overview": {
-      "summary": "Stacks & Queues is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "Stacks (LIFO) and Queues (FIFO) are the two fundamental restricted-access data structures. Understanding both and knowing when to use which is key."
     }
   },
   {
@@ -306,14 +337,16 @@
   {
     "id": "tries",
     "slug": "tries",
-    "title": "Tries",
+    "title": "Tries (Prefix Trees)",
     "category": "data-structure",
     "difficulty": "advanced",
     "tags": [
-      "tries"
+      "trie",
+      "prefix-tree",
+      "string-matching"
     ],
     "overview": {
-      "summary": "Tries is scheduled for a deeper DSAKarle lesson. This stub keeps the route stable and gives you practice links today."
+      "summary": "A Trie is a tree-like data structure optimized for storing and searching strings, where each node represents a character and paths from root to leaf spell out stored words."
     }
   },
   {

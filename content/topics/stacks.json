@@ -2,6 +2,8 @@
   "id": "stacks",
   "slug": "stacks",
   "title": "Stacks",
+  "analogy": "A stack is like a pile of plates — you can only add or remove from the top. Try pulling out the middle plate without disaster!",
+  "analogyIcon": "🍽️",
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 30,
