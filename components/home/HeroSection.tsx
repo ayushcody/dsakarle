@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import IsometricCampus from './IsometricCampus';
+import Image from 'next/image';
 
 export default function HeroSection() {
   return (
@@ -15,40 +15,44 @@ export default function HeroSection() {
 
       <div className="relative z-10 flex flex-col items-center px-6 max-w-4xl mx-auto w-full text-center">
         <span className="fade-up-stagger-1 badge-pill badge-pill-teal mb-6 inline-flex font-medium text-[13px]">
-          Ab DSA se darna band karo
+          Visual-first Learning
         </span>
         
-        <h1 className="fade-up-stagger-2 font-lora font-bold text-[clamp(48px,7vw,84px)] leading-[1.08] tracking-[-0.02em] mb-6">
-          <span className="block text-[var(--text-primary)]">DSA?</span>
-          <span className="block text-[var(--accent-coral)] italic">Karle.</span>
+        <h1 className="fade-up-stagger-2 font-dmsans font-bold text-[clamp(40px,6vw,72px)] leading-[1.1] tracking-tight mb-6">
+          <span className="block text-[var(--text-primary)]">Master Data Structures</span>
+          <span className="block text-[var(--text-primary)]">and Algorithms</span>
         </h1>
         
-        <p className="fade-up-stagger-3 font-dmsans text-[19px] text-[var(--text-secondary)] max-w-[560px] mb-10">
-          The visual-first learning platform for Indian engineering students. Master Data Structures and Algorithms through scrubable step-by-step diagrams.
+        <p className="fade-up-stagger-3 font-dmsans text-[18px] text-[var(--text-secondary)] max-w-[640px] mb-10">
+          Build strong problem solving skills and visual intuition for arrays, linked lists, trees, graphs, dynamic programming, and interview patterns through interactive visuals.
         </p>
         
         <div className="fade-up-stagger-4 flex flex-col sm:flex-row gap-4 mb-8">
-          <Link href="/learn" className="px-8 py-4 bg-[var(--accent-coral)] text-white font-dmsans font-medium text-lg rounded-[var(--radius-sm)] transition-all hover:bg-[var(--accent-coral-dark)] hover:translate-x-[2px] shadow-sm">
-            Patterns Dekho &rarr;
+          <Link href="/learn" className="px-8 py-4 bg-[var(--accent-coral)] text-[var(--white)] font-dmsans font-medium text-lg rounded-full transition-all hover:bg-[var(--accent-coral-dark)] hover:-translate-y-0.5 shadow-sm">
+            Start Learning &rarr;
           </Link>
-          <a href="#how-it-works" className="px-8 py-4 bg-transparent border-2 border-[var(--accent-coral)] text-[var(--accent-coral)] font-dmsans font-medium text-lg rounded-[var(--radius-sm)] transition-all hover:bg-[var(--accent-coral)] hover:text-white hover:translate-x-[2px]">
-            Kaise kaam karta hai &darr;
-          </a>
+          <Link href="/learn" className="px-8 py-4 bg-[var(--bg-secondary)] border border-[var(--border)] text-[var(--accent-coral)] font-dmsans font-medium text-lg rounded-full transition-all hover:bg-[var(--white)] hover:-translate-y-0.5 shadow-sm">
+            Explore Curriculum
+          </Link>
         </div>
         
-        <div className="fade-up-stagger-5 font-dmmono text-[13px] text-[var(--text-muted)] flex flex-wrap justify-center items-center gap-3">
-          <span>13 patterns</span>
-          <span className="w-1 h-1 rounded-full bg-[var(--border)]"></span>
-          <span>50+ worked examples</span>
-          <span className="w-1 h-1 rounded-full bg-[var(--border)]"></span>
-          <span>Visual-first</span>
-          <span className="w-1 h-1 rounded-full bg-[var(--border)]"></span>
-          <span>Free to start</span>
+        <div className="fade-up-stagger-5 font-dmsans text-[14px] text-[var(--text-muted)] flex flex-wrap justify-center items-center gap-8 mt-4">
+          <div className="flex flex-col items-center"><span className="font-bold text-[var(--accent-coral)] text-2xl">13+</span><span className="font-medium mt-1">Topics</span></div>
+          <div className="flex flex-col items-center"><span className="font-bold text-[var(--accent-amber)] text-2xl">200+</span><span className="font-medium mt-1">Visual Lessons</span></div>
+          <div className="flex flex-col items-center"><span className="font-bold text-[var(--accent-coral)] text-2xl">1000+</span><span className="font-medium mt-1">Practice Problems</span></div>
+          <div className="flex flex-col items-center"><span className="font-bold text-[var(--accent-amber)] text-2xl">50K+</span><span className="font-medium mt-1">Learners</span></div>
         </div>
       </div>
 
-      <div className="fade-up-stagger-6 relative z-0 mt-16 flex w-full max-w-[1000px] justify-center">
-        <IsometricCampus />
+      <div className="fade-up-stagger-6 relative z-0 mt-16 w-full max-w-[1200px] px-6 mx-auto flex justify-center">
+        <Image 
+          src="/DSAcademyImage.png" 
+          alt="DSA Academy Campus" 
+          width={1200} 
+          height={600} 
+          className="w-full h-auto object-contain"
+          priority
+        />
       </div>
     </section>
   );

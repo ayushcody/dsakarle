@@ -6,12 +6,12 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "array",
-      "indexing",
-      "contiguous-memory"
+      "data-structure",
+      "basics",
+      "memory"
     ],
     "overview": {
-      "summary": "Arrays store same-type values in contiguous memory, making index-based access extremely fast."
+      "summary": "An array is a contiguous block of memory used to store a collection of items of the same type."
     }
   },
   {
@@ -19,14 +19,14 @@
     "slug": "backtracking",
     "title": "Backtracking",
     "category": "algorithm",
-    "difficulty": "advanced",
+    "difficulty": "hard",
     "tags": [
-      "backtracking",
       "recursion",
-      "constraint-satisfaction"
+      "search",
+      "combinatorics"
     ],
     "overview": {
-      "summary": "Backtracking systematically explores all candidate solutions by building partial solutions incrementally and abandoning them ('pruning') as soon as they violate constraints."
+      "summary": "Backtracking is an algorithmic technique for solving problems recursively by trying to build a solution incrementally, one piece at a time, removing those solutions that fail to satisfy the constraints of the problem at any point of time."
     }
   },
   {
@@ -34,15 +34,15 @@
     "slug": "bfs-dfs",
     "title": "BFS & DFS",
     "category": "algorithm",
-    "difficulty": "intermediate",
+    "difficulty": "hard",
     "tags": [
-      "bfs",
-      "dfs",
-      "graph-traversal",
-      "tree-traversal"
+      "graph",
+      "tree",
+      "search",
+      "traversal"
     ],
     "overview": {
-      "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental strategies to visit every node in a graph or tree."
+      "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental algorithms for traversing or searching tree and graph data structures."
     }
   },
   {
@@ -52,12 +52,12 @@
     "category": "algorithm",
     "difficulty": "medium",
     "tags": [
+      "array",
       "search",
-      "logN",
-      "sorted"
+      "divide-and-conquer"
     ],
     "overview": {
-      "summary": "Binary Search finds elements in a sorted array by repeatedly halving the search window."
+      "summary": "Binary Search is a divide-and-conquer algorithm that finds a target in a sorted array in O(log N) time by repeatedly halving the search space."
     }
   },
   {
@@ -65,14 +65,14 @@
     "slug": "bst",
     "title": "Binary Search Trees",
     "category": "data-structure",
-    "difficulty": "intermediate",
+    "difficulty": "medium",
     "tags": [
-      "bst",
-      "binary-search-tree",
-      "in-order"
+      "tree",
+      "search",
+      "sorted"
     ],
     "overview": {
-      "summary": "A BST is a binary tree where every left descendant is smaller and every right descendant is larger, enabling O(log N) search, insert, and delete on average."
+      "summary": "A Binary Search Tree (BST) is a tree where every left child is smaller than its parent, and every right child is greater."
     }
   },
   {
@@ -80,15 +80,14 @@
     "slug": "dynamic-programming",
     "title": "Dynamic Programming",
     "category": "algorithm",
-    "difficulty": "advanced",
+    "difficulty": "hard",
     "tags": [
-      "dp",
-      "memoization",
-      "tabulation",
-      "optimization"
+      "algorithm",
+      "optimization",
+      "memoization"
     ],
     "overview": {
-      "summary": "Dynamic Programming solves complex problems by breaking them into overlapping subproblems, solving each once, and storing the result to avoid redundant computation."
+      "summary": "Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems, and storing the results of those subproblems to avoid redundant calculations."
     }
   },
   {
@@ -111,15 +110,15 @@
     "slug": "graphs",
     "title": "Graphs",
     "category": "data-structure",
-    "difficulty": "intermediate",
+    "difficulty": "hard",
     "tags": [
       "graph",
-      "adjacency-list",
-      "adjacency-matrix",
-      "connected-components"
+      "bfs",
+      "dfs",
+      "networks"
     ],
     "overview": {
-      "summary": "Graphs are the most general data structure — they model relationships between pairs of objects using nodes (vertices) and edges."
+      "summary": "Graphs model relationships between objects. Unlike trees, graphs can have cycles, multiple parents, and disjoint sections."
     }
   },
   {
@@ -127,14 +126,13 @@
     "slug": "greedy",
     "title": "Greedy Algorithms",
     "category": "algorithm",
-    "difficulty": "intermediate",
+    "difficulty": "medium",
     "tags": [
-      "greedy",
-      "optimization",
-      "local-optimal"
+      "algorithm",
+      "optimization"
     ],
     "overview": {
-      "summary": "Greedy algorithms build solutions piece by piece, always choosing the option that looks best at the current moment without reconsidering past choices."
+      "summary": "Greedy algorithms build up a solution piece by piece, always choosing the next piece that offers the most immediate benefit."
     }
   },
   {
@@ -144,28 +142,27 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
+      "data-structure",
       "hash-table",
-      "mapping",
-      "key-value"
+      "dictionary"
     ],
     "overview": {
-      "summary": "Hash maps store data in key-value pairs, allowing lightning-fast data retrieval."
+      "summary": "Hash Maps store data in key-value pairs, providing average O(1) time complexity for lookups, insertions, and deletions."
     }
   },
   {
     "id": "heaps",
     "slug": "heaps",
-    "title": "Heaps (Priority Queues)",
+    "title": "Heaps & Priority Queues",
     "category": "data-structure",
-    "difficulty": "intermediate",
+    "difficulty": "medium",
     "tags": [
-      "heap",
+      "tree",
       "priority-queue",
-      "min-heap",
-      "max-heap"
+      "sorting"
     ],
     "overview": {
-      "summary": "A Heap is a complete binary tree where every parent node satisfies the heap property (min or max), enabling efficient extraction of the extreme element."
+      "summary": "A Heap is a specialized tree-based data structure that satisfies the heap property: the parent node is always larger (or smaller) than its children."
     }
   },
   {
@@ -173,14 +170,14 @@
     "slug": "linked-lists",
     "title": "Linked Lists",
     "category": "data-structure",
-    "difficulty": "easy",
+    "difficulty": "beginner",
     "tags": [
-      "linked-list",
+      "data-structure",
       "pointers",
-      "nodes"
+      "memory"
     ],
     "overview": {
-      "summary": "Linked lists are chains of discrete nodes connected by pointers."
+      "summary": "A Linked List is a linear data structure where elements are not stored in contiguous memory. Instead, each element points to the next one."
     }
   },
   {
@@ -190,12 +187,12 @@
     "category": "algorithm",
     "difficulty": "beginner",
     "tags": [
-      "prefix-sum",
-      "cumulative-sum",
-      "range-query"
+      "array",
+      "math",
+      "optimization"
     ],
     "overview": {
-      "summary": "Prefix sums precompute cumulative totals so any range sum can be answered in O(1) time after O(N) preprocessing."
+      "summary": "Prefix Sum is a technique that pre-calculates the cumulative sum of elements in an array to answer range sum queries in O(1) time."
     }
   },
   {
@@ -205,11 +202,11 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "queue",
+      "data-structure",
       "FIFO"
     ],
     "overview": {
-      "summary": "Queues are FIFO (First-In-First-Out) data structures, just like a line at a store."
+      "summary": "A Queue is a linear data structure that follows the First-In-First-Out (FIFO) principle."
     }
   },
   {
@@ -217,15 +214,14 @@
     "slug": "recursion",
     "title": "Recursion",
     "category": "algorithm",
-    "difficulty": "intermediate",
+    "difficulty": "medium",
     "tags": [
-      "recursion",
-      "base-case",
-      "call-stack",
+      "algorithm",
+      "functions",
       "divide-and-conquer"
     ],
     "overview": {
-      "summary": "Recursion is a technique where a function calls itself with a smaller input, building solutions by combining results from sub-calls."
+      "summary": "Recursion is a method where the solution to a problem depends on solutions to smaller instances of the same problem."
     }
   },
   {
@@ -235,12 +231,11 @@
     "category": "algorithm",
     "difficulty": "beginner",
     "tags": [
-      "search",
-      "linear-search",
-      "binary-search"
+      "array",
+      "search"
     ],
     "overview": {
-      "summary": "Searching algorithms find the location of a target value within a data structure. Linear search scans sequentially; binary search halves the range on sorted data."
+      "summary": "Searching algorithms are used to retrieve information stored within some data structure."
     }
   },
   {
@@ -261,16 +256,16 @@
   {
     "id": "sorting",
     "slug": "sorting",
-    "title": "Sorting",
+    "title": "Sorting Algorithms",
     "category": "algorithm",
     "difficulty": "medium",
     "tags": [
+      "array",
       "sort",
-      "divide-and-conquer",
-      "merge"
+      "divide-and-conquer"
     ],
     "overview": {
-      "summary": "Sorting arranges elements in a specific order, creating predictability."
+      "summary": "Sorting algorithms arrange elements in a certain order (usually ascending). Understanding how they work internally is crucial for grasping time complexity limits."
     }
   },
   {
@@ -297,11 +292,11 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "stack",
+      "data-structure",
       "LIFO"
     ],
     "overview": {
-      "summary": "Stacks are simple LIFO (Last-In-First-Out) data structures, like a stack of plates."
+      "summary": "A Stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle."
     }
   },
   {
@@ -311,12 +306,12 @@
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
-      "string",
+      "array",
       "text",
-      "character"
+      "parsing"
     ],
     "overview": {
-      "summary": "Strings are arrays of characters under the hood, but often have special immutable properties."
+      "summary": "A String is an array of characters. However, depending on the language, strings are often immutable."
     }
   },
   {
@@ -339,14 +334,14 @@
     "slug": "tries",
     "title": "Tries (Prefix Trees)",
     "category": "data-structure",
-    "difficulty": "advanced",
+    "difficulty": "hard",
     "tags": [
-      "trie",
-      "prefix-tree",
-      "string-matching"
+      "tree",
+      "strings",
+      "prefix"
     ],
     "overview": {
-      "summary": "A Trie is a tree-like data structure optimized for storing and searching strings, where each node represents a character and paths from root to leaf spell out stored words."
+      "summary": "A Trie (pronounced 'try') is a specialized tree used to store associative data structures, specifically strings. It excels at fast prefix matching."
     }
   },
   {
@@ -367,16 +362,16 @@
   {
     "id": "vectors",
     "slug": "vectors",
-    "title": "Dynamic Arrays (Vectors)",
+    "title": "Vectors (Dynamic Arrays)",
     "category": "data-structure",
     "difficulty": "beginner",
     "tags": [
       "array",
       "dynamic",
-      "amortized"
+      "memory"
     ],
     "overview": {
-      "summary": "Vectors are arrays that grow automatically when they run out of space."
+      "summary": "Vectors (or Dynamic Arrays) are arrays that automatically resize themselves when they run out of space."
     }
   }
 ]

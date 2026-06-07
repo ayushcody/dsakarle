@@ -3,12 +3,13 @@
 import { useEffect, useRef } from 'react';
 
 import { useStepperStore } from '@/lib/stepper-store';
-import type { CodeLanguage } from '@/types/learning';
+import type { CodeLanguage, StepperStep } from '@/types/learning';
 
 interface CodeTabsProps {
   code: Record<CodeLanguage, string>
   renderedCode: Record<CodeLanguage, string>
   activeLine?: number
+  steps?: StepperStep[]
 }
 
 const TABS: CodeLanguage[] = ['python', 'javascript', 'java', 'cpp'];
@@ -19,8 +20,8 @@ const TAB_LABELS: Record<CodeLanguage, string> = {
   cpp: 'C++',
 };
 
-export function CodeTabs({ renderedCode, activeLine }: CodeTabsProps) {
-  const { selectedLanguage, setLanguage, currentStep } = useStepperStore();
+export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
+  const { selectedLanguage, setLanguage, currentStep, setStep } = useStepperStore();
   const codeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,6 +30,22 @@ export function CodeTabs({ renderedCode, activeLine }: CodeTabsProps) {
     }
 
     const lines = Array.from(codeRef.current.querySelectorAll('[data-line]'));
+    
+    // Setup clickability once per language change
+    if (steps) {
+      const validLines = new Set(steps.map(s => s.activeLine).filter(l => l !== undefined));
+      for (const line of lines) {
+        const lineNum = parseInt(line.getAttribute('data-line') || '0', 10);
+        if (validLines.has(lineNum)) {
+          line.classList.add('clickable-line');
+          line.setAttribute('title', 'Click to jump to this step');
+        } else {
+          line.classList.remove('clickable-line');
+          line.removeAttribute('title');
+        }
+      }
+    }
+
     for (const line of lines) {
       line.classList.remove('active-line');
     }
@@ -40,10 +57,31 @@ export function CodeTabs({ renderedCode, activeLine }: CodeTabsProps) {
     const targetLine = codeRef.current.querySelector(`[data-line="${activeLine}"]`);
     targetLine?.classList.add('active-line');
     targetLine?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [activeLine, currentStep, selectedLanguage]);
+  }, [activeLine, currentStep, selectedLanguage, steps]);
+
+  const handleCodeClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const lineElement = target.closest('[data-line]');
+    if (lineElement && steps) {
+      const lineNum = parseInt(lineElement.getAttribute('data-line') || '0', 10);
+      const targetStepIndex = steps.findIndex(step => step.activeLine === lineNum);
+      if (targetStepIndex !== -1) {
+        setStep(targetStepIndex);
+      }
+    }
+  };
 
   return (
     <div>
+      <style>{`
+        .clickable-line {
+          cursor: pointer;
+          transition: background 0.15s ease;
+        }
+        .clickable-line:hover {
+          background: rgba(200, 144, 10, 0.1) !important;
+        }
+      `}</style>
       <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--border)' }}>
         {TABS.map((lang) => (
           <button
@@ -70,6 +108,7 @@ export function CodeTabs({ renderedCode, activeLine }: CodeTabsProps) {
 
       <div
         ref={codeRef}
+        onClick={handleCodeClick}
         style={{
           overflow: 'auto',
           maxHeight: '400px',

@@ -4,82 +4,213 @@
   "title": "Hash Maps",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 45,
+  "estimatedMinutes": 40,
   "prerequisites": ["arrays"],
-  "tags": ["hash-table", "mapping", "key-value"],
+  "tags": [
+    "data-structure",
+    "hash-table",
+    "dictionary"
+  ],
   "overview": {
-    "summary": "Hash maps store data in key-value pairs, allowing lightning-fast data retrieval.",
-    "learningObjectives": ["Understand hash functions", "Master key-value storage patterns"],
-    "interviewRelevance": "The most commonly used data structure in coding interviews to achieve O(1) lookups."
+    "summary": "Hash Maps store data in key-value pairs, providing average O(1) time complexity for lookups, insertions, and deletions.",
+    "learningObjectives": [
+      "Understand the concept of a hashing function.",
+      "Explain how key-value pairs are stored and retrieved.",
+      "Understand hash collisions and basic resolution techniques."
+    ],
+    "interviewRelevance": "Hash maps are the ultimate 'cheat code' in interviews. Whenever you need to optimize a lookup from O(n) to O(1), a hash map is usually the answer."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Python's dict, JavaScript's object, and Java's HashMap are all hash maps.",
-      "O(1) lookup powers every database index, every cache, and every language's symbol table.",
-      "Git stores every commit by its SHA-256 hash in a hash map of the object store."
+      "Imagine walking into a massive library and wanting a specific book. Instead of checking every shelf (which takes hours), you ask the librarian.",
+      "You give the librarian the title (the Key), and they instantly give you the exact aisle and shelf number (the Value). A Hash Map is your digital librarian."
     ],
-    "ahaMoment": "Hash maps skip the search process entirely by mathematically calculating exactly where the answer lives."
+    "ahaMoment": "A hash function mathematically converts a key directly into a memory address, skipping the search entirely."
   },
   "definition": {
-    "technicalDefinition": "A hash map is a data structure that implements an associative array, mapping keys to values. A hash function computes an index into an array of buckets, from which the desired value can be found.",
+    "technicalDefinition": "A Hash Map (or Hash Table) is a data structure that implements an associative array abstract data type, a structure that can map keys to values using a hash function.",
     "vocabulary": [
-      { "term": "Hash Function", "definition": "A mathematical algorithm that maps data of arbitrary size to a fixed-size integer." },
-      { "term": "Collision", "definition": "When two different keys generate the same hash index." },
-      { "term": "Chaining", "definition": "A collision resolution technique where each bucket is a linked list of entries." }
+      {
+        "term": "Key",
+        "definition": "The unique identifier used to retrieve the value."
+      },
+      {
+        "term": "Value",
+        "definition": "The data associated with the key."
+      },
+      {
+        "term": "Hash Function",
+        "definition": "An algorithm that converts a key into a specific array index."
+      },
+      {
+        "term": "Collision",
+        "definition": "When two different keys hash to the same exact index."
+      }
     ],
     "keyProperties": [
-      "Average O(1) time complexity for search, insert, and delete.",
-      "Worst-case O(N) if many collisions occur or resizing is triggered.",
-      "Keys are generally unordered."
+      "O(1) average time complexity for lookup, insert, and delete.",
+      "Keys must be unique and hashable (usually immutable).",
+      "Unordered data (unless using specific variants like LinkedHashMap)."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A coat check room. You hand in your coat (value), get a numbered ticket (hash of the key), and can retrieve it instantly later."
+    ],
+    "clickSentence": "By trading space (memory) for time, we eliminate the need to search.",
+    "diagramType": "hash-map",
+    "cells": [],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "Under the hood, a hash map is usually just an Array.",
+      "The Hash Function computes an index, and the key-value pair is stored at that specific index in the array."
+    ],
+    "definitionCode": {
+      "python": "hash_map = {'alice': 25, 'bob': 30}\n# Lookup\nage = hash_map['alice']",
+      "javascript": "const hashMap = new Map();\nhashMap.set('alice', 25);\n// Lookup\nconst age = hashMap.get('alice');",
+      "java": "HashMap<String, Integer> map = new HashMap<>();\nmap.put(\"alice\", 25);\n// Lookup\nint age = map.get(\"alice\");",
+      "cpp": "std::unordered_map<std::string, int> map;\nmap[\"alice\"] = 25;\n// Lookup\nint age = map[\"alice\"];"
+    },
+    "memoryLayout": [
+      {
+        "label": "Index 0",
+        "value": "empty"
+      },
+      {
+        "label": "Index 1",
+        "value": "[\"bob\": 30]"
+      },
+      {
+        "label": "Index 2",
+        "value": "empty"
+      },
+      {
+        "label": "Index 3",
+        "value": "[\"alice\": 25]"
+      }
+    ]
+  },
+  "stepper": {
+    "diagramType": "hash-map",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive visualization for Hash Maps is coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
-      "name": "Insert",
-      "description": "Hash the key to find the index, then store the key-value pair.",
+      "name": "Insert / Update",
+      "description": "Calculate the hash of the key, find the index, and store the value.",
       "timeComplexity": "O(1) average",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "map['key'] = 'value'",
-        "javascript": "map.set('key', 'value');",
-        "java": "map.put(\"key\", \"value\");",
-        "cpp": "map[\"key\"] = \"value\";"
+        "python": "map[key] = value",
+        "javascript": "map.set(key, value);",
+        "java": "map.put(key, value);",
+        "cpp": "map[key] = value;"
       },
-      "visualNote": "The key is transformed, mapped to a bucket, and stored."
+      "visualNote": "Instantly drops the value into the bucket."
     },
     {
       "name": "Lookup",
-      "description": "Hash the key, go directly to the index, and retrieve the value.",
+      "description": "Calculate the hash of the key and retrieve the value at that index.",
       "timeComplexity": "O(1) average",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "val = map['key']\n# or map.get('key')",
-        "javascript": "const val = map.get('key');",
-        "java": "String val = map.get(\"key\");",
-        "cpp": "std::string val = map[\"key\"];"
+        "python": "val = map[key]",
+        "javascript": "const val = map.get(key);",
+        "java": "int val = map.get(key);",
+        "cpp": "int val = map[key];"
       },
-      "visualNote": "Jumps straight to the exact bucket containing the value."
+      "visualNote": "Instantly jumps to the bucket and retrieves."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "map = new Map()\nfor item in list:\n  if condition_met(map.get(target)):\n    return item\n  map.set(item.key, item.value)",
+    "whenToUse": "Whenever you are repeatedly searching an array for a value. Store values in a map as you go to turn O(n) lookups into O(1).",
+    "timeComplexity": "O(1) amortized.",
+    "spaceComplexity": "O(n) memory to store the elements."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You have an array of integers. You need to check if there are two numbers that add up to a target sum. A nested loop takes O(n²). How can you do it in O(n)?",
+    "correctPatternId": "hash-maps",
+    "distractors": [
+      "linked-lists",
+      "stacks",
+      "sorting"
+    ],
+    "explanation": "As you iterate, store each number in a Hash Map. For each number, you can instantly check if `(target - current_number)` is already in the map."
+  },
+  "examples": [
+    {
+      "title": "Two Sum",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/two-sum/",
+      "problemStatement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+      "inputExample": "nums = [2,7,11,15], target = 9",
+      "outputExample": "[0, 1]",
+      "steps": [
+        "Create an empty Hash Map.",
+        "Iterate through the array.",
+        "Calculate the 'complement' needed (target - current).",
+        "If complement is in map, you found the pair!",
+        "Otherwise, add the current number and its index to the map."
+      ],
+      "code": {
+        "python": "seen = {}\nfor i, num in enumerate(nums):\n    comp = target - num\n    if comp in seen:\n        return [seen[comp], i]\n    seen[num] = i\nreturn []",
+        "javascript": "const seen = new Map();\nfor (let i = 0; i < nums.length; i++) {\n    const comp = target - nums[i];\n    if (seen.has(comp)) {\n        return [seen.get(comp), i];\n    }\n    seen.set(nums[i], i);\n}\nreturn [];",
+        "java": "Map<Integer, Integer> seen = new HashMap<>();\nfor (int i = 0; i < nums.length; i++) {\n    int comp = target - nums[i];\n    if (seen.containsKey(comp)) {\n        return new int[] { seen.get(comp), i };\n    }\n    seen.put(nums[i], i);\n}\nreturn new int[] {};",
+        "cpp": "std::unordered_map<int, int> seen;\nfor (int i = 0; i < nums.size(); i++) {\n    int comp = target - nums[i];\n    if (seen.count(comp)) {\n        return { seen[comp], i };\n    }\n    seen[nums[i]] = i;\n}\nreturn {};"
+      },
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)",
+      "rationale": "We trade O(n) space for O(1) lookups, dropping total time from O(n²) to O(n)."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "What is a Hash Collision?",
+      "options": [
+        "When two different keys generate the exact same index in the underlying array.",
+        "When you try to look up a key that doesn't exist.",
+        "When the hash map runs out of memory.",
+        "When you delete a key while iterating."
+      ],
+      "correctIndex": 0,
+      "explanation": "Because the underlying array is smaller than the infinite possibilities of keys, eventually two keys will hash to the same slot."
     },
     {
-      "name": "Delete",
-      "description": "Hash the key, locate the entry, and remove it.",
-      "timeComplexity": "O(1) average",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "del map['key']",
-        "javascript": "map.delete('key');",
-        "java": "map.remove(\"key\");",
-        "cpp": "map.erase(\"key\");"
-      },
-      "visualNote": "The precise sub-item in the bucket is removed."
+      "question": "Why is Hash Map lookup O(1) 'average' and not 'guaranteed'?",
+      "options": [
+        "Because hash collisions might occur, requiring the map to check a short list of items at that index.",
+        "Because sometimes the computer CPU is busy.",
+        "Because memory addresses take time to calculate.",
+        "It actually is guaranteed O(1)."
+      ],
+      "correctIndex": 0,
+      "explanation": "In the worst case (e.g., all keys collide to the exact same index), looking up a key degrades to O(n) as it searches through the collided list."
     }
   ],
   "practice": [
-    { "title": "Two Sum", "url": "https://leetcode.com/problems/two-sum/", "difficulty": "easy", "keyInsight": "Store seen values and their indices to achieve O(N) total runtime." },
-    { "title": "Group Anagrams", "url": "https://leetcode.com/problems/group-anagrams/", "difficulty": "medium", "keyInsight": "Use a sorted string or character count tuple as the hash map key." },
-    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Hash map tallies frequencies, followed by a heap or bucket sort." },
-    { "title": "Longest Consecutive Sequence", "url": "https://leetcode.com/problems/longest-consecutive-sequence/", "difficulty": "medium", "keyInsight": "A Set (hash map without values) allows O(1) checks for neighboring numbers." },
-    { "title": "Subarray Sum Equals K", "url": "https://leetcode.com/problems/subarray-sum-equals-k/", "difficulty": "medium", "keyInsight": "Store running prefix sums in a hash map to look back for exact differences." },
-    { "title": "Valid Sudoku", "url": "https://leetcode.com/problems/valid-sudoku/", "difficulty": "medium", "keyInsight": "Multiple coordinate sets/hash maps enforce uniqueness rules." }
+    {
+      "title": "Valid Anagram",
+      "url": "https://leetcode.com/problems/valid-anagram/",
+      "difficulty": "easy",
+      "keyInsight": "Count character frequencies using a hash map."
+    },
+    {
+      "title": "Group Anagrams",
+      "url": "https://leetcode.com/problems/group-anagrams/",
+      "difficulty": "medium",
+      "keyInsight": "Use the sorted version of the string as the key in the hash map."
+    }
   ]
 }

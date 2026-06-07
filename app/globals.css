@@ -1,44 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-lora: 'Lora', 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
-  --font-dmsans: 'DM Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  --font-dmmono: 'DM Mono', 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
-  --bg-primary: #faf9f7;
-  --bg-secondary: #f0ede8;
-  --bg-dark: #1a1a18;
-  --bg-dark-secondary: #262624;
-  --bg-dark-tertiary: #171715;
-  --accent-coral: #d4603a;
-  --accent-coral-dark: #b84e2c;
-  --accent-amber: #c8900a;
-  --accent-teal: #1d7a6b;
-  --text-primary: #1a1a18;
-  --text-secondary: #6b6860;
-  --text-muted: #9c9890;
-  --text-inverse-muted: #a3a3a3;
-  --text-inverse-subtle: #525252;
-  --border: #e5e0d8;
-  --border-strong: #404040;
+  --font-dmsans: Satoshi, "DM Sans", Inter, Manrope, "Plus Jakarta Sans", Geist, system-ui, sans-serif;
+  --font-dmmono: 'JetBrains Mono', 'DM Mono', 'SFMono-Regular', monospace;
+  --bg-primary: #FBF5EF;
+  --bg-secondary: #FFFDF9;
+  --bg-dark: #1D1D1F;
+  --bg-dark-secondary: #2A2A2C;
+  --bg-dark-tertiary: #171515;
+  --accent-coral: #CC5A37;
+  --accent-coral-dark: #A83A1D;
+  --accent-amber: #D99B26;
+  --accent-teal: #1E7B6C;
+  --text-primary: #1D1D1F;
+  --text-secondary: #4A4A4A;
+  --text-muted: #737373;
+  --text-inverse-muted: #a8a29e;
+  --text-inverse-subtle: #57534e;
+  --border: rgba(204, 90, 55, 0.22);
+  --border-strong: rgba(204, 90, 55, 0.4);
   --white: #ffffff;
   --radius: 12px;
   --radius-sm: 8px;
-  --surface-teal: rgba(29, 122, 107, 0.1);
-  --surface-amber: rgba(200, 144, 10, 0.1);
-  --surface-coral: rgba(212, 96, 58, 0.1);
-  --surface-highlight: rgba(200, 144, 10, 0.2);
-  --surface-success: rgba(22, 163, 74, 0.08);
-  --surface-danger: rgba(220, 38, 38, 0.08);
-  --state-success: #16a34a;
-  --state-warning: #ca8a04;
-  --state-danger: #dc2626;
-  --pointer-left: #16a34a;
-  --pointer-right: #ea580c;
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.03);
-  --shadow-card-hover: 0 12px 32px rgba(0, 0, 0, 0.08);
-  --shadow-nav: 0 2px 24px rgba(0, 0, 0, 0.07);
+  --surface-teal: rgba(30, 123, 108, 0.1);
+  --surface-amber: rgba(217, 155, 38, 0.1);
+  --surface-coral: rgba(204, 90, 55, 0.1);
+  --surface-highlight: rgba(217, 155, 38, 0.2);
+  --surface-success: rgba(30, 123, 108, 0.08);
+  --surface-danger: rgba(239, 68, 68, 0.08);
+  --state-success: #1E7B6C;
+  --state-warning: #D99B26;
+  --state-danger: #EF4444;
+  --pointer-left: #1E7B6C;
+  --pointer-right: #D99B26;
+  --shadow-card: 0 4px 15px rgba(204, 90, 55, 0.04);
+  --shadow-card-hover: 0 12px 30px rgba(204, 90, 55, 0.1);
+  --shadow-nav: 0 2px 24px rgba(204, 90, 55, 0.04);
 }
 
 @layer base {
@@ -116,7 +117,7 @@
     margin-bottom: 2rem;
     border-bottom: 1px solid var(--border);
     padding-bottom: 1rem;
-    font-family: var(--font-lora);
+    font-family: var(--font-dmsans);
     font-size: 1.875rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -187,10 +188,10 @@
 
 /* Topic page h2 */
 .topic-h2 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-dmsans);
   font-size: 26px;
   font-weight: 600;
-  color: #1A1A18;
+  color: var(--text-primary);
   margin-bottom: 20px;
   margin-top: 56px;
 }

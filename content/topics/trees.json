@@ -9,27 +9,80 @@
   "tags": ["tree", "recursion", "hierarchical"],
   "overview": {
     "summary": "Trees are hierarchical data structures modeling relationships rather than flat lists.",
-    "learningObjectives": ["Understand tree terminology", "Master tree traversal algorithms (DFS, BFS)"],
-    "interviewRelevance": "The most common recursive interview questions heavily feature trees."
+    "learningObjectives": [
+      "Understand tree terminology (Root, Leaf, Height).",
+      "Master tree traversal algorithms (DFS, BFS).",
+      "Recognize recursive patterns in tree problems."
+    ],
+    "interviewRelevance": "The most common recursive interview questions heavily feature trees. If you understand trees, you understand recursion."
   },
   "realWorldHook": {
     "paragraphs": [
-      "File system directories are trees. HTML DOM is a tree. Every chess engine evaluates positions in a game tree.",
-      "The reason folder navigation is fast is that your OS stores directory metadata in a B-tree, allowing binary search through millions of files."
+      "File system directories are trees. The HTML DOM of the website you are looking at right now is a tree. Every chess engine evaluates positions in a game tree.",
+      "The reason folder navigation is fast is that your OS stores directory metadata in a B-tree, allowing rapid search through millions of files."
     ],
     "ahaMoment": "A tree is just a linked list that branches out. Instead of pointing to one 'next' node, it points to multiple 'children'."
   },
   "definition": {
     "technicalDefinition": "A tree is an undirected, connected, acyclic graph consisting of a root node and children nodes, forming a hierarchy.",
     "vocabulary": [
-      { "term": "Root", "definition": "The top-most node in the tree." },
-      { "term": "Leaf", "definition": "A node with no children." },
-      { "term": "Height", "definition": "The length of the longest path from the root to a leaf." }
+      { "term": "Root", "definition": "The top-most node in the tree. You lose the tree if you lose the root." },
+      { "term": "Leaf", "definition": "A node with no children (bottom of the tree)." },
+      { "term": "Height", "definition": "The length of the longest path from the root to a leaf." },
+      { "term": "Depth", "definition": "The length of the path from the root to a specific node." }
     ],
     "keyProperties": [
       "Every node has exactly one parent (except the root).",
       "No cycles are allowed.",
-      "Recursive structure: every child node is the root of a subtree."
+      "Recursive structure: every child node is the root of its own subtree."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A corporate org chart. The CEO is the root, VPs are children of the CEO, Managers are children of VPs, and individual contributors are the leaves."
+    ],
+    "clickSentence": "Because a tree is naturally recursive, the easiest way to solve a tree problem is to ask: 'If I know the answer for my left and right children, how do I calculate the answer for myself?'",
+    "diagramType": "tree",
+    "cells": [1, 2, 3, 4, 5, 6, 7],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "Like Linked Lists, tree nodes are scattered in memory.",
+      "A binary tree node contains data and two pointers: left and right."
+    ],
+    "definitionCode": {
+      "python": "class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right",
+      "javascript": "class TreeNode {\n    constructor(val = 0, left = null, right = null) {\n        this.val = val;\n        this.left = left;\n        this.right = right;\n    }\n}",
+      "java": "public class TreeNode {\n    int val;\n    TreeNode left;\n    TreeNode right;\n    TreeNode(int val) { this.val = val; }\n}",
+      "cpp": "struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n    TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n};"
+    },
+    "memoryLayout": [
+      {
+        "label": "Root Node",
+        "value": "{ val: 1, left: 0x4A, right: 0x9B }"
+      },
+      {
+        "label": "Left Child",
+        "value": "{ val: 2, left: null, right: null }"
+      },
+      {
+        "label": "Right Child",
+        "value": "{ val: 3, left: null, right: null }"
+      }
+    ]
+  },
+  "stepper": {
+    "diagramType": "tree",
+    "array": [1, 2, 3, 4, 5, 6, 7],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive tree traversal visualization coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
@@ -41,8 +94,8 @@
       "code": {
         "python": "def dfs(node):\n    if not node: return\n    dfs(node.left)\n    dfs(node.right)",
         "javascript": "function dfs(node) {\n  if (!node) return;\n  dfs(node.left);\n  dfs(node.right);\n}",
-        "java": "void dfs(Node node) {\n  if (node == null) return;\n  dfs(node.left);\n  dfs(node.right);\n}",
-        "cpp": "void dfs(Node* node) {\n  if (!node) return;\n  dfs(node->left);\n  dfs(node->right);\n}"
+        "java": "void dfs(TreeNode node) {\n  if (node == null) return;\n  dfs(node.left);\n  dfs(node.right);\n}",
+        "cpp": "void dfs(TreeNode* node) {\n  if (!node) return;\n  dfs(node->left);\n  dfs(node->right);\n}"
       },
       "visualNote": "The search plunges to the deepest leaf before coming back up."
     },
@@ -54,18 +107,82 @@
       "code": {
         "python": "q = deque([root])\nwhile q:\n    node = q.popleft()\n    if node.left: q.append(node.left)\n    if node.right: q.append(node.right)",
         "javascript": "const q = [root];\nwhile (q.length) {\n  const node = q.shift();\n  if (node.left) q.push(node.left);\n  if (node.right) q.push(node.right);\n}",
-        "java": "Queue<Node> q = new LinkedList<>();\nq.offer(root);\nwhile (!q.isEmpty()) {\n  Node node = q.poll();\n  if (node.left != null) q.offer(node.left);\n  if (node.right != null) q.offer(node.right);\n}",
-        "cpp": "queue<Node*> q;\nq.push(root);\nwhile (!q.empty()) {\n  Node* node = q.front(); q.pop();\n  if (node->left) q.push(node->left);\n  if (node->right) q.push(node->right);\n}"
+        "java": "Queue<TreeNode> q = new LinkedList<>();\nq.offer(root);\nwhile (!q.isEmpty()) {\n  TreeNode node = q.poll();\n  if (node.left != null) q.offer(node.left);\n  if (node.right != null) q.offer(node.right);\n}",
+        "cpp": "queue<TreeNode*> q;\nq.push(root);\nwhile (!q.empty()) {\n  TreeNode* node = q.front(); q.pop();\n  if (node->left) q.push(node->left);\n  if (node->right) q.push(node->right);\n}"
       },
       "visualNote": "The search sweeps horizontally across each level."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "def solve(node):\n  if node is null:\n    return BaseCase\n  left_result = solve(node.left)\n  right_result = solve(node.right)\n  return merge(left_result, right_result, node.val)",
+    "whenToUse": "Whenever data is hierarchical or when a problem asks to find paths, depths, or relationships between ancestors and descendants.",
+    "timeComplexity": "O(N) since we visit every node exactly once.",
+    "spaceComplexity": "O(H) where H is the height of the tree (for the call stack)."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You need to find the shortest path from the top of an organization chart to a specific employee.",
+    "correctPatternId": "trees",
+    "distractors": [
+      "arrays",
+      "sorting",
+      "two-pointers"
+    ],
+    "explanation": "An organization chart is a classic Tree structure, and finding a path requires tree traversal (BFS for shortest path)."
+  },
+  "examples": [
+    {
+      "title": "Maximum Depth of Binary Tree",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
+      "problemStatement": "Given the root of a binary tree, return its maximum depth.",
+      "inputExample": "root = [3,9,20,null,null,15,7]",
+      "outputExample": "3",
+      "steps": [
+        "Base Case: If the node is null, the depth is 0.",
+        "Recursively find the max depth of the left subtree.",
+        "Recursively find the max depth of the right subtree.",
+        "The depth of the current node is max(left, right) + 1."
+      ],
+      "code": {
+        "python": "def maxDepth(root):\n    if not root:\n        return 0\n    return max(maxDepth(root.left), maxDepth(root.right)) + 1",
+        "javascript": "function maxDepth(root) {\n    if (!root) return 0;\n    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;\n}",
+        "java": "public int maxDepth(TreeNode root) {\n    if (root == null) return 0;\n    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;\n}",
+        "cpp": "int maxDepth(TreeNode* root) {\n    if (!root) return 0;\n    return max(maxDepth(root->left), maxDepth(root->right)) + 1;\n}"
+      },
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(H)",
+      "rationale": "This perfectly demonstrates the 'ask my children for their answer, then calculate mine' recursive pattern."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "What is the difference between DFS and BFS?",
+      "options": [
+        "DFS goes deep into branches first using a Stack/Recursion, while BFS explores level-by-level using a Queue.",
+        "DFS uses a Queue, BFS uses a Stack.",
+        "DFS is faster than BFS.",
+        "BFS only works on Binary Search Trees."
+      ],
+      "correctIndex": 0,
+      "explanation": "DFS plunges to the leaves before backtracking (LIFO), whereas BFS scans horizontally (FIFO)."
+    },
+    {
+      "question": "What is the worst-case space complexity for a recursive DFS on a completely unbalanced tree (like a linked list)?",
+      "options": [
+        "O(N)",
+        "O(1)",
+        "O(log N)",
+        "O(N^2)"
+      ],
+      "correctIndex": 0,
+      "explanation": "If the tree is completely unbalanced, the height H is equal to N, meaning the recursion stack will hold N frames."
     }
   ],
   "practice": [
     { "title": "Maximum Depth of Binary Tree", "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/", "difficulty": "easy", "keyInsight": "Recursively take the max of left and right heights plus 1." },
     { "title": "Invert Binary Tree", "url": "https://leetcode.com/problems/invert-binary-tree/", "difficulty": "easy", "keyInsight": "Swap the left and right pointers at every node." },
     { "title": "Same Tree", "url": "https://leetcode.com/problems/same-tree/", "difficulty": "easy", "keyInsight": "Traverse both trees simultaneously." },
-    { "title": "Subtree of Another Tree", "url": "https://leetcode.com/problems/subtree-of-another-tree/", "difficulty": "easy", "keyInsight": "Recursively check if current tree equals the subRoot." },
-    { "title": "Lowest Common Ancestor of a Binary Tree", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/", "difficulty": "medium", "keyInsight": "Bubble up boolean values indicating if targets were found." },
+    { "title": "Lowest Common Ancestor", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/", "difficulty": "medium", "keyInsight": "Bubble up boolean values indicating if targets were found." },
     { "title": "Binary Tree Level Order Traversal", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "medium", "keyInsight": "A standard BFS queue ensures level-by-level tracking." }
   ]
 }

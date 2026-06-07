@@ -2,108 +2,166 @@
   "id": "dynamic-programming",
   "slug": "dynamic-programming",
   "title": "Dynamic Programming",
-  "analogy": "DP is like filling out a multiplication table — instead of recalculating 7×8 every time, you look up the answer you already computed in the table.",
-  "analogyIcon": "📊",
   "category": "algorithm",
-  "difficulty": "advanced",
-  "estimatedMinutes": 60,
+  "difficulty": "hard",
+  "estimatedMinutes": 90,
   "prerequisites": ["recursion"],
-  "tags": ["dp", "memoization", "tabulation", "optimization"],
+  "tags": ["algorithm", "optimization", "memoization"],
   "overview": {
-    "summary": "Dynamic Programming solves complex problems by breaking them into overlapping subproblems, solving each once, and storing the result to avoid redundant computation.",
+    "summary": "Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems, and storing the results of those subproblems to avoid redundant calculations.",
     "learningObjectives": [
-      "Identify overlapping subproblems and optimal substructure.",
-      "Implement both top-down (memoization) and bottom-up (tabulation) approaches.",
-      "Derive recurrence relations from problem constraints."
+      "Identify overlapping subproblems.",
+      "Implement Top-Down DP (Memoization).",
+      "Implement Bottom-Up DP (Tabulation)."
     ],
-    "interviewRelevance": "DP is one of the most frequently tested advanced topics at FAANG companies, appearing in 20-30% of medium/hard interview problems."
+    "interviewRelevance": "DP is the final boss of interview algorithms. Recognizing when a recursive problem is repeating work is the key to mastering it."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Spell-checkers use DP (edit distance) to suggest corrections. GPS navigation uses DP to find shortest paths. Text diff tools (git diff) use DP (LCS) to show what changed.",
-      "Your phone's keyboard predictions use DP-based sequence models to predict the next word."
+      "If I ask you what 1 + 1 + 1 + 1 + 1 is, you count and say 5.",
+      "If I instantly add another '+ 1' to the end, do you recount all of them? No. You just say 6. You remembered the previous answer and built upon it. That is Dynamic Programming."
     ],
-    "ahaMoment": "DP trades memory for time — by remembering past results, it transforms exponential brute-force into polynomial elegance."
+    "ahaMoment": "DP is just Recursion + A Notebook (Memory). If you have solved a problem before, write the answer down so you never have to solve it again."
   },
   "definition": {
-    "technicalDefinition": "Dynamic Programming is a method for solving optimization problems by combining solutions to overlapping subproblems. It requires two properties: optimal substructure and overlapping subproblems.",
+    "technicalDefinition": "Dynamic programming is both a mathematical optimization method and a computer programming method. It solves problems by recursively breaking them down into overlapping subproblems and storing the solutions to avoid duplicate work.",
     "vocabulary": [
-      { "term": "Memoization", "definition": "Top-down approach: solve recursively and cache results in a hash map." },
-      { "term": "Tabulation", "definition": "Bottom-up approach: fill a table iteratively from the smallest subproblems." },
-      { "term": "Recurrence Relation", "definition": "A formula expressing the solution in terms of solutions to smaller instances." },
-      { "term": "State", "definition": "The set of variables that uniquely define a subproblem." }
+      { "term": "Overlapping Subproblems", "definition": "When a recursive algorithm visits the exact same state multiple times." },
+      { "term": "Optimal Substructure", "definition": "When the optimal solution to the overall problem can be constructed from optimal solutions to its subproblems." },
+      { "term": "Memoization (Top-Down)", "definition": "Writing a recursive function and adding a hash map (or array) to cache the results." },
+      { "term": "Tabulation (Bottom-Up)", "definition": "Building an array from the smallest subproblem up to the largest, using loops instead of recursion." }
     ],
     "keyProperties": [
-      "Optimal substructure: an optimal solution contains optimal solutions to subproblems.",
-      "Overlapping subproblems: the same subproblems are solved multiple times.",
-      "Transforms exponential recursion into polynomial time by caching."
+      "Trades Space for Time.",
+      "Turns O(2^N) exponential time into O(N) or O(N^2) polynomial time.",
+      "State definitions are the hardest part of DP."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A spider web where many paths lead to the same intersection. If you leave a signpost at the intersection with the distance to the center, no one else arriving there has to measure it again."
+    ],
+    "clickSentence": "Recursion says 'Solve this'. DP says 'Check if I already solved this. If not, solve it and save the answer'.",
+    "diagramType": "DPDiagram",
+    "cells": [],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "DP usually requires O(N) or O(N^2) extra memory to hold the 'cache' or 'DP Table'.",
+      "In Top-Down, this is usually a Hash Map or Array. In Bottom-Up, it is always an Array/Grid."
+    ],
+    "definitionCode": {
+      "python": "# Top-Down (Memoization)\ncache = {}\ndef fib(n):\n    if n in cache: return cache[n]\n    if n <= 1: return n\n    cache[n] = fib(n-1) + fib(n-2)\n    return cache[n]",
+      "javascript": "// Bottom-Up (Tabulation)\nfunction fib(n) {\n    if (n <= 1) return n;\n    const dp = new Array(n + 1).fill(0);\n    dp[1] = 1;\n    for (let i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}"
+    },
+    "memoryLayout": [
+      { "label": "DP Table (Array)", "value": "Stores solutions. dp[3] = answer for subproblem 3." },
+      { "label": "State Transitions", "value": "How dp[i] is calculated from dp[i-1], dp[i-2], etc." }
+    ]
+  },
+  "stepper": {
+    "diagramType": "DPDiagram",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive DP visualizer coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
-      "name": "Top-Down (Memoization)",
-      "description": "Solve recursively but cache results so each subproblem is computed only once.",
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(n)",
+      "name": "Check Cache",
+      "description": "Before doing any work, check if the answer for this state is already known.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
       "code": {
-        "python": "def fib(n, memo={}):\n    if n <= 1: return n\n    if n not in memo:\n        memo[n] = fib(n-1, memo) + fib(n-2, memo)\n    return memo[n]",
-        "javascript": "function fib(n, memo = {}) {\n  if (n <= 1) return n;\n  if (!(n in memo)) {\n    memo[n] = fib(n-1, memo) + fib(n-2, memo);\n  }\n  return memo[n];\n}",
-        "java": "int fib(int n, Map<Integer,Integer> memo) {\n    if (n <= 1) return n;\n    if (!memo.containsKey(n)) {\n        memo.put(n, fib(n-1,memo) + fib(n-2,memo));\n    }\n    return memo.get(n);\n}",
-        "cpp": "int fib(int n, unordered_map<int,int>& memo) {\n    if (n <= 1) return n;\n    if (!memo.count(n)) {\n        memo[n] = fib(n-1,memo) + fib(n-2,memo);\n    }\n    return memo[n];\n}"
+        "python": "if state in memo:\n    return memo[state]"
       },
-      "visualNote": "Recursion tree with grayed-out branches for cached subproblems."
+      "visualNote": "A lookup skips a massive subtree of recursion."
     },
     {
-      "name": "Bottom-Up (Tabulation)",
-      "description": "Build a table from the base cases upward, filling each cell using the recurrence.",
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(n) or O(1) with space optimization",
+      "name": "State Transition",
+      "description": "Calculate the current answer using previously calculated smaller answers.",
+      "timeComplexity": "O(1) usually",
+      "spaceComplexity": "O(1)",
       "code": {
-        "python": "def fib(n):\n    if n <= 1: return n\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i-1] + dp[i-2]\n    return dp[n]",
-        "javascript": "function fib(n) {\n  if (n <= 1) return n;\n  const dp = new Array(n + 1).fill(0);\n  dp[1] = 1;\n  for (let i = 2; i <= n; i++) {\n    dp[i] = dp[i-1] + dp[i-2];\n  }\n  return dp[n];\n}",
-        "java": "int fib(int n) {\n    if (n <= 1) return n;\n    int[] dp = new int[n + 1];\n    dp[1] = 1;\n    for (int i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}",
-        "cpp": "int fib(int n) {\n    if (n <= 1) return n;\n    vector<int> dp(n + 1, 0);\n    dp[1] = 1;\n    for (int i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}"
+        "python": "dp[i] = dp[i-1] + cost[i]"
       },
-      "visualNote": "A 1D array fills left-to-right, each cell derived from previous cells."
+      "visualNote": "Values from smaller indices flow into the larger index."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "def solve(state):\n  if state is base_case: return base_val\n  if state in memo: return memo[state]\n  ans = transition(solve(state - 1), solve(state - 2))\n  memo[state] = ans\n  return ans",
+    "whenToUse": "When asking for the 'maximum', 'minimum', or 'total number of ways' to do something, AND the problem has overlapping subproblems.",
+    "timeComplexity": "O(States * Time Per State)",
+    "spaceComplexity": "O(States) to store the DP table/memo."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
+    "correctPatternId": "dynamic-programming",
+    "distractors": [
+      "binary-search",
+      "greedy",
+      "two-pointers"
+    ],
+    "explanation": "To get to step N, you either came from step N-1 or N-2. Thus, Ways(N) = Ways(N-1) + Ways(N-2). Because you will calculate Ways(3) multiple times while finding Ways(5), it has overlapping subproblems."
+  },
+  "examples": [
+    {
+      "title": "Climbing Stairs",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/climbing-stairs/",
+      "problemStatement": "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
+      "inputExample": "n = 3",
+      "outputExample": "3 (1+1+1, 1+2, 2+1)",
+      "steps": [
+        "Create an array `dp` of size `n+1`.",
+        "Base cases: `dp[1] = 1`, `dp[2] = 2`.",
+        "Iterate from 3 to n.",
+        "State transition: `dp[i] = dp[i-1] + dp[i-2]`.",
+        "Return `dp[n]`."
+      ],
+      "code": {
+        "python": "def climbStairs(n):\n    if n <= 2: return n\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    dp[2] = 2\n    for i in range(3, n + 1):\n        dp[i] = dp[i-1] + dp[i-2]\n    return dp[n]"
+      },
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(N) (can be optimized to O(1))",
+      "rationale": "By building from the bottom up, we never recalculate the same step twice."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "What is the primary difference between Backtracking and Dynamic Programming?",
+      "options": [
+        "Backtracking explores ALL paths to find ALL solutions. DP stores answers to subproblems to find the BEST or TOTAL solutions efficiently.",
+        "Backtracking uses recursion, DP never does.",
+        "DP is always faster than O(N).",
+        "Backtracking uses less memory."
+      ],
+      "correctIndex": 0,
+      "explanation": "If a problem asks 'List all possible paths', you MUST use Backtracking. If it asks 'What is the MAXIMUM path' or 'HOW MANY paths', you use DP to avoid building the actual paths."
+    },
+    {
+      "question": "What happens if a DP problem does NOT have overlapping subproblems?",
+      "options": [
+        "It is just standard Divide and Conquer (like Merge Sort).",
+        "It crashes.",
+        "You get a Stack Overflow.",
+        "You must use a Hash Map."
+      ],
+      "correctIndex": 0,
+      "explanation": "Merge sort divides the array into halves. The left half and right half have NO overlapping elements. Therefore, caching results doesn't help because you never solve the same problem twice."
     }
   ],
   "practice": [
-    { "title": "Climbing Stairs", "url": "https://leetcode.com/problems/climbing-stairs/", "difficulty": "easy", "keyInsight": "dp[i] = dp[i-1] + dp[i-2] — pure Fibonacci." },
-    { "title": "Coin Change", "url": "https://leetcode.com/problems/coin-change/", "difficulty": "medium", "keyInsight": "dp[amount] = min(dp[amount - coin] + 1) for each coin." },
-    { "title": "Longest Common Subsequence", "url": "https://leetcode.com/problems/longest-common-subsequence/", "difficulty": "medium", "keyInsight": "2D table where dp[i][j] considers first i chars of s1 and first j chars of s2." },
-    { "title": "0/1 Knapsack", "url": "https://leetcode.com/problems/partition-equal-subset-sum/", "difficulty": "medium", "keyInsight": "Include or exclude each item, track remaining capacity." },
-    { "title": "House Robber", "url": "https://leetcode.com/problems/house-robber/", "difficulty": "medium", "keyInsight": "dp[i] = max(dp[i-1], dp[i-2] + nums[i])." },
-    { "title": "Edit Distance", "url": "https://leetcode.com/problems/edit-distance/", "difficulty": "medium", "keyInsight": "Three operations: insert, delete, replace — min of all three transitions." }
-  ],
-  "examples": [],
-  "conceptQuiz": [
-    {
-      "question": "What two properties must a problem have to be solvable by DP?",
-      "options": [
-        "Optimal substructure and overlapping subproblems",
-        "Sorting and binary search",
-        "Greedy choice and matroid structure",
-        "Divide and conquer only"
-      ],
-      "correctIndex": 0,
-      "explanation": "DP requires that optimal solutions contain optimal sub-solutions AND that subproblems recur."
-    },
-    {
-      "question": "What is the difference between memoization and tabulation?",
-      "options": [
-        "Memoization is top-down recursive; tabulation is bottom-up iterative",
-        "They are the same thing",
-        "Memoization is faster than tabulation",
-        "Tabulation uses recursion"
-      ],
-      "correctIndex": 0,
-      "explanation": "Memoization starts from the original problem and caches. Tabulation builds from base cases upward."
-    }
-  ],
-  "recognitionQuiz": {
-    "problemStatement": "Find the minimum cost to reach the top of a staircase where each step has an associated cost, and you can climb 1 or 2 steps at a time.",
-    "correctPatternId": "dynamic-programming",
-    "distractors": ["greedy", "binary-search", "two-pointers"],
-    "explanation": "The problem has overlapping subproblems (ways to reach step i) and optimal substructure (min cost uses min of sub-costs)."
-  }
+    { "title": "Climbing Stairs", "url": "https://leetcode.com/problems/climbing-stairs/", "difficulty": "easy", "keyInsight": "Literally just the Fibonacci sequence." },
+    { "title": "House Robber", "url": "https://leetcode.com/problems/house-robber/", "difficulty": "medium", "keyInsight": "dp[i] = max(rob current + dp[i-2], skip current + dp[i-1])" },
+    { "title": "Coin Change", "url": "https://leetcode.com/problems/coin-change/", "difficulty": "medium", "keyInsight": "dp[amount] = min(dp[amount - coin] + 1)" },
+    { "title": "Longest Common Subsequence", "url": "https://leetcode.com/problems/longest-common-subsequence/", "difficulty": "medium", "keyInsight": "2D DP grid comparing character by character." }
+  ]
 }

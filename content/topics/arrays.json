@@ -2,240 +2,156 @@
   "id": "arrays",
   "slug": "arrays",
   "title": "Arrays",
-  "analogy": "An array is like a row of numbered lockers at a gym — each locker has a fixed address and you can jump directly to locker #5 without checking #1 through #4.",
-  "analogyIcon": "🔐",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 45,
+  "estimatedMinutes": 30,
   "prerequisites": [],
   "tags": [
-    "array",
-    "indexing",
-    "contiguous-memory"
+    "data-structure",
+    "basics",
+    "memory"
   ],
   "overview": {
-    "summary": "Arrays store same-type values in contiguous memory, making index-based access extremely fast.",
+    "summary": "An array is a contiguous block of memory used to store a collection of items of the same type.",
     "learningObjectives": [
-      "Understand contiguous memory layout.",
-      "Explain why random access is O(1).",
-      "Recognize why inserts and deletes in the middle cost more."
+      "Understand how contiguous memory allows O(1) index access.",
+      "Recognize the cost of shifting elements during insertions and deletions.",
+      "Trace basic array operations."
     ],
-    "interviewRelevance": "Arrays are the default storage model for most interview problems."
+    "interviewRelevance": "Arrays are the most fundamental data structure. Almost every interview question relies on them."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Every pixel in an image, every row in a spreadsheet, and every daily temperature reading can be modeled as an array.",
-      "Arrays are the simplest mental model for \u201ca list of values with positions.\u201d"
+      "Imagine a row of identical parking spaces. Every space has a number, and they are placed right next to each other.",
+      "If you know the number of a specific parking space, you can drive straight to it without checking the others."
     ],
-    "ahaMoment": "An array is powerful because the computer can jump straight to any position by arithmetic."
+    "ahaMoment": "Because the spaces are contiguous, jumping to any specific slot is instant."
   },
   "definition": {
-    "technicalDefinition": "An array is a fixed-size contiguous block of memory that stores values of the same type and supports direct index-based access.",
+    "technicalDefinition": "An array is a data structure that stores elements in contiguous memory locations, allowing O(1) random access via an index.",
     "vocabulary": [
       {
         "term": "index",
-        "definition": "The zero-based position of a value in the array."
+        "definition": "The numerical position of an element in the array (usually starting at 0)."
       },
       {
         "term": "contiguous",
-        "definition": "Stored in one continuous span of memory."
+        "definition": "Memory slots that are physically next to each other."
       },
       {
         "term": "random access",
-        "definition": "Directly jumping to an index without walking through earlier values."
+        "definition": "The ability to access any element instantly in O(1) time."
       }
     ],
     "keyProperties": [
-      "Values sit next to each other in memory.",
-      "Access by index is constant time.",
-      "Middle insert/delete requires shifting later values."
+      "Fixed size in memory (in static languages).",
+      "O(1) time complexity to read or write a specific index.",
+      "O(n) time complexity to insert or delete elements (due to shifting)."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "Picture a row of labeled lockers. Each locker has a number, and the label lets you jump to it instantly."
+      "A set of post office boxes all in a single row."
     ],
-    "clickSentence": "The value is easy to access because its address is base + offset.",
+    "clickSentence": "Math makes it fast: Address = StartAddress + (Index * ItemSize).",
     "diagramType": "ArrayDiagram",
     "cells": [
-      4,
-      8,
-      15,
-      16,
-      23,
-      42
+      10,
+      20,
+      30,
+      40,
+      50
     ],
     "diagramState": {
-      "left": 0,
-      "right": 5,
-      "highlighted": [
-        2
-      ]
+      "highlighted": [2]
     }
   },
   "structure": {
     "memoryDescription": [
-      "Arrays reserve one continuous memory region large enough for every element.",
-      "Because every slot has the same size, the address of index i can be calculated directly."
+      "Arrays ask the operating system for one solid block of memory.",
+      "This guarantees that element [3] is physically adjacent to element [2]."
     ],
     "definitionCode": {
-      "python": "arr = [4, 8, 15, 16, 23, 42]",
-      "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-      "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-      "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+      "python": "arr = [10, 20, 30, 40, 50]",
+      "javascript": "const arr = [10, 20, 30, 40, 50];",
+      "java": "int[] arr = {10, 20, 30, 40, 50};",
+      "cpp": "int arr[] = {10, 20, 30, 40, 50};"
     },
     "memoryLayout": [
       {
-        "label": "base address",
-        "value": "where the array starts in memory"
+        "label": "arr[0]",
+        "value": "10"
       },
       {
-        "label": "element size",
-        "value": "how many bytes each value occupies"
+        "label": "arr[1]",
+        "value": "20"
       },
       {
-        "label": "index offset",
-        "value": "index \u00d7 element size"
+        "label": "arr[2]",
+        "value": "30"
       }
     ]
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
     "array": [
-      4,
-      8,
-      15,
-      16,
-      23,
-      42
+      10,
+      20,
+      30,
+      40,
+      50
     ],
     "steps": [
       {
         "stepIndex": 0,
         "diagramState": {
-          "left": 0,
-          "right": -1,
-          "highlighted": [],
-          "comparing": [
-            0
-          ],
-          "windowStart": -1,
-          "windowEnd": -1
+          "highlighted": []
         },
         "variables": {
           "index": 0,
-          "target": 23,
-          "current_value": 4,
-          "found": "no"
+          "target": 30
         },
-        "explanation": "Scan index 0. The value 4 is not the target yet.",
-        "activeLine": 4
+        "explanation": "Let's search for the value 30 in this array using a simple linear scan.",
+        "activeLine": 2
       },
       {
         "stepIndex": 1,
         "diagramState": {
-          "left": 1,
-          "right": -1,
-          "highlighted": [],
-          "comparing": [
-            1
-          ],
-          "windowStart": -1,
-          "windowEnd": -1
+          "comparing": [0]
         },
         "variables": {
-          "index": 1,
-          "target": 23,
-          "current_value": 8,
-          "found": "no"
+          "index": 0,
+          "value": 10,
+          "target": 30
         },
-        "explanation": "Scan index 1. The value 8 is not the target yet.",
-        "activeLine": 4
+        "explanation": "Checking index 0. The value is 10. Not our target.",
+        "activeLine": 3
       },
       {
         "stepIndex": 2,
         "diagramState": {
-          "left": 2,
-          "right": -1,
-          "highlighted": [],
-          "comparing": [
-            2
-          ],
-          "windowStart": -1,
-          "windowEnd": -1
+          "comparing": [1]
         },
         "variables": {
-          "index": 2,
-          "target": 23,
-          "current_value": 15,
-          "found": "no"
+          "index": 1,
+          "value": 20,
+          "target": 30
         },
-        "explanation": "Scan index 2. The value 15 is not the target yet.",
-        "activeLine": 4
+        "explanation": "Checking index 1. The value is 20. Not our target.",
+        "activeLine": 3
       },
       {
         "stepIndex": 3,
         "diagramState": {
-          "left": 3,
-          "right": -1,
-          "highlighted": [],
-          "comparing": [
-            3
-          ],
-          "windowStart": -1,
-          "windowEnd": -1
+          "comparing": [2],
+          "highlighted": [2]
         },
         "variables": {
-          "index": 3,
-          "target": 23,
-          "current_value": 16,
-          "found": "no"
+          "index": 2,
+          "value": 30,
+          "target": 30
         },
-        "explanation": "Scan index 3. The value 16 is not the target yet.",
-        "activeLine": 4
-      },
-      {
-        "stepIndex": 4,
-        "diagramState": {
-          "left": 4,
-          "right": -1,
-          "highlighted": [
-            4
-          ],
-          "comparing": [
-            4
-          ],
-          "windowStart": -1,
-          "windowEnd": -1
-        },
-        "variables": {
-          "index": 4,
-          "target": 23,
-          "current_value": 23,
-          "found": "yes"
-        },
-        "explanation": "We reached index 4 and found the target value 23.",
-        "activeLine": 6
-      },
-      {
-        "stepIndex": 5,
-        "diagramState": {
-          "left": 5,
-          "right": -1,
-          "highlighted": [],
-          "comparing": [
-            5
-          ],
-          "windowStart": -1,
-          "windowEnd": -1
-        },
-        "variables": {
-          "index": 5,
-          "target": 23,
-          "current_value": 42,
-          "found": "no"
-        },
-        "explanation": "Scan index 5. The value 42 is not the target yet.",
+        "explanation": "Checking index 2. Found our target 30!",
         "activeLine": 4
       }
     ]
@@ -243,187 +159,107 @@
   "operations": [
     {
       "name": "Access",
-      "description": "Compute the offset and jump directly to the requested index.",
+      "description": "Read an element directly by its index.",
       "timeComplexity": "O(1)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "val = arr[2]",
+        "javascript": "const val = arr[2];",
+        "java": "int val = arr[2];",
+        "cpp": "int val = arr[2];"
       },
-      "visualNote": "Only one cell is highlighted because direct access does not scan earlier values."
+      "visualNote": "The memory slot is accessed instantly."
     },
     {
-      "name": "Insert in Middle",
-      "description": "To insert in the middle, every later value shifts right by one slot.",
+      "name": "Search",
+      "description": "Iterate through the array to find a specific value.",
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "for i in range(len(arr)):\n    if arr[i] == target:\n        return i",
+        "javascript": "for (let i = 0; i < arr.length; i++) {\n    if (arr[i] === target) return i;\n}",
+        "java": "for (int i = 0; i < arr.length; i++) {\n    if (arr[i] == target) return i;\n}",
+        "cpp": "for (int i = 0; i < arr.size(); i++) {\n    if (arr[i] == target) return i;\n}"
       },
-      "visualNote": "Cells after the insertion point visibly shift right."
+      "visualNote": "Highlights each cell sequentially until the target is found."
     }
   ],
   "patternTemplate": {
-    "pseudocode": "address = base + index * element_size\nreturn memory[address]",
-    "whenToUse": "Use arrays when position matters and fast index lookup is more important than cheap middle insertions.",
-    "timeComplexity": "Access O(1), search O(n), insert/delete in middle O(n).",
-    "spaceComplexity": "O(n) for n stored values."
+    "pseudocode": "val = array[index]\nfor i from 0 to array.length:\n  process(array[i])",
+    "whenToUse": "Use Arrays when you need fast random access and size is known or doesn't change frequently.",
+    "timeComplexity": "O(1) Access, O(n) Search/Insert/Delete.",
+    "spaceComplexity": "O(n) memory to store n items."
   },
   "recognitionQuiz": {
-    "problemStatement": "You need the fastest possible lookup by numeric position in a dense sequence.",
+    "problemStatement": "You need to store a list of daily temperatures and frequently check the temperature on specific days by index.",
     "correctPatternId": "arrays",
     "distractors": [
       "linked-lists",
-      "hash-maps",
-      "trees"
+      "stacks",
+      "hash-maps"
     ],
-    "explanation": "Arrays are the best fit when direct indexing is the core requirement."
+    "explanation": "Arrays provide O(1) random access, making them perfect for looking up items by a known index."
   },
   "examples": [
     {
-      "title": "Linear Search in an Array",
+      "title": "Contains Duplicate",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/search-insert-position/",
-      "problemStatement": "Scan the array from left to right until you find the target.",
-      "inputExample": "nums = [4,8,15,16,23,42], target = 23",
-      "outputExample": "4",
+      "leetcodeUrl": "https://leetcode.com/problems/contains-duplicate/",
+      "problemStatement": "Given an integer array nums, return true if any value appears at least twice in the array.",
+      "inputExample": "nums = [1,2,3,1]",
+      "outputExample": "true",
       "steps": [
-        "Start at index 0.",
-        "Compare each value to the target.",
-        "Stop when the target is found."
+        "Iterate through the array.",
+        "Store seen values in a Hash Set.",
+        "If a value is already in the set, we found a duplicate."
       ],
       "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
+        "python": "seen = set()\nfor num in nums:\n    if num in seen:\n        return True\n    seen.add(num)\nreturn False",
+        "javascript": "const seen = new Set();\nfor (const num of nums) {\n    if (seen.has(num)) return true;\n    seen.add(num);\n}\nreturn false;",
+        "java": "Set<Integer> seen = new HashSet<>();\nfor (int num : nums) {\n    if (seen.contains(num)) return true;\n    seen.add(num);\n}\nreturn false;",
+        "cpp": "std::unordered_set<int> seen;\nfor (int num : nums) {\n    if (seen.count(num)) return true;\n    seen.insert(num);\n}\nreturn false;"
       },
       "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "rationale": "In the worst case every element is compared."
-    },
-    {
-      "title": "Remove Duplicates from Sorted Array",
-      "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/",
-      "problemStatement": "Rewrite the array in-place so each distinct value appears once.",
-      "inputExample": "nums = [1,1,2,2,3]",
-      "outputExample": "3",
-      "steps": [
-        "Keep a write pointer.",
-        "Copy forward each new value.",
-        "Return the new logical length."
-      ],
-      "code": {
-        "python": "arr = [4, 8, 15, 16, 23, 42]",
-        "javascript": "const arr = [4, 8, 15, 16, 23, 42];",
-        "java": "int[] arr = {4, 8, 15, 16, 23, 42};",
-        "cpp": "std::vector<int> arr = {4, 8, 15, 16, 23, 42};"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "rationale": "Each element is inspected once."
+      "spaceComplexity": "O(n)",
+      "rationale": "We traverse the array once while utilizing auxiliary space to track elements."
     }
   ],
   "conceptQuiz": [
     {
       "question": "Why is array access O(1)?",
       "options": [
-        "Contiguous memory with fixed-size offsets",
-        "It uses hashing",
-        "It uses recursion",
-        "Values are linked"
+        "Elements are contiguous, so memory addresses are calculated with simple math.",
+        "The computer searches all elements instantly.",
+        "Arrays are stored in the CPU cache.",
+        "Arrays are mapped to hash values."
       ],
       "correctIndex": 0,
-      "explanation": "The address calculation is arithmetic, not traversal."
+      "explanation": "The memory address of any index is found by adding (Index * Size) to the starting address."
     },
     {
-      "question": "Why is inserting in the middle expensive?",
+      "question": "What is the primary drawback of a static array?",
       "options": [
-        "Later elements must shift",
-        "The array sorts itself",
-        "Pointers must reverse",
-        "Hash buckets resize"
+        "Fixed size means you must guess capacity up front.",
+        "They use too much CPU.",
+        "They cannot store objects.",
+        "Accessing the middle element is slow."
       ],
       "correctIndex": 0,
-      "explanation": "Contiguous layout means later elements must move to preserve order."
-    },
-    {
-      "question": "What is the biggest strength of arrays?",
-      "options": [
-        "Fast indexing",
-        "Fast middle deletion",
-        "Automatic balancing",
-        "Cycle detection"
-      ],
-      "correctIndex": 0,
-      "explanation": "Arrays dominate when direct positional access matters most."
-    },
-    {
-      "question": "What is stored at an array index?",
-      "options": [
-        "A value of the element type",
-        "A linked list head",
-        "A heap root",
-        "A tree edge"
-      ],
-      "correctIndex": 0,
-      "explanation": "Each slot contains one value of the array element type."
+      "explanation": "Static arrays cannot grow. If you run out of space, you must create a new, larger array."
     }
   ],
   "practice": [
     {
-      "title": "Search Insert Position",
-      "url": "https://leetcode.com/problems/search-insert-position/",
+      "title": "Two Sum",
+      "url": "https://leetcode.com/problems/two-sum/",
       "difficulty": "easy",
-      "keyInsight": "Indexed linear or binary reasoning depending on sortedness."
-    },
-    {
-      "title": "Remove Element",
-      "url": "https://leetcode.com/problems/remove-element/",
-      "difficulty": "easy",
-      "keyInsight": "Rewrite in-place while preserving a valid prefix."
-    },
-    {
-      "title": "Plus One",
-      "url": "https://leetcode.com/problems/plus-one/",
-      "difficulty": "easy",
-      "keyInsight": "Carry propagates through array digits."
+      "keyInsight": "Iterate the array while storing complements in a hash map."
     },
     {
       "title": "Best Time to Buy and Sell Stock",
       "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
       "difficulty": "easy",
-      "keyInsight": "Track the best prior value while scanning forward."
-    },
-    {
-      "title": "Move Zeroes",
-      "url": "https://leetcode.com/problems/move-zeroes/",
-      "difficulty": "easy",
-      "keyInsight": "Keep a compacted prefix of non-zero values."
-    },
-    {
-      "title": "Merge Sorted Array",
-      "url": "https://leetcode.com/problems/merge-sorted-array/",
-      "difficulty": "easy",
-      "keyInsight": "Fill from the back to avoid overwriting values."
-    },
-    {
-      "title": "Product of Array Except Self",
-      "url": "https://leetcode.com/problems/product-of-array-except-self/",
-      "difficulty": "medium",
-      "keyInsight": "Use prefix and suffix products."
-    },
-    {
-      "title": "Container With Most Water",
-      "url": "https://leetcode.com/problems/container-with-most-water/",
-      "difficulty": "medium",
-      "keyInsight": "Array positions define the geometry of the answer."
+      "keyInsight": "Track the lowest minimum price as you iterate."
     }
   ]
 }

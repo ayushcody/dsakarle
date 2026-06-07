@@ -4,55 +4,169 @@
   "title": "Binary Search",
   "category": "algorithm",
   "difficulty": "medium",
-  "estimatedMinutes": 45,
+  "estimatedMinutes": 50,
   "prerequisites": ["arrays"],
-  "tags": ["search", "logN", "sorted"],
+  "tags": ["array", "search", "divide-and-conquer"],
   "overview": {
-    "summary": "Binary Search finds elements in a sorted array by repeatedly halving the search window.",
-    "learningObjectives": ["Master loop initialization and termination", "Understand mid calculation", "Identify when to apply binary search on abstract search spaces"],
-    "interviewRelevance": "Critical for optimizing O(N) search to O(log N)."
+    "summary": "Binary Search is a divide-and-conquer algorithm that finds a target in a sorted array in O(log N) time by repeatedly halving the search space.",
+    "learningObjectives": [
+      "Understand why the array MUST be sorted.",
+      "Master the mid-point calculation to avoid integer overflow.",
+      "Identify the three main templates of Binary Search (exact match, lower bound, upper bound)."
+    ],
+    "interviewRelevance": "Binary search is the ultimate optimization when a brute-force O(N) scan is too slow. Finding the O(log N) solution is a mandatory interview milestone."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Looking up a word in a physical dictionary uses binary search. You don't read page 1, 2, 3.",
-      "You open to the middle, decide if your word is earlier or later, and discard half the book instantly."
+      "Imagine guessing a number between 1 and 100. If you guess 50 and I say 'Higher!', you instantly eliminate 1 through 50. You don't need to check them.",
+      "By always guessing in the exact middle of the remaining possibilities, you can find the answer in a maximum of 7 guesses instead of 100."
     ],
-    "ahaMoment": "In a sorted sequence, knowing you are at the wrong value automatically tells you which half contains the right value."
+    "ahaMoment": "Every single comparison eliminates exactly half of the remaining data."
   },
   "definition": {
-    "technicalDefinition": "Binary search is a search algorithm that finds the position of a target value within a sorted array by comparing the target to the middle element.",
+    "technicalDefinition": "Binary Search is a search algorithm that finds the position of a target value within a sorted array by comparing the target value to the middle element of the array.",
     "vocabulary": [
-      { "term": "Search Space", "definition": "The range of possible valid indices (or values) currently being considered." },
-      { "term": "Monotonicity", "definition": "A sequence that is entirely non-decreasing or non-increasing. A strict requirement for binary search." },
-      { "term": "Midpoint", "definition": "The calculated center index of the current search window." }
+      { "term": "Search Space", "definition": "The range of indices `[left, right]` where the target might still exist." },
+      { "term": "Midpoint", "definition": "The index exactly halfway between the current `left` and `right` boundaries." },
+      { "term": "Logarithmic Time", "definition": "O(log N). The time increases linearly only as the data size increases exponentially." }
     ],
     "keyProperties": [
-      "Always requires a sorted space.",
-      "Runs in O(log N) time.",
-      "Takes O(1) auxiliary space."
+      "Requires random access (like an Array, not a Linked List).",
+      "Requires the data to be sorted (or at least monotonic).",
+      "Reduces search space by 50% on every iteration."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A dictionary. To find 'Monkey', you open to the middle ('M'). You know instantly whether to search the left half or right half of the book."
+    ],
+    "clickSentence": "If you know it's not in the left half, you never have to look at the left half again.",
+    "diagramType": "ArrayDiagram",
+    "cells": [2, 5, 8, 12, 16, 23, 38, 56, 72, 91],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "Binary Search requires zero extra memory. It operates entirely in-place.",
+      "It simply maintains two integer pointers: `left` and `right`."
+    ],
+    "definitionCode": {
+      "python": "left, right = 0, len(arr) - 1",
+      "javascript": "let left = 0, right = arr.length - 1;",
+      "java": "int left = 0, right = arr.length - 1;",
+      "cpp": "int left = 0, right = arr.size() - 1;"
+    },
+    "memoryLayout": [
+      { "label": "Left Pointer", "value": "Tracks the start of the valid window." },
+      { "label": "Right Pointer", "value": "Tracks the end of the valid window." },
+      { "label": "Mid Pointer", "value": "Calculated dynamically: left + (right - left) // 2" }
+    ]
+  },
+  "stepper": {
+    "diagramType": "ArrayDiagram",
+    "array": [2, 5, 8, 12, 16, 23, 38, 56, 72, 91],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive Binary Search visualization coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
-      "name": "Search Target",
-      "description": "Standard binary search. Left and right bound the window. Compare target to mid.",
-      "timeComplexity": "O(log N)",
+      "name": "Calculate Midpoint",
+      "description": "Find the center. Use `left + (right - left) // 2` instead of `(left + right) // 2` to prevent integer overflow in languages like Java/C++.",
+      "timeComplexity": "O(1)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "l, r = 0, len(arr) - 1\nwhile l <= r:\n    m = (l + r) // 2\n    if arr[m] == target:\n        return m\n    elif arr[m] < target:\n        l = m + 1\n    else:\n        r = m - 1\nreturn -1",
-        "javascript": "let l = 0, r = arr.length - 1;\nwhile (l <= r) {\n  let m = Math.floor((l + r) / 2);\n  if (arr[m] === target) return m;\n  if (arr[m] < target) l = m + 1;\n  else r = m - 1;\n}\nreturn -1;",
-        "java": "int l = 0, r = arr.length - 1;\nwhile (l <= r) {\n  int m = l + (r - l) / 2;\n  if (arr[m] == target) return m;\n  if (arr[m] < target) l = m + 1;\n  else r = m - 1;\n}\nreturn -1;",
-        "cpp": "int l = 0, r = arr.size() - 1;\nwhile (l <= r) {\n  int m = l + (r - l) / 2;\n  if (arr[m] == target) return m;\n  if (arr[m] < target) l = m + 1;\n  else r = m - 1;\n}\nreturn -1;"
+        "python": "mid = left + (right - left) // 2",
+        "javascript": "const mid = left + Math.floor((right - left) / 2);",
+        "java": "int mid = left + (right - left) / 2;",
+        "cpp": "int mid = left + (right - left) / 2;"
       },
-      "visualNote": "The unsearchable greyed out area grows logarithmically each step."
+      "visualNote": "A pointer drops exactly in the middle of the active window."
+    },
+    {
+      "name": "Adjust Boundaries",
+      "description": "If mid is too small, move `left` past mid. If mid is too big, move `right` behind mid.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "if arr[mid] < target:\n    left = mid + 1\nelse:\n    right = mid - 1"
+      },
+      "visualNote": "Half of the array greys out, completely eliminated from the search."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "left = 0\nright = N - 1\nwhile left <= right:\n  mid = left + (right - left) // 2\n  if arr[mid] == target: return mid\n  if arr[mid] < target: left = mid + 1\n  else: right = mid - 1\nreturn -1",
+    "whenToUse": "Whenever an array is sorted and you need to find an element, or when searching for an optimal numerical answer within a known range ('Binary Search on Answer').",
+    "timeComplexity": "O(log N)",
+    "spaceComplexity": "O(1)"
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You are given a sorted array of 100,000 integers and a target value. Return the index if the target is found.",
+    "correctPatternId": "binary-search",
+    "distractors": [
+      "two-pointers",
+      "sliding-window",
+      "hash-maps"
+    ],
+    "explanation": "The array is already SORTED. Any time you see a sorted array and a search task, Binary Search is the intended O(log N) optimal approach."
+  },
+  "examples": [
+    {
+      "title": "Binary Search",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/binary-search/",
+      "problemStatement": "Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.",
+      "inputExample": "nums = [-1,0,3,5,9,12], target = 9",
+      "outputExample": "4",
+      "steps": [
+        "Initialize left=0, right=len-1.",
+        "While left <= right, calculate mid.",
+        "If nums[mid] == target, return mid.",
+        "If nums[mid] < target, target must be to the right, so left = mid + 1.",
+        "If nums[mid] > target, target must be to the left, so right = mid - 1."
+      ],
+      "code": {
+        "python": "def search(nums, target):\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1"
+      },
+      "timeComplexity": "O(log N)",
+      "spaceComplexity": "O(1)",
+      "rationale": "This is the purest form of the pattern."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "Why use `left + (right - left) / 2` instead of `(left + right) / 2`?",
+      "options": [
+        "To prevent integer overflow if left and right are very large numbers.",
+        "It is mathematically faster.",
+        "To handle negative numbers.",
+        "It's just a style preference."
+      ],
+      "correctIndex": 0,
+      "explanation": "If left and right are near the 32-bit integer limit (2.14 billion), adding them together `(left + right)` will overflow into a negative number before the division happens, causing a crash."
+    },
+    {
+      "question": "What is the condition for the standard while loop in Binary Search?",
+      "options": [
+        "while left <= right",
+        "while left < right",
+        "while left != right",
+        "while True"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using `<=` ensures that we check the element even when `left` and `right` converge onto the exact same index."
     }
   ],
   "practice": [
-    { "title": "Binary Search", "url": "https://leetcode.com/problems/binary-search/", "difficulty": "easy", "keyInsight": "The most basic template implementation." },
-    { "title": "Search a 2D Matrix", "url": "https://leetcode.com/problems/search-a-2d-matrix/", "difficulty": "medium", "keyInsight": "Treat a 2D matrix conceptually as a 1D sorted array." },
-    { "title": "Koko Eating Bananas", "url": "https://leetcode.com/problems/koko-eating-bananas/", "difficulty": "medium", "keyInsight": "Binary searching over the answer space, not an array." },
-    { "title": "Find Minimum in Rotated Sorted Array", "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/", "difficulty": "medium", "keyInsight": "Compare mid to the right pointer to find the pivot." },
-    { "title": "Search in Rotated Sorted Array", "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/", "difficulty": "medium", "keyInsight": "Determine which half is properly sorted, then bound the target." },
-    { "title": "Median of Two Sorted Arrays", "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/", "difficulty": "hard", "keyInsight": "Binary search on the smaller array's partitioning line." }
+    { "title": "Binary Search", "url": "https://leetcode.com/problems/binary-search/", "difficulty": "easy", "keyInsight": "The foundational template." },
+    { "title": "Search Insert Position", "url": "https://leetcode.com/problems/search-insert-position/", "difficulty": "easy", "keyInsight": "When the loop breaks, `left` will be exactly at the correct insertion index." },
+    { "title": "First Bad Version", "url": "https://leetcode.com/problems/first-bad-version/", "difficulty": "easy", "keyInsight": "Use `while left < right` and don't skip mid when moving the right pointer." },
+    { "title": "Koko Eating Bananas", "url": "https://leetcode.com/problems/koko-eating-bananas/", "difficulty": "medium", "keyInsight": "Binary Search on the Answer. Guess a speed, check if it works, adjust." }
   ]
 }

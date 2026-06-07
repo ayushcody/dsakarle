@@ -2,98 +2,164 @@
   "id": "bfs-dfs",
   "slug": "bfs-dfs",
   "title": "BFS & DFS",
-  "analogy": "BFS is like ripples spreading outward from a stone thrown in water — it explores all neighbors at the same distance first. DFS is like following a single path deep into a forest before backtracking.",
-  "analogyIcon": "🌊",
   "category": "algorithm",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 45,
-  "prerequisites": ["graphs", "queues", "stacks"],
-  "tags": ["bfs", "dfs", "graph-traversal", "tree-traversal"],
+  "difficulty": "hard",
+  "estimatedMinutes": 60,
+  "prerequisites": ["graphs", "trees", "recursion", "queues"],
+  "tags": ["graph", "tree", "search", "traversal"],
   "overview": {
-    "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental strategies to visit every node in a graph or tree.",
+    "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental algorithms for traversing or searching tree and graph data structures.",
     "learningObjectives": [
-      "Understand when to use BFS vs DFS.",
-      "Implement both traversals using queues and stacks.",
-      "Recognize BFS for shortest-path and DFS for exhaustive exploration."
+      "Understand why BFS uses a Queue and DFS uses a Stack (or Recursion).",
+      "Recognize when to use BFS (Shortest Path) vs DFS (Exhaustive Search).",
+      "Correctly implement the 'visited' set to prevent infinite loops."
     ],
-    "interviewRelevance": "Together, BFS and DFS form the backbone of 30%+ of graph and tree interview problems."
+    "interviewRelevance": "More than 30% of all interview questions boil down to running BFS or DFS on a grid, tree, or graph."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Google Maps uses BFS (Dijkstra's variant) to find shortest routes. Facebook's friend-suggestion algorithm uses BFS to find 'friends of friends' layer by layer.",
-      "File system search (find command) uses DFS to recursively descend into directories before exploring siblings."
+      "Imagine you are stuck in the center of a corn maze and need to find the exit.",
+      "DFS is putting your hand on the right wall and walking forward until you hit a dead end, then backing up. BFS is cloning yourself at every intersection and exploring every path simultaneously layer by layer."
     ],
-    "ahaMoment": "BFS guarantees the shortest path in unweighted graphs because it explores all nodes at distance d before any node at distance d+1."
+    "ahaMoment": "BFS and DFS are exactly the same algorithm, except one uses a Queue (First In First Out) and the other uses a Stack (Last In First Out)."
   },
   "definition": {
-    "technicalDefinition": "BFS uses a queue to explore nodes layer-by-layer. DFS uses a stack (or recursion) to explore as deep as possible before backtracking.",
+    "technicalDefinition": "BFS explores the neighbor nodes first, before moving to the next level neighbors. DFS explores as far as possible along each branch before backtracking.",
     "vocabulary": [
-      { "term": "BFS", "definition": "Breadth-First Search — explores neighbors before going deeper." },
-      { "term": "DFS", "definition": "Depth-First Search — explores as deep as possible before backtracking." },
-      { "term": "Visited Set", "definition": "A set tracking already-explored nodes to prevent infinite loops." },
-      { "term": "Level", "definition": "In BFS, all nodes at the same distance from the source." }
+      { "term": "Queue", "definition": "The data structure required for BFS. Ensures nodes discovered first are processed first." },
+      { "term": "Stack / Call Stack", "definition": "The data structure required for DFS. Ensures the most recently discovered node is processed first." },
+      { "term": "Visited Set", "definition": "A Hash Set used to track which nodes have already been processed to prevent infinite cycles." }
     ],
     "keyProperties": [
-      "BFS finds shortest paths in unweighted graphs.",
-      "DFS is memory-efficient for deep graphs (stack depth vs queue breadth).",
-      "Both visit every reachable node exactly once: O(V + E)."
+      "BFS guarantees the shortest path in an unweighted graph.",
+      "DFS is easier to write because it uses recursion.",
+      "Both traverse every reachable node in O(V + E) time."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "BFS: A ripple in a pond. The water expands outward in perfect circles.",
+      "DFS: A snake hunting. It slithers all the way down a tunnel, comes back out, and goes down the next tunnel."
+    ],
+    "clickSentence": "BFS goes WIDE. DFS goes DEEP.",
+    "diagramType": "GraphDiagramInner",
+    "cells": [1, 2, 3, 4, 5, 6],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "BFS requires O(W) memory for the Queue, where W is the maximum width of the graph.",
+      "DFS requires O(H) memory for the Call Stack, where H is the maximum depth of the graph."
+    ],
+    "definitionCode": {
+      "python": "# BFS Iterative\nfrom collections import deque\nq = deque([start])\nvisited = set([start])\nwhile q:\n    node = q.popleft() # Pop from FRONT\n    for neighbor in graph[node]:\n        if neighbor not in visited:\n            visited.add(neighbor)\n            q.append(neighbor) # Push to BACK",
+      "javascript": "// DFS Recursive\nconst visited = new Set();\nfunction dfs(node) {\n    if (visited.has(node)) return;\n    visited.add(node);\n    for (let neighbor of graph[node]) {\n        dfs(neighbor);\n    }\n}"
+    },
+    "memoryLayout": [
+      { "label": "BFS Queue", "value": "Front -> [Level 2 nodes] ... [Level 3 nodes] <- Back" },
+      { "label": "DFS Stack", "value": "Top -> [Deepest node] ... [Root node] <- Bottom" }
+    ]
+  },
+  "stepper": {
+    "diagramType": "GraphDiagramInner",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive BFS vs DFS visualization coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
-      "name": "BFS Traversal",
-      "description": "Start at a node, enqueue it, then repeatedly dequeue and enqueue unvisited neighbors.",
+      "name": "BFS (Queue)",
+      "description": "Process the oldest discovered node first.",
       "timeComplexity": "O(V + E)",
       "spaceComplexity": "O(V)",
       "code": {
-        "python": "from collections import deque\n\ndef bfs(graph, start):\n    visited = set([start])\n    queue = deque([start])\n    while queue:\n        node = queue.popleft()\n        for neighbor in graph[node]:\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(neighbor)",
-        "javascript": "function bfs(graph, start) {\n  const visited = new Set([start]);\n  const queue = [start];\n  while (queue.length) {\n    const node = queue.shift();\n    for (const neighbor of graph[node]) {\n      if (!visited.has(neighbor)) {\n        visited.add(neighbor);\n        queue.push(neighbor);\n      }\n    }\n  }\n}",
-        "java": "void bfs(Map<Integer, List<Integer>> graph, int start) {\n    Set<Integer> visited = new HashSet<>();\n    Queue<Integer> queue = new LinkedList<>();\n    visited.add(start);\n    queue.add(start);\n    while (!queue.isEmpty()) {\n        int node = queue.poll();\n        for (int neighbor : graph.get(node)) {\n            if (!visited.contains(neighbor)) {\n                visited.add(neighbor);\n                queue.add(neighbor);\n            }\n        }\n    }\n}",
-        "cpp": "void bfs(unordered_map<int, vector<int>>& graph, int start) {\n    unordered_set<int> visited = {start};\n    queue<int> q;\n    q.push(start);\n    while (!q.empty()) {\n        int node = q.front(); q.pop();\n        for (int neighbor : graph[node]) {\n            if (!visited.count(neighbor)) {\n                visited.insert(neighbor);\n                q.push(neighbor);\n            }\n        }\n    }\n}"
+        "python": "node = q.popleft()"
       },
-      "visualNote": "Nodes light up in concentric rings radiating from the start node."
+      "visualNote": "Highlights expand in concentric rings."
     },
     {
-      "name": "DFS Traversal",
-      "description": "Start at a node, recursively visit unvisited neighbors, going as deep as possible.",
+      "name": "DFS (Stack)",
+      "description": "Process the newest discovered node first.",
       "timeComplexity": "O(V + E)",
       "spaceComplexity": "O(V)",
       "code": {
-        "python": "def dfs(graph, node, visited=None):\n    if visited is None:\n        visited = set()\n    visited.add(node)\n    for neighbor in graph[node]:\n        if neighbor not in visited:\n            dfs(graph, neighbor, visited)",
-        "javascript": "function dfs(graph, node, visited = new Set()) {\n  visited.add(node);\n  for (const neighbor of graph[node]) {\n    if (!visited.has(neighbor)) {\n      dfs(graph, neighbor, visited);\n    }\n  }\n}",
-        "java": "void dfs(Map<Integer, List<Integer>> graph, int node, Set<Integer> visited) {\n    visited.add(node);\n    for (int neighbor : graph.get(node)) {\n        if (!visited.contains(neighbor)) {\n            dfs(graph, neighbor, visited);\n        }\n    }\n}",
-        "cpp": "void dfs(unordered_map<int, vector<int>>& graph, int node, unordered_set<int>& visited) {\n    visited.insert(node);\n    for (int neighbor : graph[node]) {\n        if (!visited.count(neighbor)) {\n            dfs(graph, neighbor, visited);\n        }\n    }\n}"
+        "python": "dfs(neighbor) # Implicitly pushes to stack"
       },
-      "visualNote": "A single path lights up going deep, then backtracks and explores another branch."
+      "visualNote": "A single line shoots deep into the graph, bouncing off dead ends."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "def search(start):\n  ds = new DataStructure()\n  ds.add(start)\n  visited.add(start)\n  while not ds.is_empty():\n    curr = ds.remove()\n    process(curr)\n    for neighbor in get_neighbors(curr):\n      if neighbor not in visited:\n        visited.add(neighbor)\n        ds.add(neighbor)",
+    "whenToUse": "BFS: Shortest Path, Level Order Traversal, Nearest Neighbor.\nDFS: Cycle Detection, Path Exists, Topological Sort, Exhaustive search.",
+    "timeComplexity": "O(V + E)",
+    "spaceComplexity": "O(V)"
+  },
+  "recognitionQuiz": {
+    "problemStatement": "Given a 2D grid representing a maze, find the MINIMUM number of steps required to reach the exit.",
+    "correctPatternId": "bfs-dfs",
+    "distractors": [
+      "dynamic-programming",
+      "binary-search",
+      "two-pointers"
+    ],
+    "explanation": "The word 'MINIMUM number of steps' in an unweighted grid means you must use BFS. DFS will find A path, but BFS guarantees it finds the SHORTEST path."
+  },
+  "examples": [
+    {
+      "title": "Rotting Oranges",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/rotting-oranges/",
+      "problemStatement": "Given an m x n grid, each cell has an orange (fresh or rotten). Every minute, any fresh orange adjacent to a rotten orange becomes rotten. Return the minimum number of minutes until no cell has a fresh orange.",
+      "inputExample": "grid = [[2,1,1],[1,1,0],[0,1,1]]",
+      "outputExample": "4",
+      "steps": [
+        "This is a Multi-Source BFS.",
+        "Scan the grid and add EVERY rotten orange to the queue simultaneously. Count the fresh oranges.",
+        "While the queue is not empty and we still have fresh oranges, pop the current layer, rot the neighbors, and increment time.",
+        "If fresh oranges remain at the end, return -1."
+      ],
+      "code": {
+        "python": "from collections import deque\ndef orangesRotting(grid):\n    ROWS, COLS = len(grid), len(grid[0])\n    q = deque()\n    fresh = 0\n    time = 0\n    \n    for r in range(ROWS):\n        for c in range(COLS):\n            if grid[r][c] == 1: fresh += 1\n            if grid[r][c] == 2: q.append((r, c))\n            \n    directions = [[0,1], [0,-1], [1,0], [-1,0]]\n    while q and fresh > 0:\n        for i in range(len(q)):\n            r, c = q.popleft()\n            for dr, dc in directions:\n                row, col = r + dr, c + dc\n                if 0 <= row < ROWS and 0 <= col < COLS and grid[row][col] == 1:\n                    grid[row][col] = 2\n                    q.append((row, col))\n                    fresh -= 1\n        time += 1\n        \n    return time if fresh == 0 else -1"
+      },
+      "timeComplexity": "O(M * N)",
+      "spaceComplexity": "O(M * N)",
+      "rationale": "BFS simulates 'time' perfectly. One full cycle of the while loop equals exactly one minute passing."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "Can DFS find the shortest path in a maze?",
+      "options": [
+        "Yes, but you have to check EVERY SINGLE PATH to the end and compare their lengths, making it terribly slow (Exponential).",
+        "No, it is mathematically impossible.",
+        "Yes, and it is faster than BFS.",
+        "Yes, but only if you don't use recursion."
+      ],
+      "correctIndex": 0,
+      "explanation": "DFS might find the exit immediately by blindly running forward, but it might be a terrible winding path. To guarantee it's the shortest, DFS has to try all other paths to be sure. BFS finds the shortest path on its very first try."
+    },
+    {
+      "question": "In Python, why do we use `from collections import deque` for BFS instead of a standard list `[]`?",
+      "options": [
+        "Because popping from the front of a standard list `list.pop(0)` takes O(N) time, making BFS O(N^2). A deque takes O(1) time.",
+        "Because deque is required for recursion.",
+        "It is just a stylistic choice.",
+        "Because deque prevents infinite loops."
+      ],
+      "correctIndex": 0,
+      "explanation": "A Python list is an array. If you remove the first element, every other element has to shift left by one spot, which takes O(N) time. A `deque` is a doubly-linked list, so `popleft()` is O(1)."
     }
   ],
   "practice": [
-    { "title": "Number of Islands", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "Start BFS/DFS from each unvisited land cell." },
-    { "title": "Clone Graph", "url": "https://leetcode.com/problems/clone-graph/", "difficulty": "medium", "keyInsight": "BFS/DFS with a hash map of original → clone." },
-    { "title": "Course Schedule", "url": "https://leetcode.com/problems/course-schedule/", "difficulty": "medium", "keyInsight": "Topological sort via DFS cycle detection." },
-    { "title": "Pacific Atlantic Water Flow", "url": "https://leetcode.com/problems/pacific-atlantic-water-flow/", "difficulty": "medium", "keyInsight": "BFS/DFS from ocean borders inward." },
-    { "title": "Word Ladder", "url": "https://leetcode.com/problems/word-ladder/", "difficulty": "hard", "keyInsight": "BFS on a word-graph where edges connect words differing by one letter." },
-    { "title": "Surrounded Regions", "url": "https://leetcode.com/problems/surrounded-regions/", "difficulty": "medium", "keyInsight": "DFS from border O's to mark safe regions." }
-  ],
-  "examples": [],
-  "conceptQuiz": [
-    {
-      "question": "Which traversal guarantees the shortest path in an unweighted graph?",
-      "options": ["BFS", "DFS", "Both equally", "Neither"],
-      "correctIndex": 0,
-      "explanation": "BFS explores nodes level by level, so the first time it reaches a node, it's via the shortest path."
-    },
-    {
-      "question": "What data structure does BFS primarily use?",
-      "options": ["Queue", "Stack", "Heap", "Hash Map"],
-      "correctIndex": 0,
-      "explanation": "BFS processes nodes in FIFO order using a queue to maintain the exploration frontier."
-    }
-  ],
-  "recognitionQuiz": {
-    "problemStatement": "Find the minimum number of steps to reach from cell (0,0) to cell (m-1,n-1) in a grid, moving in 4 directions.",
-    "correctPatternId": "bfs-dfs",
-    "distractors": ["dynamic-programming", "binary-search", "two-pointers"],
-    "explanation": "Shortest path in an unweighted grid is a classic BFS problem."
-  }
+    { "title": "Word Ladder", "url": "https://leetcode.com/problems/word-ladder/", "difficulty": "hard", "keyInsight": "Shortest transformation sequence = BFS." },
+    { "title": "Surrounded Regions", "url": "https://leetcode.com/problems/surrounded-regions/", "difficulty": "medium", "keyInsight": "DFS from the borders to mark 'safe' regions." },
+    { "title": "01 Matrix", "url": "https://leetcode.com/problems/01-matrix/", "difficulty": "medium", "keyInsight": "Multi-Source BFS starting from all the 0s." }
+  ]
 }

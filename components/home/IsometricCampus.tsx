@@ -24,7 +24,7 @@ export default function IsometricCampus() {
           {/* Inner courtyard */}
           <rect x="40" y="40" width="120" height="120" fill="#F0EDE8" />
           <rect x="40" y="40" width="120" height="120" fill="none" stroke="#E5E0D8" strokeWidth="2" />
-          <text x="100" y="115" fontFamily="var(--font-dmsans)" fontSize="42" fontWeight="bold" fill="#C8900A" textAnchor="middle" transform="rotate(-45 100 100)">DSA</text>
+          <image href="/DSAKarle_Logo.png" x="50" y="50" width="100" height="100" transform="rotate(-45 100 100)" />
         </g>
         
         {/* 2. Array Platform */}

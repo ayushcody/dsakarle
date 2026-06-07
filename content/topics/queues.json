@@ -2,85 +2,209 @@
   "id": "queues",
   "slug": "queues",
   "title": "Queues",
-  "analogy": "A queue is like a line at a movie ticket counter — the first person in line gets served first, and new people join at the back.",
-  "analogyIcon": "🎬",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 30,
+  "estimatedMinutes": 35,
   "prerequisites": ["arrays", "linked-lists"],
-  "tags": ["queue", "FIFO"],
+  "tags": [
+    "data-structure",
+    "FIFO"
+  ],
   "overview": {
-    "summary": "Queues are FIFO (First-In-First-Out) data structures, just like a line at a store.",
-    "learningObjectives": ["Understand FIFO property", "Learn to use queues for breadth first search and scheduling"],
-    "interviewRelevance": "Crucial for Breadth-First Search (BFS) and concurrent systems scheduling."
+    "summary": "A Queue is a linear data structure that follows the First-In-First-Out (FIFO) principle.",
+    "learningObjectives": [
+      "Understand the FIFO principle.",
+      "Implement a Queue using a Linked List (or dynamic array).",
+      "Recognize problems that require sequential processing like BFS."
+    ],
+    "interviewRelevance": "Queues are the backbone of Breadth-First Search (BFS) for trees and graphs, and are essential for scheduling tasks."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Print queues, CPU process scheduling, BFS graph search, and rate limiters all use queues.",
-      "The reason your 100 print jobs come out in order is because the print spooler enqueues each job and processes them FIFO."
+      "Think of a line at a coffee shop. You enter at the back of the line, and you wait your turn.",
+      "The first person who got in line is the first person to order and leave. This is FIFO."
     ],
-    "ahaMoment": "A queue ensures fair processing: the first task that arrives is guaranteed to be the first task completed."
+    "ahaMoment": "A Queue preserves the exact order of arrival. It's the ultimate 'fair' data structure."
   },
   "definition": {
-    "technicalDefinition": "A queue is a linear data structure that follows the First-In-First-Out (FIFO) principle, where elements are added at the rear and removed from the front.",
+    "technicalDefinition": "A Queue is an abstract data type that serves as a collection of elements, with two principal operations: enqueue (adds to the back) and dequeue (removes from the front).",
     "vocabulary": [
-      { "term": "Enqueue", "definition": "Add an element to the rear of the queue." },
-      { "term": "Dequeue", "definition": "Remove an element from the front of the queue." },
-      { "term": "Front / Tail", "definition": "Front is where exits happen, Tail is where entrances happen." }
+      {
+        "term": "Enqueue",
+        "definition": "Insert an element at the back (tail) of the queue."
+      },
+      {
+        "term": "Dequeue",
+        "definition": "Remove the element at the front (head) of the queue."
+      },
+      {
+        "term": "Front / Peek",
+        "definition": "Look at the first element without removing it."
+      },
+      {
+        "term": "FIFO",
+        "definition": "First-In-First-Out."
+      }
     ],
     "keyProperties": [
-      "Enqueue and Dequeue are O(1) time.",
-      "Maintains the strict chronological arrival order.",
-      "Requires a linked list or circular array to achieve O(1) dequeue."
+      "O(1) Enqueue and Dequeue operations.",
+      "O(n) search (since you only have direct access to the front).",
+      "Best implemented with a Linked List to avoid O(n) shifting."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A car wash tunnel. Cars enter one side and exit the other side in the exact same order."
+    ],
+    "clickSentence": "Use a Queue whenever you need to process things in the exact order they were discovered.",
+    "diagramType": "ArrayDiagram",
+    "cells": [],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "Implementing a Queue with a standard Array is bad because removing the first element requires shifting all other elements (O(n)).",
+      "Instead, Queues are usually implemented using a Doubly Linked List, where enqueueing at the tail and dequeueing at the head are both O(1)."
+    ],
+    "definitionCode": {
+      "python": "from collections import deque\nq = deque()\nq.append(1)    # Enqueue\nfront = q.popleft() # Dequeue",
+      "javascript": "const q = [];\nq.push(1);    // Enqueue\nconst front = q.shift(); // Dequeue (O(n) in JS array!)",
+      "java": "Queue<Integer> q = new LinkedList<>();\nq.offer(1); // Enqueue\nint front = q.poll(); // Dequeue",
+      "cpp": "std::queue<int> q;\nq.push(1); // Enqueue\nint front = q.front(); q.pop(); // Dequeue"
+    },
+    "memoryLayout": [
+      {
+        "label": "Front",
+        "value": "10 (Oldest)"
+      },
+      {
+        "label": "Middle",
+        "value": "20"
+      },
+      {
+        "label": "Back",
+        "value": "30 (Newest)"
+      }
+    ]
+  },
+  "stepper": {
+    "diagramType": "ArrayDiagram",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive visualization for Queues is coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
       "name": "Enqueue",
-      "description": "Place an item at the back of the line.",
+      "description": "Add an item to the back of the queue.",
       "timeComplexity": "O(1)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "queue.append(5)",
-        "javascript": "queue.push(5);",
-        "java": "queue.offer(5);",
-        "cpp": "queue.push(5);"
+        "python": "q.append(val)",
+        "javascript": "q.push(val);",
+        "java": "q.offer(val);",
+        "cpp": "q.push(val);"
       },
-      "visualNote": "A new block enters from the right."
+      "visualNote": "A new element enters the back of the line."
     },
     {
       "name": "Dequeue",
-      "description": "Remove the item at the front of the line.",
+      "description": "Remove the front item.",
       "timeComplexity": "O(1)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "val = queue.popleft()  # collections.deque",
-        "javascript": "const val = queue.shift(); // Warning: O(N) in JS arrays",
-        "java": "int val = queue.poll();",
-        "cpp": "int val = queue.front();\nqueue.pop();"
+        "python": "val = q.popleft()",
+        "javascript": "const val = q.shift();",
+        "java": "int val = q.poll();",
+        "cpp": "int val = q.front(); q.pop();"
       },
-      "visualNote": "The leftmost block exits the sequence."
+      "visualNote": "The front element exits the line."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "q = new Queue()\nq.enqueue(start_node)\nwhile not q.is_empty():\n  curr = q.dequeue()\n  process(curr)\n  for neighbor in curr.neighbors:\n    q.enqueue(neighbor)",
+    "whenToUse": "Whenever you need to process data level-by-level, or maintain fairness (First come, first served).",
+    "timeComplexity": "O(n) if processing a sequence.",
+    "spaceComplexity": "O(n) max queue length."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You are building a customer support ticket system where the oldest tickets must be answered first.",
+    "correctPatternId": "queues",
+    "distractors": [
+      "arrays",
+      "stacks",
+      "hash-maps"
+    ],
+    "explanation": "Oldest first means First-In-First-Out (FIFO). This is the textbook definition of a Queue."
+  },
+  "examples": [
+    {
+      "title": "Number of Recent Calls",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/number-of-recent-calls/",
+      "problemStatement": "Count the number of requests that happened in the past 3000 milliseconds.",
+      "inputExample": "ping(1), ping(100), ping(3001), ping(3002)",
+      "outputExample": "3",
+      "steps": [
+        "Store all pings in a Queue.",
+        "When a new ping arrives, enqueue its timestamp.",
+        "While the front of the queue is older than (current_ping - 3000), dequeue it.",
+        "Return the size of the queue."
+      ],
+      "code": {
+        "python": "class RecentCounter:\n    def __init__(self):\n        self.q = deque()\n\n    def ping(self, t: int) -> int:\n        self.q.append(t)\n        while self.q[0] < t - 3000:\n            self.q.popleft()\n        return len(self.q)",
+        "javascript": "class RecentCounter {\n    constructor() {\n        this.q = [];\n    }\n    ping(t) {\n        this.q.push(t);\n        while (this.q[0] < t - 3000) {\n            this.q.shift();\n        }\n        return this.q.length;\n    }\n}",
+        "java": "class RecentCounter {\n    Queue<Integer> q;\n    public RecentCounter() {\n        q = new LinkedList<>();\n    }\n    public int ping(int t) {\n        q.offer(t);\n        while (q.peek() < t - 3000) {\n            q.poll();\n        }\n        return q.size();\n    }\n}",
+        "cpp": "class RecentCounter {\n    queue<int> q;\npublic:\n    int ping(int t) {\n        q.push(t);\n        while (q.front() < t - 3000) {\n            q.pop();\n        }\n        return q.size();\n    }\n};"
+      },
+      "timeComplexity": "O(1) amortized per ping",
+      "spaceComplexity": "O(W) where W is the window size",
+      "rationale": "Since time always moves forward, the oldest pings will always be at the front of the queue, making them easy to discard."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "Which principle does a Queue follow?",
+      "options": [
+        "FIFO (First In, First Out)",
+        "LIFO (Last In, First Out)",
+        "FILO (First In, Last Out)",
+        "Random Access"
+      ],
+      "correctIndex": 0,
+      "explanation": "FIFO. The first item to enter the queue is the first one to leave."
     },
     {
-      "name": "Front / Peek",
-      "description": "Look at the front item without removing it.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "val = queue[0]",
-        "javascript": "const val = queue[0];",
-        "java": "int val = queue.peek();",
-        "cpp": "int val = queue.front();"
-      },
-      "visualNote": "The leftmost block flashes briefly."
+      "question": "Why is implementing a Queue with a standard array usually bad?",
+      "options": [
+        "Dequeueing from the front requires shifting all other elements O(n).",
+        "Arrays cannot store dynamic data types.",
+        "Arrays are LIFO.",
+        "It uses more memory."
+      ],
+      "correctIndex": 0,
+      "explanation": "If you remove index 0, index 1 must move to index 0, index 2 to index 1, etc. This is O(n) time. Linked Lists can dequeue in O(1)."
     }
   ],
   "practice": [
-    { "title": "Number of Islands (BFS)", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "A queue explores the grid layer by layer." },
-    { "title": "Implement Stack using Queues", "url": "https://leetcode.com/problems/implement-stack-using-queues/", "difficulty": "easy", "keyInsight": "Rotate the queue after every push to simulate LIFO." },
-    { "title": "Design Circular Queue", "url": "https://leetcode.com/problems/design-circular-queue/", "difficulty": "medium", "keyInsight": "Use an array with wrap-around pointers." },
-    { "title": "Binary Tree Level Order Traversal", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "medium", "keyInsight": "Queue tracks nodes of current depth." },
-    { "title": "Rotting Oranges", "url": "https://leetcode.com/problems/rotting-oranges/", "difficulty": "medium", "keyInsight": "Multi-source BFS using a queue of initial rotted coords." },
-    { "title": "Sliding Window Maximum", "url": "https://leetcode.com/problems/sliding-window-maximum/", "difficulty": "hard", "keyInsight": "Monotonic double-ended queue (deque)." }
+    {
+      "title": "Number of Recent Calls",
+      "url": "https://leetcode.com/problems/number-of-recent-calls/",
+      "difficulty": "easy",
+      "keyInsight": "Use a queue to track the rolling 3000ms window."
+    },
+    {
+      "title": "Implement Queue using Stacks",
+      "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
+      "difficulty": "easy",
+      "keyInsight": "Use two stacks: one for pushing, one for popping/peeking."
+    }
   ]
 }

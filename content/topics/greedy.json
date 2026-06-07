@@ -2,83 +2,163 @@
   "id": "greedy",
   "slug": "greedy",
   "title": "Greedy Algorithms",
-  "analogy": "A greedy algorithm is like always picking the biggest coin when making change — at each step you make the locally optimal choice, hoping it leads to a globally optimal solution.",
-  "analogyIcon": "💰",
   "category": "algorithm",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 35,
+  "difficulty": "medium",
+  "estimatedMinutes": 45,
   "prerequisites": ["sorting"],
-  "tags": ["greedy", "optimization", "local-optimal"],
+  "tags": ["algorithm", "optimization"],
   "overview": {
-    "summary": "Greedy algorithms build solutions piece by piece, always choosing the option that looks best at the current moment without reconsidering past choices.",
+    "summary": "Greedy algorithms build up a solution piece by piece, always choosing the next piece that offers the most immediate benefit.",
     "learningObjectives": [
-      "Understand the greedy-choice property.",
-      "Distinguish problems solvable by greedy vs those requiring DP.",
-      "Prove greedy correctness via exchange argument."
+      "Understand the Greedy Choice Property.",
+      "Recognize when a locally optimal choice leads to a globally optimal solution.",
+      "Understand why Greedy algorithms often require sorting the input first."
     ],
-    "interviewRelevance": "Greedy problems appear frequently in scheduling, interval, and optimization questions."
+    "interviewRelevance": "Greedy algorithms are often the O(N log N) 'trick' solutions to optimization problems that would otherwise require O(N^2) Dynamic Programming."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Huffman coding (used in ZIP compression) uses a greedy algorithm to assign shorter codes to more frequent characters.",
-      "Job scheduling in operating systems often uses greedy heuristics to maximize throughput."
+      "Imagine you are a cashier making change for $0.85. You want to use the fewest coins possible. You don't calculate all possible combinations of coins.",
+      "You just act 'Greedy'. You grab the biggest coin you can (a Quarter). Then another Quarter. Then another. Then a Dime. By always taking the biggest chunk possible right now, you arrive at the perfect answer."
     ],
-    "ahaMoment": "Greedy works when making the locally best choice at each step guarantees the globally best outcome."
+    "ahaMoment": "A Greedy algorithm never looks back. Once a choice is made, it is permanent. It never backtracks."
   },
   "definition": {
-    "technicalDefinition": "A greedy algorithm makes the locally optimal choice at each step with the hope of finding a global optimum. It never reconsiders previous decisions.",
+    "technicalDefinition": "A greedy algorithm is any algorithm that follows the problem-solving heuristic of making the locally optimal choice at each stage with the intent of finding a global optimum.",
     "vocabulary": [
-      { "term": "Greedy Choice Property", "definition": "A global optimum can be reached by making locally optimal choices." },
-      { "term": "Exchange Argument", "definition": "A proof technique showing any non-greedy solution can be improved by swapping to the greedy choice." },
-      { "term": "Feasible Solution", "definition": "A solution that satisfies all problem constraints." }
+      { "term": "Locally Optimal", "definition": "The best possible choice you can make right now, based ONLY on the current step, ignoring future consequences." },
+      { "term": "Globally Optimal", "definition": "The absolute best possible final answer for the entire problem." },
+      { "term": "Counter-example", "definition": "A specific scenario that proves a greedy approach fails to find the global optimum." }
     ],
     "keyProperties": [
-      "Makes irrevocable decisions at each step.",
-      "Usually runs in O(N log N) due to sorting.",
-      "Does NOT work for all optimization problems — DP may be needed."
+      "Very fast (usually O(N) or O(N log N) if sorting is required).",
+      "Easy to code, incredibly hard to prove mathematically correct.",
+      "Fails if making a good choice now forces you into a terrible choice later."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A mountain climber trying to reach the highest peak in the fog. A greedy algorithm just says 'Always step uphill'. (This works for a single mountain, but fails if there are multiple peaks)."
+    ],
+    "clickSentence": "Sort the data to reveal the most 'valuable' pieces, then gobble them up one by one until you can't.",
+    "diagramType": "ArrayDiagram",
+    "cells": [],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "Greedy algorithms usually operate in O(1) space (excluding the sort).",
+      "They simply maintain a running total or a pointer to the current state."
+    ],
+    "definitionCode": {
+      "python": "def make_change(amount, coins):\n    coins.sort(reverse=True)\n    count = 0\n    for coin in coins:\n        while amount >= coin:\n            amount -= coin\n            count += 1\n    return count"
+    },
+    "memoryLayout": [
+      { "label": "Greedy Choice", "value": "Pick the highest value available at the current moment." }
+    ]
+  },
+  "stepper": {
+    "diagramType": "ArrayDiagram",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive Greedy visualization coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
-      "name": "Interval Scheduling",
-      "description": "Select the maximum number of non-overlapping intervals by always picking the one that ends earliest.",
+      "name": "Sort",
+      "description": "Most greedy problems require organizing the data first so the 'best' choices are presented first.",
       "timeComplexity": "O(N log N)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "def max_meetings(intervals):\n    intervals.sort(key=lambda x: x[1])\n    count, end = 0, float('-inf')\n    for s, e in intervals:\n        if s >= end:\n            count += 1\n            end = e\n    return count",
-        "javascript": "function maxMeetings(intervals) {\n  intervals.sort((a, b) => a[1] - b[1]);\n  let count = 0, end = -Infinity;\n  for (const [s, e] of intervals) {\n    if (s >= end) { count++; end = e; }\n  }\n  return count;\n}",
-        "java": "int maxMeetings(int[][] intervals) {\n    Arrays.sort(intervals, (a, b) -> a[1] - b[1]);\n    int count = 0, end = Integer.MIN_VALUE;\n    for (int[] iv : intervals) {\n        if (iv[0] >= end) { count++; end = iv[1]; }\n    }\n    return count;\n}",
-        "cpp": "int maxMeetings(vector<pair<int,int>>& intervals) {\n    sort(intervals.begin(), intervals.end(),\n         [](auto& a, auto& b){ return a.second < b.second; });\n    int count = 0, end = INT_MIN;\n    for (auto& [s, e] : intervals) {\n        if (s >= end) { count++; end = e; }\n    }\n    return count;\n}"
+        "python": "data.sort()"
       },
-      "visualNote": "Intervals on a timeline, selected ones highlighted green, rejected ones crossed out."
+      "visualNote": "Items are rearranged by value or weight."
+    },
+    {
+      "name": "Consume",
+      "description": "Iterate through the sorted data, taking whatever fits the constraints.",
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "for item in data:\n    if fits(item):\n        take(item)"
+      },
+      "visualNote": "A pointer moves left to right, collecting items."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "items.sort(key=custom_greedy_criteria)\nresult = 0\nfor item in items:\n  if is_valid(item, current_state):\n    result += item.value\n    update_state()\nreturn result",
+    "whenToUse": "Optimization problems (maximize profit, minimize cost) where local maximums perfectly align with the global maximum.",
+    "timeComplexity": "O(N log N) dominated by sorting.",
+    "spaceComplexity": "O(1) usually."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You have a list of meeting times `[start, end]`. Find the maximum number of meetings you can attend without overlapping.",
+    "correctPatternId": "greedy",
+    "distractors": [
+      "dynamic-programming",
+      "binary-search",
+      "backtracking"
+    ],
+    "explanation": "By acting 'Greedy' and always choosing the meeting that ENDS the earliest, you leave the maximum amount of free time available for future meetings. This guarantees the optimal answer."
+  },
+  "examples": [
+    {
+      "title": "Jump Game",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/jump-game/",
+      "problemStatement": "You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return true if you can reach the last index.",
+      "inputExample": "nums = [2,3,1,1,4]",
+      "outputExample": "true",
+      "steps": [
+        "Maintain a variable `max_reach` initialized to 0.",
+        "Iterate through the array.",
+        "If your current index `i` is greater than `max_reach`, it means you are stuck. Return false.",
+        "Otherwise, update `max_reach = max(max_reach, i + nums[i])`.",
+        "If `max_reach` >= last index, return true."
+      ],
+      "code": {
+        "python": "def canJump(nums):\n    max_reach = 0\n    for i in range(len(nums)):\n        if i > max_reach:\n            return False\n        max_reach = max(max_reach, i + nums[i])\n    return True",
+        "javascript": "function canJump(nums) {\n    let maxReach = 0;\n    for (let i = 0; i < nums.length; i++) {\n        if (i > maxReach) return false;\n        maxReach = Math.max(maxReach, i + nums[i]);\n    }\n    return true;\n}"
+      },
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(1)",
+      "rationale": "Instead of checking every possible combination of jumps (which would be O(2^N)), we greedily track the furthest possible rightward boundary we can reach."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "Why does making change with coins (US currency) work with a Greedy algorithm, but some custom coin sets fail?",
+      "options": [
+        "Because US coins (25, 10, 5, 1) are mathematically structured so that the greedy choice never 'traps' you into using more coins.",
+        "Because you sort them first.",
+        "Because there are only 4 coins.",
+        "It doesn't work with US currency."
+      ],
+      "correctIndex": 0,
+      "explanation": "If your coins were [4, 3, 1] and you wanted to make 6. Greedy takes 4, then 1, then 1 (3 coins). But the optimal answer is 3 + 3 (2 coins). Greedy fails if the coin values don't follow specific mathematical gaps."
+    },
+    {
+      "question": "If a problem can be solved by both Greedy and Dynamic Programming, which should you choose?",
+      "options": [
+        "Greedy, because it is usually O(N) or O(N log N) space/time, whereas DP is often O(N^2) time/space.",
+        "Dynamic Programming, because it is safer.",
+        "They are the exact same thing.",
+        "Neither, use Recursion."
+      ],
+      "correctIndex": 0,
+      "explanation": "If the Greedy Choice Property holds true, the Greedy approach will be significantly faster and use less memory than DP."
     }
   ],
   "practice": [
-    { "title": "Jump Game", "url": "https://leetcode.com/problems/jump-game/", "difficulty": "medium", "keyInsight": "Track the farthest reachable index greedily." },
-    { "title": "Non-overlapping Intervals", "url": "https://leetcode.com/problems/non-overlapping-intervals/", "difficulty": "medium", "keyInsight": "Sort by end time, count overlaps to remove." },
-    { "title": "Assign Cookies", "url": "https://leetcode.com/problems/assign-cookies/", "difficulty": "easy", "keyInsight": "Sort both arrays and match smallest cookie to smallest child." },
-    { "title": "Gas Station", "url": "https://leetcode.com/problems/gas-station/", "difficulty": "medium", "keyInsight": "If total gas >= total cost, a solution exists. Find the start greedily." },
-    { "title": "Task Scheduler", "url": "https://leetcode.com/problems/task-scheduler/", "difficulty": "medium", "keyInsight": "Greedy: schedule most frequent task first, fill cooling slots." },
-    { "title": "Partition Labels", "url": "https://leetcode.com/problems/partition-labels/", "difficulty": "medium", "keyInsight": "Extend partition greedily until all chars' last occurrences are included." }
-  ],
-  "examples": [],
-  "conceptQuiz": [
-    {
-      "question": "When does greedy fail?",
-      "options": [
-        "When locally optimal choices don't lead to a global optimum",
-        "When the input is sorted",
-        "When there are no constraints",
-        "Greedy never fails"
-      ],
-      "correctIndex": 0,
-      "explanation": "Greedy fails when the problem lacks the greedy-choice property, e.g., 0/1 Knapsack."
-    }
-  ],
-  "recognitionQuiz": {
-    "problemStatement": "Given a set of meetings with start and end times, find the maximum number of non-overlapping meetings you can attend.",
-    "correctPatternId": "greedy",
-    "distractors": ["dynamic-programming", "backtracking", "sliding-window"],
-    "explanation": "Interval scheduling with earliest-end-time selection is the textbook greedy problem."
-  }
+    { "title": "Jump Game", "url": "https://leetcode.com/problems/jump-game/", "difficulty": "medium", "keyInsight": "Greedily track the furthest index you can reach." },
+    { "title": "Assign Cookies", "url": "https://leetcode.com/problems/assign-cookies/", "difficulty": "easy", "keyInsight": "Sort both arrays. Give the smallest cookie to the least greedy child." },
+    { "title": "Task Scheduler", "url": "https://leetcode.com/problems/task-scheduler/", "difficulty": "medium", "keyInsight": "Always schedule the most frequent task first." }
+  ]
 }

@@ -1,98 +1,177 @@
 {
   "id": "heaps",
   "slug": "heaps",
-  "title": "Heaps (Priority Queues)",
-  "analogy": "A heap is like an emergency room triage system — the most urgent patient (highest priority) always gets treated first, regardless of arrival order.",
-  "analogyIcon": "🏥",
+  "title": "Heaps & Priority Queues",
   "category": "data-structure",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 40,
-  "prerequisites": ["arrays", "trees"],
-  "tags": ["heap", "priority-queue", "min-heap", "max-heap"],
+  "difficulty": "medium",
+  "estimatedMinutes": 50,
+  "prerequisites": ["trees", "arrays"],
+  "tags": ["tree", "priority-queue", "sorting"],
   "overview": {
-    "summary": "A Heap is a complete binary tree where every parent node satisfies the heap property (min or max), enabling efficient extraction of the extreme element.",
+    "summary": "A Heap is a specialized tree-based data structure that satisfies the heap property: the parent node is always larger (or smaller) than its children.",
     "learningObjectives": [
-      "Understand min-heap and max-heap properties.",
-      "Implement heapify, push, and pop operations.",
-      "Apply heaps to top-K, median, and scheduling problems."
+      "Understand the difference between Min-Heaps and Max-Heaps.",
+      "Explain how a Heap is usually implemented under the hood using a flat Array.",
+      "Recognize 'Top K' problems as immediate Heap indicators."
     ],
-    "interviewRelevance": "Heaps are essential for top-K elements, merge-K sorted lists, and median-from-stream problems."
+    "interviewRelevance": "Heaps are the silver bullet for any question containing the phrases 'Kth largest', 'Top K frequent', or 'Merge K sorted'."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Operating systems use priority queues (heaps) to schedule processes — higher-priority tasks get CPU time first.",
-      "Dijkstra's shortest path algorithm uses a min-heap to always process the closest unvisited node."
+      "Imagine an emergency room. Patients don't get treated First-Come, First-Served like a normal Queue. They get treated based on the severity of their injury.",
+      "A Heap (or Priority Queue) automatically bubbles the highest priority item to the front of the line, no matter what order it arrived in."
     ],
-    "ahaMoment": "A heap gives you the min or max in O(1) and lets you insert/remove in O(log N) — the perfect 'what's most important right now?' structure."
+    "ahaMoment": "A Heap doesn't sort the whole array. It just guarantees that the absolute largest (or smallest) element is ALWAYS sitting at the very top."
   },
   "definition": {
-    "technicalDefinition": "A heap is a complete binary tree stored as an array where the parent at index i has children at 2i+1 and 2i+2. In a min-heap, every parent ≤ its children; in a max-heap, every parent ≥ its children.",
+    "technicalDefinition": "A Heap is a complete binary tree that satisfies the Heap Property. In a Max Heap, every parent node is greater than or equal to its children. In a Min Heap, every parent is less than or equal to its children.",
     "vocabulary": [
-      { "term": "Min-Heap", "definition": "Root is the smallest element. Parent ≤ children." },
-      { "term": "Max-Heap", "definition": "Root is the largest element. Parent ≥ children." },
-      { "term": "Heapify", "definition": "Restoring the heap property after an insertion or deletion." },
-      { "term": "Complete Binary Tree", "definition": "All levels are fully filled except possibly the last, which is filled left to right." }
+      { "term": "Heapify", "definition": "The process of moving an element up or down the tree to restore the Heap Property." },
+      { "term": "Priority Queue", "definition": "An abstract data type often implemented using a Heap, where elements are dequeued by priority." },
+      { "term": "Complete Tree", "definition": "A tree where every level is completely filled, except possibly the last level, which is filled left-to-right." }
     ],
     "keyProperties": [
-      "Get min/max: O(1). Insert: O(log N). Delete min/max: O(log N).",
-      "Stored as a flat array — no pointer overhead.",
-      "Building a heap from N elements takes O(N), not O(N log N)."
+      "O(1) access to the Max/Min element.",
+      "O(log N) insertion and deletion.",
+      "Because it is a 'Complete Tree', it can be efficiently represented as a flat Array without any pointer gaps."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A corporate ladder where any employee who performs better than their boss instantly swaps jobs with them."
+    ],
+    "clickSentence": "By only partially sorting the data (just enough to keep the best at the top), Heaps save massive amounts of CPU time.",
+    "diagramType": "tree",
+    "cells": [10, 8, 7, 4, 5, 2, 1],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "Heaps are visually drawn as Trees, but physically stored in memory as Arrays.",
+      "Because the tree is 'Complete', we can use simple math to find children: Left Child is at (2 * index) + 1. Right Child is at (2 * index) + 2."
+    ],
+    "definitionCode": {
+      "python": "import heapq\nheap = []\nheapq.heappush(heap, 5) # Min Heap by default\nmin_val = heapq.heappop(heap)",
+      "javascript": "// JS doesn't have a built-in Heap! You must implement it or use a library.\nconst pq = new MinPriorityQueue(); // from @datastructures-js",
+      "java": "PriorityQueue<Integer> pq = new PriorityQueue<>(); // Min Heap\npq.offer(5);\nint minVal = pq.poll();",
+      "cpp": "std::priority_queue<int> max_pq; // Max Heap by default\nstd::priority_queue<int, vector<int>, greater<int>> min_pq;"
+    },
+    "memoryLayout": [
+      { "label": "Index 0 (Root)", "value": "100" },
+      { "label": "Index 1 (Left)", "value": "50" },
+      { "label": "Index 2 (Right)", "value": "75" }
+    ]
+  },
+  "stepper": {
+    "diagramType": "tree",
+    "array": [10, 8, 7, 4, 5, 2, 1],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive Heap push/pop visualization coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
       "name": "Push (Insert)",
-      "description": "Add element at the end of the array, then bubble up to restore heap property.",
+      "description": "Add the element to the bottom (end of array), then 'Bubble Up' (swap with parent) until the heap property is restored.",
       "timeComplexity": "O(log N)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "import heapq\nheapq.heappush(heap, val)",
-        "javascript": "// JS has no built-in heap — use a library or implement manually\nheap.push(val);\nbubbleUp(heap, heap.length - 1);",
-        "java": "PriorityQueue<Integer> pq = new PriorityQueue<>();\npq.offer(val);",
-        "cpp": "priority_queue<int, vector<int>, greater<int>> pq;\npq.push(val);"
+        "python": "heapq.heappush(heap, val)",
+        "javascript": "pq.enqueue(val);",
+        "java": "pq.offer(val);",
+        "cpp": "pq.push(val);"
       },
-      "visualNote": "New element appears at bottom-right, then floats upward until heap property is restored."
+      "visualNote": "A node attaches to the bottom left and floats up the tree."
     },
     {
       "name": "Pop (Extract Min/Max)",
-      "description": "Remove the root, move the last element to root, then bubble down.",
+      "description": "Remove the root, move the very last element to the root, then 'Bubble Down' (swap with largest child).",
       "timeComplexity": "O(log N)",
       "spaceComplexity": "O(1)",
       "code": {
         "python": "val = heapq.heappop(heap)",
-        "javascript": "const val = heap[0];\nheap[0] = heap.pop();\nbubbleDown(heap, 0);",
+        "javascript": "const val = pq.dequeue();",
         "java": "int val = pq.poll();",
-        "cpp": "int val = pq.top();\npq.pop();"
+        "cpp": "int val = pq.top(); pq.pop();"
       },
-      "visualNote": "Root vanishes, last leaf jumps to root, then sinks down to correct position."
+      "visualNote": "The root disappears, the bottom-right leaf jumps to the top, then sinks down."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "heap = new MinHeap()\nfor item in stream:\n  heap.push(item)\n  if heap.size() > K:\n    heap.pop() # Discard the smallest\nreturn heap.peek() # The Kth largest!",
+    "whenToUse": "Whenever a problem asks for the 'Top K', 'Kth Largest/Smallest', or asks you to repeatedly find the minimum/maximum of a changing dataset.",
+    "timeComplexity": "O(N log K) for finding Top K.",
+    "spaceComplexity": "O(K) to store the heap."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You are given a stream of 1 million incoming integers. You need to always be able to return the 5th largest integer seen so far instantly.",
+    "correctPatternId": "heaps",
+    "distractors": [
+      "arrays",
+      "binary-search",
+      "sorting"
+    ],
+    "explanation": "Sorting 1 million items repeatedly takes O(N log N) which is too slow. A Min-Heap of size 5 tracks the top 5 largest elements in just O(N log 5) time."
+  },
+  "examples": [
+    {
+      "title": "Kth Largest Element in an Array",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+      "problemStatement": "Given an integer array nums and an integer k, return the kth largest element in the array.",
+      "inputExample": "nums = [3,2,1,5,6,4], k = 2",
+      "outputExample": "5",
+      "steps": [
+        "Initialize a Min Heap.",
+        "Push elements into the heap one by one.",
+        "If the heap size exceeds k, pop the smallest element.",
+        "At the end, the heap contains the k largest elements, and the root is the kth largest."
+      ],
+      "code": {
+        "python": "import heapq\ndef findKthLargest(nums, k):\n    heap = []\n    for num in nums:\n        heapq.heappush(heap, num)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return heap[0]",
+        "javascript": "// Using a MinPriorityQueue class\nfunction findKthLargest(nums, k) {\n    const pq = new MinPriorityQueue();\n    for (let num of nums) {\n        pq.enqueue(num);\n        if (pq.size() > k) pq.dequeue();\n    }\n    return pq.front().element;\n}",
+        "java": "public int findKthLargest(int[] nums, int k) {\n    PriorityQueue<Integer> pq = new PriorityQueue<>();\n    for (int num : nums) {\n        pq.offer(num);\n        if (pq.size() > k) {\n            pq.poll();\n        }\n    }\n    return pq.peek();\n}",
+        "cpp": "int findKthLargest(vector<int>& nums, int k) {\n    priority_queue<int, vector<int>, greater<int>> pq;\n    for (int num : nums) {\n        pq.push(num);\n        if (pq.size() > k) {\n            pq.pop();\n        }\n    }\n    return pq.top();\n}"
+      },
+      "timeComplexity": "O(N log K)",
+      "spaceComplexity": "O(K)",
+      "rationale": "By capping the heap size at K, we dramatically reduce memory usage and insertion time compared to a full sort."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "If you want to find the Top K LARGEST elements, what kind of heap should you use?",
+      "options": [
+        "A Min-Heap of size K",
+        "A Max-Heap of size K",
+        "A Max-Heap of size N",
+        "A Binary Search Tree"
+      ],
+      "correctIndex": 0,
+      "explanation": "Counter-intuitively, you use a MIN-Heap. You want the 'smallest of the largest' sitting at the root so you can easily pop it out when you find a bigger number."
+    },
+    {
+      "question": "How are the Left and Right children of an element at index 'i' found in a Heap array?",
+      "options": [
+        "Left: 2i + 1, Right: 2i + 2",
+        "Left: i + 1, Right: i + 2",
+        "Left: i / 2, Right: (i / 2) + 1",
+        "By traversing pointers."
+      ],
+      "correctIndex": 0,
+      "explanation": "Because a heap is a Complete Tree, array math mathematically guarantees no empty gaps, saving memory overhead."
     }
   ],
   "practice": [
-    { "title": "Kth Largest Element in an Array", "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/", "difficulty": "medium", "keyInsight": "Min-heap of size K — after processing all elements, the root is the Kth largest." },
-    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Count frequencies, then use a min-heap of size K." },
-    { "title": "Merge K Sorted Lists", "url": "https://leetcode.com/problems/merge-k-sorted-lists/", "difficulty": "hard", "keyInsight": "Min-heap of K list heads; always pop the smallest and push its next." },
-    { "title": "Find Median from Data Stream", "url": "https://leetcode.com/problems/find-median-from-data-stream/", "difficulty": "hard", "keyInsight": "Two heaps: max-heap for lower half, min-heap for upper half." },
-    { "title": "Last Stone Weight", "url": "https://leetcode.com/problems/last-stone-weight/", "difficulty": "easy", "keyInsight": "Max-heap to always smash the two heaviest stones." }
-  ],
-  "examples": [],
-  "conceptQuiz": [
-    {
-      "question": "What is the time complexity of extracting the minimum from a min-heap?",
-      "options": ["O(log N)", "O(1)", "O(N)", "O(N log N)"],
-      "correctIndex": 0,
-      "explanation": "Removing the root takes O(1), but restoring the heap property via bubble-down takes O(log N)."
-    },
-    {
-      "question": "How is a heap typically stored in memory?",
-      "options": ["As a flat array", "As a linked list", "As a hash map", "As a graph adjacency list"],
-      "correctIndex": 0,
-      "explanation": "A heap is a complete binary tree that maps perfectly to an array using index arithmetic."
-    }
-  ],
-  "recognitionQuiz": {
-    "problemStatement": "Given a stream of integers, efficiently find the Kth largest element at any point.",
-    "correctPatternId": "heaps",
-    "distractors": ["sorting", "binary-search", "hash-maps"],
-    "explanation": "A min-heap of size K maintains the K largest elements, with the root being the Kth largest."
-  }
+    { "title": "Kth Largest Element in an Array", "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/", "difficulty": "medium", "keyInsight": "Maintain a Min-Heap of size K." },
+    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Count frequencies with a Hash Map, then put the counts into a Min-Heap." },
+    { "title": "Merge K Sorted Lists", "url": "https://leetcode.com/problems/merge-k-sorted-lists/", "difficulty": "hard", "keyInsight": "Put the head of every list into a Min-Heap to find the absolute minimum at any given moment." },
+    { "title": "Find Median from Data Stream", "url": "https://leetcode.com/problems/find-median-from-data-stream/", "difficulty": "hard", "keyInsight": "Use two heaps. A Max-Heap for the bottom half, and a Min-Heap for the top half." }
+  ]
 }

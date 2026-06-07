@@ -59,7 +59,7 @@ function renderBadgeCards(topics: CurriculumTopic[]) {
   });
 }
 
-export default function CourseCatalog() {
+export default function CourseCatalog({ hideButton = false }: { hideButton?: boolean }) {
   return (
     <section className="mx-auto flex max-w-7xl flex-col items-center px-6 py-24 md:px-12">
       <h2 className="mb-4 text-center font-lora text-3xl font-bold text-[var(--text-primary)] md:text-4xl">
@@ -87,11 +87,13 @@ export default function CourseCatalog() {
         </div>
       </div>
 
-      <div className="mt-16">
-        <Link href="/learn" className="button-primary inline-flex items-center justify-center px-6 py-3">
-          Explore Curriculum &rarr;
-        </Link>
-      </div>
+      {!hideButton && (
+        <div className="mt-16">
+          <Link href="/learn" className="button-primary inline-flex items-center justify-center px-6 py-3">
+            Explore Curriculum &rarr;
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

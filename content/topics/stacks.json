@@ -2,86 +2,215 @@
   "id": "stacks",
   "slug": "stacks",
   "title": "Stacks",
-  "analogy": "A stack is like a pile of plates — you can only add or remove from the top. Try pulling out the middle plate without disaster!",
-  "analogyIcon": "🍽️",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 30,
+  "estimatedMinutes": 35,
   "prerequisites": ["arrays", "linked-lists"],
-  "tags": ["stack", "LIFO"],
+  "tags": [
+    "data-structure",
+    "LIFO"
+  ],
   "overview": {
-    "summary": "Stacks are simple LIFO (Last-In-First-Out) data structures, like a stack of plates.",
-    "learningObjectives": ["Understand LIFO property", "Learn to use stacks for reversing and nesting"],
-    "interviewRelevance": "Essential for parsing tasks like parenthesis matching and tree traversal."
+    "summary": "A Stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle.",
+    "learningObjectives": [
+      "Understand the LIFO principle.",
+      "Implement a Stack using an Array or Linked List.",
+      "Recognize problems that require reversing order or matching pairs."
+    ],
+    "interviewRelevance": "Stacks are incredibly common in technical interviews, specifically for parsing strings, balancing parentheses, and tracking history."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Your CPU maintains a call stack right now. Every function call pushes a stack frame. Every return pops it.",
-      "When you get a StackOverflowError, the call stack physically ran out of memory.",
-      "The brackets validator in your IDE uses an explicit stack to track nesting."
+      "Think of a stack of plates at a buffet. You can only take the plate that is right on top.",
+      "When a new plate is washed, it is placed on the very top of the stack. The last plate added is the first one taken. This is LIFO."
     ],
-    "ahaMoment": "A stack perfectly models 'returning to where I was recently' because the last thing pushed is the first thing popped."
+    "ahaMoment": "A Stack inherently reverses the order of elements. Whatever went in last, comes out first!"
   },
   "definition": {
-    "technicalDefinition": "A stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle, meaning elements are added and removed from the same end (the 'top').",
+    "technicalDefinition": "A Stack is an abstract data type that serves as a collection of elements, with two principal operations: push (adds an element) and pop (removes the most recently added element).",
     "vocabulary": [
-      { "term": "Push", "definition": "Add an element to the top of the stack." },
-      { "term": "Pop", "definition": "Remove the element from the top of the stack." },
-      { "term": "Peek (or Top)", "definition": "Look at the top element without removing it." }
+      {
+        "term": "Push",
+        "definition": "Insert an element onto the top of the stack."
+      },
+      {
+        "term": "Pop",
+        "definition": "Remove the top element from the stack."
+      },
+      {
+        "term": "Peek / Top",
+        "definition": "Look at the top element without removing it."
+      },
+      {
+        "term": "LIFO",
+        "definition": "Last-In-First-Out."
+      }
     ],
     "keyProperties": [
-      "Elements are added and removed in O(1) time.",
-      "Random access to elements in the middle is not allowed.",
-      "LIFO behavior inherently reverses the order of items."
+      "O(1) Push and Pop operations.",
+      "O(n) search (since you only have direct access to the top).",
+      "Can be implemented via Arrays or Linked Lists."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A tube of tennis balls. You can only put a ball in the top, and take a ball from the top."
+    ],
+    "clickSentence": "Use a Stack whenever you need to 'go back' or process the most recent thing first.",
+    "diagramType": "StackDiagram",
+    "cells": [],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "If implemented with an Array, the 'top' of the stack is just the end of the array.",
+      "If implemented with a Linked List, the 'top' of the stack is the Head of the list."
+    ],
+    "definitionCode": {
+      "python": "stack = []\nstack.append(1)  # Push\ntop = stack.pop() # Pop",
+      "javascript": "const stack = [];\nstack.push(1);  // Push\nconst top = stack.pop(); // Pop",
+      "java": "Stack<Integer> stack = new Stack<>();\nstack.push(1); // Push\nint top = stack.pop(); // Pop",
+      "cpp": "std::stack<int> stack;\nstack.push(1); // Push\nint top = stack.top(); stack.pop();"
+    },
+    "memoryLayout": [
+      {
+        "label": "Top",
+        "value": "30 (Most recently added)"
+      },
+      {
+        "label": "Middle",
+        "value": "20"
+      },
+      {
+        "label": "Bottom",
+        "value": "10 (Oldest)"
+      }
+    ]
+  },
+  "stepper": {
+    "diagramType": "StackDiagram",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive visualization for Stacks is coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
       "name": "Push",
-      "description": "Place an item on the top of the stack.",
+      "description": "Add an item to the top of the stack.",
       "timeComplexity": "O(1)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "stack.append(5)",
-        "javascript": "stack.push(5);",
-        "java": "stack.push(5);",
-        "cpp": "stack.push(5);"
+        "python": "stack.append(val)",
+        "javascript": "stack.push(val);",
+        "java": "stack.push(val);",
+        "cpp": "stack.push(val);"
       },
-      "visualNote": "A new block appears exactly on top of the pile."
+      "visualNote": "A new element drops down from the top."
     },
     {
       "name": "Pop",
-      "description": "Remove the top item from the stack.",
+      "description": "Remove the top item.",
       "timeComplexity": "O(1)",
       "spaceComplexity": "O(1)",
       "code": {
         "python": "val = stack.pop()",
         "javascript": "const val = stack.pop();",
         "java": "int val = stack.pop();",
-        "cpp": "int val = stack.top();\nstack.pop();"
+        "cpp": "int val = stack.top(); stack.pop();"
       },
-      "visualNote": "The topmost block vanishes."
+      "visualNote": "The top element is pulled off the stack."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "stack = []\nfor item in data:\n  if condition(item, stack.top):\n    stack.pop()\n  else:\n    stack.push(item)",
+    "whenToUse": "Parsing expressions, checking valid parentheses, tracking previous states (undo buttons), or implementing DFS.",
+    "timeComplexity": "O(n) if processing a sequence.",
+    "spaceComplexity": "O(n) max stack depth."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You need to implement the 'Undo' button in a text editor.",
+    "correctPatternId": "stacks",
+    "distractors": [
+      "arrays",
+      "queues",
+      "hash-maps"
+    ],
+    "explanation": "Undo requires reverting the MOST RECENT action first. This perfectly matches the Last-In-First-Out (LIFO) model of a Stack."
+  },
+  "examples": [
+    {
+      "title": "Valid Parentheses",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/valid-parentheses/",
+      "problemStatement": "Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
+      "inputExample": "s = \"()[]{}\"",
+      "outputExample": "true",
+      "steps": [
+        "Iterate through the string.",
+        "If it's an opening bracket, push to stack.",
+        "If it's a closing bracket, pop from stack and check if they match.",
+        "Stack must be empty at the end."
+      ],
+      "code": {
+        "python": "stack = []\nmapping = {')': '(', '}': '{', ']': '['}\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            return False\n    else:\n        stack.append(char)\nreturn not stack",
+        "javascript": "const stack = [];\nconst map = {')': '(', '}': '{', ']': '['};\nfor (let char of s) {\n    if (map[char]) {\n        if (stack.pop() !== map[char]) return false;\n    } else {\n        stack.push(char);\n    }\n}\nreturn stack.length === 0;",
+        "java": "Stack<Character> stack = new Stack<>();\nfor (char c : s.toCharArray()) {\n    if (c == '(') stack.push(')');\n    else if (c == '{') stack.push('}');\n    else if (c == '[') stack.push(']');\n    else if (stack.isEmpty() || stack.pop() != c) return false;\n}\nreturn stack.isEmpty();",
+        "cpp": "std::stack<char> st;\nfor (char c : s) {\n    if (c == '(' || c == '{' || c == '[') st.push(c);\n    else {\n        if (st.empty()) return false;\n        if (c == ')' && st.top() != '(') return false;\n        if (c == '}' && st.top() != '{') return false;\n        if (c == ']' && st.top() != '[') return false;\n        st.pop();\n    }\n}\nreturn st.empty();"
+      },
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)",
+      "rationale": "The stack perfectly tracks the most recent unclosed bracket, ensuring it gets closed first."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "Which principle does a Stack follow?",
+      "options": [
+        "LIFO (Last In, First Out)",
+        "FIFO (First In, First Out)",
+        "FILO (First In, Last Out)",
+        "Random Access"
+      ],
+      "correctIndex": 0,
+      "explanation": "LIFO. The last item pushed onto the stack is the first item popped off. (Note: FILO is technically identical, but LIFO is the standard industry term)."
     },
     {
-      "name": "Peek",
-      "description": "Return the top item without removing it.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "val = stack[-1]",
-        "javascript": "const val = stack[stack.length - 1];",
-        "java": "int val = stack.peek();",
-        "cpp": "int val = stack.top();"
-      },
-      "visualNote": "The topmost block is highlighted, but remains in place."
+      "question": "What happens if you pop an empty stack?",
+      "options": [
+        "Stack Underflow Error",
+        "Stack Overflow Error",
+        "It returns 0",
+        "It crashes the OS"
+      ],
+      "correctIndex": 0,
+      "explanation": "Attempting to pop from an empty stack is called a Stack Underflow."
     }
   ],
   "practice": [
-    { "title": "Valid Parentheses", "url": "https://leetcode.com/problems/valid-parentheses/", "difficulty": "easy", "keyInsight": "Push openers, pop closers to verify match." },
-    { "title": "Min Stack", "url": "https://leetcode.com/problems/min-stack/", "difficulty": "medium", "keyInsight": "Store a tuple of (val, current_min)." },
-    { "title": "Evaluate Reverse Polish Notation", "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/", "difficulty": "medium", "keyInsight": "Operands go on the stack, operators pop two and push one." },
-    { "title": "Daily Temperatures", "url": "https://leetcode.com/problems/daily-temperatures/", "difficulty": "medium", "keyInsight": "Monotonic decreasing stack to resolve 'next greater' queries." },
-    { "title": "Generate Parentheses", "url": "https://leetcode.com/problems/generate-parentheses/", "difficulty": "medium", "keyInsight": "Implicit call stack via recursion." },
-    { "title": "Implement Queue using Stacks", "url": "https://leetcode.com/problems/implement-queue-using-stacks/", "difficulty": "easy", "keyInsight": "Pour from an 'in' stack to an 'out' stack." }
+    {
+      "title": "Valid Parentheses",
+      "url": "https://leetcode.com/problems/valid-parentheses/",
+      "difficulty": "easy",
+      "keyInsight": "Push openers, pop and check closers."
+    },
+    {
+      "title": "Min Stack",
+      "url": "https://leetcode.com/problems/min-stack/",
+      "difficulty": "medium",
+      "keyInsight": "Store a tuple of (val, current_min) at every stack level."
+    },
+    {
+      "title": "Evaluate Reverse Polish Notation",
+      "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/",
+      "difficulty": "medium",
+      "keyInsight": "Push numbers. When you see an operator, pop two numbers, evaluate, and push result."
+    }
   ]
 }

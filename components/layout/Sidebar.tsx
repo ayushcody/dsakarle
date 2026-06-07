@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getProgress } from '@/lib/progress';
 import type { CourseStructure, ProgressData } from '@/types/learning';
 
@@ -26,93 +27,95 @@ export function Sidebar({
     setProgress(getProgress());
   }, []);
 
-  // Calculate chapter progress only on client after mount
-  function getChapterProgressSafe(slugs: string[]): number {
-    if (!mounted || slugs.length === 0) return 0;
-    const completed = slugs.filter((slug) => progress.completedSections.includes(slug)).length;
-    return Math.round((completed / slugs.length) * 100);
-  }
+  // Calculate overall progress
+  const totalTopics = courseStructure.groups.reduce((acc, group) => acc + group.topics.length, 0);
+  const completedTopics = mounted ? progress.completedSections.length : 0;
+  const overallProgress = totalTopics === 0 ? 0 : Math.round((completedTopics / totalTopics) * 100);
 
   return (
-    <aside style={{
-      position: 'fixed',
-      left: 0,
-      top: '64px',  // below navbar
-      width: '280px',
-      height: 'calc(100vh - 64px)',
-      overflowY: 'auto',
-      background: 'var(--bg-secondary)',
-      borderRight: '1px solid var(--border)',
-      zIndex: 40,
-      // Custom scrollbar
-      scrollbarWidth: 'thin',
-      scrollbarColor: 'var(--border) transparent',
-    }}>
-      <div style={{ padding: '20px 0 40px' }}>
-        {courseStructure.groups.map((group, groupIndex) => {
-          const chapterProgress = getChapterProgressSafe(group.topics.map((t) => t.slug));
-          
-          return (
-            <div key={group.title}>
-              {/* Group Header */}
-              <div style={{
-                position: 'sticky',
-                top: 0,
-                background: 'var(--bg-secondary)',
-                borderBottom: '1px solid var(--border)',
-                borderTop: groupIndex > 0 ? '1px solid var(--border)' : 'none',
-                padding: '12px 20px 10px',
-                marginTop: groupIndex > 0 ? 16 : 0,
-                zIndex: 10,
-              }}>
-                <span style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 600, fontSize: 13, color: 'var(--text-primary)' }}>
-                  {group.title}
-                </span>
-                <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'var(--text-muted)', marginLeft: 8 }}>
-                  {mounted ? `${chapterProgress}% COMPLETE` : '—'}
-                </span>
-              </div>
+    <aside className="fixed left-0 top-0 w-[280px] h-screen bg-[var(--bg-secondary)] border-r border-[var(--border)] z-50 overflow-y-auto flex flex-col custom-scrollbar pb-10">
+      
+      {/* Brand Header */}
+      <div className="p-6 pb-4">
+        <div className="flex items-center gap-3 mb-1">
+          <Image src="/DSAKarle_Logo.png" alt="DSA Karle Logo" width={36} height={36} className="object-contain" />
+          <div>
+            <h2 className="font-dmsans font-bold text-xl text-[var(--text-primary)] leading-none tracking-tight">DSA Karle</h2>
+            <p className="font-dmsans text-[11px] font-bold uppercase tracking-widest text-[var(--accent-coral)] mt-1">Technical Mastery</p>
+          </div>
+        </div>
+      </div>
 
-              {/* Topics */}
+      {/* Progress Card */}
+      <div className="px-5 mb-6">
+        <div className="bg-[var(--white)] border border-[var(--border)] rounded-lg p-4 shadow-sm">
+          <div className="flex justify-between items-center mb-3">
+            <span className="font-dmsans text-sm font-bold text-[var(--text-primary)]">Overall Progress</span>
+            <span className="font-dmsans text-sm font-bold text-[var(--text-primary)]">{overallProgress}%</span>
+          </div>
+          <div className="h-2 w-full bg-[var(--bg-secondary)] rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[var(--accent-coral)] rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${overallProgress}%` }}
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Groups */}
+      <nav className="flex-1 px-3">
+        {courseStructure.groups.map((group, groupIndex) => (
+          <div key={group.title} className={groupIndex > 0 ? "mt-6" : ""}>
+            {/* Group Header */}
+            <div className="px-3 mb-2 flex items-center justify-between">
+              <h3 className="font-dmsans font-bold text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
+                {group.title}
+              </h3>
+            </div>
+
+            {/* Topics */}
+            <ul className="space-y-1">
               {group.topics.map(topic => {
                 const isActive = topic.slug === currentSlug;
                 const isComplete = mounted && progress.completedSections.includes(topic.slug);
-                const hasQuiz = mounted && (progress.quizScores[topic.slug]?.recognition || progress.quizScores[topic.slug]?.concept);
 
                 return (
-                  <Link key={topic.slug} href={`/learn/${topic.slug}`} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    padding: '9px 20px',
-                    background: isActive ? 'rgba(212,96,58,0.08)' : 'transparent',
-                    borderLeft: isActive ? '3px solid var(--accent-coral)' : '3px solid transparent',
-                    textDecoration: 'none',
-                    transition: 'background 0.15s',
-                  }}>
-                    {/* Completion dot */}
-                    <span style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: '50%',
-                      flexShrink: 0,
-                      background: isComplete ? '#1D7A6B' : hasQuiz ? '#CA8A04' : '#D4D0C8',
-                    }} />
-                    <span style={{
-                      fontFamily: 'DM Sans, sans-serif',
-                      fontSize: 14,
-                      color: isActive ? 'var(--accent-coral)' : 'var(--text-secondary)',
-                      fontWeight: isActive ? 500 : 400,
-                    }}>
-                      {topic.title}
-                    </span>
-                  </Link>
+                  <li key={topic.slug}>
+                    <Link 
+                      href={`/learn/${topic.slug}`} 
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-dmsans text-[14px] transition-all group ${
+                        isActive 
+                          ? 'bg-[var(--accent-coral)] bg-opacity-10 text-[var(--accent-coral)] font-semibold' 
+                          : 'text-[var(--text-secondary)] hover:bg-[var(--white)] hover:text-[var(--text-primary)]'
+                      }`}
+                    >
+                      {/* Status Indicator */}
+                      <span className={`w-2 h-2 rounded-full flex-shrink-0 transition-colors ${
+                        isComplete 
+                          ? 'bg-[var(--state-success)]' 
+                          : isActive 
+                            ? 'bg-[var(--accent-coral)]'
+                            : 'bg-[var(--border-strong)] group-hover:bg-[var(--text-muted)]'
+                      }`} />
+                      <span className="truncate">{topic.title}</span>
+                    </Link>
+                  </li>
                 );
               })}
-            </div>
-          );
-        })}
+            </ul>
+          </div>
+        ))}
+      </nav>
+
+      {/* Practice Button */}
+      <div className="px-5 mt-8">
+        <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-1">Practice & Reinforce</h3>
+        <p className="font-dmsans text-xs text-[var(--text-secondary)] mb-4">Solve curated problems related to this topic.</p>
+        <Link href="/practice" className="block w-full py-2.5 px-4 text-center border border-[var(--accent-coral)] text-[var(--accent-coral)] font-dmsans font-bold text-sm rounded-lg hover:bg-[var(--accent-coral)] hover:text-white transition-colors">
+          Start Practice &rarr;
+        </Link>
       </div>
+
     </aside>
   );
 }

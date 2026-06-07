@@ -9,7 +9,6 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        lora: ['var(--font-lora)'],
         dmsans: ['var(--font-dmsans)'],
         dmmono: ['var(--font-dmmono)'],
       },

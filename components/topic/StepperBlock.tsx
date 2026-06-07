@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { useStepperStore } from '@/lib/stepper-store';
 import type { CodeLanguage, StepperData } from '@/types/learning';
@@ -64,6 +64,12 @@ export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockPr
       }
     };
   }, [isPlaying, speed]);
+
+  // Derive step history for the enhanced variable trace panel
+  const stepHistory = useMemo(
+    () => stepperData.steps.map((s) => s.variables),
+    [stepperData.steps]
+  );
 
   const step = stepperData.steps[currentStep];
 
@@ -219,7 +225,7 @@ export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockPr
         </p>
       </div>
 
-      <VariableStatePanel variables={step.variables} />
+      <VariableStatePanel stepHistory={stepHistory} currentStep={currentStep} />
 
       {step.constraintValue !== undefined && step.constraintMax !== undefined && (
         <ConstraintGauge
@@ -229,7 +235,7 @@ export function StepperBlock({ stepperData, code, renderedCode }: StepperBlockPr
         />
       )}
 
-      <CodeTabs code={code} renderedCode={renderedCode} activeLine={step.activeLine} />
+      <CodeTabs code={code} renderedCode={renderedCode} activeLine={step.activeLine} steps={stepperData.steps} />
     </div>
   );
 }

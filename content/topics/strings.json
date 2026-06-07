@@ -4,81 +4,171 @@
   "title": "Strings",
   "category": "data-structure",
   "difficulty": "beginner",
-  "estimatedMinutes": 45,
+  "estimatedMinutes": 35,
   "prerequisites": ["arrays"],
-  "tags": ["string", "text", "character"],
+  "tags": ["array", "text", "parsing"],
   "overview": {
-    "summary": "Strings are arrays of characters under the hood, but often have special immutable properties.",
-    "learningObjectives": ["Understand string immutability", "Master common string searching / manipulation patterns"],
-    "interviewRelevance": "Many problems test your knowledge of strings and their standard library functions."
+    "summary": "A String is an array of characters. However, depending on the language, strings are often immutable.",
+    "learningObjectives": [
+      "Understand string immutability.",
+      "Recognize ASCII character math (e.g., char - 'a').",
+      "Apply array patterns (like Two Pointers) to Strings."
+    ],
+    "interviewRelevance": "Strings are incredibly common, specifically for parsing, palindrome checks, and anagrams."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Every autocomplete suggestion, every password validation, every plagiarism detector works on strings.",
-      "Google's search index stores trillions of character sequences."
+      "Every text message, password, and URL you've ever typed is processed as a String.",
+      "To a computer, text isn't letters. It's an array of numbers (ASCII/Unicode) that happen to map to letters on a screen."
     ],
-    "ahaMoment": "The reason 'Two Sum' has a trivial solution but 'Longest Palindrome' does not is entirely about how string memory works."
+    "ahaMoment": "A String is just an Array of Characters. Any algorithm that works on an array (Two Pointers, Sliding Window) also works on a String."
   },
   "definition": {
-    "technicalDefinition": "A string is a sequential collection of characters used to represent text. In languages like Python and Java, they are immutable.",
+    "technicalDefinition": "A string is traditionally a sequence of characters, either as a literal constant or as some kind of variable.",
     "vocabulary": [
-      { "term": "Immutable", "definition": "Once created, the contents cannot be changed. Any modification creates a new string." },
+      { "term": "Immutable", "definition": "Once created, the string cannot be changed. To modify it, you must create an entirely new string (Python, Java, JS)." },
+      { "term": "Mutable", "definition": "The string can be modified in-place (C++)." },
       { "term": "Substring", "definition": "A contiguous sequence of characters within a string." },
-      { "term": "Anagram", "definition": "A string formed by rearranging the letters of another string." }
+      { "term": "Subsequence", "definition": "A sequence derived by deleting some characters without changing the order." }
     ],
     "keyProperties": [
-      "Accessing a character by index is O(1).",
-      "Concatenating two strings is O(N + M) time.",
-      "Because they are immutable (in many languages), repetitive concatenation in a loop is computationally expensive O(N^2)."
+      "O(1) character access by index.",
+      "O(N) to concatenate immutable strings (usually).",
+      "Character encoding (ASCII/Unicode) allows math on letters."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A scrabble board where the tiles are glued down. To 'change' a word, you have to buy a whole new board and glue down new tiles."
+    ],
+    "clickSentence": "Because strings are often immutable, building strings character-by-character in a loop is a massive performance trap.",
+    "diagramType": "ArrayDiagram",
+    "cells": ["a", "p", "p", "l", "e"],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "In memory, a string is an array of bytes. 'A' is 65, 'B' is 66, 'a' is 97.",
+      "Because of immutability in many languages, appending a single character requires copying the ENTIRE string to a new memory block."
+    ],
+    "definitionCode": {
+      "python": "s = \"hello\"\n# s[0] = 'H'  # ERROR: Immutable!\ns = \"H\" + s[1:] # Creates a new string",
+      "javascript": "let s = \"hello\";\n// s[0] = 'H'; // Fails silently!\ns = \"H\" + s.slice(1); // Creates a new string",
+      "java": "String s = \"hello\";\n// Must use StringBuilder for mutability\nStringBuilder sb = new StringBuilder(s);\nsb.setCharAt(0, 'H');",
+      "cpp": "std::string s = \"hello\";\ns[0] = 'H'; // Works! C++ strings are mutable."
+    },
+    "memoryLayout": [
+      { "label": "Index 0", "value": "'a' (ASCII 97)" },
+      { "label": "Index 1", "value": "'p' (ASCII 112)" }
+    ]
+  },
+  "stepper": {
+    "diagramType": "ArrayDiagram",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive String visualization coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
-      "name": "Access Character",
-      "description": "Get the character at a specific index.",
+      "name": "ASCII Math",
+      "description": "Convert a lowercase letter to an index 0-25 by subtracting the ASCII value of 'a'.",
       "timeComplexity": "O(1)",
       "spaceComplexity": "O(1)",
       "code": {
-        "python": "char = s[4]",
-        "javascript": "const char = s[4];",
-        "java": "char c = s.charAt(4);",
-        "cpp": "char c = s[4];"
+        "python": "index = ord('c') - ord('a') # 2",
+        "javascript": "const index = 'c'.charCodeAt(0) - 'a'.charCodeAt(0); // 2",
+        "java": "int index = 'c' - 'a'; // 2",
+        "cpp": "int index = 'c' - 'a'; // 2"
       },
-      "visualNote": "Jumps directly to the physical address in memory."
+      "visualNote": "Shows a letter converting to a number."
     },
     {
-      "name": "Concatenation",
-      "description": "Appends a string to another. In python/java this copies both strings.",
-      "timeComplexity": "O(N+M)",
-      "spaceComplexity": "O(N+M)",
+      "name": "Efficient Concatenation",
+      "description": "Collect characters in an Array, then join them at the end.",
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(N)",
       "code": {
-        "python": "s = 'Hello ' + 'World'",
-        "javascript": "const s = 'Hello ' + 'World';",
-        "java": "String s = \"Hello \" + \"World\";",
-        "cpp": "std::string s = \"Hello \" + \"World\";"
+        "python": "chars = ['h', 'i']\ns = \"\".join(chars)",
+        "javascript": "const chars = ['h', 'i'];\nconst s = chars.join('');",
+        "java": "StringBuilder sb = new StringBuilder();\nsb.append('h').append('i');\nString s = sb.toString();",
+        "cpp": "string s = \"\"; s += 'h'; s += 'i'; // C++ is optimized"
       },
-      "visualNote": "A completely new larger string is allocated in memory."
+      "visualNote": "Array slots combine into a single block."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "def is_palindrome(s):\n  left = 0\n  right = len(s) - 1\n  while left < right:\n    if s[left] != s[right]: return False\n    left += 1\n    right -= 1\n  return True",
+    "whenToUse": "Whenever parsing words, checking symmetry, or searching for substrings.",
+    "timeComplexity": "O(N)",
+    "spaceComplexity": "O(1) if not building a new string."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You are asked to reverse the vowels in a string.",
+    "correctPatternId": "strings",
+    "distractors": [
+      "hash-maps",
+      "trees",
+      "binary-search"
+    ],
+    "explanation": "This requires treating the String as an Array, running Two Pointers, and converting it to a mutable array (or StringBuilder) first."
+  },
+  "examples": [
+    {
+      "title": "Valid Anagram",
+      "difficulty": "easy",
+      "leetcodeUrl": "https://leetcode.com/problems/valid-anagram/",
+      "problemStatement": "Given two strings s and t, return true if t is an anagram of s.",
+      "inputExample": "s = \"anagram\", t = \"nagaram\"",
+      "outputExample": "true",
+      "steps": [
+        "If lengths differ, return false.",
+        "Create an array of size 26 to count letter frequencies.",
+        "Iterate through strings, increment count for s, decrement for t.",
+        "If any count is non-zero, they are not anagrams."
+      ],
+      "code": {
+        "python": "def isAnagram(s, t):\n    if len(s) != len(t): return False\n    counts = [0] * 26\n    for i in range(len(s)):\n        counts[ord(s[i]) - ord('a')] += 1\n        counts[ord(t[i]) - ord('a')] -= 1\n    return all(c == 0 for c in counts)",
+        "javascript": "function isAnagram(s, t) {\n    if (s.length !== t.length) return false;\n    const counts = new Array(26).fill(0);\n    for (let i = 0; i < s.length; i++) {\n        counts[s.charCodeAt(i) - 97]++;\n        counts[t.charCodeAt(i) - 97]--;\n    }\n    return counts.every(c => c === 0);\n}"
+      },
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(1)",
+      "rationale": "Using a fixed size array of 26 integers is technically O(1) space, and perfectly demonstrates ASCII math."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "What happens in Java/Python if you do `s += char` in a loop 1000 times?",
+      "options": [
+        "It copies the entire string 1000 times, causing O(N^2) time complexity.",
+        "It runs in O(N) time.",
+        "It crashes.",
+        "It modifies the string in place."
+      ],
+      "correctIndex": 0,
+      "explanation": "Because strings are immutable, adding a single character to a length-500 string requires copying 500 characters. Doing this repeatedly creates an O(N^2) trap."
     },
     {
-      "name": "Substring",
-      "description": "Extract a continuous slice of the string.",
-      "timeComplexity": "O(K) where K is length",
-      "spaceComplexity": "O(K)",
-      "code": {
-        "python": "sub = s[1:4]",
-        "javascript": "const sub = s.slice(1, 4);",
-        "java": "String sub = s.substring(1, 4);",
-        "cpp": "std::string sub = s.substr(1, 3);"
-      },
-      "visualNote": "A region is copied out to form the new string."
+      "question": "What is the result of `ord('d') - ord('a')`?",
+      "options": [
+        "3",
+        "4",
+        "0",
+        "It throws an error."
+      ],
+      "correctIndex": 0,
+      "explanation": "ASCII math! 'a' is 0, 'b' is 1, 'c' is 2, 'd' is 3."
     }
   ],
   "practice": [
-    { "title": "Valid Anagram", "url": "https://leetcode.com/problems/valid-anagram/", "difficulty": "easy", "keyInsight": "Count character frequencies." },
-    { "title": "Valid Palindrome", "url": "https://leetcode.com/problems/valid-palindrome/", "difficulty": "easy", "keyInsight": "Two pointers from the outside in." },
-    { "title": "Longest Palindromic Substring", "url": "https://leetcode.com/problems/longest-palindromic-substring/", "difficulty": "medium", "keyInsight": "Expand around centers." },
-    { "title": "Find All Anagrams in a String", "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/", "difficulty": "medium", "keyInsight": "Sliding window with frequency maps." },
-    { "title": "Longest Substring Without Repeating Characters", "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/", "difficulty": "medium", "keyInsight": "Sliding window using a set." },
-    { "title": "Encode and Decode Strings", "url": "https://leetcode.com/problems/encode-and-decode-strings/", "difficulty": "medium", "keyInsight": "Length delimiters prevent ambiguity." }
+    { "title": "Valid Anagram", "url": "https://leetcode.com/problems/valid-anagram/", "difficulty": "easy", "keyInsight": "Use a 26-element array for frequency counting." },
+    { "title": "Valid Palindrome", "url": "https://leetcode.com/problems/valid-palindrome/", "difficulty": "easy", "keyInsight": "Two pointers starting from opposite ends." },
+    { "title": "Longest Substring Without Repeating Characters", "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/", "difficulty": "medium", "keyInsight": "Sliding Window with a Hash Set." }
   ]
 }

@@ -2,78 +2,169 @@
   "id": "graphs",
   "slug": "graphs",
   "title": "Graphs",
-  "analogy": "A graph is like a social network — each person is a node and friendships are edges. Some friendships are one-way (directed), some are mutual (undirected).",
-  "analogyIcon": "🕸️",
   "category": "data-structure",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 50,
-  "prerequisites": ["arrays", "hash-maps"],
-  "tags": ["graph", "adjacency-list", "adjacency-matrix", "connected-components"],
+  "difficulty": "hard",
+  "estimatedMinutes": 90,
+  "prerequisites": ["trees", "hash-maps"],
+  "tags": ["graph", "bfs", "dfs", "networks"],
   "overview": {
-    "summary": "Graphs are the most general data structure — they model relationships between pairs of objects using nodes (vertices) and edges.",
+    "summary": "Graphs model relationships between objects. Unlike trees, graphs can have cycles, multiple parents, and disjoint sections.",
     "learningObjectives": [
-      "Understand directed vs undirected, weighted vs unweighted graphs.",
-      "Represent graphs using adjacency lists and adjacency matrices.",
-      "Identify connected components and cycles."
+      "Distinguish between directed/undirected and weighted/unweighted graphs.",
+      "Represent graphs using Adjacency Lists and Adjacency Matrices.",
+      "Traverse graphs using BFS and DFS while tracking visited nodes."
     ],
-    "interviewRelevance": "Graph problems appear in 20%+ of interviews — networks, dependencies, shortest paths, and topological ordering."
+    "interviewRelevance": "Graphs are the pinnacle of interview data structures. Problems often disguise themselves as matrices, grids, or social networks."
   },
   "realWorldHook": {
     "paragraphs": [
-      "Google Maps models roads as a graph: intersections are nodes, roads are edges, and distances are weights.",
-      "Social networks, flight routes, package dependency trees, and neural networks are all graphs."
+      "The internet is a graph of web pages connected by hyperlinks. Facebook is a graph of people connected by friendships. Google Maps is a graph of intersections connected by roads.",
+      "Anytime you need to find the shortest path, detect a cycle (like a deadlock), or see if two things are connected, you are using a graph algorithm."
     ],
-    "ahaMoment": "Any problem involving connections between entities — where you need to traverse, search, or find paths — is a graph problem in disguise."
+    "ahaMoment": "A Tree is just a restricted Graph. If you remove the rules 'must have a root' and 'cannot have cycles', a Tree becomes a Graph."
   },
   "definition": {
-    "technicalDefinition": "A graph G = (V, E) consists of a set of vertices V and a set of edges E, where each edge connects two vertices. Edges can be directed or undirected, and optionally carry weights.",
+    "technicalDefinition": "A Graph is a non-linear data structure consisting of nodes (vertices) and edges that connect pairs of nodes.",
     "vocabulary": [
-      { "term": "Vertex (Node)", "definition": "A fundamental unit in the graph." },
+      { "term": "Vertex / Node", "definition": "An entity in the graph." },
       { "term": "Edge", "definition": "A connection between two vertices." },
-      { "term": "Adjacency List", "definition": "A mapping from each vertex to its list of neighbors." },
-      { "term": "Degree", "definition": "Number of edges connected to a vertex." }
+      { "term": "Directed Edge", "definition": "A one-way street (A -> B)." },
+      { "term": "Undirected Edge", "definition": "A two-way street (A <-> B)." },
+      { "term": "Cycle", "definition": "A path that starts and ends at the exact same vertex." }
     ],
     "keyProperties": [
-      "Adjacency list: O(V + E) space. Adjacency matrix: O(V²) space.",
-      "Traversal (BFS/DFS) visits all vertices and edges: O(V + E).",
-      "Directed graphs can have cycles; DAGs (Directed Acyclic Graphs) cannot."
+      "Can be dense (many edges) or sparse (few edges).",
+      "May contain isolated nodes with no edges.",
+      "Requires a 'visited' set during traversal to prevent infinite loops."
+    ]
+  },
+  "mentalModel": {
+    "metaphor": [
+      "A map of flight routes between cities. Some flights go both ways (Undirected), some only go one way (Directed), and some cost more money (Weighted)."
+    ],
+    "clickSentence": "Graphs don't have a clear 'starting point' like a Tree's Root. You can enter a Graph from any node.",
+    "diagramType": "GraphDiagramInner",
+    "cells": [1, 2, 3, 4],
+    "diagramState": {}
+  },
+  "structure": {
+    "memoryDescription": [
+      "Because nodes can connect to anywhere from 0 to N other nodes, storing a Graph is harder than a Tree.",
+      "We usually use an Adjacency List: A Hash Map where the Key is a node, and the Value is an Array of its neighbors."
+    ],
+    "definitionCode": {
+      "python": "adj_list = {\n  'A': ['B', 'C'],\n  'B': ['A', 'D'],\n  'C': ['A'],\n  'D': ['B']\n}",
+      "javascript": "const adjList = new Map();\nadjList.set('A', ['B', 'C']);\nadjList.set('B', ['A', 'D']);",
+      "java": "Map<String, List<String>> adjList = new HashMap<>();\nadjList.put(\"A\", Arrays.asList(\"B\", \"C\"));",
+      "cpp": "unordered_map<string, vector<string>> adjList;\nadjList[\"A\"] = {\"B\", \"C\"};"
+    },
+    "memoryLayout": [
+      { "label": "Key 'A'", "value": "Array['B', 'C']" },
+      { "label": "Key 'B'", "value": "Array['A', 'D']" }
+    ]
+  },
+  "stepper": {
+    "diagramType": "GraphDiagramInner",
+    "array": [],
+    "steps": [
+      {
+        "stepIndex": 0,
+        "diagramState": {},
+        "variables": {},
+        "explanation": "Interactive Graph visualization coming soon.",
+        "activeLine": 1
+      }
     ]
   },
   "operations": [
     {
-      "name": "Build Adjacency List",
-      "description": "Convert edge pairs into a dictionary mapping each node to its neighbors.",
+      "name": "Breadth-First Search (BFS)",
+      "description": "Explores neighbors in expanding concentric circles using a Queue. Guarantees the shortest path in unweighted graphs.",
       "timeComplexity": "O(V + E)",
-      "spaceComplexity": "O(V + E)",
+      "spaceComplexity": "O(V)",
       "code": {
-        "python": "from collections import defaultdict\n\ndef build_graph(edges):\n    graph = defaultdict(list)\n    for u, v in edges:\n        graph[u].append(v)\n        graph[v].append(u)  # undirected\n    return graph",
-        "javascript": "function buildGraph(edges) {\n  const graph = {};\n  for (const [u, v] of edges) {\n    (graph[u] ||= []).push(v);\n    (graph[v] ||= []).push(u);\n  }\n  return graph;\n}",
-        "java": "Map<Integer, List<Integer>> buildGraph(int[][] edges) {\n    Map<Integer, List<Integer>> g = new HashMap<>();\n    for (int[] e : edges) {\n        g.computeIfAbsent(e[0], k -> new ArrayList<>()).add(e[1]);\n        g.computeIfAbsent(e[1], k -> new ArrayList<>()).add(e[0]);\n    }\n    return g;\n}",
-        "cpp": "unordered_map<int, vector<int>> buildGraph(vector<pair<int,int>>& edges) {\n    unordered_map<int, vector<int>> g;\n    for (auto& [u, v] : edges) {\n        g[u].push_back(v);\n        g[v].push_back(u);\n    }\n    return g;\n}"
+        "python": "q = deque([start])\nvisited = set([start])\nwhile q:\n    curr = q.popleft()\n    for neighbor in adj[curr]:\n        if neighbor not in visited:\n            visited.add(neighbor)\n            q.append(neighbor)"
       },
-      "visualNote": "Nodes arranged in a circle with edges drawn between connected pairs."
+      "visualNote": "Like dropping a pebble in water, the search ripples outward layer by layer."
+    },
+    {
+      "name": "Depth-First Search (DFS)",
+      "description": "Explores as far as possible down a single path before backtracking. Great for cycle detection and topological sorting.",
+      "timeComplexity": "O(V + E)",
+      "spaceComplexity": "O(V)",
+      "code": {
+        "python": "visited = set()\ndef dfs(node):\n    if node in visited: return\n    visited.add(node)\n    for neighbor in adj[node]:\n        dfs(neighbor)"
+      },
+      "visualNote": "Like navigating a maze by keeping your hand on the right wall until you hit a dead end."
+    }
+  ],
+  "patternTemplate": {
+    "pseudocode": "def traverse(graph, start):\n  visited = set()\n  q = [start]\n  while q:\n    node = q.pop()\n    if node in visited: continue\n    visited.add(node)\n    for neighbor in graph[node]:\n      q.push(neighbor)",
+    "whenToUse": "Whenever the problem talks about networks, connected components, shortest paths, maps, or dependencies (prerequisites).",
+    "timeComplexity": "O(V + E) where V is vertices and E is edges.",
+    "spaceComplexity": "O(V) to track visited nodes."
+  },
+  "recognitionQuiz": {
+    "problemStatement": "You are given an M x N grid representing a map of land ('1') and water ('0'). Return the number of islands (connected groups of '1's).",
+    "correctPatternId": "graphs",
+    "distractors": [
+      "binary-search",
+      "dynamic-programming",
+      "sorting"
+    ],
+    "explanation": "A 2D Grid is implicitly a Graph! Every cell is a vertex, and its neighbors (up/down/left/right) are its edges. Counting islands is just counting connected components."
+  },
+  "examples": [
+    {
+      "title": "Number of Islands",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/number-of-islands/",
+      "problemStatement": "Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.",
+      "inputExample": "grid = [\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"1\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"1\",\"1\"]\n]",
+      "outputExample": "3",
+      "steps": [
+        "Iterate over every cell in the grid.",
+        "When you find a '1', increment the island count.",
+        "Launch a DFS or BFS from that '1' to visit all connected land.",
+        "Mark visited cells as '0' (or keep a visited set) so you don't count them again."
+      ],
+      "code": {
+        "python": "def numIslands(grid):\n    if not grid: return 0\n    count = 0\n    def dfs(r, c):\n        if r<0 or c<0 or r>=len(grid) or c>=len(grid[0]) or grid[r][c] == '0':\n            return\n        grid[r][c] = '0' # Mark visited\n        dfs(r+1, c)\n        dfs(r-1, c)\n        dfs(r, c+1)\n        dfs(r, c-1)\n\n    for r in range(len(grid)):\n        for c in range(len(grid[0])):\n            if grid[r][c] == '1':\n                count += 1\n                dfs(r, c)\n    return count",
+        "javascript": "// Using a similar DFS approach\nfunction numIslands(grid) {\n    let count = 0;\n    const dfs = (r, c) => {\n        if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] === '0') return;\n        grid[r][c] = '0';\n        dfs(r+1, c); dfs(r-1, c); dfs(r, c+1); dfs(r, c-1);\n    };\n    for (let r = 0; r < grid.length; r++) {\n        for (let c = 0; c < grid[0].length; c++) {\n            if (grid[r][c] === '1') {\n                count++;\n                dfs(r, c);\n            }\n        }\n    }\n    return count;\n}"
+      },
+      "timeComplexity": "O(M * N)",
+      "spaceComplexity": "O(M * N)",
+      "rationale": "By aggressively sinking (visiting) the entire island the moment we spot it, we guarantee that we only count each contiguous landmass exactly once."
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "What is the primary difference between a Tree traversal and a Graph traversal?",
+      "options": [
+        "Graphs require a 'visited' set to avoid infinite loops, Trees do not.",
+        "Graphs can only be traversed using BFS.",
+        "Trees do not use recursion.",
+        "Graphs do not have time complexity."
+      ],
+      "correctIndex": 0,
+      "explanation": "Because graphs can have cycles (A points to B, B points to A), you must track what you have already seen or you will bounce back and forth forever."
+    },
+    {
+      "question": "If you want to find the SHORTEST path between two nodes in an unweighted graph, which algorithm should you use?",
+      "options": [
+        "BFS (Breadth-First Search)",
+        "DFS (Depth-First Search)",
+        "Pre-Order Traversal",
+        "A sorting algorithm"
+      ],
+      "correctIndex": 0,
+      "explanation": "BFS explores expanding layers. The moment it hits the target, it is mathematically guaranteed to be the shortest path because it didn't look at any paths that were longer yet."
     }
   ],
   "practice": [
-    { "title": "Number of Islands", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "Grid as implicit graph, count connected components." },
-    { "title": "Clone Graph", "url": "https://leetcode.com/problems/clone-graph/", "difficulty": "medium", "keyInsight": "BFS/DFS with original→clone hash map." },
-    { "title": "Course Schedule", "url": "https://leetcode.com/problems/course-schedule/", "difficulty": "medium", "keyInsight": "Directed graph cycle detection via topological sort." },
-    { "title": "Graph Valid Tree", "url": "https://leetcode.com/problems/graph-valid-tree/", "difficulty": "medium", "keyInsight": "A tree is a connected acyclic graph with V-1 edges." },
-    { "title": "Network Delay Time", "url": "https://leetcode.com/problems/network-delay-time/", "difficulty": "medium", "keyInsight": "Dijkstra's algorithm with a min-heap." }
-  ],
-  "examples": [],
-  "conceptQuiz": [
-    {
-      "question": "What is the space complexity of an adjacency list representation?",
-      "options": ["O(V + E)", "O(V²)", "O(E²)", "O(V)"],
-      "correctIndex": 0,
-      "explanation": "Each vertex has a list entry, and each edge is stored twice (once per endpoint)."
-    }
-  ],
-  "recognitionQuiz": {
-    "problemStatement": "Given N cities and M roads between them, determine if you can reach every city from city 0.",
-    "correctPatternId": "graphs",
-    "distractors": ["arrays", "binary-search", "dynamic-programming"],
-    "explanation": "Connectivity in a network is a fundamental graph problem solved via BFS/DFS."
-  }
+    { "title": "Number of Islands", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "DFS sinks the island." },
+    { "title": "Clone Graph", "url": "https://leetcode.com/problems/clone-graph/", "difficulty": "medium", "keyInsight": "Use a Hash Map to map original nodes to their cloned counterparts." },
+    { "title": "Course Schedule", "url": "https://leetcode.com/problems/course-schedule/", "difficulty": "medium", "keyInsight": "Topological Sort / Cycle Detection in a Directed Graph." },
+    { "title": "Rotting Oranges", "url": "https://leetcode.com/problems/rotting-oranges/", "difficulty": "medium", "keyInsight": "Multi-source BFS. Push all initial rotten oranges into the queue at step 0." }
+  ]
 }
