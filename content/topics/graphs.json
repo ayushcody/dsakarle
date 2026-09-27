@@ -5,8 +5,16 @@
   "category": "data-structure",
   "difficulty": "hard",
   "estimatedMinutes": 90,
-  "prerequisites": ["trees", "hash-maps"],
-  "tags": ["graph", "bfs", "dfs", "networks"],
+  "prerequisites": [
+    "trees",
+    "hash-maps"
+  ],
+  "tags": [
+    "graph",
+    "bfs",
+    "dfs",
+    "networks"
+  ],
   "overview": {
     "summary": "Graphs model relationships between objects. Unlike trees, graphs can have cycles, multiple parents, and disjoint sections.",
     "learningObjectives": [
@@ -26,11 +34,26 @@
   "definition": {
     "technicalDefinition": "A Graph is a non-linear data structure consisting of nodes (vertices) and edges that connect pairs of nodes.",
     "vocabulary": [
-      { "term": "Vertex / Node", "definition": "An entity in the graph." },
-      { "term": "Edge", "definition": "A connection between two vertices." },
-      { "term": "Directed Edge", "definition": "A one-way street (A -> B)." },
-      { "term": "Undirected Edge", "definition": "A two-way street (A <-> B)." },
-      { "term": "Cycle", "definition": "A path that starts and ends at the exact same vertex." }
+      {
+        "term": "Vertex / Node",
+        "definition": "An entity in the graph."
+      },
+      {
+        "term": "Edge",
+        "definition": "A connection between two vertices."
+      },
+      {
+        "term": "Directed Edge",
+        "definition": "A one-way street (A -> B)."
+      },
+      {
+        "term": "Undirected Edge",
+        "definition": "A two-way street (A <-> B)."
+      },
+      {
+        "term": "Cycle",
+        "definition": "A path that starts and ends at the exact same vertex."
+      }
     ],
     "keyProperties": [
       "Can be dense (many edges) or sparse (few edges).",
@@ -43,9 +66,108 @@
       "A map of flight routes between cities. Some flights go both ways (Undirected), some only go one way (Directed), and some cost more money (Weighted)."
     ],
     "clickSentence": "Graphs don't have a clear 'starting point' like a Tree's Root. You can enter a Graph from any node.",
-    "diagramType": "GraphDiagramInner",
-    "cells": [1, 2, 3, 4],
-    "diagramState": {}
+    "diagramType": "graph",
+    "cells": [],
+    "diagramState": {
+      "nodes": [
+        {
+          "id": "A",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "B",
+          "x": -110,
+          "y": 90
+        },
+        {
+          "id": "C",
+          "x": 110,
+          "y": 90
+        },
+        {
+          "id": "D",
+          "x": -150,
+          "y": 200
+        },
+        {
+          "id": "E",
+          "x": 0,
+          "y": 200
+        },
+        {
+          "id": "F",
+          "x": 150,
+          "y": 200
+        }
+      ],
+      "edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "A",
+          "C"
+        ],
+        [
+          "B",
+          "D"
+        ],
+        [
+          "B",
+          "E"
+        ],
+        [
+          "C",
+          "E"
+        ],
+        [
+          "C",
+          "F"
+        ]
+      ],
+      "nodeStates": {
+        "A": "visited",
+        "B": "visited",
+        "D": "active"
+      },
+      "activeEdges": [
+        [
+          "A",
+          "C"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "E"
+        ],
+        [
+          "B",
+          "D"
+        ]
+      ],
+      "aux": [
+        {
+          "label": "stack",
+          "items": [
+            "C",
+            "E"
+          ]
+        },
+        {
+          "label": "visited",
+          "items": [
+            "A",
+            "B",
+            "D"
+          ]
+        }
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -59,22 +181,1162 @@
       "cpp": "unordered_map<string, vector<string>> adjList;\nadjList[\"A\"] = {\"B\", \"C\"};"
     },
     "memoryLayout": [
-      { "label": "Key 'A'", "value": "Array['B', 'C']" },
-      { "label": "Key 'B'", "value": "Array['A', 'D']" }
+      {
+        "label": "Key 'A'",
+        "value": "Array['B', 'C']"
+      },
+      {
+        "label": "Key 'B'",
+        "value": "Array['A', 'D']"
+      }
     ]
   },
   "stepper": {
-    "diagramType": "GraphDiagramInner",
-    "array": [],
+    "diagramType": "graph",
+    "code": {
+      "python": "def dfs(g, start):\n    stack, seen = [start], {start}\n    while stack:\n        u = stack.pop(); visit(u)\n        for v in reversed(g[u]):\n            if v not in seen: seen.add(v); stack.append(v)"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {},
+          "activeEdges": [],
+          "aux": [
+            {
+              "label": "stack",
+              "items": [
+                "A"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": []
+            }
+          ]
+        },
         "variables": {},
-        "explanation": "Interactive Graph visualization coming soon.",
-        "activeLine": 1
+        "explanation": "DFS from A: a stack dives down one path as deep as possible before backing up.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "active"
+          },
+          "activeEdges": [],
+          "aux": [
+            {
+              "label": "stack",
+              "items": []
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "A"
+        },
+        "explanation": "Pop A and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": [
+                "C",
+                "B"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "A",
+          "added": "B,C"
+        },
+        "explanation": "Unvisited neighbours B, C → mark seen and push.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": [
+                "C"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "B"
+        },
+        "explanation": "Pop B and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "B",
+              "D"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": [
+                "C",
+                "E",
+                "D"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "B",
+          "added": "D,E"
+        },
+        "explanation": "Unvisited neighbours D, E → mark seen and push.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "D": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "B",
+              "D"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": [
+                "C",
+                "E"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "D"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "D"
+        },
+        "explanation": "Pop D and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "D": "visited",
+            "E": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "B",
+              "D"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": [
+                "C"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "D",
+                "E"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "E"
+        },
+        "explanation": "Pop E and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "D": "visited",
+            "E": "visited",
+            "C": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "B",
+              "D"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": []
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "D",
+                "E",
+                "C"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "C"
+        },
+        "explanation": "Pop C and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "D": "visited",
+            "E": "visited",
+            "C": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": [
+                "F"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "D",
+                "E",
+                "C"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "C",
+          "added": "F"
+        },
+        "explanation": "Unvisited neighbours F → mark seen and push.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "D": "visited",
+            "E": "visited",
+            "C": "visited",
+            "F": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": []
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "D",
+                "E",
+                "C",
+                "F"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "F"
+        },
+        "explanation": "Pop F and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 10,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "D": "visited",
+            "E": "visited",
+            "C": "visited",
+            "F": "visited"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "C"
+            ],
+            [
+              "A",
+              "B"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "stack",
+              "items": []
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "D",
+                "E",
+                "C",
+                "F"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "order": "A B D E C F"
+        },
+        "explanation": "Done. Visit order: A → B → D → E → C → F. The highlighted edges form the DFS tree.",
+        "activeLine": 3
       }
-    ]
+    ],
+    "array": []
   },
   "operations": [
     {
@@ -162,9 +1424,29 @@
     }
   ],
   "practice": [
-    { "title": "Number of Islands", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "DFS sinks the island." },
-    { "title": "Clone Graph", "url": "https://leetcode.com/problems/clone-graph/", "difficulty": "medium", "keyInsight": "Use a Hash Map to map original nodes to their cloned counterparts." },
-    { "title": "Course Schedule", "url": "https://leetcode.com/problems/course-schedule/", "difficulty": "medium", "keyInsight": "Topological Sort / Cycle Detection in a Directed Graph." },
-    { "title": "Rotting Oranges", "url": "https://leetcode.com/problems/rotting-oranges/", "difficulty": "medium", "keyInsight": "Multi-source BFS. Push all initial rotten oranges into the queue at step 0." }
+    {
+      "title": "Number of Islands",
+      "url": "https://leetcode.com/problems/number-of-islands/",
+      "difficulty": "medium",
+      "keyInsight": "DFS sinks the island."
+    },
+    {
+      "title": "Clone Graph",
+      "url": "https://leetcode.com/problems/clone-graph/",
+      "difficulty": "medium",
+      "keyInsight": "Use a Hash Map to map original nodes to their cloned counterparts."
+    },
+    {
+      "title": "Course Schedule",
+      "url": "https://leetcode.com/problems/course-schedule/",
+      "difficulty": "medium",
+      "keyInsight": "Topological Sort / Cycle Detection in a Directed Graph."
+    },
+    {
+      "title": "Rotting Oranges",
+      "url": "https://leetcode.com/problems/rotting-oranges/",
+      "difficulty": "medium",
+      "keyInsight": "Multi-source BFS. Push all initial rotten oranges into the queue at step 0."
+    }
   ]
 }

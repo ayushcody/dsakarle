@@ -5,8 +5,15 @@
   "category": "algorithm",
   "difficulty": "medium",
   "estimatedMinutes": 45,
-  "prerequisites": ["trees", "stacks"],
-  "tags": ["algorithm", "functions", "divide-and-conquer"],
+  "prerequisites": [
+    "trees",
+    "stacks"
+  ],
+  "tags": [
+    "algorithm",
+    "functions",
+    "divide-and-conquer"
+  ],
   "overview": {
     "summary": "Recursion is a method where the solution to a problem depends on solutions to smaller instances of the same problem.",
     "learningObjectives": [
@@ -26,9 +33,18 @@
   "definition": {
     "technicalDefinition": "In computer science, recursion is a programming technique using function or algorithm that calls itself one or more times until a specified condition is met at which time the rest of each repetition is processed from the last one called to the first.",
     "vocabulary": [
-      { "term": "Base Case", "definition": "The condition that stops the recursion. Without it, you get an infinite loop." },
-      { "term": "Recursive Step", "definition": "The part of the function where it calls itself with modified arguments." },
-      { "term": "Call Stack", "definition": "The hidden memory structure the computer uses to keep track of paused recursive functions." }
+      {
+        "term": "Base Case",
+        "definition": "The condition that stops the recursion. Without it, you get an infinite loop."
+      },
+      {
+        "term": "Recursive Step",
+        "definition": "The part of the function where it calls itself with modified arguments."
+      },
+      {
+        "term": "Call Stack",
+        "definition": "The hidden memory structure the computer uses to keep track of paused recursive functions."
+      }
     ],
     "keyProperties": [
       "Uses implicit space O(Depth) on the Call Stack.",
@@ -43,7 +59,14 @@
     "clickSentence": "Never try to trace the entire recursion tree in your head. Trust that the recursive call will return the correct answer for the subproblem, and just handle the current step.",
     "diagramType": "StackDiagram",
     "cells": [],
-    "diagramState": {}
+    "diagramState": {
+      "stack": [
+        "fact(4)",
+        "fact(3)",
+        "fact(2)",
+        "fact(1)"
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -57,23 +80,152 @@
       "cpp": "int factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}"
     },
     "memoryLayout": [
-      { "label": "Stack Top", "value": "factorial(1) [Returns 1]" },
-      { "label": "Stack Middle", "value": "factorial(2) [Waiting for factorial(1)]" },
-      { "label": "Stack Bottom", "value": "factorial(3) [Waiting for factorial(2)]" }
+      {
+        "label": "Stack Top",
+        "value": "factorial(1) [Returns 1]"
+      },
+      {
+        "label": "Stack Middle",
+        "value": "factorial(2) [Waiting for factorial(1)]"
+      },
+      {
+        "label": "Stack Bottom",
+        "value": "factorial(3) [Waiting for factorial(2)]"
+      }
     ]
   },
   "stepper": {
     "diagramType": "StackDiagram",
-    "array": [],
+    "code": {
+      "python": "def fact(n):\n    if n == 1: return 1\n    return n * fact(n - 1)"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
+        "diagramState": {
+          "stack": []
+        },
         "variables": {},
-        "explanation": "Interactive Call Stack visualization coming soon.",
+        "explanation": "Call factorial(4). Each call waits on a smaller call, and each waiting call is a frame on the call stack.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "stack": [
+            "fact(4)"
+          ]
+        },
+        "variables": {
+          "n": 4
+        },
+        "explanation": "fact(4) needs fact(3) first. Push a new frame.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "stack": [
+            "fact(4)",
+            "fact(3)"
+          ]
+        },
+        "variables": {
+          "n": 3
+        },
+        "explanation": "fact(3) needs fact(2) first. Push a new frame.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "stack": [
+            "fact(4)",
+            "fact(3)",
+            "fact(2)"
+          ]
+        },
+        "variables": {
+          "n": 2
+        },
+        "explanation": "fact(2) needs fact(1) first. Push a new frame.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "stack": [
+            "fact(4)",
+            "fact(3)",
+            "fact(2)",
+            "fact(1)"
+          ]
+        },
+        "variables": {
+          "n": 1
+        },
+        "explanation": "n == 1 is the base case: return 1 without recursing.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "stack": [
+            "fact(4)",
+            "fact(3)",
+            "fact(2)"
+          ]
+        },
+        "variables": {
+          "n": 1,
+          "returns": 1
+        },
+        "explanation": "fact(1) returns 1. Its frame is popped and the caller resumes.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "stack": [
+            "fact(4)",
+            "fact(3)"
+          ]
+        },
+        "variables": {
+          "n": 2,
+          "returns": 2
+        },
+        "explanation": "fact(2) returns 2. Its frame is popped and the caller resumes.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "stack": [
+            "fact(4)"
+          ]
+        },
+        "variables": {
+          "n": 3,
+          "returns": 6
+        },
+        "explanation": "fact(3) returns 6. Its frame is popped and the caller resumes.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "stack": []
+        },
+        "variables": {
+          "n": 4,
+          "returns": 24
+        },
+        "explanation": "fact(4) returns 24. Its frame is popped and the caller resumes.",
+        "activeLine": 3
       }
-    ]
+    ],
+    "array": []
   },
   "operations": [
     {
@@ -161,8 +313,23 @@
     }
   ],
   "practice": [
-    { "title": "Fibonacci Number", "url": "https://leetcode.com/problems/fibonacci-number/", "difficulty": "easy", "keyInsight": "The textbook definition of recursion: f(n) = f(n-1) + f(n-2)." },
-    { "title": "Pow(x, n)", "url": "https://leetcode.com/problems/powx-n/", "difficulty": "medium", "keyInsight": "Fast exponentiation. If n is even, x^n = (x^2)^(n/2)." },
-    { "title": "K-th Symbol in Grammar", "url": "https://leetcode.com/problems/k-th-symbol-in-grammar/", "difficulty": "medium", "keyInsight": "The parent of a node at index K is at index K/2." }
+    {
+      "title": "Fibonacci Number",
+      "url": "https://leetcode.com/problems/fibonacci-number/",
+      "difficulty": "easy",
+      "keyInsight": "The textbook definition of recursion: f(n) = f(n-1) + f(n-2)."
+    },
+    {
+      "title": "Pow(x, n)",
+      "url": "https://leetcode.com/problems/powx-n/",
+      "difficulty": "medium",
+      "keyInsight": "Fast exponentiation. If n is even, x^n = (x^2)^(n/2)."
+    },
+    {
+      "title": "K-th Symbol in Grammar",
+      "url": "https://leetcode.com/problems/k-th-symbol-in-grammar/",
+      "difficulty": "medium",
+      "keyInsight": "The parent of a node at index K is at index K/2."
+    }
   ]
 }

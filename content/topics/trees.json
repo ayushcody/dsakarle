@@ -5,8 +5,14 @@
   "category": "data-structure",
   "difficulty": "medium",
   "estimatedMinutes": 60,
-  "prerequisites": ["linked-lists"],
-  "tags": ["tree", "recursion", "hierarchical"],
+  "prerequisites": [
+    "linked-lists"
+  ],
+  "tags": [
+    "tree",
+    "recursion",
+    "hierarchical"
+  ],
   "overview": {
     "summary": "Trees are hierarchical data structures modeling relationships rather than flat lists.",
     "learningObjectives": [
@@ -26,10 +32,22 @@
   "definition": {
     "technicalDefinition": "A tree is an undirected, connected, acyclic graph consisting of a root node and children nodes, forming a hierarchy.",
     "vocabulary": [
-      { "term": "Root", "definition": "The top-most node in the tree. You lose the tree if you lose the root." },
-      { "term": "Leaf", "definition": "A node with no children (bottom of the tree)." },
-      { "term": "Height", "definition": "The length of the longest path from the root to a leaf." },
-      { "term": "Depth", "definition": "The length of the path from the root to a specific node." }
+      {
+        "term": "Root",
+        "definition": "The top-most node in the tree. You lose the tree if you lose the root."
+      },
+      {
+        "term": "Leaf",
+        "definition": "A node with no children (bottom of the tree)."
+      },
+      {
+        "term": "Height",
+        "definition": "The length of the longest path from the root to a leaf."
+      },
+      {
+        "term": "Depth",
+        "definition": "The length of the path from the root to a specific node."
+      }
     ],
     "keyProperties": [
       "Every node has exactly one parent (except the root).",
@@ -43,8 +61,42 @@
     ],
     "clickSentence": "Because a tree is naturally recursive, the easiest way to solve a tree problem is to ask: 'If I know the answer for my left and right children, how do I calculate the answer for myself?'",
     "diagramType": "tree",
-    "cells": [1, 2, 3, 4, 5, 6, 7],
-    "diagramState": {}
+    "cells": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "diagramState": {
+      "nodeStates": {
+        "0": "visited",
+        "1": "visited",
+        "2": "visited",
+        "3": "active"
+      },
+      "aux": [
+        {
+          "label": "queue",
+          "items": [
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "output",
+          "items": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -74,14 +126,310 @@
   },
   "stepper": {
     "diagramType": "tree",
-    "array": [1, 2, 3, 4, 5, 6, 7],
+    "array": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "code": {
+      "python": "def level_order(root):\n    q = deque([root])\n    while q:\n        node = q.popleft(); visit(node)\n        if node.left: q.append(node.left)\n        if node.right: q.append(node.right)"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
+        "diagramState": {
+          "nodeStates": {},
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                1
+              ]
+            },
+            {
+              "label": "output",
+              "items": []
+            }
+          ]
+        },
         "variables": {},
-        "explanation": "Interactive tree traversal visualization coming soon.",
-        "activeLine": 1
+        "explanation": "Level-order (BFS) traversal: a queue holds nodes waiting to be visited. Start with the root.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "nodeStates": {
+            "0": "active"
+          },
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                2,
+                3
+              ]
+            },
+            {
+              "label": "output",
+              "items": [
+                1
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": 1
+        },
+        "explanation": "Dequeue 1 and visit it. Enqueue its children 2, 3.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "1": "active"
+          },
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "label": "output",
+              "items": [
+                1,
+                2
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": 2
+        },
+        "explanation": "Dequeue 2 and visit it. Enqueue its children 4, 5.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "1": "visited",
+            "2": "active"
+          },
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                4,
+                5,
+                6,
+                7
+              ]
+            },
+            {
+              "label": "output",
+              "items": [
+                1,
+                2,
+                3
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": 3
+        },
+        "explanation": "Dequeue 3 and visit it. Enqueue its children 6, 7.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "1": "visited",
+            "2": "visited",
+            "3": "active"
+          },
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                5,
+                6,
+                7
+              ]
+            },
+            {
+              "label": "output",
+              "items": [
+                1,
+                2,
+                3,
+                4
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": 4
+        },
+        "explanation": "Dequeue 4 and visit it. It is a leaf.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "1": "visited",
+            "2": "visited",
+            "3": "visited",
+            "4": "active"
+          },
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                6,
+                7
+              ]
+            },
+            {
+              "label": "output",
+              "items": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": 5
+        },
+        "explanation": "Dequeue 5 and visit it. It is a leaf.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "1": "visited",
+            "2": "visited",
+            "3": "visited",
+            "4": "visited",
+            "5": "active"
+          },
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                7
+              ]
+            },
+            {
+              "label": "output",
+              "items": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": 6
+        },
+        "explanation": "Dequeue 6 and visit it. It is a leaf.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "1": "visited",
+            "2": "visited",
+            "3": "visited",
+            "4": "visited",
+            "5": "visited",
+            "6": "active"
+          },
+          "aux": [
+            {
+              "label": "queue",
+              "items": []
+            },
+            {
+              "label": "output",
+              "items": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": 7
+        },
+        "explanation": "Dequeue 7 and visit it. It is a leaf.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "1": "visited",
+            "2": "visited",
+            "3": "visited",
+            "4": "visited",
+            "5": "visited",
+            "6": "visited"
+          },
+          "aux": [
+            {
+              "label": "output",
+              "items": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "order": "1 2 3 4 5 6 7"
+        },
+        "explanation": "Queue empty. Nodes came out level by level: that is why BFS uses a queue.",
+        "activeLine": 6
       }
     ]
   },
@@ -179,10 +527,35 @@
     }
   ],
   "practice": [
-    { "title": "Maximum Depth of Binary Tree", "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/", "difficulty": "easy", "keyInsight": "Recursively take the max of left and right heights plus 1." },
-    { "title": "Invert Binary Tree", "url": "https://leetcode.com/problems/invert-binary-tree/", "difficulty": "easy", "keyInsight": "Swap the left and right pointers at every node." },
-    { "title": "Same Tree", "url": "https://leetcode.com/problems/same-tree/", "difficulty": "easy", "keyInsight": "Traverse both trees simultaneously." },
-    { "title": "Lowest Common Ancestor", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/", "difficulty": "medium", "keyInsight": "Bubble up boolean values indicating if targets were found." },
-    { "title": "Binary Tree Level Order Traversal", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "medium", "keyInsight": "A standard BFS queue ensures level-by-level tracking." }
+    {
+      "title": "Maximum Depth of Binary Tree",
+      "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
+      "difficulty": "easy",
+      "keyInsight": "Recursively take the max of left and right heights plus 1."
+    },
+    {
+      "title": "Invert Binary Tree",
+      "url": "https://leetcode.com/problems/invert-binary-tree/",
+      "difficulty": "easy",
+      "keyInsight": "Swap the left and right pointers at every node."
+    },
+    {
+      "title": "Same Tree",
+      "url": "https://leetcode.com/problems/same-tree/",
+      "difficulty": "easy",
+      "keyInsight": "Traverse both trees simultaneously."
+    },
+    {
+      "title": "Lowest Common Ancestor",
+      "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+      "difficulty": "medium",
+      "keyInsight": "Bubble up boolean values indicating if targets were found."
+    },
+    {
+      "title": "Binary Tree Level Order Traversal",
+      "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+      "difficulty": "medium",
+      "keyInsight": "A standard BFS queue ensures level-by-level tracking."
+    }
   ]
 }

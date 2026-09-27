@@ -1,72 +1,78 @@
-import React from 'react';
-import Link from 'next/link';
+'use client';
 
-export function RightSidebar() {
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+import { getProgress } from '@/lib/progress';
+
+export type OutlineItem = { id: string; label: string };
+
+export function RightSidebar({ topicId, outline, quizTotal }: { topicId: string; outline: OutlineItem[]; quizTotal: number }) {
+  const [active, setActive] = useState(outline[0]?.id);
+  const [stats, setStats] = useState({ done: false, concept: 0, recognition: false });
+
+  useEffect(() => {
+    const sync = () => {
+      const p = getProgress();
+      const q = p.quizScores[topicId];
+      setStats({ done: p.completedSections.includes(topicId), concept: q?.concept ?? 0, recognition: !!q?.recognition });
+    };
+    sync();
+    window.addEventListener('dsakarle:progress', sync);
+    return () => window.removeEventListener('dsakarle:progress', sync);
+  }, [topicId]);
+
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: '-30% 0px -60% 0px' },
+    );
+    outline.forEach((o) => { const el = document.getElementById(o.id); if (el) io.observe(el); });
+    return () => io.disconnect();
+  }, [outline]);
+
+  const checks = [
+    { label: 'Pattern recognised', ok: stats.recognition },
+    { label: `Concept quiz ${stats.concept}/${quizTotal}`, ok: quizTotal > 0 && stats.concept === quizTotal },
+    { label: 'Topic marked complete', ok: stats.done },
+  ];
+
   return (
-    <aside className="w-[280px] hidden lg:block flex-shrink-0 relative">
+    <aside className="relative hidden w-[240px] flex-shrink-0 lg:block">
       <div className="sticky top-[88px] flex flex-col gap-8">
-        
-        {/* Lesson Outline */}
-        <div>
-          <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-4">Lesson Outline</h3>
-          <ul className="space-y-3">
-            {['1. Intuition', '2. Core Idea', '3. Step-by-Step Walkthrough', '4. Implementation', '5. Complexity Analysis', '6. Common Mistakes', '7. Practice Problems'].map((item, i) => (
-              <li key={item}>
-                <Link href="#" className={`font-dmsans text-sm block px-3 py-2 rounded-md transition-colors ${i === 0 ? 'bg-[var(--accent-coral)] bg-opacity-10 text-[var(--accent-coral)] font-medium' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'}`}>
-                  {item}
+        <nav aria-label="Lesson outline">
+          <h3 className="mb-3 font-dmsans text-sm font-bold text-[var(--text-primary)]">On this page</h3>
+          <ul className="space-y-1 border-l border-[var(--border)]">
+            {outline.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={`#${item.id}`}
+                  className={`-ml-px block border-l-2 py-1.5 pl-4 font-dmsans text-sm transition-colors ${active === item.id ? 'border-[var(--accent-coral)] font-medium text-[var(--accent-coral)]' : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+                >
+                  {item.label}
                 </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div>
+          <h3 className="mb-3 font-dmsans text-sm font-bold text-[var(--text-primary)]">Your progress</h3>
+          <ul className="space-y-2">
+            {checks.map((c) => (
+              <li key={c.label} className="flex items-center gap-3 font-dmsans text-sm text-[var(--text-secondary)]">
+                <span className={`flex h-5 w-5 items-center justify-center rounded-full ${c.ok ? 'bg-[var(--accent-teal)] text-white' : 'border border-[var(--border-strong)]'}`}>
+                  {c.ok && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 13l4 4L19 7" /></svg>}
+                </span>
+                <span className="tabular-nums">{c.label}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Your Progress */}
-        <div>
-          <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-4">Your Progress</h3>
-          <div className="bg-[var(--white)] border border-[var(--border)] rounded-xl p-6 flex flex-col items-center justify-center shadow-sm">
-            {/* Fake SVG Circle Progress */}
-            <div className="relative w-24 h-24 mb-4">
-              <svg className="w-full h-full" viewBox="0 0 36 36">
-                <path
-                  className="text-[var(--bg-secondary)]"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="text-[var(--accent-coral)]"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeDasharray="60, 100"
-                  strokeLinecap="round"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-dmsans font-bold text-xl text-[var(--text-primary)]">60%</span>
-                <span className="font-dmsans text-[8px] uppercase tracking-widest text-[var(--text-muted)] font-bold">Completed</span>
-              </div>
-            </div>
-            <p className="font-dmsans text-xs text-[var(--text-secondary)] font-medium">3 / 5 sections done</p>
-          </div>
-        </div>
-
-        {/* Study Tip */}
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-[var(--accent-amber)]">💡</span>
-            <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)]">Study Tip</h3>
-          </div>
-          <p className="font-dmsans text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
-            Try solving one easy problem now to lock in the concept!
-          </p>
-          <Link href="/practice" className="inline-flex items-center gap-2 px-4 py-2 border border-[var(--accent-coral)] text-[var(--accent-coral)] font-dmsans font-bold text-xs rounded-md hover:bg-[var(--accent-coral)] hover:text-[var(--white)] transition-colors">
-            Solve Problem &rarr;
-          </Link>
-        </div>
-
+        <Link href="/practice" className="inline-flex items-center gap-2 self-start rounded-md border border-[var(--accent-coral)] px-4 py-2 font-dmsans text-xs font-bold text-[var(--accent-coral)] transition-colors hover:bg-[var(--accent-coral)] hover:text-white">
+          Practice this topic →
+        </Link>
       </div>
     </aside>
   );

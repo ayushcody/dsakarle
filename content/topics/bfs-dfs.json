@@ -5,8 +5,18 @@
   "category": "algorithm",
   "difficulty": "hard",
   "estimatedMinutes": 60,
-  "prerequisites": ["graphs", "trees", "recursion", "queues"],
-  "tags": ["graph", "tree", "search", "traversal"],
+  "prerequisites": [
+    "graphs",
+    "trees",
+    "recursion",
+    "queues"
+  ],
+  "tags": [
+    "graph",
+    "tree",
+    "search",
+    "traversal"
+  ],
   "overview": {
     "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental algorithms for traversing or searching tree and graph data structures.",
     "learningObjectives": [
@@ -26,9 +36,18 @@
   "definition": {
     "technicalDefinition": "BFS explores the neighbor nodes first, before moving to the next level neighbors. DFS explores as far as possible along each branch before backtracking.",
     "vocabulary": [
-      { "term": "Queue", "definition": "The data structure required for BFS. Ensures nodes discovered first are processed first." },
-      { "term": "Stack / Call Stack", "definition": "The data structure required for DFS. Ensures the most recently discovered node is processed first." },
-      { "term": "Visited Set", "definition": "A Hash Set used to track which nodes have already been processed to prevent infinite cycles." }
+      {
+        "term": "Queue",
+        "definition": "The data structure required for BFS. Ensures nodes discovered first are processed first."
+      },
+      {
+        "term": "Stack / Call Stack",
+        "definition": "The data structure required for DFS. Ensures the most recently discovered node is processed first."
+      },
+      {
+        "term": "Visited Set",
+        "definition": "A Hash Set used to track which nodes have already been processed to prevent infinite cycles."
+      }
     ],
     "keyProperties": [
       "BFS guarantees the shortest path in an unweighted graph.",
@@ -42,9 +61,108 @@
       "DFS: A snake hunting. It slithers all the way down a tunnel, comes back out, and goes down the next tunnel."
     ],
     "clickSentence": "BFS goes WIDE. DFS goes DEEP.",
-    "diagramType": "GraphDiagramInner",
-    "cells": [1, 2, 3, 4, 5, 6],
-    "diagramState": {}
+    "diagramType": "graph",
+    "cells": [],
+    "diagramState": {
+      "nodes": [
+        {
+          "id": "A",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "B",
+          "x": -110,
+          "y": 90
+        },
+        {
+          "id": "C",
+          "x": 110,
+          "y": 90
+        },
+        {
+          "id": "D",
+          "x": -150,
+          "y": 200
+        },
+        {
+          "id": "E",
+          "x": 0,
+          "y": 200
+        },
+        {
+          "id": "F",
+          "x": 150,
+          "y": 200
+        }
+      ],
+      "edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "A",
+          "C"
+        ],
+        [
+          "B",
+          "D"
+        ],
+        [
+          "B",
+          "E"
+        ],
+        [
+          "C",
+          "E"
+        ],
+        [
+          "C",
+          "F"
+        ]
+      ],
+      "nodeStates": {
+        "A": "visited",
+        "B": "visited",
+        "C": "active"
+      },
+      "activeEdges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "A",
+          "C"
+        ],
+        [
+          "B",
+          "D"
+        ],
+        [
+          "B",
+          "E"
+        ]
+      ],
+      "aux": [
+        {
+          "label": "queue",
+          "items": [
+            "D",
+            "E"
+          ]
+        },
+        {
+          "label": "visited",
+          "items": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -56,22 +174,1171 @@
       "javascript": "// DFS Recursive\nconst visited = new Set();\nfunction dfs(node) {\n    if (visited.has(node)) return;\n    visited.add(node);\n    for (let neighbor of graph[node]) {\n        dfs(neighbor);\n    }\n}"
     },
     "memoryLayout": [
-      { "label": "BFS Queue", "value": "Front -> [Level 2 nodes] ... [Level 3 nodes] <- Back" },
-      { "label": "DFS Stack", "value": "Top -> [Deepest node] ... [Root node] <- Bottom" }
+      {
+        "label": "BFS Queue",
+        "value": "Front -> [Level 2 nodes] ... [Level 3 nodes] <- Back"
+      },
+      {
+        "label": "DFS Stack",
+        "value": "Top -> [Deepest node] ... [Root node] <- Bottom"
+      }
     ]
   },
   "stepper": {
-    "diagramType": "GraphDiagramInner",
-    "array": [],
+    "diagramType": "graph",
+    "code": {
+      "python": "def bfs(g, start):\n    q, seen = deque([start]), {start}\n    while q:\n        u = q.popleft(); visit(u)\n        for v in g[u]:\n            if v not in seen: seen.add(v); q.append(v)"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {},
+          "activeEdges": [],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "A"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": []
+            }
+          ]
+        },
         "variables": {},
-        "explanation": "Interactive BFS vs DFS visualization coming soon.",
-        "activeLine": 1
+        "explanation": "BFS from A: a queue explores the graph in rings of increasing distance.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "active"
+          },
+          "activeEdges": [],
+          "aux": [
+            {
+              "label": "queue",
+              "items": []
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "A"
+        },
+        "explanation": "Dequeue A and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "B",
+                "C"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "A",
+          "added": "B,C"
+        },
+        "explanation": "Unvisited neighbours B, C → mark seen and enqueue.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "C"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "B"
+        },
+        "explanation": "Dequeue B and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "C",
+                "D",
+                "E"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "B",
+          "added": "D,E"
+        },
+        "explanation": "Unvisited neighbours D, E → mark seen and enqueue.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "C": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "D",
+                "E"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "C"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "C"
+        },
+        "explanation": "Dequeue C and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "C": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "D",
+                "E",
+                "F"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "C"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "C",
+          "added": "F"
+        },
+        "explanation": "Unvisited neighbours F → mark seen and enqueue.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "C": "visited",
+            "D": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "E",
+                "F"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "C",
+                "D"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "D"
+        },
+        "explanation": "Dequeue D and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "C": "visited",
+            "D": "visited",
+            "E": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": [
+                "F"
+              ]
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "E"
+        },
+        "explanation": "Dequeue E and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "C": "visited",
+            "D": "visited",
+            "E": "visited",
+            "F": "active"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": []
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "node": "F"
+        },
+        "explanation": "Dequeue F and visit it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 10,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "A",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "B",
+              "x": -110,
+              "y": 90
+            },
+            {
+              "id": "C",
+              "x": 110,
+              "y": 90
+            },
+            {
+              "id": "D",
+              "x": -150,
+              "y": 200
+            },
+            {
+              "id": "E",
+              "x": 0,
+              "y": 200
+            },
+            {
+              "id": "F",
+              "x": 150,
+              "y": 200
+            }
+          ],
+          "edges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "nodeStates": {
+            "A": "visited",
+            "B": "visited",
+            "C": "visited",
+            "D": "visited",
+            "E": "visited",
+            "F": "visited"
+          },
+          "activeEdges": [
+            [
+              "A",
+              "B"
+            ],
+            [
+              "A",
+              "C"
+            ],
+            [
+              "B",
+              "D"
+            ],
+            [
+              "B",
+              "E"
+            ],
+            [
+              "C",
+              "F"
+            ]
+          ],
+          "aux": [
+            {
+              "label": "queue",
+              "items": []
+            },
+            {
+              "label": "visited",
+              "items": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F"
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "order": "A B C D E F"
+        },
+        "explanation": "Done. Visit order: A → B → C → D → E → F. The highlighted edges form the BFS tree.",
+        "activeLine": 3
       }
-    ]
+    ],
+    "array": []
   },
   "operations": [
     {
@@ -158,8 +1425,23 @@
     }
   ],
   "practice": [
-    { "title": "Word Ladder", "url": "https://leetcode.com/problems/word-ladder/", "difficulty": "hard", "keyInsight": "Shortest transformation sequence = BFS." },
-    { "title": "Surrounded Regions", "url": "https://leetcode.com/problems/surrounded-regions/", "difficulty": "medium", "keyInsight": "DFS from the borders to mark 'safe' regions." },
-    { "title": "01 Matrix", "url": "https://leetcode.com/problems/01-matrix/", "difficulty": "medium", "keyInsight": "Multi-Source BFS starting from all the 0s." }
+    {
+      "title": "Word Ladder",
+      "url": "https://leetcode.com/problems/word-ladder/",
+      "difficulty": "hard",
+      "keyInsight": "Shortest transformation sequence = BFS."
+    },
+    {
+      "title": "Surrounded Regions",
+      "url": "https://leetcode.com/problems/surrounded-regions/",
+      "difficulty": "medium",
+      "keyInsight": "DFS from the borders to mark 'safe' regions."
+    },
+    {
+      "title": "01 Matrix",
+      "url": "https://leetcode.com/problems/01-matrix/",
+      "difficulty": "medium",
+      "keyInsight": "Multi-Source BFS starting from all the 0s."
+    }
   ]
 }

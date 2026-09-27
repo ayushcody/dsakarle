@@ -8,7 +8,7 @@ export function PracticeList({ problems }: { problems: PracticeProblem[] }) {
   };
 
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] px-8 py-8 shadow-[var(--shadow-card)]">
       <h2 className="topic-h2" style={{ marginTop: 0 }}>Practice Problems</h2>
       <div className="overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border)]">
         <table className="w-full border-collapse text-left">

@@ -5,8 +5,14 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 30,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "dynamic", "memory"],
+  "prerequisites": [
+    "arrays"
+  ],
+  "tags": [
+    "array",
+    "dynamic",
+    "memory"
+  ],
   "overview": {
     "summary": "Vectors (or Dynamic Arrays) are arrays that automatically resize themselves when they run out of space.",
     "learningObjectives": [
@@ -26,9 +32,18 @@
   "definition": {
     "technicalDefinition": "A Dynamic Array (Vector in C++, ArrayList in Java, List in Python) is a random access, variable-size list data structure that allows elements to be added or removed.",
     "vocabulary": [
-      { "term": "Size", "definition": "The number of elements currently stored in the vector." },
-      { "term": "Capacity", "definition": "The actual size of the underlying memory block." },
-      { "term": "Amortized Time", "definition": "An average time complexity that accounts for occasional expensive operations spread out over many fast operations." }
+      {
+        "term": "Size",
+        "definition": "The number of elements currently stored in the vector."
+      },
+      {
+        "term": "Capacity",
+        "definition": "The actual size of the underlying memory block."
+      },
+      {
+        "term": "Amortized Time",
+        "definition": "An average time complexity that accounts for occasional expensive operations spread out over many fast operations."
+      }
     ],
     "keyProperties": [
       "O(1) random access by index.",
@@ -42,8 +57,27 @@
     ],
     "clickSentence": "By doubling the capacity every time we run out of space, the heavy O(N) cost of copying elements happens so rarely that the average cost per insert drops to O(1).",
     "diagramType": "ArrayDiagram",
-    "cells": [1, 2, 3, 4],
-    "diagramState": {}
+    "cells": [
+      4,
+      8,
+      15,
+      16,
+      23,
+      "·",
+      "·",
+      "·"
+    ],
+    "diagramState": {
+      "cells": [
+        4,
+        8,
+        15,
+        "·"
+      ],
+      "highlighted": [
+        2
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -57,21 +91,245 @@
       "cpp": "std::vector<int> arr;\narr.push_back(1);"
     },
     "memoryLayout": [
-      { "label": "Size", "value": "4" },
-      { "label": "Capacity", "value": "8 (It doubled when the 4th item was added)" },
-      { "label": "Memory", "value": "[1, 2, 3, 4, null, null, null, null]" }
+      {
+        "label": "Size",
+        "value": "4"
+      },
+      {
+        "label": "Capacity",
+        "value": "8 (It doubled when the 4th item was added)"
+      },
+      {
+        "label": "Memory",
+        "value": "[1, 2, 3, 4, null, null, null, null]"
+      }
     ]
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
-    "array": [],
+    "array": [
+      4,
+      8,
+      15,
+      16,
+      23,
+      "·",
+      "·",
+      "·"
+    ],
+    "code": {
+      "python": "def push(v, x):\n    if v.size == v.capacity:\n        new = [None] * (2 * v.capacity)  # grow\n        copy(v.data, new); v.data = new\n    v.data[v.size] = x; v.size += 1"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Vector resizing visualization coming soon.",
+        "diagramState": {
+          "cells": [
+            "·",
+            "·"
+          ]
+        },
+        "variables": {
+          "size": 0,
+          "capacity": 2
+        },
+        "explanation": "Start with an empty vector of capacity 2. Empty slots are shown as ·.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "cells": [
+            4,
+            "·"
+          ],
+          "highlighted": [
+            0
+          ]
+        },
+        "variables": {
+          "size": 1,
+          "capacity": 2,
+          "pushed": 4
+        },
+        "explanation": "Write 4 into slot 0. Size is now 1.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "cells": [
+            4,
+            8
+          ],
+          "highlighted": [
+            1
+          ]
+        },
+        "variables": {
+          "size": 2,
+          "capacity": 2,
+          "pushed": 8
+        },
+        "explanation": "Write 8 into slot 1. Size is now 2.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "cells": [
+            4,
+            8
+          ],
+          "highlighted": [
+            0,
+            1
+          ]
+        },
+        "variables": {
+          "size": 2,
+          "capacity": 2
+        },
+        "explanation": "Full! Pushing 15 needs room, so allocate a new block of capacity 4.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "cells": [
+            4,
+            8,
+            "·",
+            "·"
+          ],
+          "comparing": [
+            0,
+            1
+          ]
+        },
+        "variables": {
+          "size": 2,
+          "capacity": 4
+        },
+        "explanation": "Copy all 2 elements into the bigger block. This O(n) copy is rare, so push stays O(1) amortized.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "cells": [
+            4,
+            8,
+            15,
+            "·"
+          ],
+          "highlighted": [
+            2
+          ]
+        },
+        "variables": {
+          "size": 3,
+          "capacity": 4,
+          "pushed": 15
+        },
+        "explanation": "Write 15 into slot 2. Size is now 3.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "cells": [
+            4,
+            8,
+            15,
+            16
+          ],
+          "highlighted": [
+            3
+          ]
+        },
+        "variables": {
+          "size": 4,
+          "capacity": 4,
+          "pushed": 16
+        },
+        "explanation": "Write 16 into slot 3. Size is now 4.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "cells": [
+            4,
+            8,
+            15,
+            16
+          ],
+          "highlighted": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "variables": {
+          "size": 4,
+          "capacity": 4
+        },
+        "explanation": "Full! Pushing 23 needs room, so allocate a new block of capacity 8.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "cells": [
+            4,
+            8,
+            15,
+            16,
+            "·",
+            "·",
+            "·",
+            "·"
+          ],
+          "comparing": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "variables": {
+          "size": 4,
+          "capacity": 8
+        },
+        "explanation": "Copy all 4 elements into the bigger block. This O(n) copy is rare, so push stays O(1) amortized.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "cells": [
+            4,
+            8,
+            15,
+            16,
+            23,
+            "·",
+            "·",
+            "·"
+          ],
+          "highlighted": [
+            4
+          ]
+        },
+        "variables": {
+          "size": 5,
+          "capacity": 8,
+          "pushed": 23
+        },
+        "explanation": "Write 23 into slot 4. Size is now 5.",
+        "activeLine": 5
       }
     ]
   },
@@ -160,6 +418,11 @@
     }
   ],
   "practice": [
-    { "title": "Design Dynamic Array (Concept)", "url": "#", "difficulty": "medium", "keyInsight": "Understand the internal copy mechanisms of your language's array." }
+    {
+      "title": "Design Dynamic Array (Concept)",
+      "url": "#",
+      "difficulty": "medium",
+      "keyInsight": "Understand the internal copy mechanisms of your language's array."
+    }
   ]
 }

@@ -5,8 +5,13 @@
   "category": "algorithm",
   "difficulty": "medium",
   "estimatedMinutes": 45,
-  "prerequisites": ["sorting"],
-  "tags": ["algorithm", "optimization"],
+  "prerequisites": [
+    "sorting"
+  ],
+  "tags": [
+    "algorithm",
+    "optimization"
+  ],
   "overview": {
     "summary": "Greedy algorithms build up a solution piece by piece, always choosing the next piece that offers the most immediate benefit.",
     "learningObjectives": [
@@ -26,9 +31,18 @@
   "definition": {
     "technicalDefinition": "A greedy algorithm is any algorithm that follows the problem-solving heuristic of making the locally optimal choice at each stage with the intent of finding a global optimum.",
     "vocabulary": [
-      { "term": "Locally Optimal", "definition": "The best possible choice you can make right now, based ONLY on the current step, ignoring future consequences." },
-      { "term": "Globally Optimal", "definition": "The absolute best possible final answer for the entire problem." },
-      { "term": "Counter-example", "definition": "A specific scenario that proves a greedy approach fails to find the global optimum." }
+      {
+        "term": "Locally Optimal",
+        "definition": "The best possible choice you can make right now, based ONLY on the current step, ignoring future consequences."
+      },
+      {
+        "term": "Globally Optimal",
+        "definition": "The absolute best possible final answer for the entire problem."
+      },
+      {
+        "term": "Counter-example",
+        "definition": "A specific scenario that proves a greedy approach fails to find the global optimum."
+      }
     ],
     "keyProperties": [
       "Very fast (usually O(N) or O(N log N) if sorting is required).",
@@ -42,8 +56,33 @@
     ],
     "clickSentence": "Sort the data to reveal the most 'valuable' pieces, then gobble them up one by one until you can't.",
     "diagramType": "ArrayDiagram",
-    "cells": [],
-    "diagramState": {}
+    "cells": [
+      25,
+      10,
+      5,
+      1
+    ],
+    "diagramState": {
+      "cells": [
+        25,
+        10,
+        5,
+        1
+      ],
+      "comparing": [
+        1
+      ],
+      "aux": [
+        {
+          "label": "used",
+          "items": [
+            25,
+            25,
+            10
+          ]
+        }
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -54,19 +93,340 @@
       "python": "def make_change(amount, coins):\n    coins.sort(reverse=True)\n    count = 0\n    for coin in coins:\n        while amount >= coin:\n            amount -= coin\n            count += 1\n    return count"
     },
     "memoryLayout": [
-      { "label": "Greedy Choice", "value": "Pick the highest value available at the current moment." }
+      {
+        "label": "Greedy Choice",
+        "value": "Pick the highest value available at the current moment."
+      }
     ]
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
-    "array": [],
+    "array": [
+      25,
+      10,
+      5,
+      1
+    ],
+    "code": {
+      "python": "def min_coins(coins, amount):\n    used = []\n    for c in coins:            # largest first\n        while amount >= c:\n            amount -= c; used.append(c)\n    return used"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Greedy visualization coming soon.",
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ]
+        },
+        "variables": {
+          "amount": 63
+        },
+        "explanation": "Make 63¢ with the fewest coins. Greedy rule: always take the biggest coin that fits.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "highlighted": [
+            0
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 25,
+          "remaining": 38
+        },
+        "explanation": "25¢ fits. Take it; 38¢ left.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "highlighted": [
+            0
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 25,
+          "remaining": 13
+        },
+        "explanation": "25¢ fits. Take it; 13¢ left.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "comparing": [
+            0
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 25,
+          "remaining": 13
+        },
+        "explanation": "25¢ no longer fits into 13¢. Move to the next smaller coin.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "highlighted": [
+            1
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25,
+                10
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 10,
+          "remaining": 3
+        },
+        "explanation": "10¢ fits. Take it; 3¢ left.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "comparing": [
+            1
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25,
+                10
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 10,
+          "remaining": 3
+        },
+        "explanation": "10¢ no longer fits into 3¢. Move to the next smaller coin.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "comparing": [
+            2
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25,
+                10
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 5,
+          "remaining": 3
+        },
+        "explanation": "5¢ no longer fits into 3¢. Move to the next smaller coin.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "highlighted": [
+            3
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25,
+                10,
+                1
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 1,
+          "remaining": 2
+        },
+        "explanation": "1¢ fits. Take it; 2¢ left.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "highlighted": [
+            3
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25,
+                10,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 1,
+          "remaining": 1
+        },
+        "explanation": "1¢ fits. Take it; 1¢ left.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "highlighted": [
+            3
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25,
+                10,
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coin": 1,
+          "remaining": 0
+        },
+        "explanation": "1¢ fits. Take it; 0¢ left.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 10,
+        "diagramState": {
+          "cells": [
+            25,
+            10,
+            5,
+            1
+          ],
+          "aux": [
+            {
+              "label": "used",
+              "items": [
+                25,
+                25,
+                10,
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "variables": {
+          "coins": 6
+        },
+        "explanation": "Done with 6 coins. Greedy is optimal here because US coin values are \"canonical\".",
+        "activeLine": 6
       }
     ]
   },
@@ -157,8 +517,23 @@
     }
   ],
   "practice": [
-    { "title": "Jump Game", "url": "https://leetcode.com/problems/jump-game/", "difficulty": "medium", "keyInsight": "Greedily track the furthest index you can reach." },
-    { "title": "Assign Cookies", "url": "https://leetcode.com/problems/assign-cookies/", "difficulty": "easy", "keyInsight": "Sort both arrays. Give the smallest cookie to the least greedy child." },
-    { "title": "Task Scheduler", "url": "https://leetcode.com/problems/task-scheduler/", "difficulty": "medium", "keyInsight": "Always schedule the most frequent task first." }
+    {
+      "title": "Jump Game",
+      "url": "https://leetcode.com/problems/jump-game/",
+      "difficulty": "medium",
+      "keyInsight": "Greedily track the furthest index you can reach."
+    },
+    {
+      "title": "Assign Cookies",
+      "url": "https://leetcode.com/problems/assign-cookies/",
+      "difficulty": "easy",
+      "keyInsight": "Sort both arrays. Give the smallest cookie to the least greedy child."
+    },
+    {
+      "title": "Task Scheduler",
+      "url": "https://leetcode.com/problems/task-scheduler/",
+      "difficulty": "medium",
+      "keyInsight": "Always schedule the most frequent task first."
+    }
   ]
 }

@@ -15,13 +15,13 @@ export interface TopicMeta {
 
 export interface StepperStep {
   stepIndex: number
-  diagramState: {
+  diagramState: Record<string, unknown> & {
     left?: number
     right?: number
     windowStart?: number
     windowEnd?: number
     highlighted?: number[]
-    comparing?: [number, number]
+    comparing?: number[]
   }
   variables: Record<string, string | number>
   constraintValue?: number
@@ -35,6 +35,7 @@ export interface StepperData {
   array?: Array<number | string>
   steps: StepperStep[]
   constraintLabel?: string
+  code?: Partial<Record<CodeLanguage, string>>
 }
 
 export interface VocabularyItem {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { getCatalogTopics } from '@/lib/content';
+import { getCatalogTopics, getTopicBySlug } from '@/lib/content';
 import type { CurriculumTopic } from '@/types';
 
 import ArraysBadge from '../badges/ArraysBadge';
@@ -55,14 +55,23 @@ function renderBadgeCards(topics: CurriculumTopic[]) {
       return null;
     }
 
-    return <BadgeCard key={topic.slug} {...topic} BadgeComponent={BadgeComponent} />;
+    const full = getTopicBySlug(topic.slug);
+    return (
+      <BadgeCard
+        key={topic.slug}
+        {...topic}
+        minutes={full?.estimatedMinutes}
+        examples={full?.examples?.length ?? 0}
+        badge={<BadgeComponent />}
+      />
+    );
   });
 }
 
 export default function CourseCatalog({ hideButton = false }: { hideButton?: boolean }) {
   return (
     <section className="mx-auto flex max-w-7xl flex-col items-center px-6 py-24 md:px-12">
-      <h2 className="mb-4 text-center font-lora text-3xl font-bold text-[var(--text-primary)] md:text-4xl">
+      <h2 className="mb-4 text-center font-dmsans tracking-tight text-3xl font-bold text-[var(--text-primary)] md:text-4xl">
         Master Data Structures and Algorithms
       </h2>
       <p className="mb-16 text-center font-dmsans text-lg text-[var(--text-muted)]">

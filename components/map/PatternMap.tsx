@@ -30,6 +30,13 @@ export default function PatternMap() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!svgRef.current) return;
+    d3.select(svgRef.current)
+      .selectAll<SVGGElement, MapNode>('g.pm-node')
+      .style('opacity', (d) => (!selectedCategory || d.category === selectedCategory ? 1 : 0.15));
+  }, [selectedCategory]);
+
+  useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
 
     const rect = containerRef.current.getBoundingClientRect();
@@ -95,6 +102,8 @@ export default function PatternMap() {
       .selectAll('g')
       .data(nodes)
       .join('g')
+      .attr('class', 'pm-node')
+      .style('transition', 'opacity 250ms cubic-bezier(0.4,0,0.2,1)')
       .style('cursor', (d) => (d.topicSlug ? 'pointer' : 'default'))
       .call(
         d3
@@ -187,7 +196,7 @@ export default function PatternMap() {
       style={{
         position: 'relative',
         width: '100%',
-        height: 'calc(100vh - 64px)',
+        height: '100%',
         background: 'var(--bg-primary)',
         overflow: 'hidden',
       }}
@@ -196,7 +205,7 @@ export default function PatternMap() {
       <div style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}>
         <h1
           style={{
-            fontFamily: 'var(--font-lora)',
+            fontFamily: 'var(--font-dmsans tracking-tight)',
             fontSize: 24,
             fontWeight: 700,
             color: 'var(--text-primary)',

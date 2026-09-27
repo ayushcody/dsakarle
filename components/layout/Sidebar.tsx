@@ -21,11 +21,17 @@ export function Sidebar({
 }) {
   const [mounted, setMounted] = useState(false);
   const [progress, setProgress] = useState<ProgressData>(EMPTY_PROGRESS);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    setProgress(getProgress());
+    const sync = () => setProgress({ ...getProgress() });
+    sync();
+    window.addEventListener('dsakarle:progress', sync);
+    return () => window.removeEventListener('dsakarle:progress', sync);
   }, []);
+
+  useEffect(() => setOpen(false), [currentSlug]);
 
   // Calculate overall progress
   const totalTopics = courseStructure.groups.reduce((acc, group) => acc + group.topics.length, 0);
@@ -33,7 +39,16 @@ export function Sidebar({
   const overallProgress = totalTopics === 0 ? 0 : Math.round((completedTopics / totalTopics) * 100);
 
   return (
-    <aside className="fixed left-0 top-0 w-[280px] h-screen bg-[var(--bg-secondary)] border-r border-[var(--border)] z-50 overflow-y-auto flex flex-col custom-scrollbar pb-10">
+    <>
+    <button
+      onClick={() => setOpen(true)}
+      aria-label="Open course menu"
+      className="md:hidden fixed bottom-5 left-5 z-40 h-12 px-5 rounded-full bg-[var(--accent-coral)] text-white font-dmsans font-bold text-sm shadow-lg"
+    >
+      ☰ Topics
+    </button>
+    {open && <div className="md:hidden fixed inset-0 z-40 bg-black/40" onClick={() => setOpen(false)} />}
+    <aside className={`fixed left-0 top-0 w-[280px] h-screen transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'} bg-[var(--bg-secondary)] border-r border-[var(--border)] z-50 overflow-y-auto flex flex-col custom-scrollbar pb-10`}>
       
       {/* Brand Header */}
       <div className="p-6 pb-4">
@@ -55,7 +70,7 @@ export function Sidebar({
           </div>
           <div className="h-2 w-full bg-[var(--bg-secondary)] rounded-full overflow-hidden">
             <div 
-              className="h-full bg-[var(--accent-coral)] rounded-full transition-all duration-500 ease-out"
+              className="h-full bg-[var(--accent-coral)] rounded-full transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
               style={{ width: `${overallProgress}%` }}
             ></div>
           </div>
@@ -85,7 +100,7 @@ export function Sidebar({
                       href={`/learn/${topic.slug}`} 
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-dmsans text-[14px] transition-all group ${
                         isActive 
-                          ? 'bg-[var(--accent-coral)] bg-opacity-10 text-[var(--accent-coral)] font-semibold' 
+                          ? 'bg-[var(--surface-coral)] text-[var(--accent-coral)] font-semibold' 
                           : 'text-[var(--text-secondary)] hover:bg-[var(--white)] hover:text-[var(--text-primary)]'
                       }`}
                     >
@@ -117,6 +132,7 @@ export function Sidebar({
       </div>
 
     </aside>
+    </>
   );
 }
 

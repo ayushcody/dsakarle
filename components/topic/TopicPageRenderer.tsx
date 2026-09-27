@@ -7,7 +7,6 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import type { CourseStructure, LearningTopicPage, CodeLanguage } from '@/types/learning';
 
 import { TopicHero } from './TopicHero';
-import { HeroBlock } from './HeroBlock';
 import { RealWorldHookSection } from './RealWorldHookSection';
 import { CoreDefinitionSection } from './CoreDefinitionSection';
 import { MentalModelSection } from './MentalModelSection';
@@ -21,13 +20,14 @@ import { ConceptQuiz } from './ConceptQuiz';
 import { PracticeList } from './PracticeList';
 import { MarkCompleteButton } from './MarkCompleteButton';
 import { TopicNavigation } from './TopicNavigation';
-import { RightSidebar } from './RightSidebar';
+import { RightSidebar, type OutlineItem } from './RightSidebar';
 import { InteractiveDemoPanel } from './InteractiveDemoPanel';
 import { CodePanel } from './CodePanel';
 
 const VisualDebugger = dynamic(() => import('@/components/debugger/VisualDebugger').then(m => m.VisualDebugger), { ssr: false });
 const ComplexityGauge = dynamic(() => import('@/components/visualizers/ComplexityGauge').then(m => m.ComplexityGauge), { ssr: false });
 
+import { getBadgeForSlug } from '@/components/badges/registry';
 import { DEBUGGER_CHALLENGES } from '@/content/debugger-challenges';
 
 const emptyCode = {
@@ -36,6 +36,14 @@ const emptyCode = {
   java: '',
   cpp: '',
 } satisfies Record<CodeLanguage, string>;
+
+const OBJECTIVE_ICONS = ['🏆', '⏱️', '🧩'];
+
+function difficultyClass(d: string) {
+  if (d === 'beginner' || d === 'easy') return 'bg-[rgba(30,123,108,0.14)] text-[var(--accent-teal)]';
+  if (d === 'hard' || d === 'advanced') return 'bg-[rgba(204,90,55,0.14)] text-[var(--accent-coral)]';
+  return 'bg-[rgba(217,155,38,0.16)] text-[var(--accent-amber)]';
+}
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -57,6 +65,23 @@ export function TopicPageRenderer({
 }) {
   // Access analogy fields (may not exist on all topics)
   const topicAny = topic as LearningTopicPage & { analogy?: string; analogyIcon?: string };
+  const groupTitle =
+    (courseStructure as CourseStructure).groups.find((g) => g.topics.some((t) => t.slug === topic.slug))?.title ?? 'Topics';
+  const Icon = getBadgeForSlug(topic.slug);
+  const outline: OutlineItem[] = [
+    { id: 'hook', label: 'Why it matters', show: !!topic.realWorldHook },
+    { id: 'definition', label: 'Definition', show: !!topic.definition },
+    { id: 'mental-model', label: 'Mental model', show: !!topic.mentalModel },
+    { id: 'visualize', label: 'Visualization', show: true },
+    { id: 'operations', label: 'Operations', show: !!topic.operations?.length },
+    { id: 'template', label: 'Pattern template', show: !!topic.patternTemplate },
+    { id: 'recognition', label: 'Recognition quiz', show: !!topic.recognitionQuiz },
+    { id: 'examples', label: 'Worked examples', show: !!topic.examples?.length },
+    { id: 'quiz', label: 'Concept quiz', show: !!topic.conceptQuiz?.length },
+    { id: 'practice', label: 'Practice', show: !!topic.practice?.length }
+  ].filter((o) => o.show);
+
+  const objectives = topic.overview?.learningObjectives?.slice(0, 3) ?? [];
 
   return (
     <>
@@ -70,52 +95,43 @@ export function TopicPageRenderer({
             {/* Breadcrumb & Header */}
             <div>
               <div className="font-dmsans text-[13px] text-[var(--text-muted)] font-medium mb-6">
-                Algorithms <span className="mx-2">&gt;</span> <span className="text-[var(--text-primary)]">{topic.title}</span>
+                {groupTitle} <span className="mx-2">&gt;</span> <span className="text-[var(--text-primary)]">{topic.title}</span>
               </div>
-              
+
               <div className="flex items-start gap-6 mb-6">
                 <div className="w-20 h-20 rounded-full border border-dashed border-[var(--border-strong)] bg-[var(--bg-secondary)] flex items-center justify-center flex-shrink-0 text-[var(--accent-coral)]">
-                  {/* Icon placeholder based on reference */}
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="4" y1="8" x2="20" y2="8"></line>
-                    <line x1="4" y1="16" x2="20" y2="16"></line>
-                    <circle cx="8" cy="8" r="2" fill="currentColor"></circle>
-                    <circle cx="16" cy="16" r="2" fill="currentColor"></circle>
-                  </svg>
+                  <Icon width={44} height={44} />
                 </div>
                 <div>
                   <h1 className="font-dmsans text-4xl md:text-5xl font-bold text-[var(--text-primary)] tracking-tight mb-3">
                     {topic.title}
                   </h1>
-                  <p className="font-dmsans text-[var(--text-secondary)] text-lg mb-4 max-w-2xl">
-                    {topic.definition?.technicalDefinition || `A powerful technique that uses a window of elements to solve problems efficiently in linear time.`}
-                  </p>
+                  {topic.definition?.technicalDefinition && (
+                    <p className="font-dmsans text-[var(--text-secondary)] text-lg mb-4 max-w-2xl">
+                      {topic.definition.technicalDefinition}
+                    </p>
+                  )}
                   <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 bg-[var(--surface-success)] bg-opacity-20 text-[var(--state-success)] text-xs font-bold uppercase tracking-widest rounded-md">
-                      Beginner
+                    <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-md ${difficultyClass(topic.difficulty)}`}>
+                      {topic.difficulty}
                     </span>
-                    <span className="px-3 py-1 bg-[var(--text-primary)] text-white text-xs font-bold uppercase tracking-widest rounded-md">
-                      35 Min
+                    <span className="px-3 py-1 bg-[var(--text-primary)] text-[var(--bg-primary)] text-xs font-bold uppercase tracking-widest rounded-md">
+                      {topic.estimatedMinutes} Min
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Objective Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
-                <div className="bg-[var(--white)] border border-[var(--border)] rounded-lg p-4 flex items-start gap-3 shadow-sm">
-                  <span className="text-[var(--accent-coral)] mt-0.5">🏆</span>
-                  <p className="font-dmsans text-sm font-medium text-[var(--text-primary)]">Master window expansion and contraction patterns</p>
+              {objectives.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
+                  {objectives.map((text, i) => (
+                    <div key={text} className="bg-[var(--white)] border border-[var(--border)] rounded-lg p-4 flex items-start gap-3 shadow-sm">
+                      <span className="text-[var(--accent-coral)] mt-0.5">{OBJECTIVE_ICONS[i]}</span>
+                      <p className="font-dmsans text-sm font-medium text-[var(--text-primary)]">{text}</p>
+                    </div>
+                  ))}
                 </div>
-                <div className="bg-[var(--white)] border border-[var(--border)] rounded-lg p-4 flex items-start gap-3 shadow-sm">
-                  <span className="text-[var(--accent-coral)] mt-0.5">⏱️</span>
-                  <p className="font-dmsans text-sm font-medium text-[var(--text-primary)]">Solve problems in O(n) time using optimal windows</p>
-                </div>
-                <div className="bg-[var(--white)] border border-[var(--border)] rounded-lg p-4 flex items-start gap-3 shadow-sm">
-                  <span className="text-[var(--accent-coral)] mt-0.5">🧩</span>
-                  <p className="font-dmsans text-sm font-medium text-[var(--text-primary)]">Apply to arrays, strings & sequence problems</p>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Rest of the content */}
@@ -128,8 +144,8 @@ export function TopicPageRenderer({
               />
             ) : null}
 
-        <HeroBlock topic={topic} />
 
+        <div id="hook" className="scroll-mt-24" />
         {topic.realWorldHook && (
           <RealWorldHookSection
             paragraphs={topic.realWorldHook.paragraphs}
@@ -137,6 +153,7 @@ export function TopicPageRenderer({
           />
         )}
 
+        <div id="definition" className="scroll-mt-24" />
         {topic.definition && (
           <CoreDefinitionSection
             technicalDefinition={topic.definition.technicalDefinition}
@@ -145,6 +162,7 @@ export function TopicPageRenderer({
           />
         )}
 
+        <div id="mental-model" className="scroll-mt-24" />
         {topic.mentalModel && (
           <MentalModelSection
             metaphor={topic.mentalModel.metaphor}
@@ -163,6 +181,7 @@ export function TopicPageRenderer({
           />
         )}
 
+        <div id="visualize" className="scroll-mt-24" />
         {topic.slug === 'sliding-window' ? (
           <section className="mb-12">
             <InteractiveDemoPanel />
@@ -173,7 +192,7 @@ export function TopicPageRenderer({
             <h2 className="topic-h2" style={{ marginTop: 0 }}>Interactive Visualization</h2>
             <StepperBlock
               stepperData={topic.stepper}
-              code={topic.examples?.[0]?.code || emptyCode}
+              code={{ ...emptyCode, ...(topic.stepper.code ?? topic.examples?.[0]?.code) }}
               renderedCode={renderedCode}
             />
           </section>
@@ -188,30 +207,35 @@ export function TopicPageRenderer({
           ))
         )}
 
+        <div id="operations" className="scroll-mt-24" />
         {topic.operations && topic.operations.length > 0 ? (
           <OperationsSection operations={topic.operations} />
         ) : (
           <Placeholder title="Operations Deep Dive" />
         )}
 
+        <div id="template" className="scroll-mt-24" />
         {topic.patternTemplate ? (
           <PatternTemplateSection template={topic.patternTemplate} />
         ) : (
           <Placeholder title="Pattern Template" />
         )}
 
+        <div id="recognition" className="scroll-mt-24" />
         {topic.recognitionQuiz ? (
           <RecognitionQuiz quiz={topic.recognitionQuiz} topicId={topic.id} />
         ) : (
           <Placeholder title="Recognition Quiz" />
         )}
 
+        <div id="examples" className="scroll-mt-24" />
         {topic.examples && topic.examples.length > 0 ? (
           <WorkedExamplesSection examples={topic.examples} />
         ) : (
           <Placeholder title="Worked Examples" />
         )}
 
+        <div id="quiz" className="scroll-mt-24" />
         {topic.conceptQuiz && topic.conceptQuiz.length > 0 ? (
           <ConceptQuiz questions={topic.conceptQuiz} topicId={topic.id} />
         ) : (
@@ -228,6 +252,7 @@ export function TopicPageRenderer({
           />
         )}
 
+        <div id="practice" className="scroll-mt-24" />
         {topic.practice && topic.practice.length > 0 ? (
           <PracticeList problems={topic.practice} />
         ) : (
@@ -244,7 +269,7 @@ export function TopicPageRenderer({
 
       </main>
 
-      <RightSidebar />
+      <RightSidebar topicId={topic.id} outline={outline} quizTotal={topic.conceptQuiz?.length ?? 0} />
       
       </div>
       </div>

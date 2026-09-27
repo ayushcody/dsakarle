@@ -46,7 +46,7 @@ export function TopicHero({ slug, title, analogy, analogyIcon }: TopicHeroProps)
         {/* Left: Title + Analogy */}
         <div>
           <h1 style={{
-            fontFamily: 'var(--font-lora)',
+            fontFamily: 'var(--font-dmsans tracking-tight)',
             fontSize: 36,
             fontWeight: 700,
             color: 'var(--text-primary)',

@@ -5,8 +5,15 @@
   "category": "data-structure",
   "difficulty": "hard",
   "estimatedMinutes": 45,
-  "prerequisites": ["trees", "hash-maps"],
-  "tags": ["tree", "strings", "prefix"],
+  "prerequisites": [
+    "trees",
+    "hash-maps"
+  ],
+  "tags": [
+    "tree",
+    "strings",
+    "prefix"
+  ],
   "overview": {
     "summary": "A Trie (pronounced 'try') is a specialized tree used to store associative data structures, specifically strings. It excels at fast prefix matching.",
     "learningObjectives": [
@@ -26,9 +33,18 @@
   "definition": {
     "technicalDefinition": "A Trie is a tree-like data structure whose nodes store the letters of an alphabet. By structuring the nodes in a particular way, words and strings can be retrieved by traversing down a branch path of the tree.",
     "vocabulary": [
-      { "term": "Prefix", "definition": "The beginning characters of a word." },
-      { "term": "IsWord Flag", "definition": "A boolean stored on a node to indicate that the path ending at this node forms a complete valid word." },
-      { "term": "Children Map", "definition": "Instead of just Left/Right, a Trie node has a Hash Map (or Array of size 26) pointing to its children." }
+      {
+        "term": "Prefix",
+        "definition": "The beginning characters of a word."
+      },
+      {
+        "term": "IsWord Flag",
+        "definition": "A boolean stored on a node to indicate that the path ending at this node forms a complete valid word."
+      },
+      {
+        "term": "Children Map",
+        "definition": "Instead of just Left/Right, a Trie node has a Hash Map (or Array of size 26) pointing to its children."
+      }
     ],
     "keyProperties": [
       "O(L) search time, where L is the length of the word (independent of how many words are in the dictionary).",
@@ -43,7 +59,47 @@
     "clickSentence": "By sharing common prefixes, the words 'cat', 'car', and 'cap' all share the exact same 'c -> a' nodes in memory.",
     "diagramType": "tree",
     "cells": [],
-    "diagramState": {}
+    "diagramState": {
+      "nodes": [
+        {
+          "id": "root",
+          "label": "•"
+        },
+        {
+          "id": "c",
+          "label": "c",
+          "parent": "root"
+        },
+        {
+          "id": "ca",
+          "label": "a",
+          "parent": "c"
+        },
+        {
+          "id": "car",
+          "label": "r",
+          "parent": "ca"
+        },
+        {
+          "id": "cat",
+          "label": "t",
+          "parent": "ca"
+        },
+        {
+          "id": "d",
+          "label": "d",
+          "parent": "root"
+        },
+        {
+          "id": "do",
+          "label": "o",
+          "parent": "d"
+        }
+      ],
+      "nodeStates": {
+        "do": "success"
+      }
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -57,24 +113,471 @@
       "cpp": "struct TrieNode {\n    unordered_map<char, TrieNode*> children;\n    bool isWord = false;\n};"
     },
     "memoryLayout": [
-      { "label": "Root", "value": "{ 'c': Node1, 'd': Node2 }" },
-      { "label": "Node1", "value": "{ 'a': Node3 }, isWord: false" },
-      { "label": "Node3", "value": "{ 't': Node4 }, isWord: false" },
-      { "label": "Node4", "value": "{}, isWord: true" }
+      {
+        "label": "Root",
+        "value": "{ 'c': Node1, 'd': Node2 }"
+      },
+      {
+        "label": "Node1",
+        "value": "{ 'a': Node3 }, isWord: false"
+      },
+      {
+        "label": "Node3",
+        "value": "{ 't': Node4 }, isWord: false"
+      },
+      {
+        "label": "Node4",
+        "value": "{}, isWord: true"
+      }
     ]
   },
   "stepper": {
     "diagramType": "tree",
-    "array": [],
+    "code": {
+      "python": "def insert(root, word):\n    node = root\n    for ch in word:\n        node = node.children.setdefault(ch, Node())\n    node.is_end = True"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            }
+          ]
+        },
         "variables": {},
-        "explanation": "Interactive Trie visualization coming soon.",
+        "explanation": "A trie stores words character by character. Every path from the root spells a prefix.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            }
+          ],
+          "nodeStates": {
+            "c": "active"
+          }
+        },
+        "variables": {
+          "word": "car",
+          "char": "c",
+          "prefix": "c"
+        },
+        "explanation": "No child 'c' under \"root\" → create it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            }
+          ],
+          "nodeStates": {
+            "ca": "active"
+          }
+        },
+        "variables": {
+          "word": "car",
+          "char": "a",
+          "prefix": "ca"
+        },
+        "explanation": "No child 'a' under \"c\" → create it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            }
+          ],
+          "nodeStates": {
+            "car": "active"
+          }
+        },
+        "variables": {
+          "word": "car",
+          "char": "r",
+          "prefix": "car"
+        },
+        "explanation": "No child 'r' under \"ca\" → create it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            }
+          ],
+          "nodeStates": {
+            "car": "success"
+          }
+        },
+        "variables": {
+          "word": "car"
+        },
+        "explanation": "Mark \"car\" as the end of a word.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            }
+          ],
+          "nodeStates": {
+            "c": "visited"
+          }
+        },
+        "variables": {
+          "word": "cat",
+          "char": "c",
+          "prefix": "c"
+        },
+        "explanation": "Child 'c' already exists (shared prefix \"c\") → just walk down.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            }
+          ],
+          "nodeStates": {
+            "ca": "visited"
+          }
+        },
+        "variables": {
+          "word": "cat",
+          "char": "a",
+          "prefix": "ca"
+        },
+        "explanation": "Child 'a' already exists (shared prefix \"ca\") → just walk down.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            },
+            {
+              "id": "cat",
+              "label": "t",
+              "parent": "ca"
+            }
+          ],
+          "nodeStates": {
+            "cat": "active"
+          }
+        },
+        "variables": {
+          "word": "cat",
+          "char": "t",
+          "prefix": "cat"
+        },
+        "explanation": "No child 't' under \"ca\" → create it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            },
+            {
+              "id": "cat",
+              "label": "t",
+              "parent": "ca"
+            }
+          ],
+          "nodeStates": {
+            "cat": "success"
+          }
+        },
+        "variables": {
+          "word": "cat"
+        },
+        "explanation": "Mark \"cat\" as the end of a word.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            },
+            {
+              "id": "cat",
+              "label": "t",
+              "parent": "ca"
+            },
+            {
+              "id": "d",
+              "label": "d",
+              "parent": "root"
+            }
+          ],
+          "nodeStates": {
+            "d": "active"
+          }
+        },
+        "variables": {
+          "word": "do",
+          "char": "d",
+          "prefix": "d"
+        },
+        "explanation": "No child 'd' under \"root\" → create it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 10,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            },
+            {
+              "id": "cat",
+              "label": "t",
+              "parent": "ca"
+            },
+            {
+              "id": "d",
+              "label": "d",
+              "parent": "root"
+            },
+            {
+              "id": "do",
+              "label": "o",
+              "parent": "d"
+            }
+          ],
+          "nodeStates": {
+            "do": "active"
+          }
+        },
+        "variables": {
+          "word": "do",
+          "char": "o",
+          "prefix": "do"
+        },
+        "explanation": "No child 'o' under \"d\" → create it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 11,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "root",
+              "label": "•"
+            },
+            {
+              "id": "c",
+              "label": "c",
+              "parent": "root"
+            },
+            {
+              "id": "ca",
+              "label": "a",
+              "parent": "c"
+            },
+            {
+              "id": "car",
+              "label": "r",
+              "parent": "ca"
+            },
+            {
+              "id": "cat",
+              "label": "t",
+              "parent": "ca"
+            },
+            {
+              "id": "d",
+              "label": "d",
+              "parent": "root"
+            },
+            {
+              "id": "do",
+              "label": "o",
+              "parent": "d"
+            }
+          ],
+          "nodeStates": {
+            "do": "success"
+          }
+        },
+        "variables": {
+          "word": "do"
+        },
+        "explanation": "Mark \"do\" as the end of a word.",
+        "activeLine": 5
       }
-    ]
+    ],
+    "array": []
   },
   "operations": [
     {
@@ -161,8 +664,23 @@
     }
   ],
   "practice": [
-    { "title": "Implement Trie (Prefix Tree)", "url": "https://leetcode.com/problems/implement-trie-prefix-tree/", "difficulty": "medium", "keyInsight": "Standard implementation." },
-    { "title": "Design Add and Search Words Data Structure", "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/", "difficulty": "medium", "keyInsight": "When you hit a '.' wildcard, run a DFS on all children of the current node." },
-    { "title": "Word Search II", "url": "https://leetcode.com/problems/word-search-ii/", "difficulty": "hard", "keyInsight": "Put the dictionary into a Trie, then run DFS from every cell on the board, walking down the Trie concurrently." }
+    {
+      "title": "Implement Trie (Prefix Tree)",
+      "url": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+      "difficulty": "medium",
+      "keyInsight": "Standard implementation."
+    },
+    {
+      "title": "Design Add and Search Words Data Structure",
+      "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+      "difficulty": "medium",
+      "keyInsight": "When you hit a '.' wildcard, run a DFS on all children of the current node."
+    },
+    {
+      "title": "Word Search II",
+      "url": "https://leetcode.com/problems/word-search-ii/",
+      "difficulty": "hard",
+      "keyInsight": "Put the dictionary into a Trie, then run DFS from every cell on the board, walking down the Trie concurrently."
+    }
   ]
 }

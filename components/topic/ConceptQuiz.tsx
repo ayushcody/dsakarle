@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { saveQuizScore } from '@/lib/progress';
 import type { ConceptQuestion } from '@/types/learning';
@@ -8,6 +8,24 @@ import type { ConceptQuestion } from '@/types/learning';
 export function ConceptQuiz({ questions, topicId }: { questions: ConceptQuestion[]; topicId: string }) {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
+  const storageKey = `dsakarle_quiz_${topicId}`;
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
+      if (saved) {
+        setAnswers(saved.answers);
+        setSubmitted(saved.submitted);
+      }
+    } catch {}
+  }, [storageKey]);
+
+  const pick = (questionIndex: number, optionIndex: number) => {
+    const next = { ...answers, [questionIndex]: optionIndex };
+    setAnswers(next);
+    setSubmitted(false);
+    localStorage.setItem(storageKey, JSON.stringify({ answers: next, submitted: false }));
+  };
 
   const score = questions.reduce((total, question, index) => {
     return total + (answers[index] === question.correctIndex ? 1 : 0);
@@ -15,12 +33,18 @@ export function ConceptQuiz({ questions, topicId }: { questions: ConceptQuestion
 
   const submit = () => {
     setSubmitted(true);
+    localStorage.setItem(storageKey, JSON.stringify({ answers, submitted: true }));
     saveQuizScore(topicId, 'concept', score);
   };
 
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
-      <h2 className="topic-h2" style={{ marginTop: 0 }}>Concept Quiz</h2>
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] px-8 py-8 shadow-[var(--shadow-card)]">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="topic-h2" style={{ marginTop: 0 }}>Concept Quiz</h2>
+        {submitted && score === questions.length && (
+          <span className="badge-pill badge-pill-teal">Quiz Completed ✓</span>
+        )}
+      </div>
       <div className="space-y-8">
         {questions.map((question, questionIndex) => (
           <div key={question.question} className="rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
@@ -39,14 +63,14 @@ export function ConceptQuiz({ questions, topicId }: { questions: ConceptQuestion
                         ? 'border-[var(--state-success)] bg-[var(--surface-success)]'
                         : wrong
                           ? 'border-[var(--state-danger)] bg-[var(--surface-danger)]'
-                          : 'border-[var(--border)] bg-white'
+                          : 'border-[var(--border)] bg-[var(--white)]'
                     }`}
                   >
                     <input
                       type="radio"
                       name={`concept-${questionIndex}`}
                       checked={checked}
-                      onChange={() => setAnswers((state) => ({ ...state, [questionIndex]: optionIndex }))}
+                      onChange={() => pick(questionIndex, optionIndex)}
                     />
                     <span className="font-dmsans text-[15px] text-[var(--text-primary)]">{option}</span>
                   </label>

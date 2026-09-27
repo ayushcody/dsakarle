@@ -20,8 +20,10 @@ const TAB_LABELS: Record<CodeLanguage, string> = {
   cpp: 'C++',
 };
 
-export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
-  const { selectedLanguage, setLanguage, currentStep, setStep } = useStepperStore();
+export function CodeTabs({ code, renderedCode, activeLine, steps }: CodeTabsProps) {
+  const { selectedLanguage: chosen, setLanguage, currentStep, setStep } = useStepperStore();
+  const tabs = TABS.filter((lang) => code[lang]?.trim());
+  const selectedLanguage = tabs.includes(chosen) ? chosen : tabs[0] ?? 'python';
   const codeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,9 +56,12 @@ export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
       return;
     }
 
-    const targetLine = codeRef.current.querySelector(`[data-line="${activeLine}"]`);
+    const targetLine = codeRef.current.querySelector<HTMLElement>(`[data-line="${activeLine}"]`);
     targetLine?.classList.add('active-line');
-    targetLine?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const pane = codeRef.current;
+    if (targetLine && pane.scrollHeight > pane.clientHeight) {
+      pane.scrollTo({ top: targetLine.offsetTop - pane.clientHeight / 2, behavior: 'smooth' });
+    }
   }, [activeLine, currentStep, selectedLanguage, steps]);
 
   const handleCodeClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -83,7 +88,7 @@ export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
         }
       `}</style>
       <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--border)' }}>
-        {TABS.map((lang) => (
+        {tabs.map((lang) => (
           <button
             key={lang}
             onClick={() => setLanguage(lang)}

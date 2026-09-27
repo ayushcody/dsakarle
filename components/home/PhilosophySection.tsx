@@ -7,7 +7,7 @@ export default function PhilosophySection() {
       {/* Visual over Jargon */}
       <div className="flex flex-col md:flex-row items-center gap-16 mb-24">
         <div className="flex-1">
-          <h2 className="font-lora text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-6">Build Intuition First</h2>
+          <h2 className="font-dmsans tracking-tight text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-6">Build Intuition First</h2>
           <p className="font-dmsans text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
             Read a textbook, and you get a wall of formal proofs. Read our guides, and you get an interactive playground. We believe that if you can visually see the underlying shape of an algorithm, the code writes itself.
           </p>
@@ -22,7 +22,7 @@ export default function PhilosophySection() {
         </div>
         <div className="flex-1 bg-[#F0EDE8] p-8 rounded-[var(--radius)] border border-[#E5E0D8] flex items-center justify-center min-h-[300px]">
            {/* Simple static layout diagram */}
-           <div className="bg-white p-6 rounded shadow-sm border border-[#E5E0D8] flex gap-4 w-full opacity-80">
+           <div className="bg-[var(--white)] p-6 rounded shadow-sm border border-[#E5E0D8] flex gap-4 w-full opacity-80">
              <div className="w-1/3 flex flex-col gap-2">
                <div className="h-4 bg-[#E5E0D8] rounded w-full"></div>
                <div className="h-4 bg-[#E5E0D8] rounded w-3/4"></div>
@@ -39,7 +39,7 @@ export default function PhilosophySection() {
       {/* Code in 4 Languages */}
       <div className="flex flex-col md:flex-row-reverse items-center gap-16">
         <div className="flex-1">
-          <h2 className="font-lora text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-6">Learn in Your Language</h2>
+          <h2 className="font-dmsans tracking-tight text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-6">Learn in Your Language</h2>
           <p className="font-dmsans text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
             Language syntax shouldn&apos;t be a barrier to algorithm mastery. That&apos;s why every single implementation, template, and solution on DSAKarle is strictly provided in the top 4 competitive programming languages.
           </p>

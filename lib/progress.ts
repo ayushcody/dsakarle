@@ -26,6 +26,7 @@ export function markComplete(slug: string): void {
   if (!progress.completedSections.includes(slug)) {
     progress.completedSections.push(slug);
     window.localStorage.setItem(KEY, JSON.stringify(progress));
+    window.dispatchEvent(new Event('dsakarle:progress'));
   }
 }
 
@@ -48,6 +49,7 @@ export function saveQuizScore(slug: string, type: 'recognition' | 'concept', sco
   }
 
   window.localStorage.setItem(KEY, JSON.stringify(progress));
+  window.dispatchEvent(new Event('dsakarle:progress'));
 }
 
 export function setLastVisited(slug: string): void {

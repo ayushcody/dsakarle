@@ -10,9 +10,9 @@ export function HeroBlock({ topic }: { topic: LearningTopicPage }) {
   }[topic.difficulty];
 
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-10 shadow-[var(--shadow-card)]">
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] px-8 py-10 shadow-[var(--shadow-card)]">
       <Badge className="h-[120px] w-[120px]" />
-      <h1 className="mt-6 font-lora text-5xl font-bold text-[var(--text-primary)]">{topic.title}</h1>
+      <h1 className="mt-6 font-dmsans tracking-tight text-5xl font-bold text-[var(--text-primary)]">{topic.title}</h1>
       <p className="mt-4 max-w-3xl font-dmsans text-[18px] leading-relaxed text-[var(--text-secondary)]">
         {topic.overview.summary}
       </p>

@@ -17,8 +17,9 @@ function asNodeArray(value: unknown): LinkedListNode[] {
   }
 
   return value.map((item, index) => {
-    if (typeof item === 'object' && item && 'value' in item) {
-      const node = item as { id?: unknown; value: unknown };
+    if (typeof item === 'object' && item && ('value' in item || 'val' in item)) {
+      const raw = item as { id?: unknown; value?: unknown; val?: unknown };
+      const node = { id: raw.id, value: raw.value ?? raw.val };
       return {
         id: typeof node.id === 'string' ? node.id : `node-${index}`,
         value:
@@ -54,7 +55,7 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
   const centerOffset = (width - (nodes.length * nodeWidth + (nodes.length - 1) * gap)) / 2;
 
   return (
-    <div className="overflow-x-auto rounded-[var(--radius)] border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-card)]">
+    <div className="overflow-x-auto rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] p-4 shadow-[var(--shadow-card)]">
       <svg viewBox={`0 0 ${width} 190`} width="100%" className="min-w-[620px]">
         <rect x="0" y="0" width={width} height="190" rx="16" fill="var(--bg-secondary)" />
 
@@ -77,8 +78,6 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
                 fill={isCurrent ? 'rgba(202,138,4,0.18)' : 'white'}
                 stroke={isCurrent ? '#CA8A04' : '#E5E0D8'}
                 strokeWidth={isCurrent ? 2 : 1.5}
-                animate={{ y }}
-                transition={{ type: 'spring', stiffness: 260, damping: 24 }}
               />
               <text
                 x={x + nodeWidth / 2}

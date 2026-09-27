@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 
 import { saveQuizScore } from '@/lib/progress';
 import { PATTERN_META } from '@/lib/patternMeta';
@@ -27,6 +28,9 @@ export function RecognitionQuiz({ quiz, topicId }: { quiz: RecognitionQuizData; 
 
     if (slug === quiz.correctPatternId) {
       setRevealed(true);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, colors: ['#CC5A37', '#D99B26', '#1E7B6C'] });
+      }
       return;
     }
 
@@ -46,7 +50,7 @@ export function RecognitionQuiz({ quiz, topicId }: { quiz: RecognitionQuizData; 
   };
 
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] px-8 py-8 shadow-[var(--shadow-card)]">
       <h2 className="topic-h2" style={{ marginTop: 0 }}>
         🎯 Pattern Recognition
       </h2>

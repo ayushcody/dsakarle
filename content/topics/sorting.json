@@ -5,8 +5,15 @@
   "category": "algorithm",
   "difficulty": "medium",
   "estimatedMinutes": 60,
-  "prerequisites": ["arrays", "recursion"],
-  "tags": ["array", "sort", "divide-and-conquer"],
+  "prerequisites": [
+    "arrays",
+    "recursion"
+  ],
+  "tags": [
+    "array",
+    "sort",
+    "divide-and-conquer"
+  ],
   "overview": {
     "summary": "Sorting algorithms arrange elements in a certain order (usually ascending). Understanding how they work internally is crucial for grasping time complexity limits.",
     "learningObjectives": [
@@ -26,9 +33,18 @@
   "definition": {
     "technicalDefinition": "A Sorting Algorithm puts elements of a list into an order. The most frequently used orders are numerical order and lexicographical order.",
     "vocabulary": [
-      { "term": "In-Place", "definition": "The algorithm sorts the array without needing extra memory (e.g., Quick Sort)." },
-      { "term": "Stable", "definition": "Items with the same value retain their original relative order (e.g., Merge Sort)." },
-      { "term": "Comparator", "definition": "A custom function passed to a sort method to define how two elements should be compared." }
+      {
+        "term": "In-Place",
+        "definition": "The algorithm sorts the array without needing extra memory (e.g., Quick Sort)."
+      },
+      {
+        "term": "Stable",
+        "definition": "Items with the same value retain their original relative order (e.g., Merge Sort)."
+      },
+      {
+        "term": "Comparator",
+        "definition": "A custom function passed to a sort method to define how two elements should be compared."
+      }
     ],
     "keyProperties": [
       "O(N log N) is the fastest comparison-based sort.",
@@ -42,8 +58,29 @@
     ],
     "clickSentence": "Divide and Conquer is the secret to breaking the O(N^2) barrier.",
     "diagramType": "ArrayDiagram",
-    "cells": [5, 2, 9, 1, 5, 6],
-    "diagramState": {}
+    "cells": [
+      5,
+      1,
+      4,
+      2,
+      8
+    ],
+    "diagramState": {
+      "cells": [
+        1,
+        4,
+        2,
+        5,
+        8
+      ],
+      "comparing": [
+        1,
+        2
+      ],
+      "highlighted": [
+        4
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -57,20 +94,513 @@
       "cpp": "std::sort(arr.begin(), arr.end()); // Introsort"
     },
     "memoryLayout": [
-      { "label": "Unsorted", "value": "[5, 2, 9, 1]" },
-      { "label": "Sorted", "value": "[1, 2, 5, 9]" }
+      {
+        "label": "Unsorted",
+        "value": "[5, 2, 9, 1]"
+      },
+      {
+        "label": "Sorted",
+        "value": "[1, 2, 5, 9]"
+      }
     ]
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
-    "array": [],
+    "array": [
+      5,
+      1,
+      4,
+      2,
+      8
+    ],
+    "code": {
+      "python": "def bubble_sort(a):\n    for i in range(len(a) - 1):\n        for j in range(len(a) - 1 - i):\n            if a[j] > a[j + 1]:\n                a[j], a[j + 1] = a[j + 1], a[j]\n    return a"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
+        "diagramState": {
+          "cells": [
+            5,
+            1,
+            4,
+            2,
+            8
+          ]
+        },
         "variables": {},
-        "explanation": "Interactive Sorting visualization coming soon.",
+        "explanation": "Bubble sort: repeatedly swap adjacent out-of-order pairs. The biggest value bubbles to the end each pass.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "cells": [
+            5,
+            1,
+            4,
+            2,
+            8
+          ],
+          "comparing": [
+            0,
+            1
+          ],
+          "highlighted": []
+        },
+        "variables": {
+          "pass": 1,
+          "j": 0,
+          "a[j]": 5,
+          "a[j+1]": 1
+        },
+        "explanation": "Compare 5 and 1. Out of order → swap.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "cells": [
+            1,
+            5,
+            4,
+            2,
+            8
+          ],
+          "comparing": [
+            0,
+            1
+          ],
+          "highlighted": []
+        },
+        "variables": {
+          "pass": 1,
+          "j": 0
+        },
+        "explanation": "Swapped: now 1, 5.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "cells": [
+            1,
+            5,
+            4,
+            2,
+            8
+          ],
+          "comparing": [
+            1,
+            2
+          ],
+          "highlighted": []
+        },
+        "variables": {
+          "pass": 1,
+          "j": 1,
+          "a[j]": 5,
+          "a[j+1]": 4
+        },
+        "explanation": "Compare 5 and 4. Out of order → swap.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "cells": [
+            1,
+            4,
+            5,
+            2,
+            8
+          ],
+          "comparing": [
+            1,
+            2
+          ],
+          "highlighted": []
+        },
+        "variables": {
+          "pass": 1,
+          "j": 1
+        },
+        "explanation": "Swapped: now 4, 5.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "cells": [
+            1,
+            4,
+            5,
+            2,
+            8
+          ],
+          "comparing": [
+            2,
+            3
+          ],
+          "highlighted": []
+        },
+        "variables": {
+          "pass": 1,
+          "j": 2,
+          "a[j]": 5,
+          "a[j+1]": 2
+        },
+        "explanation": "Compare 5 and 2. Out of order → swap.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "cells": [
+            1,
+            4,
+            2,
+            5,
+            8
+          ],
+          "comparing": [
+            2,
+            3
+          ],
+          "highlighted": []
+        },
+        "variables": {
+          "pass": 1,
+          "j": 2
+        },
+        "explanation": "Swapped: now 2, 5.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "cells": [
+            1,
+            4,
+            2,
+            5,
+            8
+          ],
+          "comparing": [
+            3,
+            4
+          ],
+          "highlighted": []
+        },
+        "variables": {
+          "pass": 1,
+          "j": 3,
+          "a[j]": 5,
+          "a[j+1]": 8
+        },
+        "explanation": "Compare 5 and 8. Already in order.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "cells": [
+            1,
+            4,
+            2,
+            5,
+            8
+          ],
+          "highlighted": [
+            4
+          ]
+        },
+        "variables": {
+          "pass": 1
+        },
+        "explanation": "End of pass 1: 8 is locked in its final spot.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "cells": [
+            1,
+            4,
+            2,
+            5,
+            8
+          ],
+          "comparing": [
+            0,
+            1
+          ],
+          "highlighted": [
+            4
+          ]
+        },
+        "variables": {
+          "pass": 2,
+          "j": 0,
+          "a[j]": 1,
+          "a[j+1]": 4
+        },
+        "explanation": "Compare 1 and 4. Already in order.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 10,
+        "diagramState": {
+          "cells": [
+            1,
+            4,
+            2,
+            5,
+            8
+          ],
+          "comparing": [
+            1,
+            2
+          ],
+          "highlighted": [
+            4
+          ]
+        },
+        "variables": {
+          "pass": 2,
+          "j": 1,
+          "a[j]": 4,
+          "a[j+1]": 2
+        },
+        "explanation": "Compare 4 and 2. Out of order → swap.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 11,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "comparing": [
+            1,
+            2
+          ],
+          "highlighted": [
+            4
+          ]
+        },
+        "variables": {
+          "pass": 2,
+          "j": 1
+        },
+        "explanation": "Swapped: now 2, 4.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 12,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "comparing": [
+            2,
+            3
+          ],
+          "highlighted": [
+            4
+          ]
+        },
+        "variables": {
+          "pass": 2,
+          "j": 2,
+          "a[j]": 4,
+          "a[j+1]": 5
+        },
+        "explanation": "Compare 4 and 5. Already in order.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 13,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "highlighted": [
+            4,
+            3
+          ]
+        },
+        "variables": {
+          "pass": 2
+        },
+        "explanation": "End of pass 2: 5 is locked in its final spot.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 14,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "comparing": [
+            0,
+            1
+          ],
+          "highlighted": [
+            4,
+            3
+          ]
+        },
+        "variables": {
+          "pass": 3,
+          "j": 0,
+          "a[j]": 1,
+          "a[j+1]": 2
+        },
+        "explanation": "Compare 1 and 2. Already in order.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 15,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "comparing": [
+            1,
+            2
+          ],
+          "highlighted": [
+            4,
+            3
+          ]
+        },
+        "variables": {
+          "pass": 3,
+          "j": 1,
+          "a[j]": 2,
+          "a[j+1]": 4
+        },
+        "explanation": "Compare 2 and 4. Already in order.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 16,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "highlighted": [
+            4,
+            3,
+            2
+          ]
+        },
+        "variables": {
+          "pass": 3
+        },
+        "explanation": "End of pass 3: 4 is locked in its final spot.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 17,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "comparing": [
+            0,
+            1
+          ],
+          "highlighted": [
+            4,
+            3,
+            2
+          ]
+        },
+        "variables": {
+          "pass": 4,
+          "j": 0,
+          "a[j]": 1,
+          "a[j+1]": 2
+        },
+        "explanation": "Compare 1 and 2. Already in order.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 18,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "highlighted": [
+            4,
+            3,
+            2,
+            1
+          ]
+        },
+        "variables": {
+          "pass": 4
+        },
+        "explanation": "End of pass 4: 2 is locked in its final spot.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 19,
+        "diagramState": {
+          "cells": [
+            1,
+            2,
+            4,
+            5,
+            8
+          ],
+          "highlighted": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "variables": {
+          "result": "1,2,4,5,8"
+        },
+        "explanation": "Sorted! Two nested loops make this O(n²).",
+        "activeLine": 6
       }
     ]
   },
@@ -160,8 +690,23 @@
     }
   ],
   "practice": [
-    { "title": "Merge Intervals", "url": "https://leetcode.com/problems/merge-intervals/", "difficulty": "medium", "keyInsight": "Sort by start time." },
-    { "title": "Sort Colors", "url": "https://leetcode.com/problems/sort-colors/", "difficulty": "medium", "keyInsight": "Dutch National Flag problem. Sort in O(N) time using three pointers." },
-    { "title": "K Closest Points to Origin", "url": "https://leetcode.com/problems/k-closest-points-to-origin/", "difficulty": "medium", "keyInsight": "Custom comparator based on distance formula." }
+    {
+      "title": "Merge Intervals",
+      "url": "https://leetcode.com/problems/merge-intervals/",
+      "difficulty": "medium",
+      "keyInsight": "Sort by start time."
+    },
+    {
+      "title": "Sort Colors",
+      "url": "https://leetcode.com/problems/sort-colors/",
+      "difficulty": "medium",
+      "keyInsight": "Dutch National Flag problem. Sort in O(N) time using three pointers."
+    },
+    {
+      "title": "K Closest Points to Origin",
+      "url": "https://leetcode.com/problems/k-closest-points-to-origin/",
+      "difficulty": "medium",
+      "keyInsight": "Custom comparator based on distance formula."
+    }
   ]
 }

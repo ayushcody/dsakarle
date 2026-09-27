@@ -26,7 +26,7 @@ export default function DPDiagram({ diagramState }: DPDiagramProps) {
   const offset = (width - totalWidth) / 2;
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-white shadow-[var(--shadow-card)] overflow-x-auto">
+    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] shadow-[var(--shadow-card)] overflow-x-auto">
       <div className="w-full min-w-[560px]">
         <svg viewBox={`0 0 ${width} 140`} width="100%" className="overflow-visible">
           {/* Legend */}

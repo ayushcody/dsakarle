@@ -32,27 +32,23 @@ const testimonials = [
 ];
 
 export default function TestimonialsSection() {
+  const loop = [...testimonials, ...testimonials];
   return (
-    <section className="bg-[#FAF9F7] py-24 px-6 border-t border-[var(--border)]">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="font-lora text-3xl md:text-4xl font-bold text-center text-[var(--text-primary)] mb-16">Stories from our learners</h2>
-        
-        <div className="grid md:grid-cols-2 gap-8">
-          {testimonials.map((t, idx) => (
-            <div key={idx} className="bg-white p-8 rounded-[var(--radius)] border border-[var(--border)] shadow-sm flex flex-col">
-              <p className="font-dmsans text-[var(--text-secondary)] italic text-lg leading-relaxed mb-8 flex-grow">
-                &quot;{t.quote}&quot;
-              </p>
-              <div className="flex items-center gap-4 mt-auto">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-dmsans font-bold text-white ${t.color}`}>
-                  {t.initials}
-                </div>
-                <div>
-                  <h4 className="font-dmsans font-bold text-[var(--text-primary)]">{t.name}</h4>
-                  <p className="font-dmsans text-sm text-[var(--text-muted)]">{t.role}</p>
-                </div>
-              </div>
-            </div>
+    <section className="overflow-hidden border-t border-[var(--border)] bg-[var(--bg-primary)] py-24">
+      <h2 className="mb-14 px-6 text-center font-dmsans text-3xl font-bold tracking-tight text-[var(--text-primary)] md:text-4xl">What learners say</h2>
+      <div className="marquee-mask">
+        <div className="marquee-track flex w-max gap-6">
+          {loop.map((t, idx) => (
+            <figure key={idx} aria-hidden={idx >= testimonials.length} className="flex w-[340px] shrink-0 flex-col rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] p-7 shadow-[var(--shadow-card)]">
+              <blockquote className="mb-6 flex-grow font-dmsans text-[17px] leading-relaxed text-[var(--text-secondary)]">&ldquo;{t.quote}&rdquo;</blockquote>
+              <figcaption className="flex items-center gap-3">
+                <span className={`flex h-10 w-10 items-center justify-center rounded-full font-dmsans text-sm font-bold text-white ${t.color}`}>{t.initials}</span>
+                <span>
+                  <span className="block font-dmsans font-bold text-[var(--text-primary)]">{t.name}</span>
+                  <span className="block font-dmsans text-sm text-[var(--text-muted)]">{t.role}</span>
+                </span>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>

@@ -5,7 +5,10 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 35,
-  "prerequisites": ["arrays", "linked-lists"],
+  "prerequisites": [
+    "arrays",
+    "linked-lists"
+  ],
   "tags": [
     "data-structure",
     "FIFO"
@@ -58,8 +61,21 @@
     ],
     "clickSentence": "Use a Queue whenever you need to process things in the exact order they were discovered.",
     "diagramType": "ArrayDiagram",
-    "cells": [],
-    "diagramState": {}
+    "cells": [
+      "·"
+    ],
+    "diagramState": {
+      "cells": [
+        "A",
+        "B",
+        "C"
+      ],
+      "left": 0,
+      "right": 2,
+      "highlighted": [
+        2
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -89,14 +105,142 @@
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
-    "array": [],
+    "array": [
+      "·"
+    ],
+    "code": {
+      "python": "q = deque()\nq.append(x)      # enqueue at back\nq.popleft()      # dequeue from front"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive visualization for Queues is coming soon.",
+        "diagramState": {
+          "cells": [
+            "·"
+          ],
+          "left": -1,
+          "right": -1
+        },
+        "variables": {
+          "size": 0
+        },
+        "explanation": "A queue is first-in, first-out, like a line at a ticket counter. L marks the front, R the back.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "cells": [
+            "A"
+          ],
+          "left": 0,
+          "right": 0,
+          "highlighted": [
+            0
+          ]
+        },
+        "variables": {
+          "size": 1,
+          "enqueued": "A"
+        },
+        "explanation": "enqueue(A): join at the back.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "cells": [
+            "A",
+            "B"
+          ],
+          "left": 0,
+          "right": 1,
+          "highlighted": [
+            1
+          ]
+        },
+        "variables": {
+          "size": 2,
+          "enqueued": "B"
+        },
+        "explanation": "enqueue(B): join at the back.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "cells": [
+            "A",
+            "B",
+            "C"
+          ],
+          "left": 0,
+          "right": 2,
+          "highlighted": [
+            2
+          ]
+        },
+        "variables": {
+          "size": 3,
+          "enqueued": "C"
+        },
+        "explanation": "enqueue(C): join at the back.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "cells": [
+            "B",
+            "C"
+          ],
+          "left": 0,
+          "right": 1
+        },
+        "variables": {
+          "size": 2,
+          "dequeued": "A"
+        },
+        "explanation": "dequeue(): A was first in, so it leaves first.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "cells": [
+            "B",
+            "C",
+            "D"
+          ],
+          "left": 0,
+          "right": 2,
+          "highlighted": [
+            2
+          ]
+        },
+        "variables": {
+          "size": 3,
+          "enqueued": "D"
+        },
+        "explanation": "enqueue(D): join at the back.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "cells": [
+            "C",
+            "D"
+          ],
+          "left": 0,
+          "right": 1
+        },
+        "variables": {
+          "size": 2,
+          "dequeued": "B"
+        },
+        "explanation": "dequeue(): B was first in, so it leaves first.",
+        "activeLine": 3
       }
     ]
   },

@@ -70,10 +70,10 @@ export function SearchBar() {
           }
         }}
         placeholder="Search topics, patterns, and tags"
-        className="w-full rounded-[var(--radius)] border border-[var(--border)] bg-white px-4 py-3 font-dmsans text-[15px] text-[var(--text-primary)] shadow-[var(--shadow-card)] outline-none focus:border-[var(--accent-coral)]"
+        className="w-full rounded-[var(--radius)] border border-[var(--border)] bg-[var(--white)] px-4 py-3 font-dmsans text-[15px] text-[var(--text-primary)] shadow-[var(--shadow-card)] outline-none focus:border-[var(--accent-coral)]"
       />
       {results.length > 0 && (
-        <div className="absolute top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border)] bg-white shadow-[var(--shadow-card-hover)]">
+        <div className="absolute top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--white)] shadow-[var(--shadow-card-hover)]">
           {results.map((result, index) => (
             <Link
               key={result.slug}

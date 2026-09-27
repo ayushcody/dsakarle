@@ -5,8 +5,14 @@
   "category": "data-structure",
   "difficulty": "medium",
   "estimatedMinutes": 50,
-  "prerequisites": ["trees"],
-  "tags": ["tree", "search", "sorted"],
+  "prerequisites": [
+    "trees"
+  ],
+  "tags": [
+    "tree",
+    "search",
+    "sorted"
+  ],
   "overview": {
     "summary": "A Binary Search Tree (BST) is a tree where every left child is smaller than its parent, and every right child is greater.",
     "learningObjectives": [
@@ -26,9 +32,18 @@
   "definition": {
     "technicalDefinition": "A Binary Search Tree is a rooted binary tree data structure whose internal nodes each store a key greater than all the keys in the node's left subtree and less than those in its right subtree.",
     "vocabulary": [
-      { "term": "BST Invariant", "definition": "Left Subtree < Node < Right Subtree for EVERY node." },
-      { "term": "In-Order Traversal", "definition": "Visiting Left, then Node, then Right. In a BST, this prints values in perfectly sorted order." },
-      { "term": "Balanced", "definition": "When the left and right subtrees have roughly the same height, ensuring O(log N) depth." }
+      {
+        "term": "BST Invariant",
+        "definition": "Left Subtree < Node < Right Subtree for EVERY node."
+      },
+      {
+        "term": "In-Order Traversal",
+        "definition": "Visiting Left, then Node, then Right. In a BST, this prints values in perfectly sorted order."
+      },
+      {
+        "term": "Balanced",
+        "definition": "When the left and right subtrees have roughly the same height, ensuring O(log N) depth."
+      }
     ],
     "keyProperties": [
       "Average case O(log N) for Search, Insert, and Delete.",
@@ -42,8 +57,21 @@
     ],
     "clickSentence": "By strictly enforcing the rule 'Smaller to the left, Larger to the right', searching becomes a game of elimination.",
     "diagramType": "tree",
-    "cells": [10, 5, 15, 2, 7, 12, 20],
-    "diagramState": {}
+    "cells": [
+      10,
+      5,
+      15,
+      2,
+      7,
+      12,
+      20
+    ],
+    "diagramState": {
+      "nodeStates": {
+        "0": "visited",
+        "2": "active"
+      }
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -57,21 +85,130 @@
       "cpp": "struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n    TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n};"
     },
     "memoryLayout": [
-      { "label": "Root", "value": "10" },
-      { "label": "Root.left", "value": "5 (Must be < 10)" },
-      { "label": "Root.right", "value": "15 (Must be > 10)" }
+      {
+        "label": "Root",
+        "value": "10"
+      },
+      {
+        "label": "Root.left",
+        "value": "5 (Must be < 10)"
+      },
+      {
+        "label": "Root.right",
+        "value": "15 (Must be > 10)"
+      }
     ]
   },
   "stepper": {
     "diagramType": "tree",
-    "array": [10, 5, 15, 2, 7, 12, 20],
+    "array": [
+      10,
+      5,
+      15,
+      2,
+      7,
+      12,
+      20
+    ],
+    "code": {
+      "python": "def search(node, target):\n    while node:\n        if node.val == target: return node\n        if target < node.val: node = node.left\n        else: node = node.right\n    return None"
+    },
     "steps": [
       {
         "stepIndex": 0,
         "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive BST traversal visualization coming soon.",
+        "variables": {
+          "target": 12
+        },
+        "explanation": "Search the BST for 12. Smaller values live left, larger values live right.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "nodeStates": {
+            "0": "active"
+          }
+        },
+        "variables": {
+          "node": 10,
+          "target": 12
+        },
+        "explanation": "At 10.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited"
+          }
+        },
+        "variables": {
+          "node": 10
+        },
+        "explanation": "12 > 10 → go right and ignore the whole other subtree.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "2": "active"
+          }
+        },
+        "variables": {
+          "node": 15,
+          "target": 12
+        },
+        "explanation": "At 15.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "2": "visited"
+          }
+        },
+        "variables": {
+          "node": 15
+        },
+        "explanation": "12 < 15 → go left and ignore the whole other subtree.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "2": "visited",
+            "5": "active"
+          }
+        },
+        "variables": {
+          "node": 12,
+          "target": 12
+        },
+        "explanation": "At 12.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "nodeStates": {
+            "0": "visited",
+            "2": "visited",
+            "5": "success"
+          }
+        },
+        "variables": {
+          "found": "yes"
+        },
+        "explanation": "Found 12. We checked one node per level: O(h).",
+        "activeLine": 3
       }
     ]
   },
@@ -169,9 +306,29 @@
     }
   ],
   "practice": [
-    { "title": "Validate Binary Search Tree", "url": "https://leetcode.com/problems/validate-binary-search-tree/", "difficulty": "medium", "keyInsight": "Pass a valid [min, max] range down to every node." },
-    { "title": "Lowest Common Ancestor of a BST", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/", "difficulty": "medium", "keyInsight": "If both targets are smaller, go left. If both are larger, go right. Otherwise, you are at the LCA." },
-    { "title": "Kth Smallest Element in a BST", "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/", "difficulty": "medium", "keyInsight": "An in-order traversal yields the k-th element naturally." },
-    { "title": "Convert Sorted Array to Binary Search Tree", "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/", "difficulty": "easy", "keyInsight": "The middle of the array is the root." }
+    {
+      "title": "Validate Binary Search Tree",
+      "url": "https://leetcode.com/problems/validate-binary-search-tree/",
+      "difficulty": "medium",
+      "keyInsight": "Pass a valid [min, max] range down to every node."
+    },
+    {
+      "title": "Lowest Common Ancestor of a BST",
+      "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
+      "difficulty": "medium",
+      "keyInsight": "If both targets are smaller, go left. If both are larger, go right. Otherwise, you are at the LCA."
+    },
+    {
+      "title": "Kth Smallest Element in a BST",
+      "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+      "difficulty": "medium",
+      "keyInsight": "An in-order traversal yields the k-th element naturally."
+    },
+    {
+      "title": "Convert Sorted Array to Binary Search Tree",
+      "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",
+      "difficulty": "easy",
+      "keyInsight": "The middle of the array is the root."
+    }
   ]
 }

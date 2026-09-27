@@ -5,7 +5,10 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 35,
-  "prerequisites": ["arrays", "linked-lists"],
+  "prerequisites": [
+    "arrays",
+    "linked-lists"
+  ],
   "tags": [
     "data-structure",
     "LIFO"
@@ -59,7 +62,12 @@
     "clickSentence": "Use a Stack whenever you need to 'go back' or process the most recent thing first.",
     "diagramType": "StackDiagram",
     "cells": [],
-    "diagramState": {}
+    "diagramState": {
+      "stack": [
+        "(",
+        "{"
+      ]
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -89,16 +97,168 @@
   },
   "stepper": {
     "diagramType": "StackDiagram",
-    "array": [],
+    "code": {
+      "python": "def is_valid(s):\n    stack = []\n    for c in s:\n        if c in \"([{\": stack.append(c)\n        else:\n            if not stack or stack[-1] != match[c]: return False\n            stack.pop()\n    return not stack"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive visualization for Stacks is coming soon.",
+        "diagramState": {
+          "stack": []
+        },
+        "variables": {
+          "input": "({[]})"
+        },
+        "explanation": "Check if \"({[]})\" is balanced. Openers go on the stack; each closer must match the top.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "stack": [
+            "("
+          ]
+        },
+        "variables": {
+          "i": 0,
+          "char": "("
+        },
+        "explanation": "'(' is an opener → push. Top is now '('.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "stack": [
+            "(",
+            "{"
+          ]
+        },
+        "variables": {
+          "i": 1,
+          "char": "{"
+        },
+        "explanation": "'{' is an opener → push. Top is now '{'.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "stack": [
+            "(",
+            "{",
+            "["
+          ]
+        },
+        "variables": {
+          "i": 2,
+          "char": "["
+        },
+        "explanation": "'[' is an opener → push. Top is now '['.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "stack": [
+            "(",
+            "{",
+            "["
+          ]
+        },
+        "variables": {
+          "i": 3,
+          "char": "]",
+          "top": "["
+        },
+        "explanation": "']' is a closer. Top is '[', its match → pop.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "stack": [
+            "(",
+            "{"
+          ]
+        },
+        "variables": {
+          "i": 3,
+          "char": "]"
+        },
+        "explanation": "Popped. The most recent opener is resolved first — that is LIFO.",
+        "activeLine": 7
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "stack": [
+            "(",
+            "{"
+          ]
+        },
+        "variables": {
+          "i": 4,
+          "char": "}",
+          "top": "{"
+        },
+        "explanation": "'}' is a closer. Top is '{', its match → pop.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "stack": [
+            "("
+          ]
+        },
+        "variables": {
+          "i": 4,
+          "char": "}"
+        },
+        "explanation": "Popped. The most recent opener is resolved first — that is LIFO.",
+        "activeLine": 7
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "stack": [
+            "("
+          ]
+        },
+        "variables": {
+          "i": 5,
+          "char": ")",
+          "top": "("
+        },
+        "explanation": "')' is a closer. Top is '(', its match → pop.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "stack": []
+        },
+        "variables": {
+          "i": 5,
+          "char": ")"
+        },
+        "explanation": "Popped. The most recent opener is resolved first — that is LIFO.",
+        "activeLine": 7
+      },
+      {
+        "stepIndex": 10,
+        "diagramState": {
+          "stack": []
+        },
+        "variables": {
+          "result": "True"
+        },
+        "explanation": "Stack is empty at the end, so every bracket was matched.",
+        "activeLine": 8
       }
-    ]
+    ],
+    "array": []
   },
   "operations": [
     {

@@ -44,11 +44,12 @@ export default async function TopicPage({ params }: { params: { slug: string } }
     return <ComingSoonTemplate slug={params.slug} />;
   }
 
-  const baseCode = topic.examples?.[0]?.code || {
+  const baseCode = {
     python: '',
     javascript: '',
     java: '',
     cpp: '',
+    ...(topic.stepper?.code ?? topic.examples?.[0]?.code),
   };
 
   const renderedCode = await renderCodeBlocks(baseCode);

@@ -43,11 +43,11 @@ export function InteractiveDemoPanel() {
         <div className="flex gap-12 mb-12">
           <div>
             <p className="font-dmsans text-[#888] text-sm mb-2">Left</p>
-            <div className="bg-[#1D7A6B] bg-opacity-20 text-[#1D7A6B] font-dmmono font-bold w-10 h-10 rounded flex items-center justify-center">{left}</div>
+            <div className="bg-[#1D7A6B]/20 text-[#1D7A6B] font-dmmono font-bold w-10 h-10 rounded flex items-center justify-center">{left}</div>
           </div>
           <div>
             <p className="font-dmsans text-[#888] text-sm mb-2">Right</p>
-            <div className="bg-[#1D7A6B] bg-opacity-20 text-[#1D7A6B] font-dmmono font-bold w-10 h-10 rounded flex items-center justify-center">{right}</div>
+            <div className="bg-[#1D7A6B]/20 text-[#1D7A6B] font-dmmono font-bold w-10 h-10 rounded flex items-center justify-center">{right}</div>
           </div>
           <div>
             <p className="font-dmsans text-[#888] text-sm mb-2">Current Window</p>
@@ -66,7 +66,7 @@ export function InteractiveDemoPanel() {
           <div className="flex-1 flex items-center gap-4">
             <div className="w-full h-1 bg-[#333] rounded-full relative cursor-pointer">
               <div className="absolute left-0 top-0 h-full bg-[var(--accent-coral)] rounded-full" style={{ width: `${(step/totalSteps)*100}%` }}></div>
-              <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow" style={{ left: `calc(${(step/totalSteps)*100}% - 8px)` }}></div>
+              <div className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-[var(--white)] rounded-full shadow" style={{ left: `calc(${(step/totalSteps)*100}% - 8px)` }}></div>
             </div>
             <span className="font-dmsans text-xs text-[#888] whitespace-nowrap">Step {step} / {totalSteps}</span>
           </div>

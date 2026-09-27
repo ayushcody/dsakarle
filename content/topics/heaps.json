@@ -5,8 +5,15 @@
   "category": "data-structure",
   "difficulty": "medium",
   "estimatedMinutes": 50,
-  "prerequisites": ["trees", "arrays"],
-  "tags": ["tree", "priority-queue", "sorting"],
+  "prerequisites": [
+    "trees",
+    "arrays"
+  ],
+  "tags": [
+    "tree",
+    "priority-queue",
+    "sorting"
+  ],
   "overview": {
     "summary": "A Heap is a specialized tree-based data structure that satisfies the heap property: the parent node is always larger (or smaller) than its children.",
     "learningObjectives": [
@@ -26,9 +33,18 @@
   "definition": {
     "technicalDefinition": "A Heap is a complete binary tree that satisfies the Heap Property. In a Max Heap, every parent node is greater than or equal to its children. In a Min Heap, every parent is less than or equal to its children.",
     "vocabulary": [
-      { "term": "Heapify", "definition": "The process of moving an element up or down the tree to restore the Heap Property." },
-      { "term": "Priority Queue", "definition": "An abstract data type often implemented using a Heap, where elements are dequeued by priority." },
-      { "term": "Complete Tree", "definition": "A tree where every level is completely filled, except possibly the last level, which is filled left-to-right." }
+      {
+        "term": "Heapify",
+        "definition": "The process of moving an element up or down the tree to restore the Heap Property."
+      },
+      {
+        "term": "Priority Queue",
+        "definition": "An abstract data type often implemented using a Heap, where elements are dequeued by priority."
+      },
+      {
+        "term": "Complete Tree",
+        "definition": "A tree where every level is completely filled, except possibly the last level, which is filled left-to-right."
+      }
     ],
     "keyProperties": [
       "O(1) access to the Max/Min element.",
@@ -42,8 +58,28 @@
     ],
     "clickSentence": "By only partially sorting the data (just enough to keep the best at the top), Heaps save massive amounts of CPU time.",
     "diagramType": "tree",
-    "cells": [10, 8, 7, 4, 5, 2, 1],
-    "diagramState": {}
+    "cells": [
+      10,
+      8,
+      7,
+      4,
+      5,
+      2
+    ],
+    "diagramState": {
+      "cells": [
+        10,
+        8,
+        9,
+        4,
+        5,
+        2,
+        7
+      ],
+      "nodeStates": {
+        "2": "active"
+      }
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -57,21 +93,170 @@
       "cpp": "std::priority_queue<int> max_pq; // Max Heap by default\nstd::priority_queue<int, vector<int>, greater<int>> min_pq;"
     },
     "memoryLayout": [
-      { "label": "Index 0 (Root)", "value": "100" },
-      { "label": "Index 1 (Left)", "value": "50" },
-      { "label": "Index 2 (Right)", "value": "75" }
+      {
+        "label": "Index 0 (Root)",
+        "value": "100"
+      },
+      {
+        "label": "Index 1 (Left)",
+        "value": "50"
+      },
+      {
+        "label": "Index 2 (Right)",
+        "value": "75"
+      }
     ]
   },
   "stepper": {
     "diagramType": "tree",
-    "array": [10, 8, 7, 4, 5, 2, 1],
+    "array": [
+      10,
+      8,
+      7,
+      4,
+      5,
+      2
+    ],
+    "code": {
+      "python": "def push(h, x):\n    h.append(x); i = len(h) - 1\n    while i > 0:\n        p = (i - 1) // 2\n        if h[p] >= h[i]: break\n        h[p], h[i] = h[i], h[p]; i = p"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Heap push/pop visualization coming soon.",
+        "diagramState": {
+          "cells": [
+            10,
+            8,
+            7,
+            4,
+            5,
+            2
+          ]
+        },
+        "variables": {
+          "size": 6
+        },
+        "explanation": "Max-heap: every parent ≥ its children. Stored as an array in level order.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "cells": [
+            10,
+            8,
+            7,
+            4,
+            5,
+            2,
+            9
+          ],
+          "nodeStates": {
+            "6": "active"
+          }
+        },
+        "variables": {
+          "inserted": 9,
+          "i": 6
+        },
+        "explanation": "Insert 9 at the next free spot (end of the array).",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "cells": [
+            10,
+            8,
+            7,
+            4,
+            5,
+            2,
+            9
+          ],
+          "nodeStates": {
+            "2": "compare",
+            "6": "active"
+          }
+        },
+        "variables": {
+          "i": 6,
+          "parent": 2,
+          "h[i]": 9,
+          "h[p]": 7
+        },
+        "explanation": "Compare with parent 7 at index 2 = (6−1)//2.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "cells": [
+            10,
+            8,
+            9,
+            4,
+            5,
+            2,
+            7
+          ],
+          "nodeStates": {
+            "2": "active"
+          }
+        },
+        "variables": {
+          "i": 2
+        },
+        "explanation": "Parent is smaller → swap. 9 sifts up to index 2.",
+        "activeLine": 6
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "cells": [
+            10,
+            8,
+            9,
+            4,
+            5,
+            2,
+            7
+          ],
+          "nodeStates": {
+            "0": "compare",
+            "2": "active"
+          }
+        },
+        "variables": {
+          "i": 2,
+          "parent": 0,
+          "h[i]": 9,
+          "h[p]": 10
+        },
+        "explanation": "Compare with parent 10 at index 0 = (2−1)//2.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "cells": [
+            10,
+            8,
+            9,
+            4,
+            5,
+            2,
+            7
+          ],
+          "nodeStates": {
+            "2": "success"
+          }
+        },
+        "variables": {
+          "i": 2
+        },
+        "explanation": "10 ≥ 9: heap property holds. Stop.",
+        "activeLine": 5
       }
     ]
   },
@@ -169,9 +354,29 @@
     }
   ],
   "practice": [
-    { "title": "Kth Largest Element in an Array", "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/", "difficulty": "medium", "keyInsight": "Maintain a Min-Heap of size K." },
-    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Count frequencies with a Hash Map, then put the counts into a Min-Heap." },
-    { "title": "Merge K Sorted Lists", "url": "https://leetcode.com/problems/merge-k-sorted-lists/", "difficulty": "hard", "keyInsight": "Put the head of every list into a Min-Heap to find the absolute minimum at any given moment." },
-    { "title": "Find Median from Data Stream", "url": "https://leetcode.com/problems/find-median-from-data-stream/", "difficulty": "hard", "keyInsight": "Use two heaps. A Max-Heap for the bottom half, and a Min-Heap for the top half." }
+    {
+      "title": "Kth Largest Element in an Array",
+      "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+      "difficulty": "medium",
+      "keyInsight": "Maintain a Min-Heap of size K."
+    },
+    {
+      "title": "Top K Frequent Elements",
+      "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+      "difficulty": "medium",
+      "keyInsight": "Count frequencies with a Hash Map, then put the counts into a Min-Heap."
+    },
+    {
+      "title": "Merge K Sorted Lists",
+      "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
+      "difficulty": "hard",
+      "keyInsight": "Put the head of every list into a Min-Heap to find the absolute minimum at any given moment."
+    },
+    {
+      "title": "Find Median from Data Stream",
+      "url": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "difficulty": "hard",
+      "keyInsight": "Use two heaps. A Max-Heap for the bottom half, and a Min-Heap for the top half."
+    }
   ]
 }

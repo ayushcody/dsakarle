@@ -5,7 +5,9 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 45,
-  "prerequisites": ["arrays"],
+  "prerequisites": [
+    "arrays"
+  ],
   "tags": [
     "data-structure",
     "pointers",
@@ -62,14 +64,24 @@
     "cells": [],
     "diagramState": {
       "nodes": [
-        {"id": "A", "val": 10},
-        {"id": "B", "val": 20},
-        {"id": "C", "val": 30}
+        {
+          "id": "n0",
+          "value": 1
+        },
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 4
+        }
       ],
-      "edges": [
-        {"source": "A", "target": "B"},
-        {"source": "B", "target": "C"}
-      ]
+      "current": 2
     }
   },
   "structure": {
@@ -100,28 +112,315 @@
   },
   "stepper": {
     "diagramType": "LinkedListDiagram",
-    "array": [],
+    "code": {
+      "python": "def reverse(head):\n    prev, curr = None, head\n    while curr:\n        nxt = curr.next\n        curr.next = prev\n        prev, curr = curr, nxt\n    return prev"
+    },
     "steps": [
       {
         "stepIndex": 0,
         "diagramState": {
           "nodes": [
-            {"id": "A", "val": 10},
-            {"id": "B", "val": 20},
-            {"id": "C", "val": 30}
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
           ],
-          "edges": [
-            {"source": "A", "target": "B"},
-            {"source": "B", "target": "C"}
-          ]
+          "current": 0
         },
         "variables": {
-          "current": "Node(10)"
+          "prev": "None",
+          "curr": 1
         },
-        "explanation": "Interactive traversal visualization for Linked Lists is coming soon.",
-        "activeLine": 1
+        "explanation": "Reverse the list in place. prev starts at None, curr at the head.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 0
+        },
+        "variables": {
+          "curr": 1,
+          "next": 2
+        },
+        "explanation": "Save next = 2 before we lose it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 0,
+          "reversing": true
+        },
+        "variables": {
+          "curr": 1,
+          "curr.next": "None"
+        },
+        "explanation": "Point 1.next back to None. Reversed so far: 1.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 1
+        },
+        "variables": {
+          "curr": 2,
+          "next": 3
+        },
+        "explanation": "Save next = 3 before we lose it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 1,
+          "reversing": true
+        },
+        "variables": {
+          "curr": 2,
+          "curr.next": 1
+        },
+        "explanation": "Point 2.next back to 1. Reversed so far: 2 → 1.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 2
+        },
+        "variables": {
+          "curr": 3,
+          "next": 4
+        },
+        "explanation": "Save next = 4 before we lose it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 2,
+          "reversing": true
+        },
+        "variables": {
+          "curr": 3,
+          "curr.next": 2
+        },
+        "explanation": "Point 3.next back to 2. Reversed so far: 3 → 2 → 1.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 3
+        },
+        "variables": {
+          "curr": 4,
+          "next": "None"
+        },
+        "explanation": "Save next = None before we lose it.",
+        "activeLine": 4
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "n0",
+              "value": 1
+            },
+            {
+              "id": "n1",
+              "value": 2
+            },
+            {
+              "id": "n2",
+              "value": 3
+            },
+            {
+              "id": "n3",
+              "value": 4
+            }
+          ],
+          "current": 3,
+          "reversing": true
+        },
+        "variables": {
+          "curr": 4,
+          "curr.next": 3
+        },
+        "explanation": "Point 4.next back to 3. Reversed so far: 4 → 3 → 2 → 1.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "nodes": [
+            {
+              "id": "r0",
+              "value": 4
+            },
+            {
+              "id": "r1",
+              "value": 3
+            },
+            {
+              "id": "r2",
+              "value": 2
+            },
+            {
+              "id": "r3",
+              "value": 1
+            }
+          ],
+          "current": 0
+        },
+        "variables": {
+          "head": 4
+        },
+        "explanation": "prev is the new head: 4 → 3 → 2 → 1 → None. O(n) time, O(1) space.",
+        "activeLine": 7
       }
-    ]
+    ],
+    "array": []
   },
   "operations": [
     {

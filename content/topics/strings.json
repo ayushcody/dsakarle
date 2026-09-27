@@ -5,8 +5,14 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 35,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "text", "parsing"],
+  "prerequisites": [
+    "arrays"
+  ],
+  "tags": [
+    "array",
+    "text",
+    "parsing"
+  ],
   "overview": {
     "summary": "A String is an array of characters. However, depending on the language, strings are often immutable.",
     "learningObjectives": [
@@ -26,10 +32,22 @@
   "definition": {
     "technicalDefinition": "A string is traditionally a sequence of characters, either as a literal constant or as some kind of variable.",
     "vocabulary": [
-      { "term": "Immutable", "definition": "Once created, the string cannot be changed. To modify it, you must create an entirely new string (Python, Java, JS)." },
-      { "term": "Mutable", "definition": "The string can be modified in-place (C++)." },
-      { "term": "Substring", "definition": "A contiguous sequence of characters within a string." },
-      { "term": "Subsequence", "definition": "A sequence derived by deleting some characters without changing the order." }
+      {
+        "term": "Immutable",
+        "definition": "Once created, the string cannot be changed. To modify it, you must create an entirely new string (Python, Java, JS)."
+      },
+      {
+        "term": "Mutable",
+        "definition": "The string can be modified in-place (C++)."
+      },
+      {
+        "term": "Substring",
+        "definition": "A contiguous sequence of characters within a string."
+      },
+      {
+        "term": "Subsequence",
+        "definition": "A sequence derived by deleting some characters without changing the order."
+      }
     ],
     "keyProperties": [
       "O(1) character access by index.",
@@ -43,8 +61,19 @@
     ],
     "clickSentence": "Because strings are often immutable, building strings character-by-character in a loop is a massive performance trap.",
     "diagramType": "ArrayDiagram",
-    "cells": ["a", "p", "p", "l", "e"],
-    "diagramState": {}
+    "cells": [
+      "r",
+      "a",
+      "c",
+      "e",
+      "c",
+      "a",
+      "r"
+    ],
+    "diagramState": {
+      "left": 2,
+      "right": 4
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -58,20 +87,158 @@
       "cpp": "std::string s = \"hello\";\ns[0] = 'H'; // Works! C++ strings are mutable."
     },
     "memoryLayout": [
-      { "label": "Index 0", "value": "'a' (ASCII 97)" },
-      { "label": "Index 1", "value": "'p' (ASCII 112)" }
+      {
+        "label": "Index 0",
+        "value": "'a' (ASCII 97)"
+      },
+      {
+        "label": "Index 1",
+        "value": "'p' (ASCII 112)"
+      }
     ]
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
-    "array": [],
+    "array": [
+      "r",
+      "a",
+      "c",
+      "e",
+      "c",
+      "a",
+      "r"
+    ],
+    "code": {
+      "python": "def is_palindrome(s):\n    l, r = 0, len(s) - 1\n    while l < r:\n        if s[l] != s[r]: return False\n        l += 1; r -= 1\n    return True"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive String visualization coming soon.",
+        "diagramState": {
+          "left": 0,
+          "right": 6
+        },
+        "variables": {
+          "l": 0,
+          "r": 6
+        },
+        "explanation": "A string is an array of characters. Put one pointer at each end.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "left": 0,
+          "right": 6,
+          "comparing": [
+            0,
+            6
+          ]
+        },
+        "variables": {
+          "l": 0,
+          "r": 6,
+          "s[l]": "r",
+          "s[r]": "r"
+        },
+        "explanation": "Compare 'r' and 'r'. They match.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "left": 1,
+          "right": 5
+        },
+        "variables": {
+          "l": 1,
+          "r": 5
+        },
+        "explanation": "Move both pointers inward.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "left": 1,
+          "right": 5,
+          "comparing": [
+            1,
+            5
+          ]
+        },
+        "variables": {
+          "l": 1,
+          "r": 5,
+          "s[l]": "a",
+          "s[r]": "a"
+        },
+        "explanation": "Compare 'a' and 'a'. They match.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "left": 2,
+          "right": 4
+        },
+        "variables": {
+          "l": 2,
+          "r": 4
+        },
+        "explanation": "Move both pointers inward.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "left": 2,
+          "right": 4,
+          "comparing": [
+            2,
+            4
+          ]
+        },
+        "variables": {
+          "l": 2,
+          "r": 4,
+          "s[l]": "c",
+          "s[r]": "c"
+        },
+        "explanation": "Compare 'c' and 'c'. They match.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "left": 3,
+          "right": 3
+        },
+        "variables": {
+          "l": 3,
+          "r": 3
+        },
+        "explanation": "Move both pointers inward.",
+        "activeLine": 5
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "highlighted": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "variables": {
+          "result": "True"
+        },
+        "explanation": "Pointers met without a mismatch, so \"racecar\" is a palindrome.",
+        "activeLine": 6
       }
     ]
   },
@@ -167,8 +334,23 @@
     }
   ],
   "practice": [
-    { "title": "Valid Anagram", "url": "https://leetcode.com/problems/valid-anagram/", "difficulty": "easy", "keyInsight": "Use a 26-element array for frequency counting." },
-    { "title": "Valid Palindrome", "url": "https://leetcode.com/problems/valid-palindrome/", "difficulty": "easy", "keyInsight": "Two pointers starting from opposite ends." },
-    { "title": "Longest Substring Without Repeating Characters", "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/", "difficulty": "medium", "keyInsight": "Sliding Window with a Hash Set." }
+    {
+      "title": "Valid Anagram",
+      "url": "https://leetcode.com/problems/valid-anagram/",
+      "difficulty": "easy",
+      "keyInsight": "Use a 26-element array for frequency counting."
+    },
+    {
+      "title": "Valid Palindrome",
+      "url": "https://leetcode.com/problems/valid-palindrome/",
+      "difficulty": "easy",
+      "keyInsight": "Two pointers starting from opposite ends."
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+      "difficulty": "medium",
+      "keyInsight": "Sliding Window with a Hash Set."
+    }
   ]
 }

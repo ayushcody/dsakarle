@@ -5,7 +5,9 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 40,
-  "prerequisites": ["arrays"],
+  "prerequisites": [
+    "arrays"
+  ],
   "tags": [
     "data-structure",
     "hash-table",
@@ -60,7 +62,20 @@
     "clickSentence": "By trading space (memory) for time, we eliminate the need to search.",
     "diagramType": "hash-map",
     "cells": [],
-    "diagramState": {}
+    "diagramState": {
+      "buckets": [
+        [],
+        [],
+        [
+          "cat:3"
+        ],
+        [],
+        [
+          "dog:7"
+        ]
+      ],
+      "active": 2
+    }
   },
   "structure": {
     "memoryDescription": [
@@ -94,16 +109,239 @@
   },
   "stepper": {
     "diagramType": "hash-map",
-    "array": [],
+    "code": {
+      "python": "def put(table, key, val):\n    i = hash(key) % len(table)\n    table[i].append((key, val))   # chain on collision\ndef get(table, key):\n    for k, v in table[hash(key) % len(table)]:\n        if k == key: return v"
+    },
     "steps": [
       {
         "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive visualization for Hash Maps is coming soon.",
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "variables": {
+          "buckets": 5
+        },
+        "explanation": "A hash map turns a key into a bucket index. Start with 5 empty buckets.",
         "activeLine": 1
+      },
+      {
+        "stepIndex": 1,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          "active": 2
+        },
+        "variables": {
+          "key": "cat",
+          "hash(key) % 5": 2
+        },
+        "explanation": "hash(\"cat\") % 5 = 2. Jump straight to bucket 2.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 2,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3"
+            ],
+            [],
+            []
+          ],
+          "active": 2,
+          "hit": "cat"
+        },
+        "variables": {
+          "key": "cat",
+          "value": 3
+        },
+        "explanation": "Store \"cat: 3\" in bucket 2.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 3,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3"
+            ],
+            [],
+            []
+          ],
+          "active": 4
+        },
+        "variables": {
+          "key": "dog",
+          "hash(key) % 5": 4
+        },
+        "explanation": "hash(\"dog\") % 5 = 4. Jump straight to bucket 4.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 4,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3"
+            ],
+            [],
+            [
+              "dog:7"
+            ]
+          ],
+          "active": 4,
+          "hit": "dog"
+        },
+        "variables": {
+          "key": "dog",
+          "value": 7
+        },
+        "explanation": "Store \"dog: 7\" in bucket 4.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 5,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3"
+            ],
+            [],
+            [
+              "dog:7"
+            ]
+          ],
+          "active": 2
+        },
+        "variables": {
+          "key": "emu",
+          "hash(key) % 5": 2
+        },
+        "explanation": "hash(\"emu\") % 5 = 2. Jump straight to bucket 2.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 6,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3",
+              "emu:1"
+            ],
+            [],
+            [
+              "dog:7"
+            ]
+          ],
+          "active": 2,
+          "hit": "emu"
+        },
+        "variables": {
+          "key": "emu",
+          "value": 1
+        },
+        "explanation": "Bucket 2 is already taken — a collision. Chain \"emu\" onto the same bucket.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 7,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3",
+              "emu:1"
+            ],
+            [],
+            [
+              "dog:7"
+            ]
+          ],
+          "active": 2
+        },
+        "variables": {
+          "key": "tac",
+          "hash(key) % 5": 2
+        },
+        "explanation": "hash(\"tac\") % 5 = 2. Jump straight to bucket 2.",
+        "activeLine": 2
+      },
+      {
+        "stepIndex": 8,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3",
+              "emu:1",
+              "tac:9"
+            ],
+            [],
+            [
+              "dog:7"
+            ]
+          ],
+          "active": 2,
+          "hit": "tac"
+        },
+        "variables": {
+          "key": "tac",
+          "value": 9
+        },
+        "explanation": "Bucket 2 is already taken — a collision. Chain \"tac\" onto the same bucket.",
+        "activeLine": 3
+      },
+      {
+        "stepIndex": 9,
+        "diagramState": {
+          "buckets": [
+            [],
+            [],
+            [
+              "cat:3",
+              "emu:1",
+              "tac:9"
+            ],
+            [],
+            [
+              "dog:7"
+            ]
+          ],
+          "active": 4,
+          "hit": "dog"
+        },
+        "variables": {
+          "lookup": "dog",
+          "result": 7
+        },
+        "explanation": "Lookup \"dog\": hash to bucket 4, scan its short chain → 7. Average O(1).",
+        "activeLine": 5
       }
-    ]
+    ],
+    "array": []
   },
   "operations": [
     {
