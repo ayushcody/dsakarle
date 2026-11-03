@@ -3,10 +3,16 @@
   "slug": "binary-search",
   "title": "Binary Search",
   "category": "algorithm",
-  "difficulty": "medium",
+  "difficulty": "intermediate",
   "estimatedMinutes": 50,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "search", "divide-and-conquer"],
+  "prerequisites": [
+    "arrays"
+  ],
+  "tags": [
+    "array",
+    "search",
+    "divide-and-conquer"
+  ],
   "overview": {
     "summary": "Binary Search is a divide-and-conquer algorithm that finds a target in a sorted array in O(log N) time by repeatedly halving the search space.",
     "learningObjectives": [
@@ -26,9 +32,18 @@
   "definition": {
     "technicalDefinition": "Binary Search is a search algorithm that finds the position of a target value within a sorted array by comparing the target value to the middle element of the array.",
     "vocabulary": [
-      { "term": "Search Space", "definition": "The range of indices `[left, right]` where the target might still exist." },
-      { "term": "Midpoint", "definition": "The index exactly halfway between the current `left` and `right` boundaries." },
-      { "term": "Logarithmic Time", "definition": "O(log N). The time increases linearly only as the data size increases exponentially." }
+      {
+        "term": "Search Space",
+        "definition": "The range of indices `[left, right]` where the target might still exist."
+      },
+      {
+        "term": "Midpoint",
+        "definition": "The index exactly halfway between the current `left` and `right` boundaries."
+      },
+      {
+        "term": "Logarithmic Time",
+        "definition": "O(log N). The time increases linearly only as the data size increases exponentially."
+      }
     ],
     "keyProperties": [
       "Requires random access (like an Array, not a Linked List).",
@@ -42,7 +57,18 @@
     ],
     "clickSentence": "If you know it's not in the left half, you never have to look at the left half again.",
     "diagramType": "ArrayDiagram",
-    "cells": [2, 5, 8, 12, 16, 23, 38, 56, 72, 91],
+    "cells": [
+      2,
+      5,
+      8,
+      12,
+      16,
+      23,
+      38,
+      56,
+      72,
+      91
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -57,14 +83,34 @@
       "cpp": "int left = 0, right = arr.size() - 1;"
     },
     "memoryLayout": [
-      { "label": "Left Pointer", "value": "Tracks the start of the valid window." },
-      { "label": "Right Pointer", "value": "Tracks the end of the valid window." },
-      { "label": "Mid Pointer", "value": "Calculated dynamically: left + (right - left) // 2" }
+      {
+        "label": "Left Pointer",
+        "value": "Tracks the start of the valid window."
+      },
+      {
+        "label": "Right Pointer",
+        "value": "Tracks the end of the valid window."
+      },
+      {
+        "label": "Mid Pointer",
+        "value": "Calculated dynamically: left + (right - left) // 2"
+      }
     ]
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
-    "array": [2, 5, 8, 12, 16, 23, 38, 56, 72, 91],
+    "array": [
+      2,
+      5,
+      8,
+      12,
+      16,
+      23,
+      38,
+      56,
+      72,
+      91
+    ],
     "steps": [
       {
         "stepIndex": 0,
@@ -143,30 +189,50 @@
     {
       "question": "Why use `left + (right - left) / 2` instead of `(left + right) / 2`?",
       "options": [
-        "To prevent integer overflow if left and right are very large numbers.",
         "It is mathematically faster.",
+        "To prevent integer overflow if left and right are very large numbers.",
         "To handle negative numbers.",
         "It's just a style preference."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "If left and right are near the 32-bit integer limit (2.14 billion), adding them together `(left + right)` will overflow into a negative number before the division happens, causing a crash."
     },
     {
       "question": "What is the condition for the standard while loop in Binary Search?",
       "options": [
-        "while left <= right",
         "while left < right",
         "while left != right",
-        "while True"
+        "while True",
+        "while left <= right"
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "Using `<=` ensures that we check the element even when `left` and `right` converge onto the exact same index."
     }
   ],
   "practice": [
-    { "title": "Binary Search", "url": "https://leetcode.com/problems/binary-search/", "difficulty": "easy", "keyInsight": "The foundational template." },
-    { "title": "Search Insert Position", "url": "https://leetcode.com/problems/search-insert-position/", "difficulty": "easy", "keyInsight": "When the loop breaks, `left` will be exactly at the correct insertion index." },
-    { "title": "First Bad Version", "url": "https://leetcode.com/problems/first-bad-version/", "difficulty": "easy", "keyInsight": "Use `while left < right` and don't skip mid when moving the right pointer." },
-    { "title": "Koko Eating Bananas", "url": "https://leetcode.com/problems/koko-eating-bananas/", "difficulty": "medium", "keyInsight": "Binary Search on the Answer. Guess a speed, check if it works, adjust." }
+    {
+      "title": "Binary Search",
+      "url": "https://leetcode.com/problems/binary-search/",
+      "difficulty": "easy",
+      "keyInsight": "The foundational template."
+    },
+    {
+      "title": "Search Insert Position",
+      "url": "https://leetcode.com/problems/search-insert-position/",
+      "difficulty": "easy",
+      "keyInsight": "When the loop breaks, `left` will be exactly at the correct insertion index."
+    },
+    {
+      "title": "First Bad Version",
+      "url": "https://leetcode.com/problems/first-bad-version/",
+      "difficulty": "easy",
+      "keyInsight": "Use `while left < right` and don't skip mid when moving the right pointer."
+    },
+    {
+      "title": "Koko Eating Bananas",
+      "url": "https://leetcode.com/problems/koko-eating-bananas/",
+      "difficulty": "medium",
+      "keyInsight": "Binary Search on the Answer. Guess a speed, check if it works, adjust."
+    }
   ]
 }

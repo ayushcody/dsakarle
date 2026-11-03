@@ -5,7 +5,9 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 40,
-  "prerequisites": ["arrays"],
+  "prerequisites": [
+    "arrays"
+  ],
   "tags": [
     "data-structure",
     "hash-table",
@@ -179,23 +181,23 @@
     {
       "question": "What is a Hash Collision?",
       "options": [
-        "When two different keys generate the exact same index in the underlying array.",
         "When you try to look up a key that doesn't exist.",
+        "When two different keys generate the exact same index in the underlying array.",
         "When the hash map runs out of memory.",
         "When you delete a key while iterating."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "Because the underlying array is smaller than the infinite possibilities of keys, eventually two keys will hash to the same slot."
     },
     {
       "question": "Why is Hash Map lookup O(1) 'average' and not 'guaranteed'?",
       "options": [
-        "Because hash collisions might occur, requiring the map to check a short list of items at that index.",
         "Because sometimes the computer CPU is busy.",
         "Because memory addresses take time to calculate.",
-        "It actually is guaranteed O(1)."
+        "It actually is guaranteed O(1).",
+        "Because hash collisions might occur, requiring the map to check a short list of items at that index."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "In the worst case (e.g., all keys collide to the exact same index), looking up a key degrades to O(n) as it searches through the collided list."
     }
   ],

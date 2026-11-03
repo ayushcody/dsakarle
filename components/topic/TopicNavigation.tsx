@@ -2,22 +2,19 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-import { COURSE_TOPICS } from '@/lib/course';
+import { getNeighbours, isCurriculumSlug } from '@/lib/curriculum';
 
 interface TopicNavigationProps {
   currentSlug: string;
 }
 
 export function TopicNavigation({ currentSlug }: TopicNavigationProps) {
-  const currentIndex = COURSE_TOPICS.findIndex((topic) => topic.slug === currentSlug);
-
-  // Lessons outside the course structure have no defined neighbours.
-  if (currentIndex === -1) {
+  // Lessons outside the curriculum have no defined neighbours.
+  if (!isCurriculumSlug(currentSlug)) {
     return null;
   }
 
-  const prevTopic = currentIndex > 0 ? COURSE_TOPICS[currentIndex - 1] : null;
-  const nextTopic = currentIndex < COURSE_TOPICS.length - 1 ? COURSE_TOPICS[currentIndex + 1] : null;
+  const { prev: prevTopic, next: nextTopic } = getNeighbours(currentSlug);
 
   return (
     <div style={{

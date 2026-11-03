@@ -7,8 +7,14 @@
   "category": "algorithm",
   "difficulty": "intermediate",
   "estimatedMinutes": 30,
-  "prerequisites": ["linked-lists"],
-  "tags": ["tortoise-hare", "cycle-detection", "linked-list"],
+  "prerequisites": [
+    "linked-lists"
+  ],
+  "tags": [
+    "tortoise-hare",
+    "cycle-detection",
+    "linked-list"
+  ],
   "overview": {
     "summary": "The fast-and-slow pointer technique (Floyd's Tortoise and Hare) uses two pointers moving at different speeds to detect cycles, find midpoints, and solve linked list problems.",
     "learningObjectives": [
@@ -28,9 +34,18 @@
   "definition": {
     "technicalDefinition": "Two pointers traverse a sequence at different speeds (typically 1 step vs 2 steps). If a cycle exists, the fast pointer will eventually catch up to the slow pointer.",
     "vocabulary": [
-      { "term": "Slow Pointer", "definition": "Advances one step at a time." },
-      { "term": "Fast Pointer", "definition": "Advances two steps at a time." },
-      { "term": "Floyd's Algorithm", "definition": "Phase 1: detect cycle (meeting point). Phase 2: find cycle start." }
+      {
+        "term": "Slow Pointer",
+        "definition": "Advances one step at a time."
+      },
+      {
+        "term": "Fast Pointer",
+        "definition": "Advances two steps at a time."
+      },
+      {
+        "term": "Floyd's Algorithm",
+        "definition": "Phase 1: detect cycle (meeting point). Phase 2: find cycle start."
+      }
     ],
     "keyProperties": [
       "Cycle detection: O(N) time, O(1) space.",
@@ -67,30 +82,59 @@
     }
   ],
   "practice": [
-    { "title": "Linked List Cycle", "url": "https://leetcode.com/problems/linked-list-cycle/", "difficulty": "easy", "keyInsight": "Fast and slow meet → cycle exists." },
-    { "title": "Linked List Cycle II", "url": "https://leetcode.com/problems/linked-list-cycle-ii/", "difficulty": "medium", "keyInsight": "Phase 2: reset one to head, advance both by 1, they meet at cycle start." },
-    { "title": "Middle of the Linked List", "url": "https://leetcode.com/problems/middle-of-the-linked-list/", "difficulty": "easy", "keyInsight": "Slow pointer is at middle when fast reaches end." },
-    { "title": "Find the Duplicate Number", "url": "https://leetcode.com/problems/find-the-duplicate-number/", "difficulty": "medium", "keyInsight": "Model the array as a linked list where val = next index, find cycle." },
-    { "title": "Happy Number", "url": "https://leetcode.com/problems/happy-number/", "difficulty": "easy", "keyInsight": "Digit-square sequence forms a linked list — detect if it cycles back to non-1." }
+    {
+      "title": "Linked List Cycle",
+      "url": "https://leetcode.com/problems/linked-list-cycle/",
+      "difficulty": "easy",
+      "keyInsight": "Fast and slow meet → cycle exists."
+    },
+    {
+      "title": "Linked List Cycle II",
+      "url": "https://leetcode.com/problems/linked-list-cycle-ii/",
+      "difficulty": "medium",
+      "keyInsight": "Phase 2: reset one to head, advance both by 1, they meet at cycle start."
+    },
+    {
+      "title": "Middle of the Linked List",
+      "url": "https://leetcode.com/problems/middle-of-the-linked-list/",
+      "difficulty": "easy",
+      "keyInsight": "Slow pointer is at middle when fast reaches end."
+    },
+    {
+      "title": "Find the Duplicate Number",
+      "url": "https://leetcode.com/problems/find-the-duplicate-number/",
+      "difficulty": "medium",
+      "keyInsight": "Model the array as a linked list where val = next index, find cycle."
+    },
+    {
+      "title": "Happy Number",
+      "url": "https://leetcode.com/problems/happy-number/",
+      "difficulty": "easy",
+      "keyInsight": "Digit-square sequence forms a linked list — detect if it cycles back to non-1."
+    }
   ],
   "examples": [],
   "conceptQuiz": [
     {
       "question": "Why does the fast-and-slow technique guarantee cycle detection?",
       "options": [
-        "The fast pointer closes the gap by 1 each step, so they must meet inside the cycle",
         "It uses extra memory to track visited nodes",
         "It sorts the list first",
+        "The fast pointer closes the gap by 1 each step, so they must meet inside the cycle",
         "It only works on arrays"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "In each iteration, the distance between fast and slow decreases by 1, guaranteeing they meet within the cycle."
     }
   ],
   "recognitionQuiz": {
     "problemStatement": "Given a singly linked list, determine if it contains a cycle, using O(1) extra space.",
     "correctPatternId": "fast-and-slow-pointers",
-    "distractors": ["hash-maps", "two-pointers", "binary-search"],
+    "distractors": [
+      "hash-maps",
+      "two-pointers",
+      "binary-search"
+    ],
     "explanation": "O(1) space cycle detection is the defining application of Floyd's Tortoise and Hare algorithm."
   }
 }

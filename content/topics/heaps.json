@@ -3,10 +3,17 @@
   "slug": "heaps",
   "title": "Heaps & Priority Queues",
   "category": "data-structure",
-  "difficulty": "medium",
+  "difficulty": "intermediate",
   "estimatedMinutes": 50,
-  "prerequisites": ["trees", "arrays"],
-  "tags": ["tree", "priority-queue", "sorting"],
+  "prerequisites": [
+    "trees",
+    "arrays"
+  ],
+  "tags": [
+    "tree",
+    "priority-queue",
+    "sorting"
+  ],
   "overview": {
     "summary": "A Heap is a specialized tree-based data structure that satisfies the heap property: the parent node is always larger (or smaller) than its children.",
     "learningObjectives": [
@@ -26,9 +33,18 @@
   "definition": {
     "technicalDefinition": "A Heap is a complete binary tree that satisfies the Heap Property. In a Max Heap, every parent node is greater than or equal to its children. In a Min Heap, every parent is less than or equal to its children.",
     "vocabulary": [
-      { "term": "Heapify", "definition": "The process of moving an element up or down the tree to restore the Heap Property." },
-      { "term": "Priority Queue", "definition": "An abstract data type often implemented using a Heap, where elements are dequeued by priority." },
-      { "term": "Complete Tree", "definition": "A tree where every level is completely filled, except possibly the last level, which is filled left-to-right." }
+      {
+        "term": "Heapify",
+        "definition": "The process of moving an element up or down the tree to restore the Heap Property."
+      },
+      {
+        "term": "Priority Queue",
+        "definition": "An abstract data type often implemented using a Heap, where elements are dequeued by priority."
+      },
+      {
+        "term": "Complete Tree",
+        "definition": "A tree where every level is completely filled, except possibly the last level, which is filled left-to-right."
+      }
     ],
     "keyProperties": [
       "O(1) access to the Max/Min element.",
@@ -42,7 +58,15 @@
     ],
     "clickSentence": "By only partially sorting the data (just enough to keep the best at the top), Heaps save massive amounts of CPU time.",
     "diagramType": "tree",
-    "cells": [10, 8, 7, 4, 5, 2, 1],
+    "cells": [
+      10,
+      8,
+      7,
+      4,
+      5,
+      2,
+      1
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -57,14 +81,31 @@
       "cpp": "std::priority_queue<int> max_pq; // Max Heap by default\nstd::priority_queue<int, vector<int>, greater<int>> min_pq;"
     },
     "memoryLayout": [
-      { "label": "Index 0 (Root)", "value": "100" },
-      { "label": "Index 1 (Left)", "value": "50" },
-      { "label": "Index 2 (Right)", "value": "75" }
+      {
+        "label": "Index 0 (Root)",
+        "value": "100"
+      },
+      {
+        "label": "Index 1 (Left)",
+        "value": "50"
+      },
+      {
+        "label": "Index 2 (Right)",
+        "value": "75"
+      }
     ]
   },
   "stepper": {
     "diagramType": "tree",
-    "array": [10, 8, 7, 4, 5, 2, 1],
+    "array": [
+      10,
+      8,
+      7,
+      4,
+      5,
+      2,
+      1
+    ],
     "steps": [
       {
         "stepIndex": 0,
@@ -148,30 +189,50 @@
     {
       "question": "If you want to find the Top K LARGEST elements, what kind of heap should you use?",
       "options": [
-        "A Min-Heap of size K",
         "A Max-Heap of size K",
+        "A Min-Heap of size K",
         "A Max-Heap of size N",
         "A Binary Search Tree"
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "Counter-intuitively, you use a MIN-Heap. You want the 'smallest of the largest' sitting at the root so you can easily pop it out when you find a bigger number."
     },
     {
       "question": "How are the Left and Right children of an element at index 'i' found in a Heap array?",
       "options": [
-        "Left: 2i + 1, Right: 2i + 2",
         "Left: i + 1, Right: i + 2",
         "Left: i / 2, Right: (i / 2) + 1",
-        "By traversing pointers."
+        "By traversing pointers.",
+        "Left: 2i + 1, Right: 2i + 2"
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "Because a heap is a Complete Tree, array math mathematically guarantees no empty gaps, saving memory overhead."
     }
   ],
   "practice": [
-    { "title": "Kth Largest Element in an Array", "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/", "difficulty": "medium", "keyInsight": "Maintain a Min-Heap of size K." },
-    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Count frequencies with a Hash Map, then put the counts into a Min-Heap." },
-    { "title": "Merge K Sorted Lists", "url": "https://leetcode.com/problems/merge-k-sorted-lists/", "difficulty": "hard", "keyInsight": "Put the head of every list into a Min-Heap to find the absolute minimum at any given moment." },
-    { "title": "Find Median from Data Stream", "url": "https://leetcode.com/problems/find-median-from-data-stream/", "difficulty": "hard", "keyInsight": "Use two heaps. A Max-Heap for the bottom half, and a Min-Heap for the top half." }
+    {
+      "title": "Kth Largest Element in an Array",
+      "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+      "difficulty": "medium",
+      "keyInsight": "Maintain a Min-Heap of size K."
+    },
+    {
+      "title": "Top K Frequent Elements",
+      "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+      "difficulty": "medium",
+      "keyInsight": "Count frequencies with a Hash Map, then put the counts into a Min-Heap."
+    },
+    {
+      "title": "Merge K Sorted Lists",
+      "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
+      "difficulty": "hard",
+      "keyInsight": "Put the head of every list into a Min-Heap to find the absolute minimum at any given moment."
+    },
+    {
+      "title": "Find Median from Data Stream",
+      "url": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "difficulty": "hard",
+      "keyInsight": "Use two heaps. A Max-Heap for the bottom half, and a Min-Heap for the top half."
+    }
   ]
 }

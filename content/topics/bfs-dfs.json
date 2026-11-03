@@ -3,10 +3,20 @@
   "slug": "bfs-dfs",
   "title": "BFS & DFS",
   "category": "algorithm",
-  "difficulty": "hard",
+  "difficulty": "advanced",
   "estimatedMinutes": 60,
-  "prerequisites": ["graphs", "trees", "recursion", "queues"],
-  "tags": ["graph", "tree", "search", "traversal"],
+  "prerequisites": [
+    "graphs",
+    "trees",
+    "recursion",
+    "queues"
+  ],
+  "tags": [
+    "graph",
+    "tree",
+    "search",
+    "traversal"
+  ],
   "overview": {
     "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental algorithms for traversing or searching tree and graph data structures.",
     "learningObjectives": [
@@ -26,9 +36,18 @@
   "definition": {
     "technicalDefinition": "BFS explores the neighbor nodes first, before moving to the next level neighbors. DFS explores as far as possible along each branch before backtracking.",
     "vocabulary": [
-      { "term": "Queue", "definition": "The data structure required for BFS. Ensures nodes discovered first are processed first." },
-      { "term": "Stack / Call Stack", "definition": "The data structure required for DFS. Ensures the most recently discovered node is processed first." },
-      { "term": "Visited Set", "definition": "A Hash Set used to track which nodes have already been processed to prevent infinite cycles." }
+      {
+        "term": "Queue",
+        "definition": "The data structure required for BFS. Ensures nodes discovered first are processed first."
+      },
+      {
+        "term": "Stack / Call Stack",
+        "definition": "The data structure required for DFS. Ensures the most recently discovered node is processed first."
+      },
+      {
+        "term": "Visited Set",
+        "definition": "A Hash Set used to track which nodes have already been processed to prevent infinite cycles."
+      }
     ],
     "keyProperties": [
       "BFS guarantees the shortest path in an unweighted graph.",
@@ -43,7 +62,14 @@
     ],
     "clickSentence": "BFS goes WIDE. DFS goes DEEP.",
     "diagramType": "GraphDiagramInner",
-    "cells": [1, 2, 3, 4, 5, 6],
+    "cells": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -56,8 +82,14 @@
       "javascript": "// DFS Recursive\nconst visited = new Set();\nfunction dfs(node) {\n    if (visited.has(node)) return;\n    visited.add(node);\n    for (let neighbor of graph[node]) {\n        dfs(neighbor);\n    }\n}"
     },
     "memoryLayout": [
-      { "label": "BFS Queue", "value": "Front -> [Level 2 nodes] ... [Level 3 nodes] <- Back" },
-      { "label": "DFS Stack", "value": "Top -> [Deepest node] ... [Root node] <- Bottom" }
+      {
+        "label": "BFS Queue",
+        "value": "Front -> [Level 2 nodes] ... [Level 3 nodes] <- Back"
+      },
+      {
+        "label": "DFS Stack",
+        "value": "Top -> [Deepest node] ... [Root node] <- Bottom"
+      }
     ]
   },
   "stepper": {
@@ -137,29 +169,44 @@
     {
       "question": "Can DFS find the shortest path in a maze?",
       "options": [
-        "Yes, but you have to check EVERY SINGLE PATH to the end and compare their lengths, making it terribly slow (Exponential).",
         "No, it is mathematically impossible.",
         "Yes, and it is faster than BFS.",
-        "Yes, but only if you don't use recursion."
+        "Yes, but only if you don't use recursion.",
+        "Yes, but you have to check EVERY SINGLE PATH to the end and compare their lengths, making it terribly slow (Exponential)."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "DFS might find the exit immediately by blindly running forward, but it might be a terrible winding path. To guarantee it's the shortest, DFS has to try all other paths to be sure. BFS finds the shortest path on its very first try."
     },
     {
       "question": "In Python, why do we use `from collections import deque` for BFS instead of a standard list `[]`?",
       "options": [
-        "Because popping from the front of a standard list `list.pop(0)` takes O(N) time, making BFS O(N^2). A deque takes O(1) time.",
         "Because deque is required for recursion.",
+        "Because popping from the front of a standard list `list.pop(0)` takes O(N) time, making BFS O(N^2). A deque takes O(1) time.",
         "It is just a stylistic choice.",
         "Because deque prevents infinite loops."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "A Python list is an array. If you remove the first element, every other element has to shift left by one spot, which takes O(N) time. A `deque` is a doubly-linked list, so `popleft()` is O(1)."
     }
   ],
   "practice": [
-    { "title": "Word Ladder", "url": "https://leetcode.com/problems/word-ladder/", "difficulty": "hard", "keyInsight": "Shortest transformation sequence = BFS." },
-    { "title": "Surrounded Regions", "url": "https://leetcode.com/problems/surrounded-regions/", "difficulty": "medium", "keyInsight": "DFS from the borders to mark 'safe' regions." },
-    { "title": "01 Matrix", "url": "https://leetcode.com/problems/01-matrix/", "difficulty": "medium", "keyInsight": "Multi-Source BFS starting from all the 0s." }
+    {
+      "title": "Word Ladder",
+      "url": "https://leetcode.com/problems/word-ladder/",
+      "difficulty": "hard",
+      "keyInsight": "Shortest transformation sequence = BFS."
+    },
+    {
+      "title": "Surrounded Regions",
+      "url": "https://leetcode.com/problems/surrounded-regions/",
+      "difficulty": "medium",
+      "keyInsight": "DFS from the borders to mark 'safe' regions."
+    },
+    {
+      "title": "01 Matrix",
+      "url": "https://leetcode.com/problems/01-matrix/",
+      "difficulty": "medium",
+      "keyInsight": "Multi-Source BFS starting from all the 0s."
+    }
   ]
 }

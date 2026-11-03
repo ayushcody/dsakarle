@@ -1,18 +1,27 @@
 {
   "id": "recursion",
   "slug": "recursion",
-  "title": "Recursion",
+  "title": "Recursion & Backtracking",
   "category": "algorithm",
-  "difficulty": "medium",
+  "difficulty": "intermediate",
   "estimatedMinutes": 45,
-  "prerequisites": ["trees", "stacks"],
-  "tags": ["algorithm", "functions", "divide-and-conquer"],
+  "prerequisites": [
+    "trees",
+    "stacks"
+  ],
+  "tags": [
+    "algorithm",
+    "functions",
+    "divide-and-conquer"
+  ],
   "overview": {
     "summary": "Recursion is a method where the solution to a problem depends on solutions to smaller instances of the same problem.",
     "learningObjectives": [
       "Understand the absolute necessity of a Base Case.",
       "Trace the Call Stack during recursive execution.",
-      "Convert iterative loops into recursive calls."
+      "Convert iterative loops into recursive calls.",
+      "Understand the Choose -> Explore -> Unchoose pattern.",
+      "Recognize combinatorial problems (Permutations, Combinations, Subsets)."
     ],
     "interviewRelevance": "Recursion is the engine behind Depth-First Search (DFS), Backtracking, and Dynamic Programming. You cannot pass a top-tier interview without mastering it."
   },
@@ -26,9 +35,18 @@
   "definition": {
     "technicalDefinition": "In computer science, recursion is a programming technique using function or algorithm that calls itself one or more times until a specified condition is met at which time the rest of each repetition is processed from the last one called to the first.",
     "vocabulary": [
-      { "term": "Base Case", "definition": "The condition that stops the recursion. Without it, you get an infinite loop." },
-      { "term": "Recursive Step", "definition": "The part of the function where it calls itself with modified arguments." },
-      { "term": "Call Stack", "definition": "The hidden memory structure the computer uses to keep track of paused recursive functions." }
+      {
+        "term": "Base Case",
+        "definition": "The condition that stops the recursion. Without it, you get an infinite loop."
+      },
+      {
+        "term": "Recursive Step",
+        "definition": "The part of the function where it calls itself with modified arguments."
+      },
+      {
+        "term": "Call Stack",
+        "definition": "The hidden memory structure the computer uses to keep track of paused recursive functions."
+      }
     ],
     "keyProperties": [
       "Uses implicit space O(Depth) on the Call Stack.",
@@ -57,9 +75,18 @@
       "cpp": "int factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}"
     },
     "memoryLayout": [
-      { "label": "Stack Top", "value": "factorial(1) [Returns 1]" },
-      { "label": "Stack Middle", "value": "factorial(2) [Waiting for factorial(1)]" },
-      { "label": "Stack Bottom", "value": "factorial(3) [Waiting for factorial(2)]" }
+      {
+        "label": "Stack Top",
+        "value": "factorial(1) [Returns 1]"
+      },
+      {
+        "label": "Stack Middle",
+        "value": "factorial(2) [Waiting for factorial(1)]"
+      },
+      {
+        "label": "Stack Bottom",
+        "value": "factorial(3) [Waiting for factorial(2)]"
+      }
     ]
   },
   "stepper": {
@@ -95,6 +122,36 @@
         "python": "return result"
       },
       "visualNote": "Frames resolve and disappear, passing data downward."
+    },
+    {
+      "name": "Choose",
+      "description": "Make a decision. Add the choice to your current state tracking.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "path.append(choice)"
+      },
+      "visualNote": "A node is added to the active path."
+    },
+    {
+      "name": "Explore",
+      "description": "Recurse deeper into the tree with the new state.",
+      "timeComplexity": "O(branches)",
+      "spaceComplexity": "O(N) stack",
+      "code": {
+        "python": "backtrack(path)"
+      },
+      "visualNote": "The execution pointer dives down."
+    },
+    {
+      "name": "Unchoose",
+      "description": "Undo the decision. Remove the choice from the state so the loop can try the NEXT choice.",
+      "timeComplexity": "O(1)",
+      "spaceComplexity": "O(1)",
+      "code": {
+        "python": "path.pop()"
+      },
+      "visualNote": "The node is removed, and the pointer steps back."
     }
   ],
   "patternTemplate": {
@@ -134,35 +191,117 @@
       "timeComplexity": "O(N)",
       "spaceComplexity": "O(N) stack space",
       "rationale": "This forces you to truly understand the Call Stack. The 'newHead' (the original tail) bubbles up untouched, while the actual pointer reversal happens during the ascent."
+    },
+    {
+      "title": "Subsets",
+      "difficulty": "medium",
+      "leetcodeUrl": "https://leetcode.com/problems/subsets/",
+      "problemStatement": "Given an integer array nums of unique elements, return all possible subsets (the power set).",
+      "inputExample": "nums = [1,2,3]",
+      "outputExample": "[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]",
+      "steps": [
+        "Create a result array.",
+        "Create a backtrack function that takes a start index and current path.",
+        "Add a COPY of the current path to the result.",
+        "Loop from start index to end of nums.",
+        "Add num to path, recurse with index + 1, then pop num from path."
+      ],
+      "code": {
+        "python": "def subsets(nums):\n    res = []\n    def backtrack(start, path):\n        res.append(path[:])\n        for i in range(start, len(nums)):\n            path.append(nums[i])\n            backtrack(i + 1, path)\n            path.pop()\n    backtrack(0, [])\n    return res"
+      },
+      "timeComplexity": "O(N * 2^N)",
+      "spaceComplexity": "O(N)",
+      "rationale": "There are 2^N subsets. For each element, we have a binary choice: include it or don't include it."
     }
   ],
   "conceptQuiz": [
     {
       "question": "What is a Stack Overflow?",
       "options": [
-        "When a recursive function calls itself too many times without hitting a base case, exhausting the computer's memory.",
         "When an array gets too large.",
+        "When a recursive function calls itself too many times without hitting a base case, exhausting the computer's memory.",
         "When two recursive functions collide.",
         "A website for programmers."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "Every recursive call allocates a tiny bit of memory for its local variables. If you forget a base case, it loops forever until memory runs out and the OS kills the program."
     },
     {
       "question": "Why is Recursion sometimes considered 'worse' than Iteration (Loops)?",
       "options": [
-        "Recursion uses implicit O(Depth) memory for the Call Stack, while a standard loop uses O(1) memory.",
         "Recursion cannot solve as many problems as loops.",
         "Recursion is mathematically incorrect.",
-        "Recursion is always slower."
+        "Recursion is always slower.",
+        "Recursion uses implicit O(Depth) memory for the Call Stack, while a standard loop uses O(1) memory."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "While recursion is elegant, it has an overhead cost. Anything that can be done recursively CAN be done iteratively (often by using your own explicit Stack data structure)."
+    },
+    {
+      "question": "Why MUST we copy the array (e.g., `path[:]` or `[...path]`) before adding it to the final results?",
+      "options": [
+        "Because it makes the code run faster.",
+        "Because arrays are passed by reference. If we don't copy it, the final result will just be a list of references to the exact same empty array after all the `.pop()` calls.",
+        "To satisfy the compiler's type checker.",
+        "It is not actually required."
+      ],
+      "correctIndex": 1,
+      "explanation": "If you just do `res.append(path)`, every entry in `res` points to the same object in memory. Since Backtracking pops everything off at the end, your answer will just be `[[], [], []]`."
+    },
+    {
+      "question": "What is 'Pruning' in a Backtracking algorithm?",
+      "options": [
+        "Deleting variables from memory.",
+        "Sorting the array beforehand.",
+        "Removing duplicates from the final answer.",
+        "Returning early from a branch if you know it cannot possibly be valid, saving time."
+      ],
+      "correctIndex": 3,
+      "explanation": "If you are trying to find combinations that sum to 10, and your current path sums to 15, there is no point exploring deeper. You 'prune' the branch by returning immediately."
     }
   ],
   "practice": [
-    { "title": "Fibonacci Number", "url": "https://leetcode.com/problems/fibonacci-number/", "difficulty": "easy", "keyInsight": "The textbook definition of recursion: f(n) = f(n-1) + f(n-2)." },
-    { "title": "Pow(x, n)", "url": "https://leetcode.com/problems/powx-n/", "difficulty": "medium", "keyInsight": "Fast exponentiation. If n is even, x^n = (x^2)^(n/2)." },
-    { "title": "K-th Symbol in Grammar", "url": "https://leetcode.com/problems/k-th-symbol-in-grammar/", "difficulty": "medium", "keyInsight": "The parent of a node at index K is at index K/2." }
+    {
+      "title": "Fibonacci Number",
+      "url": "https://leetcode.com/problems/fibonacci-number/",
+      "difficulty": "easy",
+      "keyInsight": "The textbook definition of recursion: f(n) = f(n-1) + f(n-2)."
+    },
+    {
+      "title": "Pow(x, n)",
+      "url": "https://leetcode.com/problems/powx-n/",
+      "difficulty": "medium",
+      "keyInsight": "Fast exponentiation. If n is even, x^n = (x^2)^(n/2)."
+    },
+    {
+      "title": "K-th Symbol in Grammar",
+      "url": "https://leetcode.com/problems/k-th-symbol-in-grammar/",
+      "difficulty": "medium",
+      "keyInsight": "The parent of a node at index K is at index K/2."
+    },
+    {
+      "title": "Subsets",
+      "url": "https://leetcode.com/problems/subsets/",
+      "difficulty": "medium",
+      "keyInsight": "Include or exclude each element."
+    },
+    {
+      "title": "Permutations",
+      "url": "https://leetcode.com/problems/permutations/",
+      "difficulty": "medium",
+      "keyInsight": "Loop over ALL elements, but skip ones already in the path."
+    },
+    {
+      "title": "Combination Sum",
+      "url": "https://leetcode.com/problems/combination-sum/",
+      "difficulty": "medium",
+      "keyInsight": "You can reuse elements, so pass `i` down the recursion instead of `i+1`."
+    },
+    {
+      "title": "N-Queens",
+      "url": "https://leetcode.com/problems/n-queens/",
+      "difficulty": "hard",
+      "keyInsight": "Classic backtracking. Place a queen, check validity, recurse, remove queen."
+    }
   ]
 }

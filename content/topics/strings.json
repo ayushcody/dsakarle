@@ -5,8 +5,14 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 35,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "text", "parsing"],
+  "prerequisites": [
+    "arrays"
+  ],
+  "tags": [
+    "array",
+    "text",
+    "parsing"
+  ],
   "overview": {
     "summary": "A String is an array of characters. However, depending on the language, strings are often immutable.",
     "learningObjectives": [
@@ -26,10 +32,22 @@
   "definition": {
     "technicalDefinition": "A string is traditionally a sequence of characters, either as a literal constant or as some kind of variable.",
     "vocabulary": [
-      { "term": "Immutable", "definition": "Once created, the string cannot be changed. To modify it, you must create an entirely new string (Python, Java, JS)." },
-      { "term": "Mutable", "definition": "The string can be modified in-place (C++)." },
-      { "term": "Substring", "definition": "A contiguous sequence of characters within a string." },
-      { "term": "Subsequence", "definition": "A sequence derived by deleting some characters without changing the order." }
+      {
+        "term": "Immutable",
+        "definition": "Once created, the string cannot be changed. To modify it, you must create an entirely new string (Python, Java, JS)."
+      },
+      {
+        "term": "Mutable",
+        "definition": "The string can be modified in-place (C++)."
+      },
+      {
+        "term": "Substring",
+        "definition": "A contiguous sequence of characters within a string."
+      },
+      {
+        "term": "Subsequence",
+        "definition": "A sequence derived by deleting some characters without changing the order."
+      }
     ],
     "keyProperties": [
       "O(1) character access by index.",
@@ -43,7 +61,13 @@
     ],
     "clickSentence": "Because strings are often immutable, building strings character-by-character in a loop is a massive performance trap.",
     "diagramType": "ArrayDiagram",
-    "cells": ["a", "p", "p", "l", "e"],
+    "cells": [
+      "a",
+      "p",
+      "p",
+      "l",
+      "e"
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -58,8 +82,14 @@
       "cpp": "std::string s = \"hello\";\ns[0] = 'H'; // Works! C++ strings are mutable."
     },
     "memoryLayout": [
-      { "label": "Index 0", "value": "'a' (ASCII 97)" },
-      { "label": "Index 1", "value": "'p' (ASCII 112)" }
+      {
+        "label": "Index 0",
+        "value": "'a' (ASCII 97)"
+      },
+      {
+        "label": "Index 1",
+        "value": "'p' (ASCII 112)"
+      }
     ]
   },
   "stepper": {
@@ -146,29 +176,44 @@
     {
       "question": "What happens in Java/Python if you do `s += char` in a loop 1000 times?",
       "options": [
-        "It copies the entire string 1000 times, causing O(N^2) time complexity.",
         "It runs in O(N) time.",
         "It crashes.",
-        "It modifies the string in place."
+        "It modifies the string in place.",
+        "It copies the entire string 1000 times, causing O(N^2) time complexity."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "Because strings are immutable, adding a single character to a length-500 string requires copying 500 characters. Doing this repeatedly creates an O(N^2) trap."
     },
     {
       "question": "What is the result of `ord('d') - ord('a')`?",
       "options": [
-        "3",
         "4",
+        "3",
         "0",
         "It throws an error."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "ASCII math! 'a' is 0, 'b' is 1, 'c' is 2, 'd' is 3."
     }
   ],
   "practice": [
-    { "title": "Valid Anagram", "url": "https://leetcode.com/problems/valid-anagram/", "difficulty": "easy", "keyInsight": "Use a 26-element array for frequency counting." },
-    { "title": "Valid Palindrome", "url": "https://leetcode.com/problems/valid-palindrome/", "difficulty": "easy", "keyInsight": "Two pointers starting from opposite ends." },
-    { "title": "Longest Substring Without Repeating Characters", "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/", "difficulty": "medium", "keyInsight": "Sliding Window with a Hash Set." }
+    {
+      "title": "Valid Anagram",
+      "url": "https://leetcode.com/problems/valid-anagram/",
+      "difficulty": "easy",
+      "keyInsight": "Use a 26-element array for frequency counting."
+    },
+    {
+      "title": "Valid Palindrome",
+      "url": "https://leetcode.com/problems/valid-palindrome/",
+      "difficulty": "easy",
+      "keyInsight": "Two pointers starting from opposite ends."
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+      "difficulty": "medium",
+      "keyInsight": "Sliding Window with a Hash Set."
+    }
   ]
 }

@@ -3,10 +3,17 @@
   "slug": "sorting",
   "title": "Sorting Algorithms",
   "category": "algorithm",
-  "difficulty": "medium",
+  "difficulty": "intermediate",
   "estimatedMinutes": 60,
-  "prerequisites": ["arrays", "recursion"],
-  "tags": ["array", "sort", "divide-and-conquer"],
+  "prerequisites": [
+    "arrays",
+    "recursion"
+  ],
+  "tags": [
+    "array",
+    "sort",
+    "divide-and-conquer"
+  ],
   "overview": {
     "summary": "Sorting algorithms arrange elements in a certain order (usually ascending). Understanding how they work internally is crucial for grasping time complexity limits.",
     "learningObjectives": [
@@ -26,9 +33,18 @@
   "definition": {
     "technicalDefinition": "A Sorting Algorithm puts elements of a list into an order. The most frequently used orders are numerical order and lexicographical order.",
     "vocabulary": [
-      { "term": "In-Place", "definition": "The algorithm sorts the array without needing extra memory (e.g., Quick Sort)." },
-      { "term": "Stable", "definition": "Items with the same value retain their original relative order (e.g., Merge Sort)." },
-      { "term": "Comparator", "definition": "A custom function passed to a sort method to define how two elements should be compared." }
+      {
+        "term": "In-Place",
+        "definition": "The algorithm sorts the array without needing extra memory (e.g., Quick Sort)."
+      },
+      {
+        "term": "Stable",
+        "definition": "Items with the same value retain their original relative order (e.g., Merge Sort)."
+      },
+      {
+        "term": "Comparator",
+        "definition": "A custom function passed to a sort method to define how two elements should be compared."
+      }
     ],
     "keyProperties": [
       "O(N log N) is the fastest comparison-based sort.",
@@ -42,7 +58,14 @@
     ],
     "clickSentence": "Divide and Conquer is the secret to breaking the O(N^2) barrier.",
     "diagramType": "ArrayDiagram",
-    "cells": [5, 2, 9, 1, 5, 6],
+    "cells": [
+      5,
+      2,
+      9,
+      1,
+      5,
+      6
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -57,8 +80,14 @@
       "cpp": "std::sort(arr.begin(), arr.end()); // Introsort"
     },
     "memoryLayout": [
-      { "label": "Unsorted", "value": "[5, 2, 9, 1]" },
-      { "label": "Sorted", "value": "[1, 2, 5, 9]" }
+      {
+        "label": "Unsorted",
+        "value": "[5, 2, 9, 1]"
+      },
+      {
+        "label": "Sorted",
+        "value": "[1, 2, 5, 9]"
+      }
     ]
   },
   "stepper": {
@@ -139,29 +168,44 @@
     {
       "question": "In JavaScript, what happens if you call `[10, 2, 30].sort()` without a comparator function?",
       "options": [
-        "It sorts them alphabetically as strings: [10, 2, 30]",
         "It sorts them numerically: [2, 10, 30]",
         "It throws an error.",
-        "It does nothing."
+        "It does nothing.",
+        "It sorts them alphabetically as strings: [10, 2, 30]"
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "JS `sort()` converts everything to strings by default! '10' comes before '2'. You MUST pass `(a, b) => a - b` to sort numbers correctly."
     },
     {
       "question": "What does it mean for a sort to be 'Stable'?",
       "options": [
-        "If two elements are equal, they remain in the same relative order as they were in the original array.",
         "It never crashes.",
+        "If two elements are equal, they remain in the same relative order as they were in the original array.",
         "It always runs in O(N log N) time.",
         "It doesn't use extra memory."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "Stability is crucial when you sort by one property (e.g., Last Name), and then sort by another property (e.g., First Name) without messing up the first sort."
     }
   ],
   "practice": [
-    { "title": "Merge Intervals", "url": "https://leetcode.com/problems/merge-intervals/", "difficulty": "medium", "keyInsight": "Sort by start time." },
-    { "title": "Sort Colors", "url": "https://leetcode.com/problems/sort-colors/", "difficulty": "medium", "keyInsight": "Dutch National Flag problem. Sort in O(N) time using three pointers." },
-    { "title": "K Closest Points to Origin", "url": "https://leetcode.com/problems/k-closest-points-to-origin/", "difficulty": "medium", "keyInsight": "Custom comparator based on distance formula." }
+    {
+      "title": "Merge Intervals",
+      "url": "https://leetcode.com/problems/merge-intervals/",
+      "difficulty": "medium",
+      "keyInsight": "Sort by start time."
+    },
+    {
+      "title": "Sort Colors",
+      "url": "https://leetcode.com/problems/sort-colors/",
+      "difficulty": "medium",
+      "keyInsight": "Dutch National Flag problem. Sort in O(N) time using three pointers."
+    },
+    {
+      "title": "K Closest Points to Origin",
+      "url": "https://leetcode.com/problems/k-closest-points-to-origin/",
+      "difficulty": "medium",
+      "keyInsight": "Custom comparator based on distance formula."
+    }
   ]
 }

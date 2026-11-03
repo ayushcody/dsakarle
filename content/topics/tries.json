@@ -3,10 +3,17 @@
   "slug": "tries",
   "title": "Tries (Prefix Trees)",
   "category": "data-structure",
-  "difficulty": "hard",
+  "difficulty": "advanced",
   "estimatedMinutes": 45,
-  "prerequisites": ["trees", "hash-maps"],
-  "tags": ["tree", "strings", "prefix"],
+  "prerequisites": [
+    "trees",
+    "hash-maps"
+  ],
+  "tags": [
+    "tree",
+    "strings",
+    "prefix"
+  ],
   "overview": {
     "summary": "A Trie (pronounced 'try') is a specialized tree used to store associative data structures, specifically strings. It excels at fast prefix matching.",
     "learningObjectives": [
@@ -26,9 +33,18 @@
   "definition": {
     "technicalDefinition": "A Trie is a tree-like data structure whose nodes store the letters of an alphabet. By structuring the nodes in a particular way, words and strings can be retrieved by traversing down a branch path of the tree.",
     "vocabulary": [
-      { "term": "Prefix", "definition": "The beginning characters of a word." },
-      { "term": "IsWord Flag", "definition": "A boolean stored on a node to indicate that the path ending at this node forms a complete valid word." },
-      { "term": "Children Map", "definition": "Instead of just Left/Right, a Trie node has a Hash Map (or Array of size 26) pointing to its children." }
+      {
+        "term": "Prefix",
+        "definition": "The beginning characters of a word."
+      },
+      {
+        "term": "IsWord Flag",
+        "definition": "A boolean stored on a node to indicate that the path ending at this node forms a complete valid word."
+      },
+      {
+        "term": "Children Map",
+        "definition": "Instead of just Left/Right, a Trie node has a Hash Map (or Array of size 26) pointing to its children."
+      }
     ],
     "keyProperties": [
       "O(L) search time, where L is the length of the word (independent of how many words are in the dictionary).",
@@ -57,10 +73,22 @@
       "cpp": "struct TrieNode {\n    unordered_map<char, TrieNode*> children;\n    bool isWord = false;\n};"
     },
     "memoryLayout": [
-      { "label": "Root", "value": "{ 'c': Node1, 'd': Node2 }" },
-      { "label": "Node1", "value": "{ 'a': Node3 }, isWord: false" },
-      { "label": "Node3", "value": "{ 't': Node4 }, isWord: false" },
-      { "label": "Node4", "value": "{}, isWord: true" }
+      {
+        "label": "Root",
+        "value": "{ 'c': Node1, 'd': Node2 }"
+      },
+      {
+        "label": "Node1",
+        "value": "{ 'a': Node3 }, isWord: false"
+      },
+      {
+        "label": "Node3",
+        "value": "{ 't': Node4 }, isWord: false"
+      },
+      {
+        "label": "Node4",
+        "value": "{}, isWord: true"
+      }
     ]
   },
   "stepper": {
@@ -140,29 +168,44 @@
     {
       "question": "If you insert 'cat' and 'car' into an empty Trie, how many nodes (including root) exist?",
       "options": [
-        "5 nodes (Root, c, a, t, r)",
         "6 nodes (Root, c, a, t, c, a, r)",
+        "5 nodes (Root, c, a, t, r)",
         "7 nodes",
         "2 nodes"
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "Root (1) -> 'c' (1) -> 'a' (1). Then 'a' branches to 't' (1) and 'r' (1). 1 + 1 + 1 + 1 + 1 = 5."
     },
     {
       "question": "Why use a Trie over a Hash Map for dictionary lookups?",
       "options": [
-        "A Trie can instantly find all words that START WITH a specific prefix, which a Hash Map cannot do.",
         "A Trie uses less CPU cycles.",
         "A Trie doesn't use pointers.",
-        "Hash Maps cannot store strings."
+        "Hash Maps cannot store strings.",
+        "A Trie can instantly find all words that START WITH a specific prefix, which a Hash Map cannot do."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "A Hash Map only supports exact matches. To find prefixes in a Hash Map, you would have to iterate over every single key in the map (O(N))."
     }
   ],
   "practice": [
-    { "title": "Implement Trie (Prefix Tree)", "url": "https://leetcode.com/problems/implement-trie-prefix-tree/", "difficulty": "medium", "keyInsight": "Standard implementation." },
-    { "title": "Design Add and Search Words Data Structure", "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/", "difficulty": "medium", "keyInsight": "When you hit a '.' wildcard, run a DFS on all children of the current node." },
-    { "title": "Word Search II", "url": "https://leetcode.com/problems/word-search-ii/", "difficulty": "hard", "keyInsight": "Put the dictionary into a Trie, then run DFS from every cell on the board, walking down the Trie concurrently." }
+    {
+      "title": "Implement Trie (Prefix Tree)",
+      "url": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+      "difficulty": "medium",
+      "keyInsight": "Standard implementation."
+    },
+    {
+      "title": "Design Add and Search Words Data Structure",
+      "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+      "difficulty": "medium",
+      "keyInsight": "When you hit a '.' wildcard, run a DFS on all children of the current node."
+    },
+    {
+      "title": "Word Search II",
+      "url": "https://leetcode.com/problems/word-search-ii/",
+      "difficulty": "hard",
+      "keyInsight": "Put the dictionary into a Trie, then run DFS from every cell on the board, walking down the Trie concurrently."
+    }
   ]
 }

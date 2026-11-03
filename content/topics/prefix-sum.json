@@ -5,8 +5,14 @@
   "category": "algorithm",
   "difficulty": "beginner",
   "estimatedMinutes": 35,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "math", "optimization"],
+  "prerequisites": [
+    "arrays"
+  ],
+  "tags": [
+    "array",
+    "math",
+    "optimization"
+  ],
   "overview": {
     "summary": "Prefix Sum is a technique that pre-calculates the cumulative sum of elements in an array to answer range sum queries in O(1) time.",
     "learningObjectives": [
@@ -26,9 +32,18 @@
   "definition": {
     "technicalDefinition": "A Prefix Sum array is an array where the value at index `i` is the sum of all elements from index `0` to index `i` in the original array.",
     "vocabulary": [
-      { "term": "Prefix", "definition": "Everything that comes before a certain point." },
-      { "term": "Range Sum Query", "definition": "A request to find the sum of elements between two indices `[L, R]`." },
-      { "term": "Cumulative", "definition": "Increasing or growing by successive additions." }
+      {
+        "term": "Prefix",
+        "definition": "Everything that comes before a certain point."
+      },
+      {
+        "term": "Range Sum Query",
+        "definition": "A request to find the sum of elements between two indices `[L, R]`."
+      },
+      {
+        "term": "Cumulative",
+        "definition": "Increasing or growing by successive additions."
+      }
     ],
     "keyProperties": [
       "Precomputation takes O(N) time and O(N) space.",
@@ -42,7 +57,12 @@
     ],
     "clickSentence": "Sum(L to R) = Sum(0 to R) - Sum(0 to L-1). We cut off the part we don't want.",
     "diagramType": "ArrayDiagram",
-    "cells": [1, 2, 3, 4],
+    "cells": [
+      1,
+      2,
+      3,
+      4
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -57,8 +77,14 @@
       "cpp": "vector<int> prefix(arr.size() + 1, 0);\nfor (int i = 0; i < arr.size(); i++) {\n    prefix[i+1] = prefix[i] + arr[i];\n}"
     },
     "memoryLayout": [
-      { "label": "Original", "value": "[ 2, 4, 6 ]" },
-      { "label": "Prefix Array", "value": "[ 0, 2, 6, 12 ]" }
+      {
+        "label": "Original",
+        "value": "[ 2, 4, 6 ]"
+      },
+      {
+        "label": "Prefix Array",
+        "value": "[ 0, 2, 6, 12 ]"
+      }
     ]
   },
   "stepper": {
@@ -138,12 +164,12 @@
     {
       "question": "Why do we often make the Prefix Sum array size N+1 instead of N?",
       "options": [
-        "To easily handle queries that start at index 0 without needing an 'if left == 0' edge case.",
         "Because arrays must be even lengths.",
         "To store the total length of the array at the end.",
+        "To easily handle queries that start at index 0 without needing an 'if left == 0' edge case.",
         "It is a requirement of Python."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "If we want `Sum(0 to 5)`, the formula `Prefix[5] - Prefix[-1]` would crash or behave unexpectedly. Putting a dummy `0` at `Prefix[0]` makes the math `Prefix[6] - Prefix[0]` work perfectly."
     },
     {
@@ -159,8 +185,23 @@
     }
   ],
   "practice": [
-    { "title": "Range Sum Query - Immutable", "url": "https://leetcode.com/problems/range-sum-query-immutable/", "difficulty": "easy", "keyInsight": "The textbook definition of Prefix Sum." },
-    { "title": "Subarray Sum Equals K", "url": "https://leetcode.com/problems/subarray-sum-equals-k/", "difficulty": "medium", "keyInsight": "Use a Hash Map to store the frequencies of prefix sums seen so far." },
-    { "title": "Product of Array Except Self", "url": "https://leetcode.com/problems/product-of-array-except-self/", "difficulty": "medium", "keyInsight": "Use a Prefix Product array from the left, and a Suffix Product array from the right." }
+    {
+      "title": "Range Sum Query - Immutable",
+      "url": "https://leetcode.com/problems/range-sum-query-immutable/",
+      "difficulty": "easy",
+      "keyInsight": "The textbook definition of Prefix Sum."
+    },
+    {
+      "title": "Subarray Sum Equals K",
+      "url": "https://leetcode.com/problems/subarray-sum-equals-k/",
+      "difficulty": "medium",
+      "keyInsight": "Use a Hash Map to store the frequencies of prefix sums seen so far."
+    },
+    {
+      "title": "Product of Array Except Self",
+      "url": "https://leetcode.com/problems/product-of-array-except-self/",
+      "difficulty": "medium",
+      "keyInsight": "Use a Prefix Product array from the left, and a Suffix Product array from the right."
+    }
   ]
 }

@@ -5,8 +5,14 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 30,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "dynamic", "memory"],
+  "prerequisites": [
+    "arrays"
+  ],
+  "tags": [
+    "array",
+    "dynamic",
+    "memory"
+  ],
   "overview": {
     "summary": "Vectors (or Dynamic Arrays) are arrays that automatically resize themselves when they run out of space.",
     "learningObjectives": [
@@ -26,9 +32,18 @@
   "definition": {
     "technicalDefinition": "A Dynamic Array (Vector in C++, ArrayList in Java, List in Python) is a random access, variable-size list data structure that allows elements to be added or removed.",
     "vocabulary": [
-      { "term": "Size", "definition": "The number of elements currently stored in the vector." },
-      { "term": "Capacity", "definition": "The actual size of the underlying memory block." },
-      { "term": "Amortized Time", "definition": "An average time complexity that accounts for occasional expensive operations spread out over many fast operations." }
+      {
+        "term": "Size",
+        "definition": "The number of elements currently stored in the vector."
+      },
+      {
+        "term": "Capacity",
+        "definition": "The actual size of the underlying memory block."
+      },
+      {
+        "term": "Amortized Time",
+        "definition": "An average time complexity that accounts for occasional expensive operations spread out over many fast operations."
+      }
     ],
     "keyProperties": [
       "O(1) random access by index.",
@@ -42,7 +57,12 @@
     ],
     "clickSentence": "By doubling the capacity every time we run out of space, the heavy O(N) cost of copying elements happens so rarely that the average cost per insert drops to O(1).",
     "diagramType": "ArrayDiagram",
-    "cells": [1, 2, 3, 4],
+    "cells": [
+      1,
+      2,
+      3,
+      4
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -57,9 +77,18 @@
       "cpp": "std::vector<int> arr;\narr.push_back(1);"
     },
     "memoryLayout": [
-      { "label": "Size", "value": "4" },
-      { "label": "Capacity", "value": "8 (It doubled when the 4th item was added)" },
-      { "label": "Memory", "value": "[1, 2, 3, 4, null, null, null, null]" }
+      {
+        "label": "Size",
+        "value": "4"
+      },
+      {
+        "label": "Capacity",
+        "value": "8 (It doubled when the 4th item was added)"
+      },
+      {
+        "label": "Memory",
+        "value": "[1, 2, 3, 4, null, null, null, null]"
+      }
     ]
   },
   "stepper": {
@@ -139,27 +168,25 @@
     {
       "question": "What does 'Amortized O(1)' mean?",
       "options": [
-        "The average time per operation is O(1) when spread out over many operations, even if one operation takes O(N).",
         "It means O(1) in the worst case.",
         "It means O(N).",
-        "It means the operation is instantly fast."
+        "It means the operation is instantly fast.",
+        "The average time per operation is O(1) when spread out over many operations, even if one operation takes O(N)."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "Because you double the capacity, you do an O(N) copy, but then you get N free O(1) operations. So the average cost is exactly O(1)."
     },
     {
       "question": "Why not just increase the capacity by 1 each time instead of doubling it?",
       "options": [
-        "Because adding 1 would require copying the entire array every single time you append, making appending O(N).",
         "Because computers only understand powers of 2.",
+        "Because adding 1 would require copying the entire array every single time you append, making appending O(N).",
         "To save memory.",
         "To prevent buffer overflows."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "If you increased capacity by 1, you would do an O(N) copy for every single insert, resulting in an O(N^2) total time for N inserts. Doubling guarantees O(N) total time for N inserts."
     }
   ],
-  "practice": [
-    { "title": "Design Dynamic Array (Concept)", "url": "#", "difficulty": "medium", "keyInsight": "Understand the internal copy mechanisms of your language's array." }
-  ]
+  "practice": []
 }

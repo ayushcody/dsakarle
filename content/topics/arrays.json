@@ -63,7 +63,9 @@
       50
     ],
     "diagramState": {
-      "highlighted": [2]
+      "highlighted": [
+        2
+      ]
     }
   },
   "structure": {
@@ -117,7 +119,9 @@
       {
         "stepIndex": 1,
         "diagramState": {
-          "comparing": [0]
+          "comparing": [
+            0
+          ]
         },
         "variables": {
           "index": 0,
@@ -130,7 +134,9 @@
       {
         "stepIndex": 2,
         "diagramState": {
-          "comparing": [1]
+          "comparing": [
+            1
+          ]
         },
         "variables": {
           "index": 1,
@@ -143,8 +149,12 @@
       {
         "stepIndex": 3,
         "diagramState": {
-          "comparing": [2],
-          "highlighted": [2]
+          "comparing": [
+            2
+          ],
+          "highlighted": [
+            2
+          ]
         },
         "variables": {
           "index": 2,
@@ -228,12 +238,12 @@
     {
       "question": "Why is array access O(1)?",
       "options": [
-        "Elements are contiguous, so memory addresses are calculated with simple math.",
         "The computer searches all elements instantly.",
         "Arrays are stored in the CPU cache.",
+        "Elements are contiguous, so memory addresses are calculated with simple math.",
         "Arrays are mapped to hash values."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "The memory address of any index is found by adding (Index * Size) to the starting address."
     },
     {

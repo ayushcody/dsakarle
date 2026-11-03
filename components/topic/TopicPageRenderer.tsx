@@ -3,9 +3,8 @@
 import { useMemo, type ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 
-import courseStructure from '@/content/course-structure.json';
 import { Sidebar } from '@/components/layout/Sidebar';
-import type { CourseStructure, LearningTopicPage, CodeLanguage } from '@/types/learning';
+import type { LearningTopicPage, CodeLanguage } from '@/types/learning';
 
 import { TopicHero } from './TopicHero';
 import { HeroBlock } from './HeroBlock';
@@ -168,7 +167,7 @@ export function TopicPageRenderer({
 
   return (
     <>
-      <Sidebar currentSlug={topic.slug} courseStructure={courseStructure as CourseStructure} />
+      <Sidebar currentSlug={topic.slug} />
 
       <div className="md:ml-[280px] min-h-[calc(100vh-64px)] bg-[var(--bg-primary)]">
         <div className="max-w-[1200px] mx-auto flex gap-12 px-6 xl:px-12 py-10">

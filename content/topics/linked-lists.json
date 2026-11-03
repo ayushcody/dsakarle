@@ -5,7 +5,9 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 45,
-  "prerequisites": ["arrays"],
+  "prerequisites": [
+    "arrays"
+  ],
   "tags": [
     "data-structure",
     "pointers",
@@ -62,13 +64,28 @@
     "cells": [],
     "diagramState": {
       "nodes": [
-        {"id": "A", "val": 10},
-        {"id": "B", "val": 20},
-        {"id": "C", "val": 30}
+        {
+          "id": "A",
+          "val": 10
+        },
+        {
+          "id": "B",
+          "val": 20
+        },
+        {
+          "id": "C",
+          "val": 30
+        }
       ],
       "edges": [
-        {"source": "A", "target": "B"},
-        {"source": "B", "target": "C"}
+        {
+          "source": "A",
+          "target": "B"
+        },
+        {
+          "source": "B",
+          "target": "C"
+        }
       ]
     }
   },
@@ -106,13 +123,28 @@
         "stepIndex": 0,
         "diagramState": {
           "nodes": [
-            {"id": "A", "val": 10},
-            {"id": "B", "val": 20},
-            {"id": "C", "val": 30}
+            {
+              "id": "A",
+              "val": 10
+            },
+            {
+              "id": "B",
+              "val": 20
+            },
+            {
+              "id": "C",
+              "val": 30
+            }
           ],
           "edges": [
-            {"source": "A", "target": "B"},
-            {"source": "B", "target": "C"}
+            {
+              "source": "A",
+              "target": "B"
+            },
+            {
+              "source": "B",
+              "target": "C"
+            }
           ]
         },
         "variables": {
@@ -207,12 +239,12 @@
     {
       "question": "Why is a 'Dummy Node' often used in Linked List problems?",
       "options": [
-        "To avoid special edge cases when modifying the 'head' of the list.",
         "To make the list run faster.",
         "To store extra variables.",
+        "To avoid special edge cases when modifying the 'head' of the list.",
         "To convert it into a Doubly Linked List."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "A dummy node placed before the head ensures that the head can be modified or deleted without writing custom 'if head == null' edge case logic."
     }
   ],

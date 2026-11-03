@@ -3,10 +3,16 @@
   "slug": "bst",
   "title": "Binary Search Trees",
   "category": "data-structure",
-  "difficulty": "medium",
+  "difficulty": "intermediate",
   "estimatedMinutes": 50,
-  "prerequisites": ["trees"],
-  "tags": ["tree", "search", "sorted"],
+  "prerequisites": [
+    "trees"
+  ],
+  "tags": [
+    "tree",
+    "search",
+    "sorted"
+  ],
   "overview": {
     "summary": "A Binary Search Tree (BST) is a tree where every left child is smaller than its parent, and every right child is greater.",
     "learningObjectives": [
@@ -26,9 +32,18 @@
   "definition": {
     "technicalDefinition": "A Binary Search Tree is a rooted binary tree data structure whose internal nodes each store a key greater than all the keys in the node's left subtree and less than those in its right subtree.",
     "vocabulary": [
-      { "term": "BST Invariant", "definition": "Left Subtree < Node < Right Subtree for EVERY node." },
-      { "term": "In-Order Traversal", "definition": "Visiting Left, then Node, then Right. In a BST, this prints values in perfectly sorted order." },
-      { "term": "Balanced", "definition": "When the left and right subtrees have roughly the same height, ensuring O(log N) depth." }
+      {
+        "term": "BST Invariant",
+        "definition": "Left Subtree < Node < Right Subtree for EVERY node."
+      },
+      {
+        "term": "In-Order Traversal",
+        "definition": "Visiting Left, then Node, then Right. In a BST, this prints values in perfectly sorted order."
+      },
+      {
+        "term": "Balanced",
+        "definition": "When the left and right subtrees have roughly the same height, ensuring O(log N) depth."
+      }
     ],
     "keyProperties": [
       "Average case O(log N) for Search, Insert, and Delete.",
@@ -42,7 +57,15 @@
     ],
     "clickSentence": "By strictly enforcing the rule 'Smaller to the left, Larger to the right', searching becomes a game of elimination.",
     "diagramType": "tree",
-    "cells": [10, 5, 15, 2, 7, 12, 20],
+    "cells": [
+      10,
+      5,
+      15,
+      2,
+      7,
+      12,
+      20
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -57,14 +80,31 @@
       "cpp": "struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n    TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n};"
     },
     "memoryLayout": [
-      { "label": "Root", "value": "10" },
-      { "label": "Root.left", "value": "5 (Must be < 10)" },
-      { "label": "Root.right", "value": "15 (Must be > 10)" }
+      {
+        "label": "Root",
+        "value": "10"
+      },
+      {
+        "label": "Root.left",
+        "value": "5 (Must be < 10)"
+      },
+      {
+        "label": "Root.right",
+        "value": "15 (Must be > 10)"
+      }
     ]
   },
   "stepper": {
     "diagramType": "tree",
-    "array": [10, 5, 15, 2, 7, 12, 20],
+    "array": [
+      10,
+      5,
+      15,
+      2,
+      7,
+      12,
+      20
+    ],
     "steps": [
       {
         "stepIndex": 0,
@@ -148,30 +188,50 @@
     {
       "question": "What happens if you insert sorted data (e.g., 1, 2, 3, 4, 5) into a basic BST?",
       "options": [
-        "It degrades into a Linked List (O(N) search).",
         "It stays perfectly balanced (O(log N) search).",
         "The compiler throws an error.",
-        "It automatically rebalances itself."
+        "It automatically rebalances itself.",
+        "It degrades into a Linked List (O(N) search)."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "Because every new number is larger, it always goes to the right, forming a straight line. (Advanced trees like AVL or Red-Black fix this by auto-balancing)."
     },
     {
       "question": "Which traversal prints a BST in perfectly sorted order?",
       "options": [
-        "In-Order",
         "Pre-Order",
+        "In-Order",
         "Post-Order",
         "Level-Order"
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "In-Order visits the Left Subtree (smaller), then the Node (middle), then the Right Subtree (larger)."
     }
   ],
   "practice": [
-    { "title": "Validate Binary Search Tree", "url": "https://leetcode.com/problems/validate-binary-search-tree/", "difficulty": "medium", "keyInsight": "Pass a valid [min, max] range down to every node." },
-    { "title": "Lowest Common Ancestor of a BST", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/", "difficulty": "medium", "keyInsight": "If both targets are smaller, go left. If both are larger, go right. Otherwise, you are at the LCA." },
-    { "title": "Kth Smallest Element in a BST", "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/", "difficulty": "medium", "keyInsight": "An in-order traversal yields the k-th element naturally." },
-    { "title": "Convert Sorted Array to Binary Search Tree", "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/", "difficulty": "easy", "keyInsight": "The middle of the array is the root." }
+    {
+      "title": "Validate Binary Search Tree",
+      "url": "https://leetcode.com/problems/validate-binary-search-tree/",
+      "difficulty": "medium",
+      "keyInsight": "Pass a valid [min, max] range down to every node."
+    },
+    {
+      "title": "Lowest Common Ancestor of a BST",
+      "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
+      "difficulty": "medium",
+      "keyInsight": "If both targets are smaller, go left. If both are larger, go right. Otherwise, you are at the LCA."
+    },
+    {
+      "title": "Kth Smallest Element in a BST",
+      "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+      "difficulty": "medium",
+      "keyInsight": "An in-order traversal yields the k-th element naturally."
+    },
+    {
+      "title": "Convert Sorted Array to Binary Search Tree",
+      "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",
+      "difficulty": "easy",
+      "keyInsight": "The middle of the array is the root."
+    }
   ]
 }

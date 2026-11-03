@@ -3,10 +3,15 @@
   "slug": "greedy",
   "title": "Greedy Algorithms",
   "category": "algorithm",
-  "difficulty": "medium",
+  "difficulty": "intermediate",
   "estimatedMinutes": 45,
-  "prerequisites": ["sorting"],
-  "tags": ["algorithm", "optimization"],
+  "prerequisites": [
+    "sorting"
+  ],
+  "tags": [
+    "algorithm",
+    "optimization"
+  ],
   "overview": {
     "summary": "Greedy algorithms build up a solution piece by piece, always choosing the next piece that offers the most immediate benefit.",
     "learningObjectives": [
@@ -26,9 +31,18 @@
   "definition": {
     "technicalDefinition": "A greedy algorithm is any algorithm that follows the problem-solving heuristic of making the locally optimal choice at each stage with the intent of finding a global optimum.",
     "vocabulary": [
-      { "term": "Locally Optimal", "definition": "The best possible choice you can make right now, based ONLY on the current step, ignoring future consequences." },
-      { "term": "Globally Optimal", "definition": "The absolute best possible final answer for the entire problem." },
-      { "term": "Counter-example", "definition": "A specific scenario that proves a greedy approach fails to find the global optimum." }
+      {
+        "term": "Locally Optimal",
+        "definition": "The best possible choice you can make right now, based ONLY on the current step, ignoring future consequences."
+      },
+      {
+        "term": "Globally Optimal",
+        "definition": "The absolute best possible final answer for the entire problem."
+      },
+      {
+        "term": "Counter-example",
+        "definition": "A specific scenario that proves a greedy approach fails to find the global optimum."
+      }
     ],
     "keyProperties": [
       "Very fast (usually O(N) or O(N log N) if sorting is required).",
@@ -54,7 +68,10 @@
       "python": "def make_change(amount, coins):\n    coins.sort(reverse=True)\n    count = 0\n    for coin in coins:\n        while amount >= coin:\n            amount -= coin\n            count += 1\n    return count"
     },
     "memoryLayout": [
-      { "label": "Greedy Choice", "value": "Pick the highest value available at the current moment." }
+      {
+        "label": "Greedy Choice",
+        "value": "Pick the highest value available at the current moment."
+      }
     ]
   },
   "stepper": {
@@ -136,12 +153,12 @@
     {
       "question": "Why does making change with coins (US currency) work with a Greedy algorithm, but some custom coin sets fail?",
       "options": [
-        "Because US coins (25, 10, 5, 1) are mathematically structured so that the greedy choice never 'traps' you into using more coins.",
         "Because you sort them first.",
         "Because there are only 4 coins.",
+        "Because US coins (25, 10, 5, 1) are mathematically structured so that the greedy choice never 'traps' you into using more coins.",
         "It doesn't work with US currency."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "If your coins were [4, 3, 1] and you wanted to make 6. Greedy takes 4, then 1, then 1 (3 coins). But the optimal answer is 3 + 3 (2 coins). Greedy fails if the coin values don't follow specific mathematical gaps."
     },
     {
@@ -157,8 +174,23 @@
     }
   ],
   "practice": [
-    { "title": "Jump Game", "url": "https://leetcode.com/problems/jump-game/", "difficulty": "medium", "keyInsight": "Greedily track the furthest index you can reach." },
-    { "title": "Assign Cookies", "url": "https://leetcode.com/problems/assign-cookies/", "difficulty": "easy", "keyInsight": "Sort both arrays. Give the smallest cookie to the least greedy child." },
-    { "title": "Task Scheduler", "url": "https://leetcode.com/problems/task-scheduler/", "difficulty": "medium", "keyInsight": "Always schedule the most frequent task first." }
+    {
+      "title": "Jump Game",
+      "url": "https://leetcode.com/problems/jump-game/",
+      "difficulty": "medium",
+      "keyInsight": "Greedily track the furthest index you can reach."
+    },
+    {
+      "title": "Assign Cookies",
+      "url": "https://leetcode.com/problems/assign-cookies/",
+      "difficulty": "easy",
+      "keyInsight": "Sort both arrays. Give the smallest cookie to the least greedy child."
+    },
+    {
+      "title": "Task Scheduler",
+      "url": "https://leetcode.com/problems/task-scheduler/",
+      "difficulty": "medium",
+      "keyInsight": "Always schedule the most frequent task first."
+    }
   ]
 }

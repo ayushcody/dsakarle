@@ -1,7 +1,4 @@
-import courseStructure from '@/content/course-structure.json';
-import type { CourseStructure } from '@/types/learning';
-
-const structure = courseStructure as CourseStructure;
+import { LESSONS, getGroup } from '@/lib/curriculum';
 
 export interface CourseTopic {
   slug: string
@@ -9,10 +6,12 @@ export interface CourseTopic {
   group: string
 }
 
-/** Every lesson in course-structure.json, in curriculum order. */
-export const COURSE_TOPICS: CourseTopic[] = structure.groups.flatMap((group) =>
-  group.topics.map((topic) => ({ slug: topic.slug, title: topic.title, group: group.title })),
-);
+/** Every lesson in content/curriculum.json, in learning order. `group` is the group's display title. */
+export const COURSE_TOPICS: CourseTopic[] = LESSONS.map((lesson) => ({
+  slug: lesson.slug,
+  title: lesson.title,
+  group: getGroup(lesson.group)?.title ?? lesson.group,
+}));
 
 const COURSE_SLUGS = new Set(COURSE_TOPICS.map((topic) => topic.slug));
 
@@ -20,7 +19,7 @@ export function isCourseSlug(slug: string): boolean {
   return COURSE_SLUGS.has(slug);
 }
 
-/** Count completed lessons, ignoring slugs that aren't part of the course structure. */
+/** Count completed lessons, ignoring slugs that aren't part of the curriculum. */
 export function countCompletedLessons(completedSections: string[]): number {
   return new Set(completedSections.filter((slug) => COURSE_SLUGS.has(slug))).size;
 }

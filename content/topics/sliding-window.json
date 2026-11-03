@@ -1077,12 +1077,12 @@
     {
       "question": "What makes Sliding Window possible?",
       "options": [
-        "Windows overlap heavily",
         "The array is sorted",
         "Recursion is involved",
+        "Windows overlap heavily",
         "We always need a stack"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "We reuse most of the previous window instead of recomputing it from scratch."
     },
     {
@@ -1099,12 +1099,12 @@
     {
       "question": "Why is the runtime often O(n)?",
       "options": [
-        "Pointers only move forward",
         "Arrays are cached",
         "The window is recursive",
+        "Pointers only move forward",
         "Because of binary search"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "Each element is entered once and removed once in the common pattern."
     },
     {

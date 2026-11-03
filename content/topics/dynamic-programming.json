@@ -3,10 +3,16 @@
   "slug": "dynamic-programming",
   "title": "Dynamic Programming",
   "category": "algorithm",
-  "difficulty": "hard",
+  "difficulty": "advanced",
   "estimatedMinutes": 90,
-  "prerequisites": ["recursion"],
-  "tags": ["algorithm", "optimization", "memoization"],
+  "prerequisites": [
+    "recursion"
+  ],
+  "tags": [
+    "algorithm",
+    "optimization",
+    "memoization"
+  ],
   "overview": {
     "summary": "Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems, and storing the results of those subproblems to avoid redundant calculations.",
     "learningObjectives": [
@@ -26,10 +32,22 @@
   "definition": {
     "technicalDefinition": "Dynamic programming is both a mathematical optimization method and a computer programming method. It solves problems by recursively breaking them down into overlapping subproblems and storing the solutions to avoid duplicate work.",
     "vocabulary": [
-      { "term": "Overlapping Subproblems", "definition": "When a recursive algorithm visits the exact same state multiple times." },
-      { "term": "Optimal Substructure", "definition": "When the optimal solution to the overall problem can be constructed from optimal solutions to its subproblems." },
-      { "term": "Memoization (Top-Down)", "definition": "Writing a recursive function and adding a hash map (or array) to cache the results." },
-      { "term": "Tabulation (Bottom-Up)", "definition": "Building an array from the smallest subproblem up to the largest, using loops instead of recursion." }
+      {
+        "term": "Overlapping Subproblems",
+        "definition": "When a recursive algorithm visits the exact same state multiple times."
+      },
+      {
+        "term": "Optimal Substructure",
+        "definition": "When the optimal solution to the overall problem can be constructed from optimal solutions to its subproblems."
+      },
+      {
+        "term": "Memoization (Top-Down)",
+        "definition": "Writing a recursive function and adding a hash map (or array) to cache the results."
+      },
+      {
+        "term": "Tabulation (Bottom-Up)",
+        "definition": "Building an array from the smallest subproblem up to the largest, using loops instead of recursion."
+      }
     ],
     "keyProperties": [
       "Trades Space for Time.",
@@ -56,8 +74,14 @@
       "javascript": "// Bottom-Up (Tabulation)\nfunction fib(n) {\n    if (n <= 1) return n;\n    const dp = new Array(n + 1).fill(0);\n    dp[1] = 1;\n    for (let i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}"
     },
     "memoryLayout": [
-      { "label": "DP Table (Array)", "value": "Stores solutions. dp[3] = answer for subproblem 3." },
-      { "label": "State Transitions", "value": "How dp[i] is calculated from dp[i-1], dp[i-2], etc." }
+      {
+        "label": "DP Table (Array)",
+        "value": "Stores solutions. dp[3] = answer for subproblem 3."
+      },
+      {
+        "label": "State Transitions",
+        "value": "How dp[i] is calculated from dp[i-1], dp[i-2], etc."
+      }
     ]
   },
   "stepper": {
@@ -138,30 +162,50 @@
     {
       "question": "What is the primary difference between Backtracking and Dynamic Programming?",
       "options": [
-        "Backtracking explores ALL paths to find ALL solutions. DP stores answers to subproblems to find the BEST or TOTAL solutions efficiently.",
         "Backtracking uses recursion, DP never does.",
         "DP is always faster than O(N).",
-        "Backtracking uses less memory."
+        "Backtracking uses less memory.",
+        "Backtracking explores ALL paths to find ALL solutions. DP stores answers to subproblems to find the BEST or TOTAL solutions efficiently."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "If a problem asks 'List all possible paths', you MUST use Backtracking. If it asks 'What is the MAXIMUM path' or 'HOW MANY paths', you use DP to avoid building the actual paths."
     },
     {
       "question": "What happens if a DP problem does NOT have overlapping subproblems?",
       "options": [
-        "It is just standard Divide and Conquer (like Merge Sort).",
         "It crashes.",
+        "It is just standard Divide and Conquer (like Merge Sort).",
         "You get a Stack Overflow.",
         "You must use a Hash Map."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "Merge sort divides the array into halves. The left half and right half have NO overlapping elements. Therefore, caching results doesn't help because you never solve the same problem twice."
     }
   ],
   "practice": [
-    { "title": "Climbing Stairs", "url": "https://leetcode.com/problems/climbing-stairs/", "difficulty": "easy", "keyInsight": "Literally just the Fibonacci sequence." },
-    { "title": "House Robber", "url": "https://leetcode.com/problems/house-robber/", "difficulty": "medium", "keyInsight": "dp[i] = max(rob current + dp[i-2], skip current + dp[i-1])" },
-    { "title": "Coin Change", "url": "https://leetcode.com/problems/coin-change/", "difficulty": "medium", "keyInsight": "dp[amount] = min(dp[amount - coin] + 1)" },
-    { "title": "Longest Common Subsequence", "url": "https://leetcode.com/problems/longest-common-subsequence/", "difficulty": "medium", "keyInsight": "2D DP grid comparing character by character." }
+    {
+      "title": "Climbing Stairs",
+      "url": "https://leetcode.com/problems/climbing-stairs/",
+      "difficulty": "easy",
+      "keyInsight": "Literally just the Fibonacci sequence."
+    },
+    {
+      "title": "House Robber",
+      "url": "https://leetcode.com/problems/house-robber/",
+      "difficulty": "medium",
+      "keyInsight": "dp[i] = max(rob current + dp[i-2], skip current + dp[i-1])"
+    },
+    {
+      "title": "Coin Change",
+      "url": "https://leetcode.com/problems/coin-change/",
+      "difficulty": "medium",
+      "keyInsight": "dp[amount] = min(dp[amount - coin] + 1)"
+    },
+    {
+      "title": "Longest Common Subsequence",
+      "url": "https://leetcode.com/problems/longest-common-subsequence/",
+      "difficulty": "medium",
+      "keyInsight": "2D DP grid comparing character by character."
+    }
   ]
 }

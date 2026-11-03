@@ -431,12 +431,12 @@
     {
       "question": "What happens if the current sum is too large?",
       "options": [
-        "Move right leftward",
         "Move left leftward",
         "Sort again",
+        "Move right leftward",
         "Use a stack"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "Reducing the larger side decreases the sum on a sorted array."
     },
     {
@@ -453,12 +453,12 @@
     {
       "question": "What does each move do conceptually?",
       "options": [
-        "Discard impossible answers",
         "Add a new subtree",
         "Resize the array",
+        "Discard impossible answers",
         "Sort the input"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "Pointer movement removes regions that cannot contain the answer anymore."
     }
   ],

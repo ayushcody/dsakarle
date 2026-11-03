@@ -5,7 +5,10 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 35,
-  "prerequisites": ["arrays", "linked-lists"],
+  "prerequisites": [
+    "arrays",
+    "linked-lists"
+  ],
   "tags": [
     "data-structure",
     "FIFO"
@@ -44,6 +47,10 @@
       {
         "term": "FIFO",
         "definition": "First-In-First-Out."
+      },
+      {
+        "term": "Deque",
+        "definition": "Double-ended queue supporting push/pop from both ends in O(1)."
       }
     ],
     "keyProperties": [
@@ -126,6 +133,19 @@
         "cpp": "int val = q.front(); q.pop();"
       },
       "visualNote": "The front element exits the line."
+    },
+    {
+      "name": "Queue from Two Stacks",
+      "description": "Use an 'in' stack for push and an 'out' stack for pop. Pour from in to out only when out is empty.",
+      "timeComplexity": "O(1) amortized per operation",
+      "spaceComplexity": "O(N)",
+      "code": {
+        "python": "class MyQueue:\n    def __init__(self):\n        self.stack_in = []\n        self.stack_out = []\n\n    def push(self, x):\n        self.stack_in.append(x)\n\n    def pop(self):\n        if not self.stack_out:\n            while self.stack_in:\n                self.stack_out.append(self.stack_in.pop())\n        return self.stack_out.pop()",
+        "javascript": "class MyQueue {\n  constructor() { this.inStack = []; this.outStack = []; }\n  push(x) { this.inStack.push(x); }\n  pop() {\n    if (!this.outStack.length) {\n      while (this.inStack.length) this.outStack.push(this.inStack.pop());\n    }\n    return this.outStack.pop();\n  }\n}",
+        "java": "class MyQueue {\n    Stack<Integer> in = new Stack<>(), out = new Stack<>();\n    void push(int x) { in.push(x); }\n    int pop() {\n        if (out.isEmpty()) while (!in.isEmpty()) out.push(in.pop());\n        return out.pop();\n    }\n}",
+        "cpp": "class MyQueue {\n    stack<int> in, out;\npublic:\n    void push(int x) { in.push(x); }\n    int pop() {\n        if (out.empty()) while (!in.empty()) { out.push(in.top()); in.pop(); }\n        int val = out.top(); out.pop(); return val;\n    }\n};"
+      },
+      "visualNote": "Items pour from one cylinder to another, reversing their order."
     }
   ],
   "patternTemplate": {
@@ -173,12 +193,12 @@
     {
       "question": "Which principle does a Queue follow?",
       "options": [
-        "FIFO (First In, First Out)",
         "LIFO (Last In, First Out)",
         "FILO (First In, Last Out)",
+        "FIFO (First In, First Out)",
         "Random Access"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "FIFO. The first item to enter the queue is the first one to leave."
     },
     {
@@ -191,6 +211,17 @@
       ],
       "correctIndex": 0,
       "explanation": "If you remove index 0, index 1 must move to index 0, index 2 to index 1, etc. This is O(n) time. Linked Lists can dequeue in O(1)."
+    },
+    {
+      "question": "What is the amortized time complexity of queue operations using two stacks?",
+      "options": [
+        "O(N)",
+        "O(log N)",
+        "O(N²)",
+        "O(1)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Each element is moved from in-stack to out-stack at most once, so amortized cost per operation is O(1)."
     }
   ],
   "practice": [
@@ -205,6 +236,12 @@
       "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
       "difficulty": "easy",
       "keyInsight": "Use two stacks: one for pushing, one for popping/peeking."
+    },
+    {
+      "title": "Sliding Window Maximum",
+      "url": "https://leetcode.com/problems/sliding-window-maximum/",
+      "difficulty": "hard",
+      "keyInsight": "Monotonic deque maintains window max candidates."
     }
   ]
 }

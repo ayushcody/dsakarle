@@ -5,298 +5,28 @@
     "title": "Arrays",
     "category": "data-structure",
     "difficulty": "beginner",
+    "trigger": "You need instant access by position.",
     "tags": [
       "data-structure",
-      "basics",
-      "memory"
+      "You need instant access by position."
     ],
     "overview": {
-      "summary": "An array is a contiguous block of memory used to store a collection of items of the same type."
+      "summary": "A row of numbered boxes, side by side in memory."
     }
   },
   {
-    "id": "backtracking",
-    "slug": "backtracking",
-    "title": "Backtracking",
-    "category": "algorithm",
-    "difficulty": "hard",
-    "tags": [
-      "recursion",
-      "search",
-      "combinatorics"
-    ],
-    "overview": {
-      "summary": "Backtracking is an algorithmic technique for solving problems recursively by trying to build a solution incrementally, one piece at a time, removing those solutions that fail to satisfy the constraints of the problem at any point of time."
-    }
-  },
-  {
-    "id": "bfs-dfs",
-    "slug": "bfs-dfs",
-    "title": "BFS & DFS",
-    "category": "algorithm",
-    "difficulty": "hard",
-    "tags": [
-      "graph",
-      "tree",
-      "search",
-      "traversal"
-    ],
-    "overview": {
-      "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental algorithms for traversing or searching tree and graph data structures."
-    }
-  },
-  {
-    "id": "binary-search",
-    "slug": "binary-search",
-    "title": "Binary Search",
-    "category": "algorithm",
-    "difficulty": "medium",
-    "tags": [
-      "array",
-      "search",
-      "divide-and-conquer"
-    ],
-    "overview": {
-      "summary": "Binary Search is a divide-and-conquer algorithm that finds a target in a sorted array in O(log N) time by repeatedly halving the search space."
-    }
-  },
-  {
-    "id": "bst",
-    "slug": "bst",
-    "title": "Binary Search Trees",
-    "category": "data-structure",
-    "difficulty": "medium",
-    "tags": [
-      "tree",
-      "search",
-      "sorted"
-    ],
-    "overview": {
-      "summary": "A Binary Search Tree (BST) is a tree where every left child is smaller than its parent, and every right child is greater."
-    }
-  },
-  {
-    "id": "dynamic-programming",
-    "slug": "dynamic-programming",
-    "title": "Dynamic Programming",
-    "category": "algorithm",
-    "difficulty": "hard",
-    "tags": [
-      "algorithm",
-      "optimization",
-      "memoization"
-    ],
-    "overview": {
-      "summary": "Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems, and storing the results of those subproblems to avoid redundant calculations."
-    }
-  },
-  {
-    "id": "fast-and-slow-pointers",
-    "slug": "fast-and-slow-pointers",
-    "title": "Fast and Slow Pointers",
-    "category": "algorithm",
-    "difficulty": "intermediate",
-    "tags": [
-      "tortoise-hare",
-      "cycle-detection",
-      "linked-list"
-    ],
-    "overview": {
-      "summary": "The fast-and-slow pointer technique (Floyd's Tortoise and Hare) uses two pointers moving at different speeds to detect cycles, find midpoints, and solve linked list problems."
-    }
-  },
-  {
-    "id": "graphs",
-    "slug": "graphs",
-    "title": "Graphs",
-    "category": "data-structure",
-    "difficulty": "hard",
-    "tags": [
-      "graph",
-      "bfs",
-      "dfs",
-      "networks"
-    ],
-    "overview": {
-      "summary": "Graphs model relationships between objects. Unlike trees, graphs can have cycles, multiple parents, and disjoint sections."
-    }
-  },
-  {
-    "id": "greedy",
-    "slug": "greedy",
-    "title": "Greedy Algorithms",
-    "category": "algorithm",
-    "difficulty": "medium",
-    "tags": [
-      "algorithm",
-      "optimization"
-    ],
-    "overview": {
-      "summary": "Greedy algorithms build up a solution piece by piece, always choosing the next piece that offers the most immediate benefit."
-    }
-  },
-  {
-    "id": "hash-maps",
-    "slug": "hash-maps",
-    "title": "Hash Maps",
+    "id": "vectors",
+    "slug": "vectors",
+    "title": "Dynamic Arrays",
     "category": "data-structure",
     "difficulty": "beginner",
+    "trigger": "You need an array but don't know the final size.",
     "tags": [
       "data-structure",
-      "hash-table",
-      "dictionary"
+      "You need an array but don't know the final size."
     ],
     "overview": {
-      "summary": "Hash Maps store data in key-value pairs, providing average O(1) time complexity for lookups, insertions, and deletions."
-    }
-  },
-  {
-    "id": "heaps",
-    "slug": "heaps",
-    "title": "Heaps & Priority Queues",
-    "category": "data-structure",
-    "difficulty": "medium",
-    "tags": [
-      "tree",
-      "priority-queue",
-      "sorting"
-    ],
-    "overview": {
-      "summary": "A Heap is a specialized tree-based data structure that satisfies the heap property: the parent node is always larger (or smaller) than its children."
-    }
-  },
-  {
-    "id": "linked-lists",
-    "slug": "linked-lists",
-    "title": "Linked Lists",
-    "category": "data-structure",
-    "difficulty": "beginner",
-    "tags": [
-      "data-structure",
-      "pointers",
-      "memory"
-    ],
-    "overview": {
-      "summary": "A Linked List is a linear data structure where elements are not stored in contiguous memory. Instead, each element points to the next one."
-    }
-  },
-  {
-    "id": "prefix-sum",
-    "slug": "prefix-sum",
-    "title": "Prefix Sum",
-    "category": "algorithm",
-    "difficulty": "beginner",
-    "tags": [
-      "array",
-      "math",
-      "optimization"
-    ],
-    "overview": {
-      "summary": "Prefix Sum is a technique that pre-calculates the cumulative sum of elements in an array to answer range sum queries in O(1) time."
-    }
-  },
-  {
-    "id": "queues",
-    "slug": "queues",
-    "title": "Queues",
-    "category": "data-structure",
-    "difficulty": "beginner",
-    "tags": [
-      "data-structure",
-      "FIFO"
-    ],
-    "overview": {
-      "summary": "A Queue is a linear data structure that follows the First-In-First-Out (FIFO) principle."
-    }
-  },
-  {
-    "id": "recursion",
-    "slug": "recursion",
-    "title": "Recursion",
-    "category": "algorithm",
-    "difficulty": "medium",
-    "tags": [
-      "algorithm",
-      "functions",
-      "divide-and-conquer"
-    ],
-    "overview": {
-      "summary": "Recursion is a method where the solution to a problem depends on solutions to smaller instances of the same problem."
-    }
-  },
-  {
-    "id": "searching",
-    "slug": "searching",
-    "title": "Searching Algorithms",
-    "category": "algorithm",
-    "difficulty": "beginner",
-    "tags": [
-      "array",
-      "search"
-    ],
-    "overview": {
-      "summary": "Searching algorithms are used to retrieve information stored within some data structure."
-    }
-  },
-  {
-    "id": "sliding-window",
-    "slug": "sliding-window",
-    "title": "Sliding Window",
-    "category": "algorithm",
-    "difficulty": "beginner",
-    "tags": [
-      "array",
-      "subarray",
-      "window"
-    ],
-    "overview": {
-      "summary": "Sliding Window turns repeated contiguous-range work into a single flowing pass across the data."
-    }
-  },
-  {
-    "id": "sorting",
-    "slug": "sorting",
-    "title": "Sorting Algorithms",
-    "category": "algorithm",
-    "difficulty": "medium",
-    "tags": [
-      "array",
-      "sort",
-      "divide-and-conquer"
-    ],
-    "overview": {
-      "summary": "Sorting algorithms arrange elements in a certain order (usually ascending). Understanding how they work internally is crucial for grasping time complexity limits."
-    }
-  },
-  {
-    "id": "stacks-queues",
-    "slug": "stacks-queues",
-    "title": "Stacks & Queues Combined",
-    "category": "data-structure",
-    "difficulty": "beginner",
-    "tags": [
-      "stack",
-      "queue",
-      "LIFO",
-      "FIFO",
-      "deque"
-    ],
-    "overview": {
-      "summary": "Stacks (LIFO) and Queues (FIFO) are the two fundamental restricted-access data structures. Understanding both and knowing when to use which is key."
-    }
-  },
-  {
-    "id": "stacks",
-    "slug": "stacks",
-    "title": "Stacks",
-    "category": "data-structure",
-    "difficulty": "beginner",
-    "tags": [
-      "data-structure",
-      "LIFO"
-    ],
-    "overview": {
-      "summary": "A Stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle."
+      "summary": "An array that grows by moving into a bigger home."
     }
   },
   {
@@ -305,43 +35,148 @@
     "title": "Strings",
     "category": "data-structure",
     "difficulty": "beginner",
+    "trigger": "The input is text: words, palindromes, anagrams, substrings.",
     "tags": [
-      "array",
-      "text",
-      "parsing"
+      "data-structure",
+      "The input is text: words, palindromes, anagrams, substrings."
     ],
     "overview": {
-      "summary": "A String is an array of characters. However, depending on the language, strings are often immutable."
+      "summary": "An array of characters with its own tricks."
+    }
+  },
+  {
+    "id": "linked-lists",
+    "slug": "linked-lists",
+    "title": "Linked Lists",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "trigger": "You rewire order often, or the problem hands you a ListNode.",
+    "tags": [
+      "data-structure",
+      "You rewire order often, or the problem hands you a ListNode."
+    ],
+    "overview": {
+      "summary": "A chain of nodes, each holding the way to the next."
+    }
+  },
+  {
+    "id": "stacks",
+    "slug": "stacks",
+    "title": "Stacks",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "trigger": "Matching pairs, undo, or 'the most recent unresolved thing'.",
+    "tags": [
+      "data-structure",
+      "Matching pairs, undo, or 'the most recent unresolved thing'."
+    ],
+    "overview": {
+      "summary": "Last in, first out — a pile of plates."
+    }
+  },
+  {
+    "id": "queues",
+    "slug": "queues",
+    "title": "Queues",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "trigger": "Process things in the order they arrived, level by level.",
+    "tags": [
+      "data-structure",
+      "Process things in the order they arrived, level by level."
+    ],
+    "overview": {
+      "summary": "First in, first out — a line at the counter."
+    }
+  },
+  {
+    "id": "hash-maps",
+    "slug": "hash-maps",
+    "title": "Hash Maps & Sets",
+    "category": "data-structure",
+    "difficulty": "beginner",
+    "trigger": "'Have I seen this before?' or 'how many times?'.",
+    "tags": [
+      "data-structure",
+      "'Have I seen this before?' or 'how many times?'."
+    ],
+    "overview": {
+      "summary": "Turn a key into a bucket number and look there directly."
     }
   },
   {
     "id": "trees",
     "slug": "trees",
-    "title": "Trees",
+    "title": "Binary Trees",
     "category": "data-structure",
-    "difficulty": "medium",
+    "difficulty": "intermediate",
+    "trigger": "Hierarchies, or the problem hands you a TreeNode.",
     "tags": [
-      "tree",
-      "recursion",
-      "hierarchical"
+      "data-structure",
+      "Hierarchies, or the problem hands you a TreeNode."
     ],
     "overview": {
-      "summary": "Trees are hierarchical data structures modeling relationships rather than flat lists."
+      "summary": "Each node has up to two children; problems split in half."
+    }
+  },
+  {
+    "id": "bst",
+    "slug": "bst",
+    "title": "Binary Search Trees",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "trigger": "Sorted order that must stay sorted while you insert and delete.",
+    "tags": [
+      "data-structure",
+      "Sorted order that must stay sorted while you insert and delete."
+    ],
+    "overview": {
+      "summary": "A tree where left is smaller and right is bigger, all the way down."
+    }
+  },
+  {
+    "id": "heaps",
+    "slug": "heaps",
+    "title": "Heaps & Priority Queues",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "trigger": "'Top K', 'K-th largest', or repeatedly take the best option.",
+    "tags": [
+      "data-structure",
+      "'Top K', 'K-th largest', or repeatedly take the best option."
+    ],
+    "overview": {
+      "summary": "Always hand me the smallest (or largest) next."
+    }
+  },
+  {
+    "id": "graphs",
+    "slug": "graphs",
+    "title": "Graphs",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "trigger": "Networks, maps, dependencies, or a grid you can walk.",
+    "tags": [
+      "data-structure",
+      "Networks, maps, dependencies, or a grid you can walk."
+    ],
+    "overview": {
+      "summary": "Dots and lines: anything connected to anything."
     }
   },
   {
     "id": "tries",
     "slug": "tries",
-    "title": "Tries (Prefix Trees)",
+    "title": "Tries",
     "category": "data-structure",
-    "difficulty": "hard",
+    "difficulty": "advanced",
+    "trigger": "Autocomplete, prefix search, or many words checked at once.",
     "tags": [
-      "tree",
-      "strings",
-      "prefix"
+      "data-structure",
+      "Autocomplete, prefix search, or many words checked at once."
     ],
     "overview": {
-      "summary": "A Trie (pronounced 'try') is a specialized tree used to store associative data structures, specifically strings. It excels at fast prefix matching."
+      "summary": "A tree of letters where shared prefixes share a path."
     }
   },
   {
@@ -350,28 +185,163 @@
     "title": "Two Pointers",
     "category": "algorithm",
     "difficulty": "beginner",
+    "trigger": "A sorted array and a pair or triple that must meet a target.",
     "tags": [
-      "array",
-      "sorted-array",
-      "pointers"
+      "algorithm",
+      "A sorted array and a pair or triple that must meet a target."
     ],
     "overview": {
-      "summary": "Two Pointers uses two moving indices to narrow the search space without nested loops."
+      "summary": "Two fingers on the data, moving with purpose."
     }
   },
   {
-    "id": "vectors",
-    "slug": "vectors",
-    "title": "Vectors (Dynamic Arrays)",
-    "category": "data-structure",
+    "id": "sliding-window",
+    "slug": "sliding-window",
+    "title": "Sliding Window",
+    "category": "algorithm",
     "difficulty": "beginner",
+    "trigger": "'Contiguous subarray / substring' with a size or a condition.",
     "tags": [
-      "array",
-      "dynamic",
-      "memory"
+      "algorithm",
+      "'Contiguous subarray / substring' with a size or a condition."
     ],
     "overview": {
-      "summary": "Vectors (or Dynamic Arrays) are arrays that automatically resize themselves when they run out of space."
+      "summary": "A frame that slides along; you only update its edges."
+    }
+  },
+  {
+    "id": "fast-and-slow-pointers",
+    "slug": "fast-and-slow-pointers",
+    "title": "Fast & Slow Pointers",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "trigger": "Cycles, or the middle of a linked list in one pass.",
+    "tags": [
+      "algorithm",
+      "Cycles, or the middle of a linked list in one pass."
+    ],
+    "overview": {
+      "summary": "A hare and a tortoise: if there's a loop, they meet."
+    }
+  },
+  {
+    "id": "prefix-sum",
+    "slug": "prefix-sum",
+    "title": "Prefix Sum",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "trigger": "Many range-sum questions, or 'subarray sums to k'.",
+    "tags": [
+      "algorithm",
+      "Many range-sum questions, or 'subarray sums to k'."
+    ],
+    "overview": {
+      "summary": "Precompute running totals; any range sum is one subtraction."
+    }
+  },
+  {
+    "id": "binary-search",
+    "slug": "binary-search",
+    "title": "Binary Search",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "trigger": "Sorted data, or 'find the smallest value that works'.",
+    "tags": [
+      "algorithm",
+      "Sorted data, or 'find the smallest value that works'."
+    ],
+    "overview": {
+      "summary": "Halve the search space with every question."
+    }
+  },
+  {
+    "id": "sorting",
+    "slug": "sorting",
+    "title": "Sorting",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "trigger": "Order would make pairs, duplicates or intervals obvious.",
+    "tags": [
+      "algorithm",
+      "Order would make pairs, duplicates or intervals obvious."
+    ],
+    "overview": {
+      "summary": "Put things in order, then problems get easier."
+    }
+  },
+  {
+    "id": "searching",
+    "slug": "searching",
+    "title": "Searching",
+    "category": "algorithm",
+    "difficulty": "beginner",
+    "trigger": "'Find X' — the right method depends on sorted, hashed or raw.",
+    "tags": [
+      "algorithm",
+      "'Find X' — the right method depends on sorted, hashed or raw."
+    ],
+    "overview": {
+      "summary": "Choosing how to find something based on how it's stored."
+    }
+  },
+  {
+    "id": "recursion",
+    "slug": "recursion",
+    "title": "Recursion & Backtracking",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "trigger": "'All combinations / subsets / permutations', or self-similar structure.",
+    "tags": [
+      "algorithm",
+      "'All combinations / subsets / permutations', or self-similar structure."
+    ],
+    "overview": {
+      "summary": "Solve a smaller copy of the problem; undo choices that fail."
+    }
+  },
+  {
+    "id": "bfs-dfs",
+    "slug": "bfs-dfs",
+    "title": "BFS & DFS",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "trigger": "Shortest steps in an unweighted graph, islands, or levels.",
+    "tags": [
+      "algorithm",
+      "Shortest steps in an unweighted graph, islands, or levels."
+    ],
+    "overview": {
+      "summary": "Explore ripple by ripple (BFS) or path by path (DFS)."
+    }
+  },
+  {
+    "id": "greedy",
+    "slug": "greedy",
+    "title": "Greedy",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "trigger": "Intervals, scheduling, or 'minimum number of …' with a clear best pick.",
+    "tags": [
+      "algorithm",
+      "Intervals, scheduling, or 'minimum number of …' with a clear best pick."
+    ],
+    "overview": {
+      "summary": "Take the best-looking move now — when you can prove it's safe."
+    }
+  },
+  {
+    "id": "dynamic-programming",
+    "slug": "dynamic-programming",
+    "title": "Dynamic Programming",
+    "category": "algorithm",
+    "difficulty": "advanced",
+    "trigger": "'Number of ways', 'min/max cost', and choices that overlap.",
+    "tags": [
+      "algorithm",
+      "'Number of ways', 'min/max cost', and choices that overlap."
+    ],
+    "overview": {
+      "summary": "Remember answers to small problems; build the big one from them."
     }
   }
 ]

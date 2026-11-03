@@ -5,7 +5,10 @@
   "category": "data-structure",
   "difficulty": "beginner",
   "estimatedMinutes": 35,
-  "prerequisites": ["arrays", "linked-lists"],
+  "prerequisites": [
+    "arrays",
+    "linked-lists"
+  ],
   "tags": [
     "data-structure",
     "LIFO"
@@ -44,6 +47,10 @@
       {
         "term": "LIFO",
         "definition": "Last-In-First-Out."
+      },
+      {
+        "term": "Monotonic Stack",
+        "definition": "A stack that maintains elements in non-increasing or non-decreasing order."
       }
     ],
     "keyProperties": [
@@ -173,12 +180,12 @@
     {
       "question": "Which principle does a Stack follow?",
       "options": [
-        "LIFO (Last In, First Out)",
         "FIFO (First In, First Out)",
         "FILO (First In, Last Out)",
+        "LIFO (Last In, First Out)",
         "Random Access"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "LIFO. The last item pushed onto the stack is the first item popped off. (Note: FILO is technically identical, but LIFO is the standard industry term)."
     },
     {
@@ -211,6 +218,24 @@
       "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/",
       "difficulty": "medium",
       "keyInsight": "Push numbers. When you see an operator, pop two numbers, evaluate, and push result."
+    },
+    {
+      "title": "Implement Stack using Queues",
+      "url": "https://leetcode.com/problems/implement-stack-using-queues/",
+      "difficulty": "easy",
+      "keyInsight": "After push, rotate all previous elements behind the new one."
+    },
+    {
+      "title": "Daily Temperatures",
+      "url": "https://leetcode.com/problems/daily-temperatures/",
+      "difficulty": "medium",
+      "keyInsight": "Monotonic decreasing stack tracks unresolved days."
+    },
+    {
+      "title": "Next Greater Element I",
+      "url": "https://leetcode.com/problems/next-greater-element-i/",
+      "difficulty": "easy",
+      "keyInsight": "Monotonic stack processes elements right to left."
     }
   ]
 }

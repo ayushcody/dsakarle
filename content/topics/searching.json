@@ -5,8 +5,13 @@
   "category": "algorithm",
   "difficulty": "beginner",
   "estimatedMinutes": 30,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "search"],
+  "prerequisites": [
+    "arrays"
+  ],
+  "tags": [
+    "array",
+    "search"
+  ],
   "overview": {
     "summary": "Searching algorithms are used to retrieve information stored within some data structure.",
     "learningObjectives": [
@@ -26,9 +31,18 @@
   "definition": {
     "technicalDefinition": "A search algorithm is any algorithm which solves the search problem, namely, to retrieve information stored within some data structure.",
     "vocabulary": [
-      { "term": "Linear Search", "definition": "Checking every single element one by one from start to finish." },
-      { "term": "Key", "definition": "The specific value or identifier you are looking for." },
-      { "term": "Search Space", "definition": "The total amount of data you have to look through." }
+      {
+        "term": "Linear Search",
+        "definition": "Checking every single element one by one from start to finish."
+      },
+      {
+        "term": "Key",
+        "definition": "The specific value or identifier you are looking for."
+      },
+      {
+        "term": "Search Space",
+        "definition": "The total amount of data you have to look through."
+      }
     ],
     "keyProperties": [
       "Unsorted Arrays / Linked Lists: O(N) Search.",
@@ -42,7 +56,13 @@
     ],
     "clickSentence": "Optimization is just the act of organizing data so you don't have to look at all of it.",
     "diagramType": "ArrayDiagram",
-    "cells": [7, 14, 21, 28, 35],
+    "cells": [
+      7,
+      14,
+      21,
+      28,
+      35
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -56,13 +76,25 @@
       "cpp": "int linearSearch(vector<int>& arr, int target) {\n    for (int i = 0; i < arr.size(); i++) {\n        if (arr[i] == target) return i;\n    }\n    return -1;\n}"
     },
     "memoryLayout": [
-      { "label": "Target", "value": "21" },
-      { "label": "Current Index", "value": "Steps through 0, 1, 2..." }
+      {
+        "label": "Target",
+        "value": "21"
+      },
+      {
+        "label": "Current Index",
+        "value": "Steps through 0, 1, 2..."
+      }
     ]
   },
   "stepper": {
     "diagramType": "ArrayDiagram",
-    "array": [7, 14, 21, 28, 35],
+    "array": [
+      7,
+      14,
+      21,
+      28,
+      35
+    ],
     "steps": [
       {
         "stepIndex": 0,
@@ -127,17 +159,27 @@
     {
       "question": "If you need to search an array 10,000 times, should you use Linear Search?",
       "options": [
-        "No, you should either sort it first (O(N log N)) to use Binary Search, or put it in a Hash Map (O(N) build) for O(1) lookups.",
         "Yes, Linear Search is fine.",
+        "No, you should either sort it first (O(N log N)) to use Binary Search, or put it in a Hash Map (O(N) build) for O(1) lookups.",
         "Only if the array is small.",
         "Yes, because Hash Maps use too much memory."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "explanation": "10,000 queries of O(N) is O(10,000 * N). By doing a one-time upfront cost to organize the data, you reduce the queries to O(log N) or O(1)."
     }
   ],
   "practice": [
-    { "title": "Search in Rotated Sorted Array", "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/", "difficulty": "medium", "keyInsight": "Determine which half of the array is properly sorted, then check if target is in that half." },
-    { "title": "Find Peak Element", "url": "https://leetcode.com/problems/find-peak-element/", "difficulty": "medium", "keyInsight": "Follow the ascending slope using binary search." }
+    {
+      "title": "Search in Rotated Sorted Array",
+      "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "difficulty": "medium",
+      "keyInsight": "Determine which half of the array is properly sorted, then check if target is in that half."
+    },
+    {
+      "title": "Find Peak Element",
+      "url": "https://leetcode.com/problems/find-peak-element/",
+      "difficulty": "medium",
+      "keyInsight": "Follow the ascending slope using binary search."
+    }
   ]
 }

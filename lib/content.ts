@@ -1,64 +1,32 @@
 import fs from 'fs';
 import path from 'path';
 
-import type { LearningTopicPage, TopicDifficulty, TopicMeta } from '@/types/learning';
+import { LESSONS, isCurriculumSlug } from '@/lib/curriculum';
+import type { CurriculumGroupId, LearningTopicPage, TopicDifficulty, TopicMeta } from '@/types/learning';
 
-type CatalogTopic = {
+export type CatalogCategory = 'data-structure' | 'algorithm';
+
+export interface CatalogTopic {
   title: string
   slug: string
   difficulty: TopicDifficulty
-  category: 'data-structure' | 'algorithm'
+  category: CatalogCategory
 }
+
+const CATEGORY_BY_GROUP: Record<CurriculumGroupId, CatalogCategory> = {
+  'data-structures': 'data-structure',
+  algorithms: 'algorithm',
+};
 
 const TOPICS_DIR = path.join(process.cwd(), 'content', 'topics');
 
-const homeCatalogTopics: CatalogTopic[] = [
-  { title: 'Arrays & Vectors', slug: 'arrays', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Linked Lists', slug: 'linked-lists', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Stacks & Queues', slug: 'stacks-queues', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Binary Trees', slug: 'trees', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Graphs', slug: 'graphs', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Heaps', slug: 'heaps', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Tries', slug: 'tries', difficulty: 'advanced', category: 'data-structure' },
-  { title: 'Hash Maps', slug: 'hash-maps', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Sliding Window', slug: 'sliding-window', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Two Pointers', slug: 'two-pointers', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Binary Search', slug: 'binary-search', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Sorting Algorithms', slug: 'sorting', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Searching Algorithms', slug: 'searching', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Prefix Sum', slug: 'prefix-sum', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Dynamic Programming', slug: 'dynamic-programming', difficulty: 'advanced', category: 'algorithm' },
-  { title: 'Backtracking', slug: 'backtracking', difficulty: 'advanced', category: 'algorithm' },
-  { title: 'Greedy Algorithms', slug: 'greedy', difficulty: 'intermediate', category: 'algorithm' },
-];
-
-const topicRegistry: CatalogTopic[] = [
-  { title: 'Arrays', slug: 'arrays', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Vectors (Dynamic Arrays)', slug: 'vectors', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Strings', slug: 'strings', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Linked Lists', slug: 'linked-lists', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Stacks', slug: 'stacks', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Queues', slug: 'queues', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Hash Maps & Hash Sets', slug: 'hash-maps', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Binary Trees', slug: 'trees', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Binary Search Trees', slug: 'bst', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Heaps', slug: 'heaps', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Graphs', slug: 'graphs', difficulty: 'intermediate', category: 'data-structure' },
-  { title: 'Tries', slug: 'tries', difficulty: 'advanced', category: 'data-structure' },
-  { title: 'Sliding Window', slug: 'sliding-window', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Two Pointers', slug: 'two-pointers', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Prefix Sum', slug: 'prefix-sum', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Binary Search Pattern', slug: 'binary-search', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Sorting Algorithms', slug: 'sorting', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Searching Algorithms', slug: 'searching', difficulty: 'beginner', category: 'algorithm' },
-  { title: 'Recursion & Backtracking', slug: 'recursion', difficulty: 'advanced', category: 'algorithm' },
-  { title: 'Dynamic Programming', slug: 'dynamic-programming', difficulty: 'advanced', category: 'algorithm' },
-  { title: 'Greedy Algorithms', slug: 'greedy', difficulty: 'intermediate', category: 'algorithm' },
-  { title: 'BFS & DFS', slug: 'bfs-dfs', difficulty: 'intermediate', category: 'algorithm' },
-  { title: 'Stacks & Queues', slug: 'stacks-queues', difficulty: 'beginner', category: 'data-structure' },
-  { title: 'Backtracking', slug: 'backtracking', difficulty: 'advanced', category: 'algorithm' },
-  { title: 'Fast and Slow Pointers', slug: 'fast-and-slow-pointers', difficulty: 'intermediate', category: 'algorithm' },
-];
+/** Every curriculum lesson, in learning order. Derived from content/curriculum.json only. */
+const topicRegistry: CatalogTopic[] = LESSONS.map((lesson) => ({
+  title: lesson.title,
+  slug: lesson.slug,
+  difficulty: lesson.difficulty,
+  category: CATEGORY_BY_GROUP[lesson.group],
+}));
 
 const topicMap = new Map(topicRegistry.map((topic) => [topic.slug, topic]));
 
@@ -107,15 +75,24 @@ function createPlaceholderTopic(slug: string): LearningTopicPage | null {
   };
 }
 
-export function getCatalogTopics(category: 'data-structure' | 'algorithm') {
-  return homeCatalogTopics.filter((topic) => topic.category === category);
+export function getCatalogTopics(category: CatalogCategory): CatalogTopic[] {
+  return topicRegistry.filter((topic) => topic.category === category);
 }
 
+/** Curriculum slugs in learning order. */
 export function getAllTopicSlugs(): string[] {
-  return Array.from(new Set(topicRegistry.map((topic) => topic.slug))).sort();
+  return topicRegistry.map((topic) => topic.slug);
 }
 
+/**
+ * Reads content/topics/<slug>.json when present, otherwise a placeholder for curriculum lessons.
+ * Returns null for any slug that is not in the curriculum.
+ */
 export function getTopicBySlug(slug: string): LearningTopicPage | null {
+  if (!isCurriculumSlug(slug)) {
+    return null;
+  }
+
   return readTopicJson(slug) || createPlaceholderTopic(slug);
 }
 

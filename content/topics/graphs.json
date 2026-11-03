@@ -3,10 +3,18 @@
   "slug": "graphs",
   "title": "Graphs",
   "category": "data-structure",
-  "difficulty": "hard",
+  "difficulty": "advanced",
   "estimatedMinutes": 90,
-  "prerequisites": ["trees", "hash-maps"],
-  "tags": ["graph", "bfs", "dfs", "networks"],
+  "prerequisites": [
+    "trees",
+    "hash-maps"
+  ],
+  "tags": [
+    "graph",
+    "bfs",
+    "dfs",
+    "networks"
+  ],
   "overview": {
     "summary": "Graphs model relationships between objects. Unlike trees, graphs can have cycles, multiple parents, and disjoint sections.",
     "learningObjectives": [
@@ -26,11 +34,26 @@
   "definition": {
     "technicalDefinition": "A Graph is a non-linear data structure consisting of nodes (vertices) and edges that connect pairs of nodes.",
     "vocabulary": [
-      { "term": "Vertex / Node", "definition": "An entity in the graph." },
-      { "term": "Edge", "definition": "A connection between two vertices." },
-      { "term": "Directed Edge", "definition": "A one-way street (A -> B)." },
-      { "term": "Undirected Edge", "definition": "A two-way street (A <-> B)." },
-      { "term": "Cycle", "definition": "A path that starts and ends at the exact same vertex." }
+      {
+        "term": "Vertex / Node",
+        "definition": "An entity in the graph."
+      },
+      {
+        "term": "Edge",
+        "definition": "A connection between two vertices."
+      },
+      {
+        "term": "Directed Edge",
+        "definition": "A one-way street (A -> B)."
+      },
+      {
+        "term": "Undirected Edge",
+        "definition": "A two-way street (A <-> B)."
+      },
+      {
+        "term": "Cycle",
+        "definition": "A path that starts and ends at the exact same vertex."
+      }
     ],
     "keyProperties": [
       "Can be dense (many edges) or sparse (few edges).",
@@ -44,7 +67,12 @@
     ],
     "clickSentence": "Graphs don't have a clear 'starting point' like a Tree's Root. You can enter a Graph from any node.",
     "diagramType": "GraphDiagramInner",
-    "cells": [1, 2, 3, 4],
+    "cells": [
+      1,
+      2,
+      3,
+      4
+    ],
     "diagramState": {}
   },
   "structure": {
@@ -59,8 +87,14 @@
       "cpp": "unordered_map<string, vector<string>> adjList;\nadjList[\"A\"] = {\"B\", \"C\"};"
     },
     "memoryLayout": [
-      { "label": "Key 'A'", "value": "Array['B', 'C']" },
-      { "label": "Key 'B'", "value": "Array['A', 'D']" }
+      {
+        "label": "Key 'A'",
+        "value": "Array['B', 'C']"
+      },
+      {
+        "label": "Key 'B'",
+        "value": "Array['A', 'D']"
+      }
     ]
   },
   "stepper": {
@@ -141,12 +175,12 @@
     {
       "question": "What is the primary difference between a Tree traversal and a Graph traversal?",
       "options": [
-        "Graphs require a 'visited' set to avoid infinite loops, Trees do not.",
         "Graphs can only be traversed using BFS.",
         "Trees do not use recursion.",
+        "Graphs require a 'visited' set to avoid infinite loops, Trees do not.",
         "Graphs do not have time complexity."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "explanation": "Because graphs can have cycles (A points to B, B points to A), you must track what you have already seen or you will bounce back and forth forever."
     },
     {
@@ -162,9 +196,29 @@
     }
   ],
   "practice": [
-    { "title": "Number of Islands", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "DFS sinks the island." },
-    { "title": "Clone Graph", "url": "https://leetcode.com/problems/clone-graph/", "difficulty": "medium", "keyInsight": "Use a Hash Map to map original nodes to their cloned counterparts." },
-    { "title": "Course Schedule", "url": "https://leetcode.com/problems/course-schedule/", "difficulty": "medium", "keyInsight": "Topological Sort / Cycle Detection in a Directed Graph." },
-    { "title": "Rotting Oranges", "url": "https://leetcode.com/problems/rotting-oranges/", "difficulty": "medium", "keyInsight": "Multi-source BFS. Push all initial rotten oranges into the queue at step 0." }
+    {
+      "title": "Number of Islands",
+      "url": "https://leetcode.com/problems/number-of-islands/",
+      "difficulty": "medium",
+      "keyInsight": "DFS sinks the island."
+    },
+    {
+      "title": "Clone Graph",
+      "url": "https://leetcode.com/problems/clone-graph/",
+      "difficulty": "medium",
+      "keyInsight": "Use a Hash Map to map original nodes to their cloned counterparts."
+    },
+    {
+      "title": "Course Schedule",
+      "url": "https://leetcode.com/problems/course-schedule/",
+      "difficulty": "medium",
+      "keyInsight": "Topological Sort / Cycle Detection in a Directed Graph."
+    },
+    {
+      "title": "Rotting Oranges",
+      "url": "https://leetcode.com/problems/rotting-oranges/",
+      "difficulty": "medium",
+      "keyInsight": "Multi-source BFS. Push all initial rotten oranges into the queue at step 0."
+    }
   ]
 }

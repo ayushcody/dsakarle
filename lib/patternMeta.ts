@@ -1,3 +1,6 @@
+import { LESSONS } from '@/lib/curriculum';
+import type { CurriculumGroupId, CurriculumLesson } from '@/types/learning';
+
 export type PatternTag =
   | 'two-pointers'
   | 'sliding-window'
@@ -22,7 +25,8 @@ export interface PatternInfo {
   color: string;
 }
 
-export const PATTERN_META: Record<string, PatternInfo> = {
+// Hand-written copy for lessons that have it. Every other curriculum lesson gets a derived entry below.
+const HAND_WRITTEN_META: Record<string, PatternInfo> = {
   'two-pointers': {
     label: 'Two Pointers',
     icon: '👈👉',
@@ -122,3 +126,33 @@ export const PATTERN_META: Record<string, PatternInfo> = {
     color: 'var(--surface-amber)',
   },
 };
+
+const GROUP_ICON: Record<CurriculumGroupId, string> = {
+  'data-structures': '🧱',
+  algorithms: '⚙️',
+};
+
+const GROUP_COLOR: Record<CurriculumGroupId, string> = {
+  'data-structures': 'var(--surface-amber)',
+  algorithms: 'var(--surface-teal)',
+};
+
+function metaFromCurriculum(lesson: CurriculumLesson): PatternInfo {
+  return {
+    label: lesson.title,
+    icon: GROUP_ICON[lesson.group],
+    trigger: lesson.trigger,
+    notThisWhen: lesson.notThisWhen ?? '',
+    color: GROUP_COLOR[lesson.group],
+  };
+}
+
+/**
+ * Label, icon and trigger for every curriculum slug. Hand-written entries win; any slug
+ * without one is derived from content/curriculum.json so RecognitionQuiz never shows a bare slug.
+ */
+const DERIVED_META: Record<string, PatternInfo> = Object.fromEntries(
+  LESSONS.map((lesson): [string, PatternInfo] => [lesson.slug, metaFromCurriculum(lesson)]),
+);
+
+export const PATTERN_META: Record<string, PatternInfo> = { ...DERIVED_META, ...HAND_WRITTEN_META };

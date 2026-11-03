@@ -5,16 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useProgress } from '@/hooks/useProgress';
 import { getCourseProgressPercent } from '@/lib/course';
+import { CURRICULUM, lessonsInGroup } from '@/lib/curriculum';
 import { useNavStore } from '@/lib/nav-store';
-import type { CourseStructure } from '@/types/learning';
 
-export function Sidebar({
-  currentSlug,
-  courseStructure,
-}: {
-  currentSlug: string
-  courseStructure: CourseStructure
-}) {
+export function Sidebar({ currentSlug }: { currentSlug: string }) {
   const { progress, mounted } = useProgress();
   const mobileNavOpen = useNavStore((state) => state.mobileNavOpen);
   const setMobileNavOpen = useNavStore((state) => state.setMobileNavOpen);
@@ -42,7 +36,7 @@ export function Sidebar({
     };
   }, [mobileNavOpen, setMobileNavOpen]);
 
-  // Only lessons that exist in course-structure.json count (capped at 100%).
+  // Only lessons that exist in content/curriculum.json count (capped at 100%).
   const overallProgress = mounted ? getCourseProgressPercent(progress.completedSections) : 0;
 
   return (
@@ -90,8 +84,8 @@ export function Sidebar({
 
       {/* Navigation Groups */}
       <nav className="flex-1 px-3">
-        {courseStructure.groups.map((group, groupIndex) => (
-          <div key={group.title} className={groupIndex > 0 ? "mt-6" : ""}>
+        {CURRICULUM.groups.map((group, groupIndex) => (
+          <div key={group.id} className={groupIndex > 0 ? "mt-6" : ""}>
             {/* Group Header */}
             <div className="px-3 mb-2 flex items-center justify-between">
               <h3 className="font-dmsans font-bold text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
@@ -101,7 +95,7 @@ export function Sidebar({
 
             {/* Topics */}
             <ul className="space-y-1">
-              {group.topics.map(topic => {
+              {lessonsInGroup(group.id).map(topic => {
                 const isActive = topic.slug === currentSlug;
                 const isComplete = mounted && progress.completedSections.includes(topic.slug);
 
