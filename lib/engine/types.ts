@@ -126,7 +126,7 @@ export interface StackScene {
   label?: string
   /** Bottom → top. */
   items: Array<number | string>
-  /** Extra empty slots drawn above the top, to show capacity. */
+  /** Total slots including items (like ArrayScene.capacity); empty ones are drawn as ghosts above the top. */
   capacity?: number
   /** Item index → role. The top item is items.length - 1. */
   marks?: Array<{ index: number; role: MarkRole }>
