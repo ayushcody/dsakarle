@@ -369,7 +369,7 @@
       "group": "algorithms",
       "glyph": "searching",
       "difficulty": "beginner",
-      "status": "draft",
+      "status": "live",
       "minutes": 20,
       "oneLiner": "Choosing how to find something based on how it's stored.",
       "trigger": "'Find X' — the right method depends on sorted, hashed or raw.",

@@ -1,185 +1,473 @@
 {
-  "id": "searching",
+  "schemaVersion": 2,
   "slug": "searching",
-  "title": "Searching Algorithms",
-  "category": "algorithm",
-  "difficulty": "beginner",
-  "estimatedMinutes": 30,
-  "prerequisites": [
-    "arrays"
-  ],
-  "tags": [
-    "array",
-    "search"
-  ],
-  "overview": {
-    "summary": "Searching algorithms are used to retrieve information stored within some data structure.",
-    "learningObjectives": [
-      "Understand Linear Search and its O(N) constraints.",
-      "Understand how data structures optimize searching.",
-      "Identify the best searching strategy based on whether data is sorted, mapped, or raw."
-    ],
-    "interviewRelevance": "Interviews rarely ask you to just 'search'. They ask you to design a system where searching is fast."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "Finding a friend's number takes a couple of seconds in your phone, and ages in a drawer of loose paper slips. Why, when the question is exactly the same?",
     "paragraphs": [
-      "When you press Cmd+F to find a word on a page, the browser is running a string search algorithm.",
-      "Searching is so fundamental that computer science spent decades inventing Trees, Hash Maps, and Binary Search just to make it faster."
+      "In your phone the contacts are kept in alphabetical order. Jump to P, scan a few names, and Priya is right there. You never look at most of your 500 contacts.",
+      "Now picture the same 500 numbers on paper slips, shuffled together in a drawer. Any slip could be the right one, so you read them one at a time, and in the worst case you read all 500."
     ],
-    "ahaMoment": "The data structure you choose entirely determines the speed of your search. You cannot search a linked list in O(1) time, no matter how clever your code is."
+    "aha": "The question didn't change; the storage did. Sorted data lets each look cross out a whole chunk, an index that maps a name straight to its spot lets you jump there, and loose data gives you nothing but the scan. Choosing a search is really reading how the data is stored."
   },
-  "definition": {
-    "technicalDefinition": "A search algorithm is any algorithm which solves the search problem, namely, to retrieve information stored within some data structure.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "nums",
+      "cells": [
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "pointers": [
+        {
+          "name": "lo",
+          "index": 0,
+          "role": "ptrA"
+        },
+        {
+          "name": "hi",
+          "index": 6,
+          "role": "ptrB"
+        },
+        {
+          "name": "mid",
+          "index": 3,
+          "role": "focus"
+        }
+      ],
+      "window": {
+        "start": 0,
+        "end": 6
+      },
+      "marks": [
+        {
+          "index": 0,
+          "role": "compare"
+        },
+        {
+          "index": 1,
+          "role": "compare"
+        },
+        {
+          "index": 2,
+          "role": "compare"
+        },
+        {
+          "index": 3,
+          "role": "compare"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "Linear Search",
-        "definition": "Checking every single element one by one from start to finish."
+        "target": "ptr:mid",
+        "text": "check the middle"
       },
       {
-        "term": "Key",
-        "definition": "The specific value or identifier you are looking for."
+        "target": "cell:1",
+        "text": "this half is in order"
       },
       {
-        "term": "Search Space",
-        "definition": "The total amount of data you have to look through."
+        "target": "cell:4",
+        "text": "the drop: where it wraps"
       }
-    ],
-    "keyProperties": [
-      "Unsorted Arrays / Linked Lists: O(N) Search.",
-      "Sorted Arrays / BSTs: O(log N) Search.",
-      "Hash Maps: O(1) Search."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "Looking for your lost keys. You have to check every room (Linear Search) because they aren't organized. If you always put them on the hook (Hash Map), finding them takes zero effort."
+      "Finding a book in a house. If the books are piled on the floor, you read every spine. If they sit on a shelf in title order, you open the middle, see whether your title comes before or after, and ignore the other half.",
+      "If the house has a catalogue that says \"shelf 4, slot 12\", you walk straight there. Same book, three storage styles, three very different amounts of work."
     ],
-    "clickSentence": "Optimization is just the act of organizing data so you don't have to look at all of it.",
-    "diagramType": "ArrayDiagram",
-    "cells": [
-      7,
-      14,
-      21,
-      28,
-      35
-    ],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "Linear search requires zero extra memory. It just requires a loop."
-    ],
-    "definitionCode": {
-      "python": "def linear_search(arr, target):\n    for i, val in enumerate(arr):\n        if val == target: return i\n    return -1",
-      "javascript": "function linearSearch(arr, target) {\n    for (let i = 0; i < arr.length; i++) {\n        if (arr[i] === target) return i;\n    }\n    return -1;\n}",
-      "java": "int linearSearch(int[] arr, int target) {\n    for (int i = 0; i < arr.length; i++) {\n        if (arr[i] == target) return i;\n    }\n    return -1;\n}",
-      "cpp": "int linearSearch(vector<int>& arr, int target) {\n    for (int i = 0; i < arr.size(); i++) {\n        if (arr[i] == target) return i;\n    }\n    return -1;\n}"
-    },
-    "memoryLayout": [
+    "click": "Before you pick a search, ask how the data is stored: raw means scan it, sorted means halve it, hashed means jump to it.",
+    "glossary": [
       {
-        "label": "Target",
-        "value": "21"
+        "term": "linear search",
+        "definition": "Check items one at a time from the start until you find the target or run out. It works on any collection, in any order."
       },
       {
-        "label": "Current Index",
-        "value": "Steps through 0, 1, 2..."
+        "term": "sorted",
+        "definition": "The items run from smallest to largest. This order is what lets one look rule out many items at once."
+      },
+      {
+        "term": "search space",
+        "definition": "The items that could still hold the target. A good search shrinks it fast: by one, by half, or all the way to one bucket."
+      },
+      {
+        "term": "rotated",
+        "definition": "A sorted list whose first few items were moved to the back, like [4, 5, 6, 7, 0, 1, 2]. It climbs, drops once, then climbs again."
+      },
+      {
+        "term": "pivot",
+        "definition": "The spot where a rotated list drops, from 7 down to 0 in the example. The smallest value sits right after it."
+      },
+      {
+        "term": "hashing",
+        "definition": "Turning a key into a number that names a bucket, so you can jump straight to where the key would be instead of scanning."
+      },
+      {
+        "term": "balanced BST",
+        "definition": "A binary search tree whose two sides stay about equally tall, so a search walks roughly log n levels. An unbalanced one can lean into a long chain."
+      }
+    ],
+    "definition": "Searching means finding where an item is stored, or learning that it isn't there. The best method depends on how the data is kept. An unsorted array or a linked list needs a linear scan, O(n). A sorted array can be halved with binary search in O(log n), and that still works on a rotated sorted array if you first work out which half is in order. A hash map jumps to the answer in O(1) on average, but O(n) in the worst case when many keys collide. A balanced binary search tree takes O(log n), and also keeps the items in order."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "search",
+        "label": "Search a rotated array",
+        "tracer": "searching/rotated-search",
+        "predict": {
+          "tags": [
+            "which-half-sorted",
+            "go-where"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "min",
+        "label": "Find the minimum",
+        "tracer": "searching/rotated-min",
+        "predict": {
+          "tags": [
+            "min-side"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The collection is unsorted and you look something up once or twice: scan it. Sorting or building a map first costs more than the one scan.",
+      "The array is sorted, or a rotation of a sorted one, and you want O(log n): halve it with binary search, checking which half is in order if it was rotated.",
+      "You will do many lookups, the order doesn't matter, and you can spend some extra memory: put the items in a hash map and jump.",
+      "You need lookups and also order, like the next bigger value or a range, while items keep coming and going: use a balanced BST."
+    ],
+    "notWhen": [
+      "The data is unsorted, or a linked list: halving needs order and a way to jump to the middle, and neither is there.",
+      "You need the next bigger key or a range: a hash map scatters the order, so those questions fall back to scanning everything.",
+      "You search only once: sorting first costs O(n log n) just to save an O(n) scan."
+    ],
+    "quiz": [
+      {
+        "problem": "Find one user id in an unsorted log of a million lines. You only need to do it once.",
+        "answer": "searching",
+        "options": [
+          "binary-search",
+          "hash-maps",
+          "searching",
+          "sorting"
+        ],
+        "explanation": "With one lookup on raw data, a single scan is the cheapest plan. Sorting first or building a map first costs more than the scan itself."
+      },
+      {
+        "problem": "A sorted array of order totals, and you want the first index whose total is at least 500. It must run in O(log n).",
+        "answer": "binary-search",
+        "options": [
+          "binary-search",
+          "two-pointers",
+          "searching",
+          "hash-maps"
+        ],
+        "explanation": "Sorted data plus a yes/no test that flips once is binary search's home ground. Halve the range until the flip is found."
+      },
+      {
+        "problem": "A stream of orders arrives, and for each one you must instantly say whether its id has been seen before.",
+        "answer": "hash-maps",
+        "options": [
+          "searching",
+          "bst",
+          "hash-maps",
+          "binary-search"
+        ],
+        "explanation": "Many lookups with no need for order is the hash map's job. Store each id as it arrives and test membership in O(1) on average."
+      },
+      {
+        "problem": "A sorted array of ids was rotated at an unknown spot, like [4, 5, 6, 7, 0, 1, 2]. Find the index of a target in O(log n).",
+        "answer": "searching",
+        "options": [
+          "sliding-window",
+          "searching",
+          "hash-maps",
+          "sorting"
+        ],
+        "explanation": "It is still halving, but plain binary search breaks on the drop. At each middle you work out which half is in order, then check whether the target lies in it."
+      },
+      {
+        "problem": "Prices are inserted and removed all day, and you must keep finding the smallest price that is at least x.",
+        "answer": "bst",
+        "options": [
+          "hash-maps",
+          "binary-search",
+          "heaps",
+          "bst"
+        ],
+        "explanation": "A sorted array finds it fast but shifts items on every insert, and a hash map has no order. A balanced BST does both inserts and these order queries in O(log n)."
+      },
+      {
+        "problem": "A sorted array of numbers: do any two of them add up to a target?",
+        "answer": "two-pointers",
+        "options": [
+          "hash-maps",
+          "binary-search",
+          "sliding-window",
+          "two-pointers"
+        ],
+        "explanation": "You are hunting a pair, not one value. A pointer at each end closes in, and each step rules out a whole end of the array."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [
-      7,
-      14,
-      21,
-      28,
-      35
-    ],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Search visualization coming soon.",
-        "activeLine": 1
-      }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Linear Scan",
-      "description": "Iterate from index 0 to N-1 checking equality.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "return target in arr"
+        "text": "lo = 0, hi = n − 1",
+        "anchor": "init"
       },
-      "visualNote": "A highlight moves one box at a time from left to right."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "for item in collection:\n  if is_match(item):\n    return item",
-    "whenToUse": "When data is completely unsorted and unstructured, or when the dataset is extremely small (N < 50) where O(N) is indistinguishable from O(1).",
-    "timeComplexity": "O(N)",
-    "spaceComplexity": "O(1)"
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You need to find a specific user in an unsorted log file of 1 million entries.",
-    "correctPatternId": "searching",
-    "distractors": [
-      "binary-search",
-      "hash-maps",
-      "sorting"
+      {
+        "text": "while lo <= hi:"
+      },
+      {
+        "text": "mid = lo + (hi − lo) / 2",
+        "anchor": "mid",
+        "indent": 1
+      },
+      {
+        "text": "if nums[mid] == target:",
+        "anchor": "check",
+        "indent": 1
+      },
+      {
+        "text": "return mid",
+        "anchor": "done",
+        "indent": 2
+      },
+      {
+        "text": "if nums[lo] <= nums[mid]:   (left half is sorted)",
+        "anchor": "which",
+        "indent": 1
+      },
+      {
+        "text": "if nums[lo] <= target < nums[mid]:",
+        "anchor": "inside",
+        "indent": 2
+      },
+      {
+        "text": "hi = mid − 1   (keep the left half)",
+        "anchor": "go-left",
+        "indent": 3
+      },
+      {
+        "text": "else:",
+        "indent": 2
+      },
+      {
+        "text": "lo = mid + 1   (keep the right half)",
+        "anchor": "go-right",
+        "indent": 3
+      },
+      {
+        "text": "else:   (right half is sorted)",
+        "indent": 1
+      },
+      {
+        "text": "if nums[mid] < target <= nums[hi]:",
+        "anchor": "inside",
+        "indent": 2
+      },
+      {
+        "text": "lo = mid + 1   (keep the right half)",
+        "anchor": "go-right",
+        "indent": 3
+      },
+      {
+        "text": "else:",
+        "indent": 2
+      },
+      {
+        "text": "hi = mid − 1   (keep the left half)",
+        "anchor": "go-left",
+        "indent": 3
+      },
+      {
+        "text": "return −1",
+        "anchor": "done"
+      }
     ],
-    "explanation": "Because it is unsorted and a flat file, you have no choice but to use Linear Search O(N). Binary search requires sorting, and hash maps require pre-loading the data into memory."
+    "tracer": "searching/rotated-search",
+    "time": "O(log n)",
+    "space": "O(1)",
+    "notes": [
+      "In a rotated array, at least one half around mid is always in order. nums[lo] <= nums[mid] means the left half is; otherwise the right half is. Check whether the target falls inside the sorted half, and keep that half or the other one.",
+      "This needs all values to be different. With duplicates, nums[lo] == nums[mid] == nums[hi] can hide which half is sorted, so you can only trim one cell at a time and the worst case becomes O(n). That is LeetCode 81.",
+      "To find the minimum instead (LeetCode 153), compare nums[mid] with nums[hi]. A bigger mid means the drop is to its right, so lo = mid + 1. Otherwise mid may be the minimum, so hi = mid.",
+      "Which search? Match the method to how the data is stored. Raw data and one lookup: linear scan, O(n) time and O(1) space. The scan is a loop that returns the index at the first match and −1 if none matches.",
+      "Sorted array, or a rotation of one: binary search, O(log n). Sorting first costs O(n log n), so it only pays off when you search many times.",
+      "Many lookups and order doesn't matter: a hash map, O(1) on average per lookup, with O(n) extra memory. A run of colliding keys can push one lookup toward O(n).",
+      "Lookups plus order (next bigger value, ranges) while items come and go: a balanced BST, O(log n) per operation. A BST that isn't balanced can lean into a chain and cost O(n). A linked list is always a scan, sorted or not, because you can't jump to its middle.",
+      "Finding a word on a page with Cmd+F is string search, which means matching a pattern inside text. It is a close cousin but a different problem, and this lesson is about finding an item in a collection."
+    ]
   },
   "examples": [
     {
+      "title": "Search in Rotated Sorted Array",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "problem": "A sorted array of distinct integers was rotated at an unknown pivot. Given the rotated array nums and a target, return the index of target, or -1 if it is not there. Your solution must run in O(log n).",
+      "input": "nums = [4,5,6,7,0,1,2], target = 0",
+      "output": "4",
+      "approach": [
+        "Plain binary search breaks, because the array drops from 7 to 0. But at any mid, one half is still in order.",
+        "lo = 0, hi = 6, mid = 3 holds 7. nums[0] = 4 is at most 7, so the left half 4..7 is sorted. 0 isn't between 4 and 7, so drop it: lo = 4.",
+        "lo = 4, hi = 6, mid = 5 holds 1. nums[4] = 0 is at most 1, so the left half 0..1 is sorted, and 0 fits in it. Keep it: hi = 4.",
+        "Now mid = 4 holds 0, the target, so return 4. If lo ever passes hi, every cell has been ruled out, so return -1."
+      ],
+      "code": "searching/rotated-search",
+      "tracer": "searching/rotated-search",
+      "time": "O(log n)",
+      "space": "O(1)"
+    },
+    {
       "title": "Find Minimum in Rotated Sorted Array",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
-      "problemStatement": "Suppose an array of length n sorted in ascending order is rotated between 1 and n times. Find the minimum element.",
-      "inputExample": "nums = [3,4,5,1,2]",
-      "outputExample": "1",
-      "steps": [
-        "This is an evolution of search. Since it was originally sorted, we don't want to use Linear Search.",
-        "Use a modified Binary Search.",
-        "If mid > right, the minimum must be to the right of mid.",
-        "Else, the minimum is mid or to the left."
+      "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+      "problem": "A sorted array of distinct integers was rotated between 1 and n times. Return the minimum element of the rotated array, in O(log n) time.",
+      "input": "nums = [3,4,5,1,2]",
+      "output": "1",
+      "approach": [
+        "The minimum sits right after the drop. Compare nums[mid] with the last cell nums[hi] to see which side of mid the drop is on.",
+        "lo = 0, hi = 4, mid = 2 holds 5. That is bigger than nums[4] = 2, so the drop is to the right of mid: lo = 3.",
+        "lo = 3, hi = 4, mid = 3 holds 1. That is smaller than nums[4] = 2, so mid may be the minimum. Keep it: hi = 3.",
+        "lo and hi meet at index 3, so the minimum is nums[3] = 1."
       ],
-      "code": {
-        "python": "def findMin(nums):\n    left, right = 0, len(nums) - 1\n    while left < right:\n        mid = left + (right - left) // 2\n        if nums[mid] > nums[right]:\n            left = mid + 1\n        else:\n            right = mid\n    return nums[left]"
-      },
-      "timeComplexity": "O(log N)",
-      "spaceComplexity": "O(1)",
-      "rationale": "This demonstrates how recognizing partial structure (rotated sorted) allows you to upgrade from O(N) Linear Search to O(log N) Binary Search."
+      "code": "searching/rotated-min",
+      "tracer": "searching/rotated-min",
+      "time": "O(log n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Search a 2D Matrix",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/search-a-2d-matrix/",
+      "problem": "An m x n matrix has each row sorted left to right, and the first number of each row is bigger than the last number of the row before it. Return true if target is in the matrix, otherwise false, in O(log(m * n)) time.",
+      "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3",
+      "output": "true",
+      "approach": [
+        "Read the rows one after another and the 12 numbers form a single sorted list, so binary search applies.",
+        "Search the indexes 0 to 11. An index mid lives in row mid / 4 and column mid % 4, with no copying needed.",
+        "mid = 5 is row 1, column 1, holding 11. That is bigger than 3, so hi = 4. Then mid = 2 holds 5, still bigger, so hi = 1.",
+        "mid = 0 holds 1, which is smaller, so lo = 1. Then mid = 1 is row 0, column 1, holding 3, so return true."
+      ],
+      "code": "searching/search-matrix",
+      "time": "O(log(m * n))",
+      "space": "O(1)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "If you need to search an array 10,000 times, should you use Linear Search?",
+      "question": "You must check 100,000 different ids against the same unsorted list of 50,000 ids. Which plan avoids scanning the whole list 100,000 times?",
       "options": [
-        "Yes, Linear Search is fine.",
-        "No, you should either sort it first (O(N log N)) to use Binary Search, or put it in a Hash Map (O(N) build) for O(1) lookups.",
-        "Only if the array is small.",
-        "Yes, because Hash Maps use too much memory."
+        "Run a linear scan for every id.",
+        "Run binary search directly on the unsorted list.",
+        "Build a hash map of the 50,000 ids once, then look each id up.",
+        "Re-sort the list before every single check."
       ],
-      "correctIndex": 1,
-      "explanation": "10,000 queries of O(N) is O(10,000 * N). By doing a one-time upfront cost to organize the data, you reduce the queries to O(log N) or O(1)."
+      "answer": 2,
+      "explanation": "One O(n) build makes every lookup O(1) on average. Scanning 100,000 times is the slow way, and binary search gives wrong answers on unsorted data."
+    },
+    {
+      "question": "In [6, 7, 8, 1, 2, 3, 4, 5], lo is 0 and mid is 3, which holds 1. Which half is sorted?",
+      "options": [
+        "The right half, 1 to 5, because 6 > 1 puts the drop on the left.",
+        "The left half, 6 to 1, because it starts at the first number.",
+        "Both halves are sorted.",
+        "Neither half is sorted."
+      ],
+      "answer": 0,
+      "explanation": "nums[lo] = 6 is bigger than nums[mid] = 1, so the list falls somewhere between them. The left half can't be in order, which leaves the right half."
+    },
+    {
+      "question": "Why do we say a hash lookup is O(1) on average, rather than plain O(1)?",
+      "options": [
+        "Because hash functions pick a random bucket every time.",
+        "Because the map has to be sorted before each lookup.",
+        "Because the table gets slower as you add memory.",
+        "Because if many keys land in one bucket, a lookup walks that whole chain, which can approach O(n)."
+      ],
+      "answer": 3,
+      "explanation": "A good hash spreads keys out, so chains stay short and lookups take a constant number of steps. Bad luck or a bad hash can pile many keys into one bucket."
+    },
+    {
+      "question": "When is searching a binary search tree O(log n)?",
+      "options": [
+        "Always, since a BST keeps its keys in order.",
+        "When the tree is balanced, so its height is about log n.",
+        "Only when every key is distinct.",
+        "Only when the keys are integers."
+      ],
+      "answer": 1,
+      "explanation": "A search walks one path from root to leaf, so its cost is the tree's height. Insert keys in sorted order into a plain BST and it becomes a chain with height n, so a search is O(n)."
+    },
+    {
+      "question": "Why can't rotated-array search promise O(log n) once duplicates are allowed, as in [1, 0, 1, 1, 1]?",
+      "options": [
+        "Because duplicates make the array unsorted.",
+        "Because the middle can never match the target.",
+        "When nums[lo], nums[mid] and nums[hi] are equal, you can't tell which half is sorted, so you may only trim one cell at a time.",
+        "Because hash maps are required for duplicates."
+      ],
+      "answer": 2,
+      "explanation": "With distinct values, nums[lo] <= nums[mid] proves the left half is in order. With ties it proves nothing, so the worst case falls back to O(n)."
     }
   ],
   "practice": [
     {
-      "title": "Search in Rotated Sorted Array",
-      "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "title": "Search Insert Position",
+      "url": "https://leetcode.com/problems/search-insert-position/",
+      "difficulty": "easy",
+      "insight": "The array is sorted, so halve it. You want the first index whose number is at least the target, and that index is one past the end if every number is smaller."
+    },
+    {
+      "title": "Contains Duplicate",
+      "url": "https://leetcode.com/problems/contains-duplicate/",
+      "difficulty": "easy",
+      "insight": "Choose how to store what you've seen. A set answers \"seen this before?\" in one step on average, while sorting first puts equal neighbours side by side."
+    },
+    {
+      "title": "Search in a Binary Search Tree",
+      "url": "https://leetcode.com/problems/search-in-a-binary-search-tree/",
+      "difficulty": "easy",
+      "insight": "At each node the order of the tree tells you which single child can still hold the value, so you never need to look at both."
+    },
+    {
+      "title": "Search a 2D Matrix II",
+      "url": "https://leetcode.com/problems/search-a-2d-matrix-ii/",
       "difficulty": "medium",
-      "keyInsight": "Determine which half of the array is properly sorted, then check if target is in that half."
+      "insight": "Rows and columns are sorted, but rows don't chain end to end. Start at a corner where one move gets bigger and the other gets smaller, and every comparison drops a whole row or column."
     },
     {
       "title": "Find Peak Element",
       "url": "https://leetcode.com/problems/find-peak-element/",
       "difficulty": "medium",
-      "keyInsight": "Follow the ascending slope using binary search."
+      "insight": "Nothing is sorted, yet halving works. Compare nums[mid] with its right neighbour: a peak must exist on whichever side the numbers are climbing toward."
+    },
+    {
+      "title": "Search in Rotated Sorted Array II",
+      "url": "https://leetcode.com/problems/search-in-rotated-sorted-array-ii/",
+      "difficulty": "medium",
+      "insight": "Same idea as the lesson, but ties can hide which half is sorted. When lo, mid and hi are equal, shrink both ends by one and carry on."
+    },
+    {
+      "title": "Find Minimum in Rotated Sorted Array II",
+      "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/",
+      "difficulty": "hard",
+      "insight": "Compare nums[mid] with nums[hi] as before, but add the tie case: when they are equal you can't tell a side, so safely drop just the last cell."
     }
   ]
 }
