@@ -311,7 +311,7 @@
       "group": "algorithms",
       "glyph": "prefix-sum",
       "difficulty": "beginner",
-      "status": "draft",
+      "status": "live",
       "minutes": 25,
       "oneLiner": "Precompute running totals; any range sum is one subtraction.",
       "trigger": "Many range-sum questions, or 'subarray sums to k'.",
