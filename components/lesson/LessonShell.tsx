@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 
 import { Sidebar } from '@/components/layout/Sidebar'
 import { RightSidebar } from '@/components/topic/RightSidebar'
+import { setLastVisited } from '@/lib/progress'
 import type { OutlineItem } from '@/components/topic/RightSidebar'
 import type { StepDef } from './sections'
 
@@ -25,7 +26,7 @@ export function useLessonSteps(): LessonStepsValue {
 
 const storageKey = (slug: string) => `dsakarle-lesson-steps:${slug}`
 
-/** Scroll-past offset: top bar (64) + strip (~56). A section counts as "past" once its bottom crosses it. */
+/** Scroll-past offset: site header (64) + sticky strip (~56). A section counts as "past" once its bottom crosses it. */
 const PAST_MARGIN = 120
 
 interface LessonShellProps {
@@ -44,6 +45,11 @@ export function LessonShell({ slug, steps, outline, children }: LessonShellProps
   const [done, setDone] = useState<ReadonlySet<string>>(() => new Set())
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const loaded = useRef(false)
+
+  // Remember where the learner is, for "Continue where you left off".
+  useEffect(() => {
+    setLastVisited(slug)
+  }, [slug])
 
   // Restore this lesson's ticks for the current tab session.
   useEffect(() => {
@@ -131,7 +137,8 @@ export function LessonShell({ slug, steps, outline, children }: LessonShellProps
   return (
     <LessonStepsContext.Provider value={value}>
       <Sidebar currentSlug={slug} />
-      <div className="min-h-[calc(100vh-64px)] bg-paper text-ink md:ml-[280px]">
+      {/* The layout already pads 64px for the fixed SiteHeader; the Sidebar rail sits below it (md+). */}
+      <div className="min-h-[calc(100vh-4rem)] bg-paper text-ink md:ml-[280px]">
         <div className="mx-auto flex max-w-[1400px] gap-12 px-4 py-8 sm:px-6 md:py-10 xl:px-12">
           <main id="lesson-main" className="w-full min-w-0 max-w-[1040px] flex-1">
             {children}

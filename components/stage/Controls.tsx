@@ -57,7 +57,7 @@ export function Controls({ compact = false, className }: ControlsProps) {
 
   return (
     <div className={cn('flex flex-col gap-3', className)}>
-      <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+      <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap">
         <div className="flex shrink-0 items-center gap-2">
           <Button
             variant="secondary"
@@ -93,7 +93,7 @@ export function Controls({ compact = false, className }: ControlsProps) {
           </Button>
         </div>
 
-        <div className="flex min-w-[10rem] flex-1 basis-full items-center gap-3 sm:basis-auto">
+        <div className="flex min-w-0 flex-1 basis-full items-center gap-3 lg:basis-auto lg:min-w-[10rem]">
           <input
             type="range"
             min={0}

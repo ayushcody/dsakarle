@@ -1,20 +1,37 @@
-import React from 'react';
-import CourseCatalog from '@/components/home/CourseCatalog';
-import SearchBar from '@/components/ui/SearchBar';
+import type { Metadata } from 'next';
+
+import { CourseToc } from '@/components/learn/CourseToc';
+import { ProgressLine } from '@/components/learn/ProgressLine';
+import { StartPaths } from '@/components/learn/StartPaths';
+import { SearchButton } from '@/components/learn/SearchButton';
+
+export const metadata: Metadata = {
+  title: 'Course | DSA Karle',
+  description:
+    'Every DSA Karle lesson in learning order: data structures first, then the patterns built on them. Live lessons have step-through walkthroughs; drafts are reading notes.',
+};
 
 export default function LearnPage() {
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] pt-24">
-      <div className="max-w-7xl mx-auto px-6 mb-8 text-center md:text-left">
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">Learn</h1>
-        <p className="font-dmsans text-[var(--text-secondary)] text-lg max-w-2xl">
-          Master the core patterns of computer science. Select a topic below to jump into the visual guides and interactive steppers.
+    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-10 sm:px-6 md:pt-14">
+      <header className="mb-10 md:mb-12">
+        <p className="t-eyebrow">Course</p>
+        <h1 className="t-h1 mt-2 text-ink">Everything, in order</h1>
+        <p className="t-body mt-3 max-w-[60ch] text-ink-2">
+          Start at the top, or jump to the pattern you need. Live lessons have walkthroughs you can play; drafts are
+          reading notes for now.
         </p>
-        <div className="mt-6 flex justify-center md:justify-start">
-          <SearchBar />
+        <div className="mt-6 flex flex-col gap-5">
+          <SearchButton />
+          <ProgressLine />
         </div>
+      </header>
+
+      <div className="mb-14 md:mb-16">
+        <StartPaths />
       </div>
-      <CourseCatalog hideButton={true} />
+
+      <CourseToc />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { fontVariables } from './fonts';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dsakarle.vercel.app'),
   title: 'DSA Karle',
   description:
     'Learn data structures and algorithms by watching them run: visual, step-through lessons you can scrub, predict and try on your own input.',

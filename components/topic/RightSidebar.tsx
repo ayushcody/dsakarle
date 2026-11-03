@@ -20,6 +20,7 @@ export interface StepProgressItem {
 export function RightSidebar({ outline, steps }: { outline: OutlineItem[]; steps?: StepProgressItem[] }) {
   const { progress, mounted } = useProgress();
   const [activeId, setActiveId] = useState(outline[0]?.id ?? '');
+  const hasSteps = steps !== undefined; // v2 lessons: a sticky strip sits under the header
 
   const completedLessons = mounted ? countCompletedLessons(progress.completedSections) : 0;
   const totalLessons = COURSE_TOPICS.length;
@@ -51,16 +52,19 @@ export function RightSidebar({ outline, steps }: { outline: OutlineItem[]; steps
           setActiveId(firstVisible.id);
         }
       },
-      { rootMargin: '-88px 0px -60% 0px' },
+      { rootMargin: hasSteps ? '-120px 0px -60% 0px' : '-88px 0px -60% 0px' },
     );
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [outline]);
+  }, [outline, hasSteps]);
 
   return (
     <aside aria-label="Lesson outline and progress" className="w-[280px] hidden xl:block flex-shrink-0 relative">
-      <div className="sticky top-[88px] flex flex-col gap-8">
+      {/* Sticks below the site header (64px), and below the lesson strip (~49px) on v2 lessons; scrolls itself if taller than the viewport. */}
+      <div
+        className={`sticky flex flex-col gap-8 overflow-y-auto pb-4 ${steps ? 'top-[7.5rem] max-h-[calc(100vh-8.5rem)]' : 'top-[88px] max-h-[calc(100vh-6.5rem)]'}`}
+      >
         
         {/* This lesson's steps (v2 lessons) */}
         {steps && steps.length > 0 && (

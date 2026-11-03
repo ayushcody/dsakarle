@@ -1,39 +1,41 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 
-import Navbar from '@/components/layout/Navbar';
+import { SiteHeader } from '@/components/layout/SiteHeader';
 
 const PatternMap = dynamic(() => import('@/components/map/PatternMap'), {
   ssr: false,
   loading: () => (
     <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 'calc(100vh - 64px)',
-        fontFamily: 'var(--font-sans)',
-        fontSize: 15,
-        color: 'var(--ink-3)',
-      }}
+      role="status"
+      className="flex h-[420px] items-center justify-center rounded-card border border-rule bg-paper-raised text-[14px] text-ink-3"
     >
-      Loading Pattern Map…
+      Loading the map…
     </div>
   ),
 });
 
 export const metadata: Metadata = {
-  title: 'DSA Pattern Map | DSAKarle',
+  title: 'Pattern map | DSA Karle',
   description:
-    'An interactive, zoomable map showing how all DSA patterns and data structures connect to each other.',
+    'How data structures and patterns connect. Arrows point from what to learn first; dashed lines mark related ideas.',
 };
 
 export default function MapPage() {
   return (
     <>
-      <Navbar />
+      <SiteHeader />
       <main className="flex-grow pt-[64px]">
-        <PatternMap />
+        <div className="mx-auto w-full max-w-6xl px-4 pb-20 pt-10 sm:px-6 md:pt-14">
+          <header className="mb-8">
+            <p className="t-eyebrow">Map</p>
+            <h1 className="t-h1 mt-2 text-ink">Pattern map</h1>
+            <p className="t-body mt-3 max-w-[60ch] text-ink-2">
+              How the ideas connect. Arrows point from what to learn first.
+            </p>
+          </header>
+          <PatternMap />
+        </div>
       </main>
     </>
   );
