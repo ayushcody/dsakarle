@@ -56,7 +56,7 @@
       "group": "data-structures",
       "glyph": "strings",
       "difficulty": "beginner",
-      "status": "draft",
+      "status": "live",
       "minutes": 30,
       "oneLiner": "An array of characters with its own tricks.",
       "trigger": "The input is text: words, palindromes, anagrams, substrings.",
