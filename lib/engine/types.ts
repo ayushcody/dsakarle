@@ -118,10 +118,118 @@ export interface CompositeScene {
 }
 
 /**
- * Scene union. Phase 5 adds stack, queue, tree, heap, trie, graph, grid and
- * call-tree kinds here (Opus owns this file; agents must not edit it).
+ * A vertical stack, bottom item first. Queues and deques use ArrayScene with
+ * `front` / `back` pointers instead.
  */
-export type Scene = ArrayScene | LinkedListScene | HashMapScene | CompositeScene
+export interface StackScene {
+  kind: 'stack'
+  label?: string
+  /** Bottom → top. */
+  items: Array<number | string>
+  /** Extra empty slots drawn above the top, to show capacity. */
+  capacity?: number
+  /** Item index → role. The top item is items.length - 1. */
+  marks?: Array<{ index: number; role: MarkRole }>
+  /** An item being pushed or just popped, drawn beside the stack. */
+  incoming?: { value: number | string; direction: 'push' | 'pop' } | null
+  annotations?: Annotation[]
+}
+
+export interface TreeNode {
+  id: string
+  value: number | string
+  /**
+   * Child ids in order. Binary trees always use [left, right] with null for a
+   * missing child so left/right placement is stable. Tries use any number.
+   */
+  children: Array<string | null>
+  /** Labels on the edge to each child (tries: the character). Same length as children. */
+  edgeLabels?: Array<string | null>
+  /** Trie end-of-word marker, drawn as a double ring. */
+  terminal?: boolean
+}
+
+export interface TreeScene {
+  kind: 'tree'
+  /** Root id, or null for an empty tree. */
+  root: string | null
+  nodes: TreeNode[]
+  pointers?: Array<{ name: string; target: string | null; role: PointerRole }>
+  marks?: Array<{ id: string; role: MarkRole }>
+  /** Highlight the edge parent → child (e.g. the path taken, or a swap in a heap). */
+  edgeMarks?: Array<{ from: string; to: string; role: 'focus' | 'visited' | 'changed' | 'found' | 'error' }>
+  /** Node not yet attached (e.g. BST insert before linking), drawn beside the tree. */
+  floating?: string[]
+  annotations?: Annotation[]
+}
+
+export interface GraphNode {
+  id: string
+  label: string
+  /**
+   * Placement on a small logical grid (col 0..5, row 0..3). Tracers give
+   * positions so graphs look the same every frame; the layout scales them.
+   */
+  at: { col: number; row: number }
+}
+
+export interface GraphScene {
+  kind: 'graph'
+  directed: boolean
+  nodes: GraphNode[]
+  edges: Array<{ from: string; to: string; weight?: number; role?: 'focus' | 'visited' | 'changed' | 'found' | 'error' | 'discarded' }>
+  marks?: Array<{ id: string; role: MarkRole }>
+  pointers?: Array<{ name: string; target: string | null; role: PointerRole }>
+  /** Small badge under a node, e.g. BFS distance or DFS discovery order. */
+  badges?: Array<{ id: string; text: string }>
+  annotations?: Annotation[]
+}
+
+export interface GridScene {
+  kind: 'grid'
+  label?: string
+  /** rows[r][c]; null = empty cell. Keep ≤ 8 × 8. */
+  rows: Array<Array<number | string | null>>
+  rowLabels?: string[]
+  colLabels?: string[]
+  marks?: Array<{ r: number; c: number; role: MarkRole }>
+  pointers?: Array<{ name: string; r: number; c: number; role: PointerRole }>
+  /** Dependency arrows, e.g. dp[i][j] ← dp[i-1][j]. */
+  arrows?: Array<{ from: [number, number]; to: [number, number] }>
+  annotations?: Annotation[]
+}
+
+export interface CallFrameNode {
+  id: string
+  /** e.g. `fib(3)` or `subsets([1], i=1)`. */
+  label: string
+  parent: string | null
+  status: 'pending' | 'active' | 'returned' | 'pruned'
+  /** Shown once returned, e.g. `= 2` or `✓ [1,2]`. */
+  result?: string
+}
+
+export interface CallTreeScene {
+  kind: 'call-tree'
+  /** Every call made so far, in call order. */
+  calls: CallFrameNode[]
+  /** The live call stack, bottom → top, as call ids. */
+  stack: string[]
+  marks?: Array<{ id: string; role: MarkRole }>
+  annotations?: Annotation[]
+}
+
+/** Scene union (Opus owns this file; agents must not edit it). */
+export type Scene =
+  | ArrayScene
+  | LinkedListScene
+  | HashMapScene
+  | StackScene
+  | TreeScene
+  | GraphScene
+  | GridScene
+  | CallTreeScene
+  | CompositeScene
 export type SceneKind = Scene['kind']
 
 // ---------------------------------------------------------------------------

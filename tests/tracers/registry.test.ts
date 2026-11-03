@@ -27,9 +27,9 @@ const GOLDEN_IDS = [
 const loaded = await Promise.all(TRACER_IDS.map(async (id) => ({ id, tracer: await loadTracer(id) })))
 
 describe('tracer registry', () => {
-  it('registers exactly the golden-path ids', () => {
-    expect([...TRACER_IDS].sort()).toEqual([...GOLDEN_IDS].sort())
-    expect(Object.keys(TRACER_LOADERS).sort()).toEqual([...GOLDEN_IDS].sort())
+  it('registers every golden-path id', () => {
+    expect([...TRACER_IDS].sort()).toEqual(Object.keys(TRACER_LOADERS).sort())
+    for (const id of GOLDEN_IDS) expect(TRACER_IDS).toContain(id)
   })
 
   it('loads every id, and a tracer id always equals its registry key', () => {

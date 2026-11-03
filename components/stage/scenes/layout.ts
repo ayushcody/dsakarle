@@ -21,6 +21,11 @@ import type {
 } from "@/lib/engine/types";
 import type { ArrowRole } from "@/lib/stage/semantics";
 import type { Point } from "@/lib/stage/sketch";
+import { describeTree, layoutTree, resolveTreeTarget, type TreeLayout } from "./kinds/tree";
+import { describeGraph, layoutGraph, resolveGraphTarget, type GraphLayout } from "./kinds/graph";
+import { describeCallTree, layoutCallTree, resolveCallTreeTarget, type CallTreeLayout } from "./kinds/call-tree";
+import { describeStack, layoutStack, resolveStackTarget, type StackLayout } from "./kinds/stack";
+import { describeGrid, layoutGrid, resolveGridTarget, type GridLayout } from "./kinds/grid";
 
 export type Density = "comfortable" | "compact";
 
@@ -897,6 +902,11 @@ export type SceneLayout =
   | ArrayLayout
   | LinkedListLayout
   | HashLayout
+  | TreeLayout
+  | GraphLayout
+  | CallTreeLayout
+  | StackLayout
+  | GridLayout
   | { kind: "composite" };
 
 export function layoutScene(
@@ -910,6 +920,16 @@ export function layoutScene(
       return layoutLinkedList(scene, density);
     case "hash-map":
       return layoutHashMap(scene, density);
+    case "tree":
+      return layoutTree(scene, density);
+    case "graph":
+      return layoutGraph(scene, density);
+    case "call-tree":
+      return layoutCallTree(scene, density);
+    case "stack":
+      return layoutStack(scene, density);
+    case "grid":
+      return layoutGrid(scene, density);
     case "composite":
       return { kind: "composite" };
   }
@@ -941,6 +961,11 @@ export function resolveTarget(
   target: string,
 ): TargetInfo | null {
   const { kind, id } = parseTarget(target);
+  if (layout.kind === "tree" && scene.kind === "tree") return resolveTreeTarget(scene, layout, target);
+  if (layout.kind === "graph" && scene.kind === "graph") return resolveGraphTarget(scene, layout, target);
+  if (layout.kind === "call-tree" && scene.kind === "call-tree") return resolveCallTreeTarget(scene, layout, target);
+  if (layout.kind === "stack" && scene.kind === "stack") return resolveStackTarget(scene, layout, target);
+  if (layout.kind === "grid" && scene.kind === "grid") return resolveGridTarget(scene, layout, target);
 
   if (layout.kind === "array") {
     if (kind === "window") {
@@ -1169,6 +1194,16 @@ function list(items: string[]): string {
 /** Plain-text description of a scene: values, pointers, marks, notes. */
 export function describeScene(scene: Scene): string {
   switch (scene.kind) {
+    case "tree":
+      return describeTree(scene);
+    case "graph":
+      return describeGraph(scene);
+    case "call-tree":
+      return describeCallTree(scene);
+    case "stack":
+      return describeStack(scene);
+    case "grid":
+      return describeGrid(scene);
     case "array": {
       const vals = scene.cells.map((c) => (c === null ? "empty" : String(c)));
       const parts = [

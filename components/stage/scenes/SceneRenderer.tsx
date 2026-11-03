@@ -6,6 +6,11 @@ import { ArrayScene } from "./ArrayScene";
 import { CompositeScene } from "./CompositeScene";
 import { HashMapScene } from "./HashMapScene";
 import { LinkedListScene } from "./LinkedListScene";
+import { TreeSceneView } from "./kinds/tree";
+import { GraphSceneView } from "./kinds/graph";
+import { CallTreeSceneView } from "./kinds/call-tree";
+import { StackSceneView } from "./kinds/stack";
+import { GridSceneView } from "./kinds/grid";
 
 /** SceneRenderer plus the two knobs ScenePicture needs (not part of the public contract). */
 export interface SceneViewProps extends SceneRendererProps {
@@ -34,6 +39,17 @@ export function SceneView({
       return <LinkedListScene scene={scene} {...common} />;
     case "hash-map":
       return <HashMapScene scene={scene} {...common} />;
+    case "tree":
+      return <TreeSceneView scene={scene} {...common} />;
+    case "graph":
+      return <GraphSceneView scene={scene} {...common} />;
+    case "call-tree":
+      return <CallTreeSceneView scene={scene} {...common} />;
+    case "stack":
+      return <StackSceneView scene={scene} {...common} />;
+    case "grid":
+      return <GridSceneView scene={scene} {...common} />;
+
     case "composite":
       return (
         <CompositeScene

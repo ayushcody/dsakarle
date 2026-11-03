@@ -86,7 +86,89 @@ const hashMapSceneSchema = z.object({
   annotations: z.array(annotationSchema).optional(),
 }).strict();
 
-const simpleSceneSchema = z.discriminatedUnion('kind', [arraySceneSchema, linkedListSceneSchema, hashMapSceneSchema]);
+const ptrToNode = z.object({ name: z.string(), target: z.string().nullable(), role: pointerRoleSchema }).strict();
+const idMark = z.object({ id: z.string(), role: markRoleSchema }).strict();
+const edgeRole = z.enum(['focus', 'visited', 'changed', 'found', 'error']);
+
+const stackSceneSchema = z.object({
+  kind: z.literal('stack'),
+  label: z.string().optional(),
+  items: z.array(scalar),
+  capacity: z.number().optional(),
+  marks: z.array(z.object({ index: z.number(), role: markRoleSchema }).strict()).optional(),
+  incoming: z.object({ value: scalar, direction: z.enum(['push', 'pop']) }).strict().nullable().optional(),
+  annotations: z.array(annotationSchema).optional(),
+}).strict();
+
+const treeSceneSchema = z.object({
+  kind: z.literal('tree'),
+  root: z.string().nullable(),
+  nodes: z.array(z.object({
+    id: z.string(),
+    value: scalar,
+    children: z.array(z.string().nullable()),
+    edgeLabels: z.array(z.string().nullable()).optional(),
+    terminal: z.boolean().optional(),
+  }).strict()),
+  pointers: z.array(ptrToNode).optional(),
+  marks: z.array(idMark).optional(),
+  edgeMarks: z.array(z.object({ from: z.string(), to: z.string(), role: edgeRole }).strict()).optional(),
+  floating: z.array(z.string()).optional(),
+  annotations: z.array(annotationSchema).optional(),
+}).strict();
+
+const graphSceneSchema = z.object({
+  kind: z.literal('graph'),
+  directed: z.boolean(),
+  nodes: z.array(z.object({ id: z.string(), label: z.string(), at: z.object({ col: z.number(), row: z.number() }).strict() }).strict()),
+  edges: z.array(z.object({
+    from: z.string(),
+    to: z.string(),
+    weight: z.number().optional(),
+    role: z.enum(['focus', 'visited', 'changed', 'found', 'error', 'discarded']).optional(),
+  }).strict()),
+  marks: z.array(idMark).optional(),
+  pointers: z.array(ptrToNode).optional(),
+  badges: z.array(z.object({ id: z.string(), text: z.string() }).strict()).optional(),
+  annotations: z.array(annotationSchema).optional(),
+}).strict();
+
+const gridSceneSchema = z.object({
+  kind: z.literal('grid'),
+  label: z.string().optional(),
+  rows: z.array(z.array(cellValue)),
+  rowLabels: z.array(z.string()).optional(),
+  colLabels: z.array(z.string()).optional(),
+  marks: z.array(z.object({ r: z.number(), c: z.number(), role: markRoleSchema }).strict()).optional(),
+  pointers: z.array(z.object({ name: z.string(), r: z.number(), c: z.number(), role: pointerRoleSchema }).strict()).optional(),
+  arrows: z.array(z.object({ from: z.tuple([z.number(), z.number()]), to: z.tuple([z.number(), z.number()]) }).strict()).optional(),
+  annotations: z.array(annotationSchema).optional(),
+}).strict();
+
+const callTreeSceneSchema = z.object({
+  kind: z.literal('call-tree'),
+  calls: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    parent: z.string().nullable(),
+    status: z.enum(['pending', 'active', 'returned', 'pruned']),
+    result: z.string().optional(),
+  }).strict()),
+  stack: z.array(z.string()),
+  marks: z.array(idMark).optional(),
+  annotations: z.array(annotationSchema).optional(),
+}).strict();
+
+const simpleSceneSchema = z.discriminatedUnion('kind', [
+  arraySceneSchema,
+  linkedListSceneSchema,
+  hashMapSceneSchema,
+  stackSceneSchema,
+  treeSceneSchema,
+  graphSceneSchema,
+  gridSceneSchema,
+  callTreeSceneSchema,
+]);
 
 const compositeSceneSchema = z.object({
   kind: z.literal('composite'),
@@ -98,6 +180,11 @@ export const sceneSchema = z.discriminatedUnion('kind', [
   arraySceneSchema,
   linkedListSceneSchema,
   hashMapSceneSchema,
+  stackSceneSchema,
+  treeSceneSchema,
+  graphSceneSchema,
+  gridSceneSchema,
+  callTreeSceneSchema,
   compositeSceneSchema,
 ]);
 
