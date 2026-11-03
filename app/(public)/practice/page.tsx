@@ -90,7 +90,7 @@ export default function PracticePage() {
           <p className="font-dmsans text-sm font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-1">Accuracy</p>
           <p className="font-dmsans text-3xl font-bold text-[var(--state-success)]">{accuracy}%</p>
         </div>
-        <div className="bg-[var(--bg-secondary)] p-6 rounded-[var(--radius)] border border-[var(--accent-amber)] border-opacity-50 shadow-[var(--shadow-card)]">
+        <div className="bg-[var(--bg-secondary)] p-6 rounded-[var(--radius)] border border-[color-mix(in_srgb,var(--accent-amber)_50%,transparent)] shadow-[var(--shadow-card)]">
           <p className="font-dmsans text-sm font-semibold text-[var(--accent-amber)] uppercase tracking-widest mb-1">Recommended</p>
           <p className="font-dmsans text-xl font-bold text-[var(--text-primary)] mt-1">Arrays Core Set</p>
         </div>

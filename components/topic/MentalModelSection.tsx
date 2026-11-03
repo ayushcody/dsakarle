@@ -1,4 +1,4 @@
-import { DiagramRouter } from '@/components/diagrams/DiagramRouter';
+import { DiagramRouter, hasDiagram } from '@/components/diagrams/DiagramRouter';
 
 export function MentalModelSection({
   metaphor,
@@ -23,9 +23,11 @@ export function MentalModelSection({
           </p>
         ))}
       </div>
-      <div className="mt-6">
-        <DiagramRouter diagramType={diagramType} cells={cells} diagramState={diagramState} />
-      </div>
+      {hasDiagram(diagramType) && (
+        <div className="mt-6">
+          <DiagramRouter diagramType={diagramType} cells={cells} diagramState={diagramState} />
+        </div>
+      )}
       <div className="mt-6 rounded-[var(--radius-sm)] bg-[var(--surface-teal)] px-5 py-4">
         <span className="font-dmmono text-[11px] uppercase tracking-[0.1em] text-[var(--accent-teal)]">What Makes It Click</span>
         <p className="mt-2 font-dmsans text-[15px] leading-relaxed text-[var(--text-primary)]">{clickSentence}</p>

@@ -2,27 +2,22 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-// Must match sidebar's topic order from course-structure.json
-const TOPIC_ORDER = [
-  'arrays', 'vectors', 'strings', 'linked-lists',
-  'stacks', 'queues', 'hash-maps', 'trees',
-  'bst', 'heaps', 'graphs', 'tries',
-  'sliding-window', 'two-pointers', 'prefix-sum',
-  'binary-search', 'sorting', 'searching',
-  'recursion', 'dynamic-programming', 'greedy', 'bfs-dfs',
-];
+import { COURSE_TOPICS } from '@/lib/course';
 
 interface TopicNavigationProps {
   currentSlug: string;
 }
 
 export function TopicNavigation({ currentSlug }: TopicNavigationProps) {
-  const currentIndex = TOPIC_ORDER.indexOf(currentSlug);
-  const prevSlug = currentIndex > 0 ? TOPIC_ORDER[currentIndex - 1] : null;
-  const nextSlug = currentIndex < TOPIC_ORDER.length - 1 ? TOPIC_ORDER[currentIndex + 1] : null;
+  const currentIndex = COURSE_TOPICS.findIndex((topic) => topic.slug === currentSlug);
 
-  const formatLabel = (slug: string) =>
-    slug.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+  // Lessons outside the course structure have no defined neighbours.
+  if (currentIndex === -1) {
+    return null;
+  }
+
+  const prevTopic = currentIndex > 0 ? COURSE_TOPICS[currentIndex - 1] : null;
+  const nextTopic = currentIndex < COURSE_TOPICS.length - 1 ? COURSE_TOPICS[currentIndex + 1] : null;
 
   return (
     <div style={{
@@ -34,23 +29,23 @@ export function TopicNavigation({ currentSlug }: TopicNavigationProps) {
       justifyContent: 'space-between',
       gap: 16,
     }}>
-      {prevSlug ? (
+      {prevTopic ? (
         <motion.div whileHover={{ x: -4 }} transition={{ type: 'spring', stiffness: 300 }}>
-          <Link href={`/learn/${prevSlug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
+          <Link href={`/learn/${prevTopic.slug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
             <span style={{ fontFamily: 'var(--font-dmmono)', fontSize: 11, color: 'var(--text-muted)' }}>← Previous</span>
             <span style={{ fontFamily: 'var(--font-dmsans)', fontSize: 14, fontWeight: 600, color: 'var(--text-secondary)' }}>
-              {formatLabel(prevSlug)}
+              {prevTopic.title}
             </span>
           </Link>
         </motion.div>
       ) : <div />}
 
-      {nextSlug ? (
+      {nextTopic ? (
         <motion.div whileHover={{ x: 4 }} transition={{ type: 'spring', stiffness: 300 }}>
-          <Link href={`/learn/${nextSlug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+          <Link href={`/learn/${nextTopic.slug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
             <span style={{ fontFamily: 'var(--font-dmmono)', fontSize: 11, color: 'var(--text-muted)' }}>Next →</span>
             <span style={{ fontFamily: 'var(--font-dmsans)', fontSize: 14, fontWeight: 600, color: 'var(--text-secondary)' }}>
-              {formatLabel(nextSlug)}
+              {nextTopic.title}
             </span>
           </Link>
         </motion.div>

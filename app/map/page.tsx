@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 
+import Navbar from '@/components/layout/Navbar';
+
 const PatternMap = dynamic(() => import('@/components/map/PatternMap'), {
   ssr: false,
   loading: () => (
@@ -27,5 +29,12 @@ export const metadata: Metadata = {
 };
 
 export default function MapPage() {
-  return <PatternMap />;
+  return (
+    <>
+      <Navbar />
+      <main className="flex-grow pt-[64px]">
+        <PatternMap />
+      </main>
+    </>
+  );
 }

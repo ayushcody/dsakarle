@@ -1,16 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getProgress } from '@/lib/progress';
-import type { CourseStructure, ProgressData } from '@/types/learning';
-
-const EMPTY_PROGRESS: ProgressData = {
-  completedSections: [],
-  quizScores: {},
-  lastVisited: '',
-};
+import { useProgress } from '@/hooks/useProgress';
+import { getCourseProgressPercent } from '@/lib/course';
+import { useNavStore } from '@/lib/nav-store';
+import type { CourseStructure } from '@/types/learning';
 
 export function Sidebar({
   currentSlug,
@@ -19,31 +15,61 @@ export function Sidebar({
   currentSlug: string
   courseStructure: CourseStructure
 }) {
-  const [mounted, setMounted] = useState(false);
-  const [progress, setProgress] = useState<ProgressData>(EMPTY_PROGRESS);
+  const { progress, mounted } = useProgress();
+  const mobileNavOpen = useNavStore((state) => state.mobileNavOpen);
+  const setMobileNavOpen = useNavStore((state) => state.setMobileNavOpen);
 
+  const closeMobileNav = () => setMobileNavOpen(false);
+
+  // Drawer behaviour on small screens: close on Escape, lock page scroll while open.
   useEffect(() => {
-    setMounted(true);
-    setProgress(getProgress());
-  }, []);
+    if (!mobileNavOpen) {
+      return;
+    }
 
-  // Calculate overall progress
-  const totalTopics = courseStructure.groups.reduce((acc, group) => acc + group.topics.length, 0);
-  const completedTopics = mounted ? progress.completedSections.length : 0;
-  const overallProgress = totalTopics === 0 ? 0 : Math.round((completedTopics / totalTopics) * 100);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMobileNavOpen(false);
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [mobileNavOpen, setMobileNavOpen]);
+
+  // Only lessons that exist in course-structure.json count (capped at 100%).
+  const overallProgress = mounted ? getCourseProgressPercent(progress.completedSections) : 0;
 
   return (
-    <aside className="fixed left-0 top-0 w-[280px] h-screen bg-[var(--bg-secondary)] border-r border-[var(--border)] z-50 overflow-y-auto flex flex-col custom-scrollbar pb-10">
+    <>
+    {mobileNavOpen && (
+      <div
+        className="md:hidden fixed inset-0 z-[45] bg-black/40"
+        onClick={closeMobileNav}
+        aria-hidden="true"
+      />
+    )}
+    <aside
+      id="lesson-sidebar"
+      className={`fixed left-0 top-0 w-[280px] max-w-[85vw] h-screen bg-[var(--bg-secondary)] border-r border-[var(--border)] z-50 overflow-y-auto flex-col custom-scrollbar pb-10 ${
+        mobileNavOpen ? 'flex' : 'hidden md:flex'
+      }`}
+    >
       
       {/* Brand Header */}
       <div className="p-6 pb-4">
-        <div className="flex items-center gap-3 mb-1">
+        <Link href="/" onClick={closeMobileNav} className="flex items-center gap-3 mb-1">
           <Image src="/DSAKarle_Logo.png" alt="DSA Karle Logo" width={36} height={36} className="object-contain" />
           <div>
             <h2 className="font-dmsans font-bold text-xl text-[var(--text-primary)] leading-none tracking-tight">DSA Karle</h2>
             <p className="font-dmsans text-[11px] font-bold uppercase tracking-widest text-[var(--accent-coral)] mt-1">Technical Mastery</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Progress Card */}
@@ -82,10 +108,11 @@ export function Sidebar({
                 return (
                   <li key={topic.slug}>
                     <Link 
-                      href={`/learn/${topic.slug}`} 
+                      href={`/learn/${topic.slug}`}
+                      onClick={closeMobileNav}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-dmsans text-[14px] transition-all group ${
                         isActive 
-                          ? 'bg-[var(--accent-coral)] bg-opacity-10 text-[var(--accent-coral)] font-semibold' 
+                          ? 'bg-[var(--surface-coral)] text-[var(--accent-coral)] font-semibold'
                           : 'text-[var(--text-secondary)] hover:bg-[var(--white)] hover:text-[var(--text-primary)]'
                       }`}
                     >
@@ -111,12 +138,13 @@ export function Sidebar({
       <div className="px-5 mt-8">
         <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-1">Practice & Reinforce</h3>
         <p className="font-dmsans text-xs text-[var(--text-secondary)] mb-4">Solve curated problems related to this topic.</p>
-        <Link href="/practice" className="block w-full py-2.5 px-4 text-center border border-[var(--accent-coral)] text-[var(--accent-coral)] font-dmsans font-bold text-sm rounded-lg hover:bg-[var(--accent-coral)] hover:text-white transition-colors">
+        <Link href="/practice" onClick={closeMobileNav} className="block w-full py-2.5 px-4 text-center border border-[var(--accent-coral)] text-[var(--accent-coral)] font-dmsans font-bold text-sm rounded-lg hover:bg-[var(--accent-coral)] hover:text-white transition-colors">
           Start Practice &rarr;
         </Link>
       </div>
 
     </aside>
+    </>
   );
 }
 

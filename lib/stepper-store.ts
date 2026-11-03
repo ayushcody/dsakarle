@@ -27,7 +27,7 @@ export const useStepperStore = create<StepperState>((set, get) => ({
   nextStep: () => get().setStep(get().currentStep + 1),
   prevStep: () => get().setStep(get().currentStep - 1),
   setLanguage: (lang) => set({ selectedLanguage: lang }),
-  setTotalSteps: (n) => set({ totalSteps: n }),
+  setTotalSteps: (n) => set({ totalSteps: n, isPlaying: false }),
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
   setSpeed: (s) => set({ speed: s }),
 }));

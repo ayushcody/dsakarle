@@ -20,6 +20,21 @@ interface DiagramRouterProps {
   comparing?: number[]
 }
 
+const SUPPORTED_DIAGRAM_TYPES = new Set([
+  'ArrayDiagram', 'SlidingWindowDiagram', 'TwoPointersDiagram', 'BinarySearchDiagram', 'array',
+  'LinkedListDiagram', 'linked-list',
+  'TreeDiagram', 'tree',
+  'GraphDiagram', 'GraphDiagramInner', 'graph',
+  'StackDiagram', 'stack',
+  'DPDiagram', 'dp',
+  'BacktrackingDiagram', 'backtracking',
+]);
+
+/** True when DiagramRouter has a real diagram for this type (callers can skip their wrapper otherwise). */
+export function hasDiagram(diagramType: string): boolean {
+  return SUPPORTED_DIAGRAM_TYPES.has(diagramType);
+}
+
 export function DiagramRouter({ diagramType, cells, diagramState, left, right, windowStart, windowEnd, highlighted, comparing }: DiagramRouterProps) {
   switch (diagramType) {
     case 'ArrayDiagram':
@@ -37,6 +52,7 @@ export function DiagramRouter({ diagramType, cells, diagramState, left, right, w
     case 'tree':
       return <TreeDiagram cells={cells} />;
     case 'GraphDiagram':
+    case 'GraphDiagramInner':
     case 'graph':
       return <GraphDiagramInner cells={cells} />;
     case 'StackDiagram':
@@ -49,10 +65,7 @@ export function DiagramRouter({ diagramType, cells, diagramState, left, right, w
     case 'backtracking':
       return <BacktrackingDiagram diagramState={diagramState || {}} />;
     default:
-      return (
-        <div className="rounded-[var(--radius)] border border-dashed border-[var(--border)] bg-[var(--bg-secondary)] px-6 py-10 text-center font-dmmono text-[13px] text-[var(--text-muted)]">
-          Visualization for {diagramType} — coming soon
-        </div>
-      );
+      // No diagram available for this type yet — render nothing rather than a placeholder card.
+      return null;
   }
 }

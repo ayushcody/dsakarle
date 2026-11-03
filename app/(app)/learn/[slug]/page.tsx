@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { codeToHtml } from 'shiki';
 import type { Properties } from 'hast';
 
@@ -37,7 +38,7 @@ export default async function TopicPage({ params }: { params: { slug: string } }
   const topic = getTopicBySlug(params.slug);
 
   if (!topic) {
-    return <ComingSoonTemplate slug={params.slug} />;
+    notFound();
   }
 
   if (topic.comingSoon) {

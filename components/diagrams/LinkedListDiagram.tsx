@@ -17,14 +17,12 @@ function asNodeArray(value: unknown): LinkedListNode[] {
   }
 
   return value.map((item, index) => {
-    if (typeof item === 'object' && item && 'value' in item) {
-      const node = item as { id?: unknown; value: unknown };
+    if (typeof item === 'object' && item && ('value' in item || 'val' in item)) {
+      const node = item as { id?: unknown; value?: unknown; val?: unknown };
+      const raw = 'value' in node ? node.value : node.val;
       return {
         id: typeof node.id === 'string' ? node.id : `node-${index}`,
-        value:
-          typeof node.value === 'string' || typeof node.value === 'number'
-            ? node.value
-            : String(node.value),
+        value: typeof raw === 'string' || typeof raw === 'number' ? raw : String(raw),
       };
     }
 

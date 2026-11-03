@@ -6,6 +6,8 @@ interface TopicHeroProps {
   title: string;
   analogy?: string;
   analogyIcon?: string;
+  /** Set false when the page already renders the topic's <h1> elsewhere (e.g. HeroBlock). */
+  showTitle?: boolean;
 }
 
 const HERO_CONFIGS: Record<string, { render: () => React.JSX.Element; bg: string }> = {
@@ -27,7 +29,7 @@ const HERO_CONFIGS: Record<string, { render: () => React.JSX.Element; bg: string
   },
 };
 
-export function TopicHero({ slug, title, analogy, analogyIcon }: TopicHeroProps) {
+export function TopicHero({ slug, title, analogy, analogyIcon, showTitle = true }: TopicHeroProps) {
   const config = HERO_CONFIGS[slug];
 
   return (
@@ -45,16 +47,18 @@ export function TopicHero({ slug, title, analogy, analogyIcon }: TopicHeroProps)
       }}>
         {/* Left: Title + Analogy */}
         <div>
-          <h1 style={{
-            fontFamily: 'var(--font-lora)',
-            fontSize: 36,
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            marginBottom: 12,
-            lineHeight: 1.2,
-          }}>
-            {title}
-          </h1>
+          {showTitle && (
+            <h1 style={{
+              fontFamily: 'var(--font-lora)',
+              fontSize: 36,
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              marginBottom: 12,
+              lineHeight: 1.2,
+            }}>
+              {title}
+            </h1>
+          )}
           {analogy && (
             <div style={{
               display: 'flex',
@@ -63,7 +67,7 @@ export function TopicHero({ slug, title, analogy, analogyIcon }: TopicHeroProps)
               background: 'rgba(255,255,255,0.7)',
               borderRadius: 12,
               padding: 16,
-              marginTop: 16,
+              marginTop: showTitle ? 16 : 0,
             }}>
               <span style={{ fontSize: 24 }}>{analogyIcon ?? '💡'}</span>
               <p style={{

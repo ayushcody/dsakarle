@@ -85,7 +85,7 @@ export default function AboutPage() {
           </ul>
         </div>
 
-        <div className="bg-[var(--surface-success)] bg-opacity-20 border border-[var(--surface-success)] rounded-[var(--radius)] p-10 shadow-sm">
+        <div className="bg-[var(--surface-success)] border border-[var(--surface-success)] rounded-[var(--radius)] p-10 shadow-sm">
           <p className="font-dmsans text-[var(--state-success)] text-sm font-bold tracking-widest uppercase mb-4">What you can expect</p>
           <h2 className="font-dmsans text-3xl font-bold text-[var(--text-primary)] mb-8">A focused path to mastery</h2>
           <div className="space-y-8">

@@ -1,30 +1,85 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-export function RightSidebar() {
+import { useProgress } from '@/hooks/useProgress';
+import { COURSE_TOPICS, countCompletedLessons, getCourseProgressPercent } from '@/lib/course';
+
+export interface OutlineItem {
+  id: string
+  label: string
+}
+
+export function RightSidebar({ outline }: { outline: OutlineItem[] }) {
+  const { progress, mounted } = useProgress();
+  const [activeId, setActiveId] = useState(outline[0]?.id ?? '');
+
+  const completedLessons = mounted ? countCompletedLessons(progress.completedSections) : 0;
+  const totalLessons = COURSE_TOPICS.length;
+  const percent = mounted ? getCourseProgressPercent(progress.completedSections) : 0;
+
+  // Scroll-spy: highlight the last section whose heading has passed the top bar.
+  useEffect(() => {
+    setActiveId(outline[0]?.id ?? '');
+
+    const elements = outline
+      .map((item) => document.getElementById(item.id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (elements.length === 0 || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    const visible = new Set<string>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            visible.add(entry.target.id);
+          } else {
+            visible.delete(entry.target.id);
+          }
+        }
+        const firstVisible = outline.find((item) => visible.has(item.id));
+        if (firstVisible) {
+          setActiveId(firstVisible.id);
+        }
+      },
+      { rootMargin: '-88px 0px -60% 0px' },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [outline]);
+
   return (
-    <aside className="w-[280px] hidden lg:block flex-shrink-0 relative">
+    <aside className="w-[280px] hidden xl:block flex-shrink-0 relative">
       <div className="sticky top-[88px] flex flex-col gap-8">
         
         {/* Lesson Outline */}
-        <div>
-          <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-4">Lesson Outline</h3>
-          <ul className="space-y-3">
-            {['1. Intuition', '2. Core Idea', '3. Step-by-Step Walkthrough', '4. Implementation', '5. Complexity Analysis', '6. Common Mistakes', '7. Practice Problems'].map((item, i) => (
-              <li key={item}>
-                <Link href="#" className={`font-dmsans text-sm block px-3 py-2 rounded-md transition-colors ${i === 0 ? 'bg-[var(--accent-coral)] bg-opacity-10 text-[var(--accent-coral)] font-medium' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'}`}>
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {outline.length > 0 && (
+          <div>
+            <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-4">Lesson Outline</h3>
+            <ul className="space-y-3">
+              {outline.map((item, i) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    className={`font-dmsans text-sm block px-3 py-2 rounded-md transition-colors ${item.id === activeId ? 'bg-[var(--surface-coral)] text-[var(--accent-coral)] font-medium' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'}`}
+                  >
+                    {i + 1}. {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Your Progress */}
         <div>
           <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-4">Your Progress</h3>
           <div className="bg-[var(--white)] border border-[var(--border)] rounded-xl p-6 flex flex-col items-center justify-center shadow-sm">
-            {/* Fake SVG Circle Progress */}
+            {/* Circle progress (path length normalised to 100) */}
             <div className="relative w-24 h-24 mb-4">
               <svg className="w-full h-full" viewBox="0 0 36 36">
                 <path
@@ -38,18 +93,18 @@ export function RightSidebar() {
                   className="text-[var(--accent-coral)]"
                   stroke="currentColor"
                   strokeWidth="3"
-                  strokeDasharray="60, 100"
+                  strokeDasharray={`${percent}, 100`}
                   strokeLinecap="round"
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-dmsans font-bold text-xl text-[var(--text-primary)]">60%</span>
+                <span className="font-dmsans font-bold text-xl text-[var(--text-primary)]">{percent}%</span>
                 <span className="font-dmsans text-[8px] uppercase tracking-widest text-[var(--text-muted)] font-bold">Completed</span>
               </div>
             </div>
-            <p className="font-dmsans text-xs text-[var(--text-secondary)] font-medium">3 / 5 sections done</p>
+            <p className="font-dmsans text-xs text-[var(--text-secondary)] font-medium">{completedLessons} / {totalLessons} lessons done</p>
           </div>
         </div>
 

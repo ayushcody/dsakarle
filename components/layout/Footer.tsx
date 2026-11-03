@@ -17,23 +17,20 @@ export default function Footer() {
           <h3 className="font-dmsans font-semibold mb-4 text-[var(--border)]">Learn</h3>
           <ul className="space-y-2 font-dmsans text-sm text-[var(--text-muted)]">
             <li><Link href="/learn" className="hover:text-white transition-colors">All Topics</Link></li>
-            <li><Link href="/learn" className="hover:text-white transition-colors">Learning Paths</Link></li>
           </ul>
         </div>
 
         <div>
           <h3 className="font-dmsans font-semibold mb-4 text-[var(--border)]">Curriculum</h3>
           <ul className="space-y-2 font-dmsans text-sm text-[var(--text-muted)]">
-            <li><Link href="/learn" className="hover:text-white transition-colors">Browse Topics</Link></li>
-            <li><Link href="/learn" className="hover:text-white transition-colors">Roadmap</Link></li>
+            <li><Link href="/map" className="hover:text-white transition-colors">Pattern Map</Link></li>
           </ul>
         </div>
 
         <div>
            <h3 className="font-dmsans font-semibold mb-4 text-[var(--border)]">Practice</h3>
           <ul className="space-y-2 font-dmsans text-sm text-[var(--text-muted)]">
-            <li><Link href="/practice" className="hover:text-white transition-colors">Problem Sets</Link></li>
-            <li><Link href="/practice" className="hover:text-white transition-colors">Daily Challenge</Link></li>
+            <li><Link href="/practice" className="hover:text-white transition-colors">Practice Problems</Link></li>
           </ul>
         </div>
 
@@ -41,8 +38,6 @@ export default function Footer() {
            <h3 className="font-dmsans font-semibold mb-4 text-[var(--border)]">Resources & About</h3>
           <ul className="space-y-2 font-dmsans text-sm text-[var(--text-muted)]">
             <li><Link href="/about" className="hover:text-white transition-colors">About DSA Karle</Link></li>
-            <li><Link href="#" className="hover:text-white transition-colors">Cheat Sheets</Link></li>
-            <li><Link href="#" className="hover:text-white transition-colors">Contact</Link></li>
           </ul>
         </div>
       </div>

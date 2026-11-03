@@ -2,19 +2,66 @@ import type { ProgressData } from '@/types/learning';
 
 const KEY = 'dsakarle_progress_v1';
 
-const EMPTY_PROGRESS: ProgressData = {
-  completedSections: [],
-  quizScores: {},
-  lastVisited: '',
-};
+/** Fired on `window` whenever progress is written in this tab (the `storage` event covers other tabs). */
+export const PROGRESS_EVENT = 'dsakarle:progress';
+
+function createEmptyProgress(): ProgressData {
+  return {
+    completedSections: [],
+    quizScores: {},
+    lastVisited: '',
+  };
+}
 
 export function getProgress(): ProgressData {
   if (typeof window === 'undefined') {
-    return EMPTY_PROGRESS;
+    return createEmptyProgress();
   }
 
-  const data = window.localStorage.getItem(KEY);
-  return data ? JSON.parse(data) : EMPTY_PROGRESS;
+  try {
+    const data = window.localStorage.getItem(KEY);
+    if (!data) {
+      return createEmptyProgress();
+    }
+
+    const parsed = JSON.parse(data) as Partial<ProgressData> | null;
+    return {
+      completedSections: Array.isArray(parsed?.completedSections) ? parsed.completedSections : [],
+      quizScores: parsed?.quizScores && typeof parsed.quizScores === 'object' ? parsed.quizScores : {},
+      lastVisited: typeof parsed?.lastVisited === 'string' ? parsed.lastVisited : '',
+    };
+  } catch {
+    return createEmptyProgress();
+  }
+}
+
+function writeProgress(progress: ProgressData): void {
+  try {
+    window.localStorage.setItem(KEY, JSON.stringify(progress));
+  } catch {
+    // Storage unavailable (private mode / quota) — progress just won't persist.
+  }
+  window.dispatchEvent(new Event(PROGRESS_EVENT));
+}
+
+/** Subscribe to progress changes from this tab and from other tabs. Returns an unsubscribe function. */
+export function subscribeProgress(callback: () => void): () => void {
+  if (typeof window === 'undefined') {
+    return () => {};
+  }
+
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === null || event.key === KEY) {
+      callback();
+    }
+  };
+
+  window.addEventListener(PROGRESS_EVENT, callback);
+  window.addEventListener('storage', onStorage);
+  return () => {
+    window.removeEventListener(PROGRESS_EVENT, callback);
+    window.removeEventListener('storage', onStorage);
+  };
 }
 
 export function markComplete(slug: string): void {
@@ -25,7 +72,7 @@ export function markComplete(slug: string): void {
   const progress = getProgress();
   if (!progress.completedSections.includes(slug)) {
     progress.completedSections.push(slug);
-    window.localStorage.setItem(KEY, JSON.stringify(progress));
+    writeProgress(progress);
   }
 }
 
@@ -47,7 +94,7 @@ export function saveQuizScore(slug: string, type: 'recognition' | 'concept', sco
     progress.quizScores[slug].concept = score as number;
   }
 
-  window.localStorage.setItem(KEY, JSON.stringify(progress));
+  writeProgress(progress);
 }
 
 export function setLastVisited(slug: string): void {
@@ -57,7 +104,7 @@ export function setLastVisited(slug: string): void {
 
   const progress = getProgress();
   progress.lastVisited = slug;
-  window.localStorage.setItem(KEY, JSON.stringify(progress));
+  writeProgress(progress);
 }
 
 export function getChapterProgress(slugs: string[]): number {

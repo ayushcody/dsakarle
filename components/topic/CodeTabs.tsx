@@ -20,9 +20,13 @@ const TAB_LABELS: Record<CodeLanguage, string> = {
   cpp: 'C++',
 };
 
-export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
+export function CodeTabs({ code, renderedCode, activeLine, steps }: CodeTabsProps) {
   const { selectedLanguage, setLanguage, currentStep, setStep } = useStepperStore();
   const codeRef = useRef<HTMLDivElement>(null);
+
+  // Only offer languages that actually have source code.
+  const availableTabs = TABS.filter((lang) => Boolean(code?.[lang]?.trim()));
+  const activeLanguage = availableTabs.includes(selectedLanguage) ? selectedLanguage : availableTabs[0];
 
   useEffect(() => {
     if (!codeRef.current) {
@@ -56,8 +60,21 @@ export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
 
     const targetLine = codeRef.current.querySelector(`[data-line="${activeLine}"]`);
     targetLine?.classList.add('active-line');
-    targetLine?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [activeLine, currentStep, selectedLanguage, steps]);
+
+    // Scroll only the code container (scrollIntoView can also scroll the whole page).
+    if (targetLine instanceof HTMLElement) {
+      const container = codeRef.current;
+      const lineTop =
+        targetLine.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop;
+      const lineBottom = lineTop + targetLine.offsetHeight;
+      if (lineTop < container.scrollTop || lineBottom > container.scrollTop + container.clientHeight) {
+        container.scrollTo({
+          top: Math.max(0, lineTop - container.clientHeight / 2 + targetLine.offsetHeight / 2),
+          behavior: 'smooth',
+        });
+      }
+    }
+  }, [activeLine, currentStep, activeLanguage, steps]);
 
   const handleCodeClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -71,6 +88,10 @@ export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
     }
   };
 
+  if (!activeLanguage) {
+    return null;
+  }
+
   return (
     <div>
       <style>{`
@@ -83,7 +104,7 @@ export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
         }
       `}</style>
       <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--border)' }}>
-        {TABS.map((lang) => (
+        {availableTabs.map((lang) => (
           <button
             key={lang}
             onClick={() => setLanguage(lang)}
@@ -91,12 +112,12 @@ export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
               padding: '8px 16px',
               fontFamily: 'var(--font-dmmono)',
               fontSize: 13,
-              background: selectedLanguage === lang ? 'var(--accent-coral)' : 'transparent',
-              color: selectedLanguage === lang ? 'white' : 'var(--text-secondary)',
+              background: activeLanguage === lang ? 'var(--accent-coral)' : 'transparent',
+              color: activeLanguage === lang ? 'white' : 'var(--text-secondary)',
               border: 'none',
               cursor: 'pointer',
               borderBottom:
-                selectedLanguage === lang
+                activeLanguage === lang
                   ? '2px solid var(--accent-coral)'
                   : '2px solid transparent',
             }}
@@ -116,7 +137,7 @@ export function CodeTabs({ renderedCode, activeLine, steps }: CodeTabsProps) {
           padding: '16px',
           borderRadius: '0 0 8px 8px',
         }}
-        dangerouslySetInnerHTML={{ __html: renderedCode[selectedLanguage] }}
+        dangerouslySetInnerHTML={{ __html: renderedCode[activeLanguage] }}
       />
     </div>
   );

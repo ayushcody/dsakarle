@@ -1,5 +1,12 @@
+import Link from 'next/link';
+
 import { getBadgeForSlug } from '@/components/badges/registry';
 import type { LearningTopicPage } from '@/types/learning';
+
+const CATEGORY_LABELS: Record<LearningTopicPage['category'], string> = {
+  'data-structure': 'Data Structures',
+  algorithm: 'Algorithms',
+};
 
 export function HeroBlock({ topic }: { topic: LearningTopicPage }) {
   const Badge = getBadgeForSlug(topic.slug);
@@ -11,6 +18,13 @@ export function HeroBlock({ topic }: { topic: LearningTopicPage }) {
 
   return (
     <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-10 shadow-[var(--shadow-card)]">
+      <nav aria-label="Breadcrumb" className="mb-6 font-dmsans text-[13px] font-medium text-[var(--text-muted)]">
+        <Link href="/learn" className="hover:text-[var(--text-primary)] transition-colors">
+          {CATEGORY_LABELS[topic.category] ?? 'Topics'}
+        </Link>
+        <span className="mx-2" aria-hidden="true">&gt;</span>
+        <span className="text-[var(--text-primary)]" aria-current="page">{topic.title}</span>
+      </nav>
       <Badge className="h-[120px] w-[120px]" />
       <h1 className="mt-6 font-lora text-5xl font-bold text-[var(--text-primary)]">{topic.title}</h1>
       <p className="mt-4 max-w-3xl font-dmsans text-[18px] leading-relaxed text-[var(--text-secondary)]">
