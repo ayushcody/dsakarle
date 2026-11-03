@@ -17,7 +17,9 @@ async function renderCodeBlocks(sourceByLanguage: Record<CodeLanguage, string>) 
   for (const lang of ['python', 'javascript', 'java', 'cpp'] as const) {
     renderedCode[lang] = await codeToHtml(sourceByLanguage[lang] || '', {
       lang,
-      theme: 'github-light',
+      // Dual themes: tokens carry --shiki-light/--shiki-dark; globals.css picks one per [data-theme].
+      themes: { light: 'github-light', dark: 'github-dark' },
+      defaultColor: false,
       transformers: [
         {
           line(node, line) {

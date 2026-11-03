@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useNavStore } from '@/lib/nav-store';
 
 const NAV_ITEMS = [
@@ -59,6 +60,7 @@ export function LearningTopBar() {
           </Link>
         ))}
       </div>
+      <div className="ml-auto"><ThemeToggle /></div>{/* TEMP: Phase 4 moves this into the navbar */}
     </header>
   );
 }

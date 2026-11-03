@@ -1,51 +1,26 @@
 import type { ComponentType, SVGProps } from 'react';
 
-import ArraysBadge from './ArraysBadge';
-import LinkedListsBadge from './LinkedListsBadge';
-import StacksQueuesBadge from './StacksQueuesBadge';
-import TreesBadge from './TreesBadge';
-import GraphsBadge from './GraphsBadge';
-import HeapsBadge from './HeapsBadge';
-import TriesBadge from './TriesBadge';
-import HashMapsBadge from './HashMapsBadge';
-import SortingBadge from './SortingBadge';
-import SearchingBadge from './SearchingBadge';
-import DPBadge from './DPBadge';
-import SlidingWindowBadge from './SlidingWindowBadge';
-import TwoPointersBadge from './TwoPointersBadge';
-import BinarySearchBadge from './BinarySearchBadge';
-import BacktrackingBadge from './BacktrackingBadge';
-import GreedyBadge from './GreedyBadge';
-import PrefixSumBadge from './PrefixSumBadge';
-import GenericTopicBadge from './GenericTopicBadge';
+import { GlyphTile, glyphForSlug } from '@/components/glyph';
 
 type BadgeComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
-const badgeRegistry: Record<string, BadgeComponent> = {
-  arrays: ArraysBadge,
-  vectors: ArraysBadge,
-  strings: ArraysBadge,
-  'linked-lists': LinkedListsBadge,
-  stacks: StacksQueuesBadge,
-  queues: StacksQueuesBadge,
-  'hash-maps': HashMapsBadge,
-  trees: TreesBadge,
-  bst: TreesBadge,
-  heaps: HeapsBadge,
-  graphs: GraphsBadge,
-  tries: TriesBadge,
-  'sliding-window': SlidingWindowBadge,
-  'two-pointers': TwoPointersBadge,
-  'prefix-sum': PrefixSumBadge,
-  'binary-search': BinarySearchBadge,
-  sorting: SortingBadge,
-  searching: SearchingBadge,
-  recursion: BacktrackingBadge,
-  'dynamic-programming': DPBadge,
-  greedy: GreedyBadge,
-  'bfs-dfs': GraphsBadge,
-};
+/**
+ * Badges are now pattern glyphs. The old per-topic SVG badge files stay on disk
+ * until Phase 5 but are no longer referenced here.
+ *
+ * Consumers render `<Badge />` (BadgeCard: 90px) or `<Badge className="h-[120px] w-[120px]" />`
+ * (HeroBlock, ComingSoonTemplate): the tile takes its size from className when given.
+ */
+const cache = new Map<string, BadgeComponent>();
 
 export function getBadgeForSlug(slug: string): BadgeComponent {
-  return badgeRegistry[slug] || GenericTopicBadge;
+  const cached = cache.get(slug);
+  if (cached) {
+    return cached;
+  }
+  const glyph = glyphForSlug(slug);
+  const Badge: BadgeComponent = ({ className }) => <GlyphTile id={glyph} className={className} decorative />;
+  Badge.displayName = `GlyphBadge(${slug})`;
+  cache.set(slug, Badge);
+  return Badge;
 }

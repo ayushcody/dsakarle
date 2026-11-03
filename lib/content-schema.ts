@@ -12,6 +12,7 @@
 import { z } from 'zod';
 import { CODE_EXT, LANGS } from './engine/types';
 import type { CodeRef, Lang, ParsedCode, TracerId } from './engine/types';
+import { parseCode, parseCodeAnyLang } from './code/anchors';
 import type { Curriculum, CurriculumLesson, LessonV2 } from '../types/learning';
 
 // ---------------------------------------------------------------------------
@@ -321,21 +322,12 @@ function lineCount(source: string): number {
 // Code files + anchors
 // ---------------------------------------------------------------------------
 
-const ANCHOR_RE = /\s(#|\/\/)\s*@([a-z0-9-]+)\s*$/;
-
 /**
- * Parse trailing `# @id` / `// @id` markers. Returns the source with markers
- * stripped and a map of anchor → 1-based line numbers.
+ * Parse trailing `# @id` / `// @id` markers (single parser: lib/code/anchors.ts).
+ * With a language it uses that language's comment marker; without, either.
  */
-export function parseAnchors(source: string): ParsedCode {
-  const anchors: Record<string, number[]> = {};
-  const lines = source.split('\n').map((line, index) => {
-    const match = ANCHOR_RE.exec(line);
-    if (!match) return line;
-    (anchors[match[2]] ??= []).push(index + 1);
-    return line.slice(0, match.index).replace(/\s+$/, '');
-  });
-  return { source: lines.join('\n'), anchors };
+export function parseAnchors(source: string, lang?: Lang): ParsedCode {
+  return lang ? parseCode(source, lang) : parseCodeAnyLang(source);
 }
 
 function codeFilePath(ref: string, lang: Lang): string {
@@ -498,7 +490,7 @@ export function checkAnchors(slug: string, parsed: ParsedLesson, codeFiles: Reco
     const out = {} as Record<Lang, Set<string> | null>;
     for (const lang of LANGS) {
       const source = codeFiles[codeFilePath(ref, lang)];
-      out[lang] = source && isNonEmpty(source) ? new Set(Object.keys(parseAnchors(source).anchors)) : null;
+      out[lang] = source && isNonEmpty(source) ? new Set(Object.keys(parseAnchors(source, lang).anchors)) : null;
     }
     return out;
   };
