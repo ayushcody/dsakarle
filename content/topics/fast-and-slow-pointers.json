@@ -1,140 +1,431 @@
 {
-  "id": "fast-and-slow-pointers",
+  "schemaVersion": 2,
   "slug": "fast-and-slow-pointers",
-  "title": "Fast and Slow Pointers",
-  "analogy": "Imagine two runners on a circular track — the fast runner goes twice as fast. Eventually the fast runner laps the slow runner, proving the track has a loop.",
-  "analogyIcon": "🐢🐇",
-  "category": "algorithm",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 30,
-  "prerequisites": [
-    "linked-lists"
-  ],
-  "tags": [
-    "tortoise-hare",
-    "cycle-detection",
-    "linked-list"
-  ],
-  "overview": {
-    "summary": "The fast-and-slow pointer technique (Floyd's Tortoise and Hare) uses two pointers moving at different speeds to detect cycles, find midpoints, and solve linked list problems.",
-    "learningObjectives": [
-      "Detect cycles in O(1) space using Floyd's algorithm.",
-      "Find the start of a cycle.",
-      "Find the middle of a linked list in one pass."
-    ],
-    "interviewRelevance": "Cycle detection and midpoint-finding are top-tier linked list interview problems."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "Two runners start together on a track you can't see. One runs twice as fast as the other. If you only watch whether the fast one ever catches the slow one, can you tell that the track is a loop?",
     "paragraphs": [
-      "Deadlock detection in operating systems uses cycle detection in resource allocation graphs.",
-      "Finding the duplicate number in an array (where values are in range 1..N) can be solved with Floyd's cycle detection."
+      "On a straight road, the fast runner pulls away and never looks back. Nobody gets passed twice, and the fast runner reaches the finish line while the slow one is still halfway there.",
+      "Now bend the road into a circle. The fast runner has no finish line. It keeps coming up behind the slow runner and, sooner or later, the two stand on the same spot. What does that meeting prove?"
     ],
-    "ahaMoment": "If a fast pointer (2× speed) ever meets a slow pointer, there MUST be a cycle — they can't meet on a straight path."
+    "aha": "If the faster runner ever catches the slower one, the track must loop. Straight tracks can't do it, and on a loop the fast runner gains exactly one step per lap, so it can't jump over the slow one. If the fast runner reaches the end instead, there is no loop. You learn the shape of the track with two pointers and no extra memory."
   },
-  "definition": {
-    "technicalDefinition": "Two pointers traverse a sequence at different speeds (typically 1 step vs 2 steps). If a cycle exists, the fast pointer will eventually catch up to the slow pointer.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "linked-list",
+      "nodes": [
+        {
+          "id": "n0",
+          "value": 3
+        },
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 0
+        },
+        {
+          "id": "n3",
+          "value": -4
+        },
+        {
+          "id": "n4",
+          "value": 7
+        }
+      ],
+      "links": [
+        {
+          "from": "n0",
+          "to": "n1"
+        },
+        {
+          "from": "n1",
+          "to": "n2"
+        },
+        {
+          "from": "n2",
+          "to": "n3"
+        },
+        {
+          "from": "n3",
+          "to": "n4"
+        },
+        {
+          "from": "n4",
+          "to": "n2"
+        }
+      ],
+      "pointers": [
+        {
+          "name": "slow",
+          "target": "n1",
+          "role": "ptrA"
+        },
+        {
+          "name": "fast",
+          "target": "n3",
+          "role": "ptrB"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "Slow Pointer",
-        "definition": "Advances one step at a time."
+        "target": "node:n1",
+        "text": "slow: one step a lap"
       },
       {
-        "term": "Fast Pointer",
-        "definition": "Advances two steps at a time."
+        "target": "node:n3",
+        "text": "fast: two steps a lap"
       },
       {
-        "term": "Floyd's Algorithm",
-        "definition": "Phase 1: detect cycle (meeting point). Phase 2: find cycle start."
+        "target": "node:n4",
+        "text": "tail links back"
       }
-    ],
-    "keyProperties": [
-      "Cycle detection: O(N) time, O(1) space.",
-      "Finding middle: when fast reaches end, slow is at the middle.",
-      "Finding cycle start: reset one pointer to head, advance both at speed 1."
     ]
   },
-  "operations": [
-    {
-      "name": "Detect Cycle",
-      "description": "Move slow by 1 and fast by 2. If they meet, there's a cycle. If fast reaches null, there's no cycle.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "def has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast:\n            return True\n    return False",
-        "javascript": "function hasCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}",
-        "java": "boolean hasCycle(ListNode head) {\n    ListNode slow = head, fast = head;\n    while (fast != null && fast.next != null) {\n        slow = slow.next;\n        fast = fast.next.next;\n        if (slow == fast) return true;\n    }\n    return false;\n}",
-        "cpp": "bool hasCycle(ListNode* head) {\n    auto slow = head, fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n        if (slow == fast) return true;\n    }\n    return false;\n}"
+  "mentalModel": {
+    "metaphor": [
+      "Picture a tortoise and a hare starting together. The hare takes two steps for each of the tortoise's one. On a straight road the hare reaches the end first and the race is over, but on a loop it comes round behind the tortoise and catches it.",
+      "You never need a map of the track. Whether the two ever meet, and where the slow one is when the fast one runs out, tells you its shape."
+    ],
+    "click": "Two pointers at different speeds can only meet again on a loop, and when the fast one runs off the end, the slow one is halfway.",
+    "glossary": [
+      {
+        "term": "slow and fast pointers",
+        "definition": "Two pointers that start together on the head. slow moves one node per lap and fast moves two. Also called the tortoise and the hare."
       },
-      "visualNote": "Two pointers advance at different speeds along the linked list, meeting inside the cycle."
+      {
+        "term": "cycle",
+        "definition": "A stretch of the list that loops: following next links brings you back to a node you already visited, so you never reach null."
+      },
+      {
+        "term": "Floyd's algorithm",
+        "definition": "The tortoise-and-hare method. Phase 1 races slow and fast to see whether they meet. Phase 2 restarts one pointer at the head to find where the loop begins."
+      },
+      {
+        "term": "meeting point",
+        "definition": "The node where slow and fast first stand together. It is always inside the cycle, but not always at its start."
+      },
+      {
+        "term": "cycle entry",
+        "definition": "The first node of the loop: the node the tail's link points back to. It is where the straight part of the list ends and the loop begins."
+      },
+      {
+        "term": "middle node",
+        "definition": "The node halfway along the list. With an even number of nodes there are two middles, and LeetCode 876 (and this lesson) returns the second one."
+      }
+    ],
+    "definition": "Fast and slow pointers walk the same sequence at different speeds, usually one step and two steps per lap. If the sequence loops, the faster pointer must eventually land on the slower one, so meeting proves a cycle and running off the end proves there is none. On a straight list, when the fast pointer reaches the end the slow pointer has covered half of it, which finds the middle. Floyd's algorithm adds a second phase that locates the start of the cycle. All of this needs only two pointers, so O(1) extra space."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "cycle",
+        "label": "Detect a cycle",
+        "tracer": "fast-and-slow-pointers/cycle",
+        "predict": {
+          "tags": [
+            "where-fast-lands",
+            "meet-or-null"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "middle",
+        "label": "Find the middle",
+        "tracer": "fast-and-slow-pointers/middle",
+        "predict": {
+          "tags": [
+            "where-slow-ends",
+            "keep-going"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "cycle-start",
+        "label": "Find the cycle start",
+        "tracer": "fast-and-slow-pointers/cycle-start",
+        "predict": {
+          "tags": [
+            "speed-after-reset",
+            "where-they-meet"
+          ],
+          "max": 2
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "A linked list might loop back on itself, and you must say whether it does.",
+      "You need the middle of a list in one pass, without knowing its length.",
+      "Each value tells you where to go next (a next index, a digit-square sum) and the sequence may repeat forever.",
+      "The problem asks for O(1) extra space, so remembering every node you visited is not allowed."
+    ],
+    "notWhen": [
+      "You have an array and want its middle: just read index n // 2. No pointers needed.",
+      "You need to know whether a value was seen before, and memory is fine: a hash set answers it directly.",
+      "You need the k-th node from the end: a pointer k steps ahead of the other fits better, and that is plain two pointers."
+    ],
+    "quiz": [
+      {
+        "problem": "Given the head of a linked list, decide whether the list contains a cycle, using only O(1) extra space.",
+        "answer": "fast-and-slow-pointers",
+        "options": [
+          "fast-and-slow-pointers",
+          "hash-maps",
+          "linked-lists",
+          "sliding-window"
+        ],
+        "explanation": "A hash set of visited nodes also finds a cycle, but it stores up to n nodes: O(n) space. Two pointers at different speeds meet on a loop and need no memory."
+      },
+      {
+        "problem": "Given an unsorted array of numbers and a target, return the indices of the two numbers that add up to the target.",
+        "answer": "hash-maps",
+        "options": [
+          "two-pointers",
+          "fast-and-slow-pointers",
+          "hash-maps",
+          "sorting"
+        ],
+        "explanation": "The array isn't sorted and has no loop to find. A hash map remembers what you have seen, so each number can ask for its partner in one lookup."
+      },
+      {
+        "problem": "Given the head of a singly linked list, reverse it in place and return the new head.",
+        "answer": "linked-lists",
+        "options": [
+          "stacks",
+          "fast-and-slow-pointers",
+          "recursion",
+          "linked-lists"
+        ],
+        "explanation": "No loop to find and no middle to reach. This is rewiring next links one node at a time with prev, curr and nxt."
+      },
+      {
+        "problem": "Replace a number by the sum of the squares of its digits, again and again. Does it reach 1, or loop forever? Do it without storing every number seen.",
+        "answer": "fast-and-slow-pointers",
+        "options": [
+          "dynamic-programming",
+          "hash-maps",
+          "fast-and-slow-pointers",
+          "recursion"
+        ],
+        "explanation": "Each number points to the next one, so the sequence is a hidden linked list. If it never reaches 1 it must loop, and two runners at different speeds find a loop with no memory."
+      },
+      {
+        "problem": "Given a sorted array and a target, find two numbers that add up to it.",
+        "answer": "two-pointers",
+        "options": [
+          "binary-search",
+          "two-pointers",
+          "fast-and-slow-pointers",
+          "hash-maps"
+        ],
+        "explanation": "Two pointers, but not at different speeds: one starts at each end and they close in on the target. Fast and slow pointers are for loops and middles."
+      }
+    ]
+  },
+  "template": {
+    "pseudocode": [
+      {
+        "text": "slow = head, fast = head",
+        "anchor": "init"
+      },
+      {
+        "text": "while fast and fast.next exist:",
+        "anchor": "check"
+      },
+      {
+        "text": "slow takes 1 step, fast takes 2 steps",
+        "anchor": "move",
+        "indent": 1
+      },
+      {
+        "text": "if slow and fast are the same node:",
+        "anchor": "meet",
+        "indent": 1
+      },
+      {
+        "text": "return true (they met, so there is a cycle)",
+        "anchor": "done",
+        "indent": 2
+      },
+      {
+        "text": "return false (fast ran out, so there is no cycle)",
+        "anchor": "done"
+      }
+    ],
+    "tracer": "fast-and-slow-pointers/cycle",
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": [
+      "slow takes at most n steps before the pointers meet or fast runs out, so the loop is O(n). Only two pointers are stored, so the space is O(1).",
+      "A hash set also detects a cycle: add each node as you visit it, and a node already in the set means a loop. That is O(n) time but O(n) space, because it remembers every node. Fast and slow pointers give the same answer with no memory.",
+      "Test fast before fast.next. If fast is null, asking for fast.next would crash, so the loop condition checks both.",
+      "For the middle (LeetCode 876), drop the meet test and return slow when the loop ends. With two middles this returns the second. To get the first, loop while fast.next and fast.next.next exist.",
+      "For the cycle start (LeetCode 142), after they meet put slow back on the head and move both one step at a time. If the entry is a steps from the head and they met b steps past it, slow walked a + b and fast walked 2(a + b), so a + b is a whole number of laps. That makes a the same distance as from the meeting point on to the entry, give or take whole laps.",
+      "It works on any sequence where each value tells you the next, not only lists: Happy Number (202) and Find the Duplicate Number (287) hide a linked list inside numbers."
+    ]
+  },
+  "examples": [
+    {
+      "title": "Linked List Cycle",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/linked-list-cycle/",
+      "problem": "Given the head of a linked list, return true if the list has a cycle: some node can be reached again by following next pointers. Otherwise return false.",
+      "input": "head = [3,2,0,-4], pos = 1 (the tail links back to index 1)",
+      "output": "true",
+      "approach": [
+        "Start slow and fast on the head. Each lap slow takes 1 step and fast takes 2.",
+        "If the list ends, fast reaches null before slow does, so return false.",
+        "On a loop, fast gains exactly one node on slow each lap, so it cannot jump over slow. Sooner or later they stand on the same node.",
+        "In [3,2,0,-4] with the tail linked back to index 1, they meet on -4 after three laps, so return true."
+      ],
+      "code": "fast-and-slow-pointers/cycle",
+      "tracer": "fast-and-slow-pointers/cycle",
+      "time": "O(n)",
+      "space": "O(1)"
     },
     {
-      "name": "Find Middle",
-      "description": "When fast reaches the end, slow is at the middle of the list.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "def find_middle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    return slow",
-        "javascript": "function findMiddle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n  }\n  return slow;\n}",
-        "java": "ListNode findMiddle(ListNode head) {\n    ListNode slow = head, fast = head;\n    while (fast != null && fast.next != null) {\n        slow = slow.next;\n        fast = fast.next.next;\n    }\n    return slow;\n}",
-        "cpp": "ListNode* findMiddle(ListNode* head) {\n    auto slow = head, fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n    }\n    return slow;\n}"
-      },
-      "visualNote": "Slow pointer ends up in the middle when fast reaches the end."
+      "title": "Middle of the Linked List",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/middle-of-the-linked-list/",
+      "problem": "Given the head of a singly linked list, return the middle node. If there are two middle nodes, return the second one.",
+      "input": "head = [1,2,3,4,5]",
+      "output": "[3,4,5] (the node with value 3, and the nodes after it)",
+      "approach": [
+        "You don't know the length, and counting first would cost a second pass. Let fast run at double speed instead.",
+        "When fast can't take another two steps, it has covered the whole list while slow has covered half of it.",
+        "For [1,2,3,4,5], slow goes 1, 2, 3 and fast goes 1, 3, 5. fast stops on the last node and slow stops on 3.",
+        "With an even length such as [1,2,3,4,5,6] there are two middles. The loop ends with fast on null and slow on 4, the second middle, which is what LeetCode asks for."
+      ],
+      "code": "fast-and-slow-pointers/middle",
+      "tracer": "fast-and-slow-pointers/middle",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Linked List Cycle II",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/linked-list-cycle-ii/",
+      "problem": "Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.",
+      "input": "head = [4,8,15,16,23,42], pos = 2 (the tail links back to index 2)",
+      "output": "the node with value 15 (index 2)",
+      "approach": [
+        "Phase 1 is the cycle race. slow and fast meet on 23, a node inside the loop but not at its start.",
+        "Phase 2: put slow back on the head and leave fast where they met. Now move both one step at a time.",
+        "Why it works: the distance from the head to the entry equals the distance from the meeting point on to the entry, give or take whole laps. So both pointers reach the entry together.",
+        "Here slow walks 4, 8, 15 and fast walks 23, 42, 15. They meet on 15, so return it."
+      ],
+      "code": "fast-and-slow-pointers/cycle-start",
+      "tracer": "fast-and-slow-pointers/cycle-start",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "conceptQuiz": [
+    {
+      "question": "On a loop, why can fast never jump over slow without landing on it?",
+      "options": [
+        "fast is always exactly one full lap ahead of slow.",
+        "Each lap fast gains exactly one node on slow, so the gap shrinks by one at a time and reaches zero instead of skipping past it.",
+        "slow steps backwards whenever fast gets close.",
+        "The list is sorted, so fast has to stop at slow's value."
+      ],
+      "answer": 1,
+      "explanation": "fast moves 2 and slow moves 1, so the gap changes by exactly 1 per lap. A gap that drops 1 at a time must pass through 0, and 0 means the same node."
+    },
+    {
+      "question": "Why does the loop read `while fast and fast.next` instead of only `while fast`?",
+      "options": [
+        "It makes the loop run exactly n times.",
+        "Python needs both sides to build the answer.",
+        "slow needs fast.next to decide where to go.",
+        "fast takes two steps, so it needs a node after it. On the last node, fast.next is null and fast.next.next would crash."
+      ],
+      "answer": 3,
+      "explanation": "fast.next is the node fast steps through on the way to fast.next.next. Checking both keeps the second step from reading a link off a null."
+    },
+    {
+      "question": "You run the middle-node loop on the list 10, 20, 30, 40. Which node does it return?",
+      "options": [
+        "30, the second of the two middle nodes.",
+        "20, the first of the two middle nodes.",
+        "40, the tail.",
+        "Nothing, because an even list has no middle."
+      ],
+      "answer": 0,
+      "explanation": "slow moves to 20, then 30, while fast moves to 30, then off the end. The loop stops with slow on 30. LeetCode 876 asks for the second middle, so this is exactly right."
+    },
+    {
+      "question": "In phase 2 of Floyd's algorithm, slow returns to the head and both pointers move one step at a time. Why do they meet on the cycle entry?",
+      "options": [
+        "Resetting slow makes it faster than fast.",
+        "The entry is always exactly halfway along the list.",
+        "The distance from the head to the entry equals the distance from the meeting point on to the entry, give or take whole laps.",
+        "Two pointers at the same speed always meet on the head."
+      ],
+      "answer": 2,
+      "explanation": "When they met, slow had walked a + b and fast had walked twice that, so a + b is a whole number of laps. Walking a more steps from the meeting point therefore lands on the entry."
+    },
+    {
+      "question": "A hash set can also detect a cycle: remember every node you visit and stop when you see one twice. What do fast and slow pointers do better?",
+      "options": [
+        "They run in less than O(n) time.",
+        "They use O(1) extra space, where the hash set uses O(n).",
+        "They also work on lists that have no cycle, which a hash set cannot handle.",
+        "They find the length of the cycle without any extra work."
+      ],
+      "answer": 1,
+      "explanation": "Both take O(n) time. The hash set remembers up to n nodes, while fast and slow pointers keep just two pointers, so the memory stays constant."
     }
   ],
   "practice": [
     {
-      "title": "Linked List Cycle",
-      "url": "https://leetcode.com/problems/linked-list-cycle/",
+      "title": "Happy Number",
+      "url": "https://leetcode.com/problems/happy-number/",
       "difficulty": "easy",
-      "keyInsight": "Fast and slow meet → cycle exists."
+      "insight": "Replacing a number by the sum of its digit squares gives each number a single next number. That sequence either reaches 1 or loops, so race two runners over it."
     },
     {
-      "title": "Linked List Cycle II",
-      "url": "https://leetcode.com/problems/linked-list-cycle-ii/",
+      "title": "Palindrome Linked List",
+      "url": "https://leetcode.com/problems/palindrome-linked-list/",
+      "difficulty": "easy",
+      "insight": "Fast and slow find the middle in one pass. Then ask what you could do to the second half so that it can be compared with the first."
+    },
+    {
+      "title": "Delete the Middle Node of a Linked List",
+      "url": "https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/",
       "difficulty": "medium",
-      "keyInsight": "Phase 2: reset one to head, advance both by 1, they meet at cycle start."
+      "insight": "To delete a node you must stand on the one before it. Where does slow end up if fast starts a little ahead, or if you stop the loop sooner?"
     },
     {
-      "title": "Middle of the Linked List",
-      "url": "https://leetcode.com/problems/middle-of-the-linked-list/",
-      "difficulty": "easy",
-      "keyInsight": "Slow pointer is at middle when fast reaches end."
+      "title": "Reorder List",
+      "url": "https://leetcode.com/problems/reorder-list/",
+      "difficulty": "medium",
+      "insight": "It combines three moves you know: find the middle, reverse the second half, then weave the two halves together."
     },
     {
       "title": "Find the Duplicate Number",
       "url": "https://leetcode.com/problems/find-the-duplicate-number/",
       "difficulty": "medium",
-      "keyInsight": "Model the array as a linked list where val = next index, find cycle."
+      "insight": "Treat each value as a pointer to the index with that number. Two different indices pointing at the same place make a cycle, and the duplicate is where the cycle starts."
     },
     {
-      "title": "Happy Number",
-      "url": "https://leetcode.com/problems/happy-number/",
-      "difficulty": "easy",
-      "keyInsight": "Digit-square sequence forms a linked list — detect if it cycles back to non-1."
-    }
-  ],
-  "examples": [],
-  "conceptQuiz": [
+      "title": "Circular Array Loop",
+      "url": "https://leetcode.com/problems/circular-array-loop/",
+      "difficulty": "medium",
+      "insight": "Each index jumps by its value, so the array is a hidden linked list. Look out for loops that change direction and loops of length one, which don't count."
+    },
     {
-      "question": "Why does the fast-and-slow technique guarantee cycle detection?",
-      "options": [
-        "It uses extra memory to track visited nodes",
-        "It sorts the list first",
-        "The fast pointer closes the gap by 1 each step, so they must meet inside the cycle",
-        "It only works on arrays"
-      ],
-      "correctIndex": 2,
-      "explanation": "In each iteration, the distance between fast and slow decreases by 1, guaranteeing they meet within the cycle."
+      "title": "Remove Nth Node From End of List",
+      "url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+      "difficulty": "medium",
+      "insight": "Two runners that don't need different speeds, only a gap. If one starts n nodes ahead, where is the other when the leader runs out of list?"
     }
-  ],
-  "recognitionQuiz": {
-    "problemStatement": "Given a singly linked list, determine if it contains a cycle, using O(1) extra space.",
-    "correctPatternId": "fast-and-slow-pointers",
-    "distractors": [
-      "hash-maps",
-      "two-pointers",
-      "binary-search"
-    ],
-    "explanation": "O(1) space cycle detection is the defining application of Floyd's Tortoise and Hare algorithm."
-  }
+  ]
 }

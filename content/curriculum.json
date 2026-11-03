@@ -292,7 +292,7 @@
       "group": "algorithms",
       "glyph": "fast-and-slow-pointers",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 25,
       "oneLiner": "A hare and a tortoise: if there's a loop, they meet.",
       "trigger": "Cycles, or the middle of a linked list in one pass.",
