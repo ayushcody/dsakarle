@@ -114,7 +114,7 @@ export default function PracticePage() {
           <select 
             value={selectedDifficulty}
             onChange={(e) => setSelectedDifficulty(e.target.value)}
-            className="px-4 py-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-white font-dmsans focus:outline-none"
+            className="px-4 py-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-paper-raised font-dmsans focus:outline-none"
           >
             <option>All Difficulties</option>
             <option>Beginner</option>
@@ -124,7 +124,7 @@ export default function PracticePage() {
           <select 
             value={selectedTopic}
             onChange={(e) => setSelectedTopic(e.target.value)}
-            className="px-4 py-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-white font-dmsans focus:outline-none"
+            className="px-4 py-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-paper-raised font-dmsans focus:outline-none"
           >
             <option>All Topics</option>
             {allTopics.map(topic => (

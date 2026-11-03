@@ -1,14 +1,47 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { codeToHtml } from 'shiki';
 import type { Properties } from 'hast';
 
+import { LessonPage } from '@/components/lesson/LessonPage';
 import { ComingSoonTemplate } from '@/components/topic/ComingSoonTemplate';
 import { TopicPageRenderer } from '@/components/topic/TopicPageRenderer';
+import type { RenderedCodeProp } from '@/components/stage/contracts';
 import { getAllTopicSlugs, getTopicBySlug } from '@/lib/content';
-import type { CodeLanguage } from '@/types/learning';
+import { getLessonMeta } from '@/lib/curriculum';
+import { renderCode } from '@/lib/code/render';
+import { isLessonV2 } from '@/types/learning';
+import type { CodeLanguage, LessonV2 } from '@/types/learning';
 
 export async function generateStaticParams() {
   return getAllTopicSlugs().map((slug) => ({ slug }));
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const meta = getLessonMeta(params.slug);
+  if (!meta) {
+    return { title: 'Lesson not found — DSA Karle' };
+  }
+  return { title: `${meta.title} — DSA Karle`, description: meta.oneLiner };
+}
+
+/** Server-render every code ref a v2 lesson uses once. A missing file omits that code instead of crashing the page. */
+async function renderLessonCode(lesson: LessonV2): Promise<Record<string, RenderedCodeProp>> {
+  const refs = new Set<string>([lesson.template.tracer]);
+  for (const example of lesson.examples) refs.add(example.code);
+  for (const track of lesson.stage.tracks) refs.add(track.tracer);
+
+  const code: Record<string, RenderedCodeProp> = {};
+  await Promise.all(
+    Array.from(refs).map(async (ref) => {
+      try {
+        code[ref] = await renderCode(ref as `${string}/${string}`);
+      } catch (error) {
+        console.error(`[learn/${lesson.slug}] could not render code "${ref}":`, error);
+      }
+    }),
+  );
+  return code;
 }
 
 async function renderCodeBlocks(sourceByLanguage: Record<CodeLanguage, string>) {
@@ -41,6 +74,15 @@ export default async function TopicPage({ params }: { params: { slug: string } }
 
   if (!topic) {
     notFound();
+  }
+
+  if (isLessonV2(topic)) {
+    const meta = getLessonMeta(params.slug);
+    if (!meta) {
+      notFound();
+    }
+    const code = await renderLessonCode(topic);
+    return <LessonPage lesson={topic} meta={meta} code={code} />;
   }
 
   if (topic.comingSoon) {

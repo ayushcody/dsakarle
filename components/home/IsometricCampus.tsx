@@ -6,11 +6,11 @@ export default function IsometricCampus() {
       {/* Isometric Projection Transform */}
       <g transform="translate(600, 150) scale(1, 0.5) rotate(45) scale(1.1)">
         {/* Base Grid / Ground */}
-        <rect x="-250" y="-250" width="500" height="500" fill="#F0EDE8" stroke="#E5E0D8" strokeWidth="2" />
+        <rect x="-250" y="-250" width="500" height="500" style={{ fill: 'var(--paper-sunken)', stroke: 'var(--rule)' }} strokeWidth="2" />
         
         {/* Connecting Paths */}
-        <polyline points="-120,-120 -120,40 200,40 200,180" fill="none" stroke="#E5E0D8" strokeWidth="20" strokeLinecap="square"/>
-        <polyline points="-120,-120 180,-120 180,-40" fill="none" stroke="#E5E0D8" strokeWidth="20" />
+        <polyline points="-120,-120 -120,40 200,40 200,180" fill="none" style={{ stroke: 'var(--rule)' }} strokeWidth="20" strokeLinecap="square"/>
+        <polyline points="-120,-120 180,-120 180,-40" fill="none" style={{ stroke: 'var(--rule)' }} strokeWidth="20" />
 
         {/* 7. Blue Pools */}
         <rect x="-220" y="-220" width="80" height="120" fill="#60B8D4" rx="4"/>
@@ -19,58 +19,58 @@ export default function IsometricCampus() {
         {/* 1. Main Building */}
         <g transform="translate(-100, -100)">
           {/* Base */}
-          <rect x="0" y="0" width="200" height="200" fill="#FFFFFF" />
-          <rect x="0" y="0" width="200" height="200" fill="none" stroke="#E5E0D8" strokeWidth="4" />
+          <rect x="0" y="0" width="200" height="200" style={{ fill: 'var(--paper-raised)' }} />
+          <rect x="0" y="0" width="200" height="200" fill="none" style={{ stroke: 'var(--rule)' }} strokeWidth="4" />
           {/* Inner courtyard */}
-          <rect x="40" y="40" width="120" height="120" fill="#F0EDE8" />
-          <rect x="40" y="40" width="120" height="120" fill="none" stroke="#E5E0D8" strokeWidth="2" />
+          <rect x="40" y="40" width="120" height="120" style={{ fill: 'var(--paper-sunken)' }} />
+          <rect x="40" y="40" width="120" height="120" fill="none" style={{ stroke: 'var(--rule)' }} strokeWidth="2" />
           <image href="/DSAKarle_Logo.png" x="50" y="50" width="100" height="100" transform="rotate(-45 100 100)" />
         </g>
         
         {/* 2. Array Platform */}
         <g transform="translate(-200, -50)">
-          <rect x="0" y="0" width="30" height="150" fill="#FAF9F7" stroke="#E5E0D8" strokeWidth="2" />
+          <rect x="0" y="0" width="30" height="150" style={{ fill: 'var(--paper)', stroke: 'var(--rule)' }} strokeWidth="2" />
           {[0, 30, 60, 90, 120].map(y => (
-            <rect key={y} x="5" y={y + 5} width="20" height="20" fill="#FFFFFF" stroke="#C8900A" strokeWidth="2" />
+            <rect key={y} x="5" y={y + 5} width="20" height="20" style={{ fill: 'var(--paper-raised)', stroke: 'var(--amber)' }} strokeWidth="2" />
           ))}
         </g>
         
         {/* 3. Linked List Platform */}
         <g transform="translate(-100, 120)">
-          <rect x="0" y="0" width="150" height="40" fill="#FAF9F7" stroke="#E5E0D8" strokeWidth="2" />
+          <rect x="0" y="0" width="150" height="40" style={{ fill: 'var(--paper)', stroke: 'var(--rule)' }} strokeWidth="2" />
           {[10, 60, 110].map(x => (
-            <circle key={x} cx={x + 15} cy="20" r="10" fill="#FFFFFF" stroke="#D4603A" strokeWidth="2" />
+            <circle key={x} cx={x + 15} cy="20" r="10" style={{ fill: 'var(--paper-raised)', stroke: 'var(--coral)' }} strokeWidth="2" />
           ))}
-          <line x1="40" y1="20" x2="60" y2="20" stroke="#D4603A" strokeWidth="2" />
-          <line x1="90" y1="20" x2="110" y2="20" stroke="#D4603A" strokeWidth="2" />
+          <line x1="40" y1="20" x2="60" y2="20" style={{ stroke: 'var(--coral)' }} strokeWidth="2" />
+          <line x1="90" y1="20" x2="110" y2="20" style={{ stroke: 'var(--coral)' }} strokeWidth="2" />
         </g>
         
         {/* 4. Stack Platform */}
         <g transform="translate(150, 150)">
-          <rect x="0" y="0" width="60" height="60" fill="#FAF9F7" stroke="#E5E0D8" strokeWidth="2" />
-          <rect x="10" y="10" width="40" height="40" fill="#FFFFFF" stroke="#1D7A6B" strokeWidth="2" />
-          <rect x="20" y="20" width="20" height="20" fill="#1D7A6B" opacity="0.3"/>
+          <rect x="0" y="0" width="60" height="60" style={{ fill: 'var(--paper)', stroke: 'var(--rule)' }} strokeWidth="2" />
+          <rect x="10" y="10" width="40" height="40" style={{ fill: 'var(--paper-raised)', stroke: 'var(--teal)' }} strokeWidth="2" />
+          <rect x="20" y="20" width="20" height="20" style={{ fill: 'var(--teal)' }} opacity="0.3"/>
         </g>
 
         {/* 5. Graph Platform */}
         <g transform="translate(140, -200)">
-          <rect x="0" y="0" width="80" height="80" fill="#FAF9F7" stroke="#E5E0D8" strokeWidth="2" />
-          <circle cx="20" cy="20" r="8" fill="#FFFFFF" stroke="#C8900A" strokeWidth="2" />
-          <circle cx="60" cy="20" r="8" fill="#FFFFFF" stroke="#C8900A" strokeWidth="2" />
-          <circle cx="40" cy="60" r="8" fill="#FFFFFF" stroke="#C8900A" strokeWidth="2" />
-          <line x1="20" y1="20" x2="60" y2="20" stroke="#C8900A" strokeWidth="2" />
-          <line x1="20" y1="20" x2="40" y2="60" stroke="#C8900A" strokeWidth="2" />
-          <line x1="60" y1="20" x2="40" y2="60" stroke="#C8900A" strokeWidth="2" />
+          <rect x="0" y="0" width="80" height="80" style={{ fill: 'var(--paper)', stroke: 'var(--rule)' }} strokeWidth="2" />
+          <circle cx="20" cy="20" r="8" style={{ fill: 'var(--paper-raised)', stroke: 'var(--amber)' }} strokeWidth="2" />
+          <circle cx="60" cy="20" r="8" style={{ fill: 'var(--paper-raised)', stroke: 'var(--amber)' }} strokeWidth="2" />
+          <circle cx="40" cy="60" r="8" style={{ fill: 'var(--paper-raised)', stroke: 'var(--amber)' }} strokeWidth="2" />
+          <line x1="20" y1="20" x2="60" y2="20" style={{ stroke: 'var(--amber)' }} strokeWidth="2" />
+          <line x1="20" y1="20" x2="40" y2="60" style={{ stroke: 'var(--amber)' }} strokeWidth="2" />
+          <line x1="60" y1="20" x2="40" y2="60" style={{ stroke: 'var(--amber)' }} strokeWidth="2" />
         </g>
 
         {/* 6. Tree Platform */}
         <g transform="translate(140, -60)">
-          <rect x="0" y="0" width="80" height="80" fill="#FAF9F7" stroke="#E5E0D8" strokeWidth="2" />
-          <circle cx="40" cy="20" r="6" fill="#FFFFFF" stroke="#1D7A6B" strokeWidth="2" />
-          <circle cx="20" cy="60" r="6" fill="#FFFFFF" stroke="#1D7A6B" strokeWidth="2" />
-          <circle cx="60" cy="60" r="6" fill="#FFFFFF" stroke="#1D7A6B" strokeWidth="2" />
-          <line x1="40" y1="26" x2="20" y2="54" stroke="#1D7A6B" strokeWidth="2" />
-          <line x1="40" y1="26" x2="60" y2="54" stroke="#1D7A6B" strokeWidth="2" />
+          <rect x="0" y="0" width="80" height="80" style={{ fill: 'var(--paper)', stroke: 'var(--rule)' }} strokeWidth="2" />
+          <circle cx="40" cy="20" r="6" style={{ fill: 'var(--paper-raised)', stroke: 'var(--teal)' }} strokeWidth="2" />
+          <circle cx="20" cy="60" r="6" style={{ fill: 'var(--paper-raised)', stroke: 'var(--teal)' }} strokeWidth="2" />
+          <circle cx="60" cy="60" r="6" style={{ fill: 'var(--paper-raised)', stroke: 'var(--teal)' }} strokeWidth="2" />
+          <line x1="40" y1="26" x2="20" y2="54" style={{ stroke: 'var(--teal)' }} strokeWidth="2" />
+          <line x1="40" y1="26" x2="60" y2="54" style={{ stroke: 'var(--teal)' }} strokeWidth="2" />
         </g>
 
         {/* 8. Green Pixel Trees */}
@@ -79,15 +79,15 @@ export default function IsometricCampus() {
         ].map(([tx, ty], i) => (
           <g key={i} transform={`translate(${tx}, ${ty})`}>
             <rect x="8" y="8" width="8" height="8" fill="#795548" />
-            <rect x="0" y="0" width="24" height="24" fill="#5CB85C" />
+            <rect x="0" y="0" width="24" height="24" style={{ fill: 'var(--role-found)' }} />
           </g>
         ))}
 
         {/* 9. Amphitheatre */}
         <g transform="translate(200, 200)">
-          <path d="M -50 -50 A 50 50 0 0 1 50 -50" fill="none" stroke="#E5E0D8" strokeWidth="6" />
-          <path d="M -70 -50 A 70 70 0 0 1 70 -50" fill="none" stroke="#E5E0D8" strokeWidth="6" />
-          <path d="M -90 -50 A 90 90 0 0 1 90 -50" fill="none" stroke="#E5E0D8" strokeWidth="6" />
+          <path d="M -50 -50 A 50 50 0 0 1 50 -50" fill="none" style={{ stroke: 'var(--rule)' }} strokeWidth="6" />
+          <path d="M -70 -50 A 70 70 0 0 1 70 -50" fill="none" style={{ stroke: 'var(--rule)' }} strokeWidth="6" />
+          <path d="M -90 -50 A 90 90 0 0 1 90 -50" fill="none" style={{ stroke: 'var(--rule)' }} strokeWidth="6" />
         </g>
       </g>
     </svg>

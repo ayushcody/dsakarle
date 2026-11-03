@@ -24,10 +24,10 @@ interface VariableEntry {
 
 const POINTER_NAMES = new Set(['left', 'right', 'i', 'j', 'slow', 'fast', 'start', 'end', 'lo', 'hi', 'mid']);
 const SPECIAL_COLORS: Record<string, string> = {
-  left: '#16A34A',
-  right: '#EA580C',
-  slow: '#1D7A6B',
-  fast: '#D4603A',
+  left: 'var(--role-ptr-a)',
+  right: 'var(--role-ptr-b)',
+  slow: 'var(--role-ptr-a)',
+  fast: 'var(--role-ptr-b)',
 };
 
 /** Tiny inline sparkline SVG for numeric history */
@@ -52,7 +52,7 @@ function Sparkline({ values }: { values: number[] }) {
 
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ flexShrink: 0 }}>
-      <path d={areaD} fill="rgba(29,122,107,0.12)" />
+      <path d={areaD} style={{ fill: 'var(--role-ptr-a-wash)' }} />
       <path d={pathD} fill="none" stroke="var(--accent-teal)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
       {/* Current value dot */}
       <circle cx={points[points.length - 1].x} cy={points[points.length - 1].y} r={2.5} fill="var(--accent-teal)" />
@@ -191,7 +191,7 @@ export function VariableStatePanel({ stepHistory, currentStep, maxHistory = 8 }:
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.2 }}
                 style={{
-                  background: isFlashing ? 'rgba(202,138,4,0.15)' : 'white',
+                  background: isFlashing ? 'color-mix(in srgb, var(--amber) 15%, transparent)' : 'var(--paper-raised)',
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-sm)',
                   padding: '10px 14px',

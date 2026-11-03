@@ -53,7 +53,7 @@ export default function PatternMap() {
     const edges = PATTERN_MAP_DATA.edges.map((e) => ({ ...e }));
 
     const nodeRadius = (d: MapNode) => NODE_RADII[d.difficulty] ?? 28;
-    const nodeColor = (d: MapNode) => NODE_COLORS[d.category] ?? '#999';
+    const nodeColor = (d: MapNode) => NODE_COLORS[d.category] ?? 'var(--ink-3)';
 
     // Simulation
     const simulation = d3
@@ -76,14 +76,14 @@ export default function PatternMap() {
 
     const links = edgeGroups
       .append('line')
-      .attr('stroke', '#B4B2A9')
+      .style('stroke', 'var(--rule-strong)')
       .attr('stroke-width', 1.5)
       .attr('stroke-dasharray', (d: any) => EDGE_DASH[d.type as MapEdge['type']] || '0')
       .attr('opacity', 0.4);
 
     const edgeLabels = edgeGroups
       .append('text')
-      .attr('fill', '#8A8880')
+      .style('fill', 'var(--ink-3)')
       .attr('font-size', '9px')
       .attr('text-anchor', 'middle')
       .attr('opacity', 0)
@@ -118,8 +118,8 @@ export default function PatternMap() {
     nodeGroups
       .append('circle')
       .attr('r', (d) => nodeRadius(d))
-      .attr('fill', (d) => nodeColor(d))
-      .attr('stroke', '#FFFFFF')
+      .style('fill', (d) => nodeColor(d))
+      .style('stroke', 'var(--paper-raised)')
       .attr('stroke-width', 2)
       .attr('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))');
 
@@ -130,7 +130,7 @@ export default function PatternMap() {
       .attr('dy', (d) => (d.difficulty === 'foundational' ? '0.35em' : `${nodeRadius(d) + 14}px`))
       .attr('font-size', (d) => (d.difficulty === 'foundational' ? '11px' : '10px'))
       .attr('font-weight', '600')
-      .attr('fill', (d) => (d.difficulty === 'foundational' ? '#FFFFFF' : '#2C2C2A'))
+      .style('fill', (d) => (d.difficulty === 'foundational' ? 'var(--paper-raised)' : 'var(--ink)'))
       .attr('font-family', 'DM Sans, system-ui, sans-serif')
       .text((d) => d.label);
 
@@ -139,7 +139,7 @@ export default function PatternMap() {
       .attr('text-anchor', 'middle')
       .attr('dy', (d) => (d.difficulty === 'foundational' ? '1.6em' : `${nodeRadius(d) + 26}px`))
       .attr('font-size', '8px')
-      .attr('fill', (d) => (d.difficulty === 'foundational' ? 'rgba(255,255,255,0.7)' : '#8A8880'))
+      .style('fill', (d) => (d.difficulty === 'foundational' ? 'color-mix(in srgb, var(--paper-raised) 70%, transparent)' : 'var(--ink-3)'))
       .attr('font-family', 'DM Sans, system-ui, sans-serif')
       .text((d) => d.hindiLabel);
 
@@ -196,7 +196,7 @@ export default function PatternMap() {
       <div style={{ position: 'absolute', top: 20, left: 24, zIndex: 10 }}>
         <h1
           style={{
-            fontFamily: 'var(--font-lora)',
+            fontFamily: 'var(--font-serif)',
             fontSize: 24,
             fontWeight: 700,
             color: 'var(--text-primary)',
@@ -236,8 +236,8 @@ export default function PatternMap() {
               padding: '4px 12px',
               borderRadius: 20,
               border: `1px solid ${selectedCategory === cat ? NODE_COLORS[cat] : 'var(--border)'}`,
-              background: selectedCategory === cat ? NODE_COLORS[cat] : 'white',
-              color: selectedCategory === cat ? 'white' : 'var(--text-secondary)',
+              background: selectedCategory === cat ? NODE_COLORS[cat] : 'var(--paper-raised)',
+              color: selectedCategory === cat ? 'var(--paper-raised)' : 'var(--text-secondary)',
               fontFamily: 'var(--font-dmsans)',
               fontSize: 12,
               fontWeight: 500,
@@ -265,7 +265,7 @@ export default function PatternMap() {
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 10,
-            background: 'white',
+            background: 'var(--paper-raised)',
             borderRadius: 'var(--radius)',
             boxShadow: 'var(--shadow-card)',
             border: '1px solid var(--border)',
@@ -327,7 +327,7 @@ export default function PatternMap() {
           bottom: 16,
           left: 24,
           zIndex: 10,
-          background: 'white',
+          background: 'var(--paper-raised)',
           borderRadius: 'var(--radius-sm)',
           border: '1px solid var(--border)',
           padding: 12,
@@ -357,7 +357,7 @@ export default function PatternMap() {
                 y1={2}
                 x2={24}
                 y2={2}
-                stroke="#B4B2A9"
+                style={{ stroke: 'var(--rule-strong)' }}
                 strokeWidth={1.5}
                 strokeDasharray={EDGE_DASH[type]}
               />

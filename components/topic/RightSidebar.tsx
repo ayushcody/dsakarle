@@ -11,7 +11,13 @@ export interface OutlineItem {
   label: string
 }
 
-export function RightSidebar({ outline }: { outline: OutlineItem[] }) {
+export interface StepProgressItem {
+  key: string
+  label: string
+  done: boolean
+}
+
+export function RightSidebar({ outline, steps }: { outline: OutlineItem[]; steps?: StepProgressItem[] }) {
   const { progress, mounted } = useProgress();
   const [activeId, setActiveId] = useState(outline[0]?.id ?? '');
 
@@ -53,9 +59,29 @@ export function RightSidebar({ outline }: { outline: OutlineItem[] }) {
   }, [outline]);
 
   return (
-    <aside className="w-[280px] hidden xl:block flex-shrink-0 relative">
+    <aside aria-label="Lesson outline and progress" className="w-[280px] hidden xl:block flex-shrink-0 relative">
       <div className="sticky top-[88px] flex flex-col gap-8">
         
+        {/* This lesson's steps (v2 lessons) */}
+        {steps && steps.length > 0 && (
+          <div aria-label="This lesson">
+            <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-3">
+              This lesson · {steps.filter((step) => step.done).length} of {steps.length}
+            </h3>
+            <ol className="flex gap-1.5" aria-label="Lesson steps">
+              {steps.map((step) => (
+                <li
+                  key={step.key}
+                  title={`${step.label}${step.done ? ' (done)' : ''}`}
+                  className={`h-1.5 flex-1 rounded-full ${step.done ? 'bg-[var(--accent-coral)]' : 'bg-[var(--border-strong)]'}`}
+                >
+                  <span className="sr-only">{step.label}{step.done ? ', done' : ''}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
         {/* Lesson Outline */}
         {outline.length > 0 && (
           <div>

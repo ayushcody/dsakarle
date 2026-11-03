@@ -46,7 +46,7 @@ export function RecognitionQuiz({ quiz, topicId }: { quiz: RecognitionQuizData; 
   };
 
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised px-8 py-8 shadow-[var(--shadow-card)]">
       <h2 className="topic-h2" style={{ marginTop: 0 }}>
         🎯 Pattern Recognition
       </h2>
@@ -66,7 +66,7 @@ export function RecognitionQuiz({ quiz, topicId }: { quiz: RecognitionQuizData; 
           const isShaking = shakeTarget === slug;
 
           let borderColor = 'var(--border)';
-          let bgColor = 'white';
+          let bgColor = 'var(--paper-raised)';
 
           if (revealed && isCorrect) {
             borderColor = 'var(--state-success)';

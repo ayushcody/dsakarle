@@ -52,7 +52,7 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
   const centerOffset = (width - (nodes.length * nodeWidth + (nodes.length - 1) * gap)) / 2;
 
   return (
-    <div className="overflow-x-auto rounded-[var(--radius)] border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-card)]">
+    <div className="overflow-x-auto rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised p-4 shadow-[var(--shadow-card)]">
       <svg viewBox={`0 0 ${width} 190`} width="100%" className="min-w-[620px]">
         <rect x="0" y="0" width={width} height="190" rx="16" fill="var(--bg-secondary)" />
 
@@ -72,8 +72,10 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
                 width={nodeWidth}
                 height={nodeHeight}
                 rx={nodeHeight / 2}
-                fill={isCurrent ? 'rgba(202,138,4,0.18)' : 'white'}
-                stroke={isCurrent ? '#CA8A04' : '#E5E0D8'}
+                style={{
+                  fill: isCurrent ? 'color-mix(in srgb, var(--role-compare) 18%, transparent)' : 'var(--paper-raised)',
+                  stroke: isCurrent ? 'var(--role-compare)' : 'var(--rule)',
+                }}
                 strokeWidth={isCurrent ? 2 : 1.5}
                 animate={{ y }}
                 transition={{ type: 'spring', stiffness: 260, damping: 24 }}
@@ -98,13 +100,13 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
                     y1={y + nodeHeight / 2}
                     x2={nextX - 12}
                     y2={y + nodeHeight / 2}
-                    stroke={reversing ? '#D4603A' : '#B58A52'}
+                    style={{ stroke: reversing ? 'var(--coral)' : '#B58A52' }}
                     strokeWidth={3}
                     strokeLinecap="round"
                   />
                   <polygon
                     points={`${nextX - 12},${y + nodeHeight / 2 - 6} ${nextX},${y + nodeHeight / 2} ${nextX - 12},${y + nodeHeight / 2 + 6}`}
-                    fill={reversing ? '#D4603A' : '#B58A52'}
+                    style={{ fill: reversing ? 'var(--coral)' : '#B58A52' }}
                   />
                 </g>
               )}
@@ -118,13 +120,13 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
                     fontFamily="var(--font-dmmono)"
                     fontSize={12}
                     fontWeight={600}
-                    fill="#1D7A6B"
+                    style={{ fill: 'var(--teal)' }}
                   >
                     slow
                   </text>
                   <polygon
                     points={`${x + nodeWidth / 2},48 ${x + nodeWidth / 2 - 8},60 ${x + nodeWidth / 2 + 8},60`}
-                    fill="#1D7A6B"
+                    style={{ fill: 'var(--teal)' }}
                   />
                 </g>
               )}
@@ -138,13 +140,13 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
                     fontFamily="var(--font-dmmono)"
                     fontSize={12}
                     fontWeight={600}
-                    fill="#D4603A"
+                    style={{ fill: 'var(--coral)' }}
                   >
                     fast
                   </text>
                   <polygon
                     points={`${x + nodeWidth / 2},32 ${x + nodeWidth / 2 - 8},44 ${x + nodeWidth / 2 + 8},44`}
-                    fill="#D4603A"
+                    style={{ fill: 'var(--coral)' }}
                   />
                 </g>
               )}
@@ -157,7 +159,7 @@ export default function LinkedListDiagram({ diagramState }: LinkedListDiagramPro
             d={`M ${centerOffset + (nodes.length - 1) * (nodeWidth + gap) + nodeWidth / 2} 134
                 C ${width - 30} 180, 40 180, ${centerOffset + cycleTo * (nodeWidth + gap) + nodeWidth / 2} 134`}
             fill="none"
-            stroke="#D4603A"
+            style={{ stroke: 'var(--coral)' }}
             strokeWidth={3}
             strokeDasharray="8 8"
           />

@@ -5,7 +5,7 @@ import '@xyflow/react/dist/style.css';
 
 const baseNodeStyle = {
   background: 'var(--surface-teal)',
-  color: 'white',
+  color: 'var(--paper-raised)',
   border: '2px solid var(--accent-teal)',
   borderRadius: '50%',
   width: 50,
@@ -14,7 +14,7 @@ const baseNodeStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   fontWeight: 'bold',
-  fontFamily: 'var(--font-dm-mono)'
+  fontFamily: 'var(--font-mono)'
 };
 
 const initialNodes: Node[] = [

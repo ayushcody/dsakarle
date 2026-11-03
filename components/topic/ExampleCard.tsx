@@ -42,7 +42,7 @@ export function ExampleCard({ example }: { example: WorkedExample }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-[var(--border)] bg-white px-5 py-5">
+        <div className="border-t border-[var(--border)] bg-paper-raised px-5 py-5">
           <div className="rounded-[var(--radius-sm)] bg-[var(--bg-secondary)] p-4">
             <p className="font-dmsans text-[15px] leading-relaxed text-[var(--text-primary)]">{example.problemStatement}</p>
           </div>

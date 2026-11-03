@@ -71,25 +71,25 @@ export function ComplexityGauge({ highlight, title }: ComplexityGaugeProps) {
       .attr('transform', `translate(0,${h})`)
       .call(d3.axisBottom(xScale).ticks(5).tickFormat((d) => d3.format('.0s')(d as number)))
       .selectAll('text')
-      .style('fill', '#9C9890')
+      .style('fill', 'var(--ink-3)')
       .style('font-size', '10px')
-      .style('font-family', 'DM Mono, monospace');
+      .style('font-family', 'var(--font-mono)');
 
     g.append('g')
       .call(d3.axisLeft(yScale).ticks(4, '.0s'))
       .selectAll('text')
-      .style('fill', '#9C9890')
+      .style('fill', 'var(--ink-3)')
       .style('font-size', '10px')
-      .style('font-family', 'DM Mono, monospace');
+      .style('font-family', 'var(--font-mono)');
 
     // Axis labels
     g.append('text')
       .attr('x', w / 2)
       .attr('y', h + 35)
       .attr('text-anchor', 'middle')
-      .style('fill', '#9C9890')
+      .style('fill', 'var(--ink-3)')
       .style('font-size', '11px')
-      .style('font-family', 'DM Mono, monospace')
+      .style('font-family', 'var(--font-mono)')
       .text('input size (n)');
 
     g.append('text')
@@ -97,9 +97,9 @@ export function ComplexityGauge({ highlight, title }: ComplexityGaugeProps) {
       .attr('x', -h / 2)
       .attr('y', -45)
       .attr('text-anchor', 'middle')
-      .style('fill', '#9C9890')
+      .style('fill', 'var(--ink-3)')
       .style('font-size', '11px')
-      .style('font-family', 'DM Mono, monospace')
+      .style('font-family', 'var(--font-mono)')
       .text('operations');
 
     // Draw complexity curves
@@ -144,13 +144,13 @@ export function ComplexityGauge({ highlight, title }: ComplexityGaugeProps) {
           .style('fill', c.color)
           .style('font-size', '11px')
           .style('font-weight', '600')
-          .style('font-family', 'DM Mono, monospace');
+          .style('font-family', 'var(--font-mono)');
       }
     }
 
     // Grid lines
-    g.selectAll('.domain').attr('stroke', '#E5E0D8');
-    g.selectAll('.tick line').attr('stroke', '#E5E0D8');
+    g.selectAll('.domain').style('stroke', 'var(--rule)');
+    g.selectAll('.tick line').style('stroke', 'var(--rule)');
   }, [n, highlight, ops]);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ export function ComplexityGauge({ highlight, title }: ComplexityGaugeProps) {
       style={{
         borderRadius: 'var(--radius)',
         border: '1px solid var(--border)',
-        background: 'white',
+        background: 'var(--paper-raised)',
         boxShadow: 'var(--shadow-card)',
         padding: '32px',
         marginTop: 40,

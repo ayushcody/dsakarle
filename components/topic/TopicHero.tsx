@@ -12,19 +12,19 @@ interface TopicHeroProps {
 
 const HERO_CONFIGS: Record<string, { render: () => React.JSX.Element; bg: string }> = {
   'arrays': {
-    bg: 'linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.12))',
+    bg: 'linear-gradient(135deg, color-mix(in srgb, var(--role-ptr-b) 6%, transparent), color-mix(in srgb, var(--role-ptr-b) 12%, transparent))',
     render: () => <ArrayHero />,
   },
   'stacks': {
-    bg: 'linear-gradient(135deg, rgba(200,144,10,0.06), rgba(200,144,10,0.12))',
+    bg: 'linear-gradient(135deg, color-mix(in srgb, var(--amber) 6%, transparent), color-mix(in srgb, var(--amber) 12%, transparent))',
     render: () => <StackHero />,
   },
   'queues': {
-    bg: 'linear-gradient(135deg, rgba(29,122,107,0.06), rgba(29,122,107,0.12))',
+    bg: 'linear-gradient(135deg, color-mix(in srgb, var(--teal) 6%, transparent), color-mix(in srgb, var(--teal) 12%, transparent))',
     render: () => <QueueHero />,
   },
   'linked-lists': {
-    bg: 'linear-gradient(135deg, rgba(212,96,58,0.06), rgba(212,96,58,0.12))',
+    bg: 'linear-gradient(135deg, color-mix(in srgb, var(--coral) 6%, transparent), color-mix(in srgb, var(--coral) 12%, transparent))',
     render: () => <LinkedListHero />,
   },
 };
@@ -35,7 +35,7 @@ export function TopicHero({ slug, title, analogy, analogyIcon, showTitle = true 
   return (
     <div style={{
       borderRadius: 16,
-      background: config?.bg ?? 'linear-gradient(135deg, rgba(229,224,216,0.3), rgba(229,224,216,0.5))',
+      background: config?.bg ?? 'var(--paper-sunken)',
       padding: 32,
       marginBottom: 8,
     }}>
@@ -49,7 +49,7 @@ export function TopicHero({ slug, title, analogy, analogyIcon, showTitle = true 
         <div>
           {showTitle && (
             <h1 style={{
-              fontFamily: 'var(--font-lora)',
+              fontFamily: 'var(--font-serif)',
               fontSize: 36,
               fontWeight: 700,
               color: 'var(--text-primary)',
@@ -64,7 +64,7 @@ export function TopicHero({ slug, title, analogy, analogyIcon, showTitle = true 
               display: 'flex',
               alignItems: 'flex-start',
               gap: 12,
-              background: 'rgba(255,255,255,0.7)',
+              background: 'color-mix(in srgb, var(--paper-raised) 70%, transparent)',
               borderRadius: 12,
               padding: 16,
               marginTop: showTitle ? 16 : 0,
@@ -108,15 +108,15 @@ function ArrayHero() {
             width: 48,
             height: 48,
             borderRadius: 8,
-            background: '#3B82F6',
-            color: 'white',
+            background: 'var(--role-ptr-b)',
+            color: 'var(--paper-raised)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontFamily: 'var(--font-dmmono)',
             fontWeight: 700,
             fontSize: 18,
-            boxShadow: '0 4px 12px rgba(59,130,246,0.25)',
+            boxShadow: 'var(--shadow-2)',
           }}>
             {v}
           </div>
@@ -148,9 +148,9 @@ function StackHero() {
             fontSize: 13,
             fontWeight: 700,
             border: i === items.length - 1 ? '2px solid var(--accent-coral)' : '1px solid var(--border)',
-            background: i === items.length - 1 ? 'var(--accent-coral)' : 'white',
-            color: i === items.length - 1 ? 'white' : 'var(--text-secondary)',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            background: i === items.length - 1 ? 'var(--accent-coral)' : 'var(--paper-raised)',
+            color: i === items.length - 1 ? 'var(--paper-raised)' : 'var(--text-secondary)',
+            boxShadow: 'var(--shadow-1)',
           }}
         >
           {label}
@@ -185,8 +185,8 @@ function QueueHero() {
             width: 36,
             height: 36,
             borderRadius: '50%',
-            background: 'white',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            background: 'var(--paper-raised)',
+            boxShadow: 'var(--shadow-1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -208,12 +208,12 @@ function LinkedListHero() {
       {nodes.map((label, i) => (
         <motion.div key={i} style={{ display: 'flex', alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.15 }}>
           <motion.div
-            whileHover={{ scale: 1.12, backgroundColor: '#D4603A', color: '#fff' }}
+            whileHover={{ scale: 1.12, backgroundColor: 'var(--coral)', color: 'var(--paper-raised)' }}
             style={{
               width: 48,
               height: 48,
               borderRadius: '50%',
-              background: 'white',
+              background: 'var(--paper-raised)',
               border: '2px solid var(--border)',
               display: 'flex',
               alignItems: 'center',
@@ -221,7 +221,7 @@ function LinkedListHero() {
               fontFamily: 'var(--font-dmmono)',
               fontWeight: 700,
               color: 'var(--text-secondary)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              boxShadow: 'var(--shadow-1)',
               cursor: 'pointer',
               transition: 'background-color 0.2s, color 0.2s',
             }}
@@ -260,7 +260,7 @@ function GenericHero() {
       width: 96,
       height: 96,
       borderRadius: 16,
-      background: 'rgba(255,255,255,0.6)',
+      background: 'color-mix(in srgb, var(--paper-raised) 60%, transparent)',
       border: '2px dashed var(--border)',
       display: 'flex',
       alignItems: 'center',

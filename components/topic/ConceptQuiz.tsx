@@ -19,7 +19,7 @@ export function ConceptQuiz({ questions, topicId }: { questions: ConceptQuestion
   };
 
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-8 shadow-[var(--shadow-card)]">
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised px-8 py-8 shadow-[var(--shadow-card)]">
       <h2 className="topic-h2" style={{ marginTop: 0 }}>Concept Quiz</h2>
       <div className="space-y-8">
         {questions.map((question, questionIndex) => (
@@ -39,7 +39,7 @@ export function ConceptQuiz({ questions, topicId }: { questions: ConceptQuestion
                         ? 'border-[var(--state-success)] bg-[var(--surface-success)]'
                         : wrong
                           ? 'border-[var(--state-danger)] bg-[var(--surface-danger)]'
-                          : 'border-[var(--border)] bg-white'
+                          : 'border-[var(--border)] bg-paper-raised'
                     }`}
                   >
                     <input

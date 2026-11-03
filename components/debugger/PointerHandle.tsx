@@ -23,7 +23,7 @@ export function PointerHandle({ id, label = '→' }: PointerHandleProps) {
         height: 24,
         borderRadius: '50%',
         background: 'var(--accent-coral)',
-        color: 'white',
+        color: 'var(--paper-raised)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -31,7 +31,7 @@ export function PointerHandle({ id, label = '→' }: PointerHandleProps) {
         fontWeight: 700,
         cursor: isDragging ? 'grabbing' : 'grab',
         boxShadow: isDragging
-          ? '0 4px 16px rgba(212,96,58,0.4)'
+          ? 'var(--shadow-2)'
           : '0 2px 6px rgba(0,0,0,0.15)',
         zIndex: isDragging ? 50 : 1,
         touchAction: 'none',

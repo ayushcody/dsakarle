@@ -25,7 +25,7 @@ export default function StackDiagram({ diagramState }: StackDiagramProps) {
   const stackX = (width - itemWidth) / 2;
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-white shadow-[var(--shadow-card)]">
+    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised shadow-[var(--shadow-card)]">
       <div className="w-full max-w-[320px]">
         <svg viewBox={`0 0 ${width} ${totalHeight}`} width="100%" className="overflow-visible">
           {/* SVG definitions for dropshadow filters or gradients */}
@@ -69,8 +69,10 @@ export default function StackDiagram({ diagramState }: StackDiagramProps) {
                       width={itemWidth}
                       height={itemHeight}
                       rx="8"
-                      fill={isTop ? 'var(--surface-amber)' : 'white'}
-                      stroke={isTop ? 'var(--accent-amber)' : 'var(--border)'}
+                      style={{
+                        fill: isTop ? 'var(--surface-amber)' : 'var(--paper-raised)',
+                        stroke: isTop ? 'var(--accent-amber)' : 'var(--border)',
+                      }}
                       strokeWidth={isTop ? '2' : '1.5'}
                       filter="url(#shadow)"
                     />
@@ -84,7 +86,7 @@ export default function StackDiagram({ diagramState }: StackDiagramProps) {
                       fontFamily="var(--font-dmmono)"
                       fontSize="15"
                       fontWeight={isTop ? '700' : '500'}
-                      fill={isTop ? 'var(--accent-amber)' : 'var(--text-primary)'}
+                      style={{ fill: isTop ? 'var(--accent-amber)' : 'var(--text-primary)' }}
                     >
                       {val}
                     </text>

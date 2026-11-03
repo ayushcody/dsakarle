@@ -19,7 +19,7 @@ function renderBadgeCards(topics: CatalogTopic[]) {
 export default function CourseCatalog({ hideButton = false }: { hideButton?: boolean }) {
   return (
     <section className="mx-auto flex max-w-7xl flex-col items-center px-6 py-24 md:px-12">
-      <h2 className="mb-4 text-center font-lora text-3xl font-bold text-[var(--text-primary)] md:text-4xl">
+      <h2 className="mb-4 text-center font-serif text-3xl font-bold text-[var(--text-primary)] md:text-4xl">
         Master Data Structures and Algorithms
       </h2>
       <p className="mb-16 text-center font-dmsans text-lg text-[var(--text-muted)]">

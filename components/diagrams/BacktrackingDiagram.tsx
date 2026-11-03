@@ -32,7 +32,7 @@ export default function BacktrackingDiagram({}: BacktrackingDiagramProps) {
   const height = 240;
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-white shadow-[var(--shadow-card)] overflow-x-auto">
+    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised shadow-[var(--shadow-card)] overflow-x-auto">
       <div className="w-full max-w-[500px] min-w-[460px]">
         <svg viewBox={`0 0 ${width} ${height}`} width="100%" className="overflow-visible">
           {/* Legend */}
@@ -72,7 +72,7 @@ export default function BacktrackingDiagram({}: BacktrackingDiagramProps) {
                 y1={fromNode.y}
                 x2={toNode.x}
                 y2={toNode.y}
-                stroke={color}
+                style={{ stroke: color }}
                 strokeWidth={strokeWidth}
                 strokeDasharray={strokeDash}
               />
@@ -81,7 +81,7 @@ export default function BacktrackingDiagram({}: BacktrackingDiagramProps) {
 
           {/* Choice Nodes */}
           {nodes.map((node) => {
-            let bg = 'white';
+            let bg = 'var(--paper-raised)';
             let stroke = 'var(--border-strong)';
             let strokeWidth = '1.5';
             let textColor = 'var(--text-primary)';
@@ -110,8 +110,7 @@ export default function BacktrackingDiagram({}: BacktrackingDiagramProps) {
                   cx={node.x}
                   cy={node.y}
                   r="20"
-                  fill={bg}
-                  stroke={stroke}
+                  style={{ fill: bg, stroke }}
                   strokeWidth={strokeWidth}
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -127,7 +126,7 @@ export default function BacktrackingDiagram({}: BacktrackingDiagramProps) {
                   fontFamily="var(--font-dmsans)"
                   fontSize="12"
                   fontWeight="700"
-                  fill={textColor}
+                  style={{ fill: textColor }}
                 >
                   {node.label}
                 </text>

@@ -12,9 +12,9 @@ const PatternMap = dynamic(() => import('@/components/map/PatternMap'), {
         alignItems: 'center',
         justifyContent: 'center',
         height: 'calc(100vh - 64px)',
-        fontFamily: 'DM Sans, system-ui, sans-serif',
+        fontFamily: 'var(--font-sans)',
         fontSize: 15,
-        color: '#9C9890',
+        color: 'var(--ink-3)',
       }}
     >
       Loading Pattern Map…

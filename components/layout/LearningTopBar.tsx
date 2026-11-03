@@ -26,7 +26,7 @@ export function LearningTopBar() {
 
   return (
     <header
-      className={`h-[64px] fixed top-0 right-0 left-0 ${hasSidebar ? 'md:left-[280px]' : ''} bg-white border-b border-[var(--border)] z-40 flex items-center px-6 transition-all duration-300`}
+      className={`h-[64px] fixed top-0 right-0 left-0 ${hasSidebar ? 'md:left-[280px]' : ''} bg-paper-raised border-b border-[var(--border)] z-40 flex items-center px-6 transition-all duration-300`}
     >
       <div className="flex items-center gap-6">
         {hasSidebar && (

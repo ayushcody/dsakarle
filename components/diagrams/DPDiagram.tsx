@@ -26,7 +26,7 @@ export default function DPDiagram({ diagramState }: DPDiagramProps) {
   const offset = (width - totalWidth) / 2;
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-white shadow-[var(--shadow-card)] overflow-x-auto">
+    <div className="flex flex-col items-center justify-center p-6 rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised shadow-[var(--shadow-card)] overflow-x-auto">
       <div className="w-full min-w-[560px]">
         <svg viewBox={`0 0 ${width} 140`} width="100%" className="overflow-visible">
           {/* Legend */}
@@ -45,7 +45,7 @@ export default function DPDiagram({ diagramState }: DPDiagramProps) {
             const isActive = idx === activeIndex;
             const isLookup = lookupIndices.includes(idx);
             
-            let bg = 'white';
+            let bg = 'var(--paper-raised)';
             let stroke = 'var(--border)';
             let strokeWidth = '1.5';
             let textColor = 'var(--text-primary)';
@@ -71,13 +71,11 @@ export default function DPDiagram({ diagramState }: DPDiagramProps) {
                   width={cellWidth}
                   height={cellHeight}
                   rx="10"
-                  fill={bg}
-                  stroke={stroke}
                   strokeWidth={strokeWidth}
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: idx * 0.05 }}
-                  style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.03))' }}
+                  style={{ fill: bg, stroke, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.03))' }}
                 />
 
                 {/* Value Text */}
@@ -89,7 +87,7 @@ export default function DPDiagram({ diagramState }: DPDiagramProps) {
                   fontFamily="var(--font-dmmono)"
                   fontSize="16"
                   fontWeight={isActive || isLookup ? '700' : '500'}
-                  fill={textColor}
+                  style={{ fill: textColor }}
                 >
                   {val !== null ? val : '-'}
                 </text>

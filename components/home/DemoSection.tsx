@@ -44,7 +44,7 @@ export default function DemoSection() {
         {/* Left Text */}
         <div className="flex-1 text-center lg:text-left">
           <span className="font-dmmono text-[13px] text-[var(--accent-teal)] tracking-widest uppercase mb-4 block font-medium">Live Demo</span>
-          <h2 className="font-lora text-3xl md:text-5xl font-bold text-white mb-6">Watch a window slide in real time</h2>
+          <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6">Watch a window slide in real time</h2>
           <p className="mb-8 max-w-lg font-dmsans text-[18px] leading-relaxed text-[var(--text-inverse-muted)] lg:mx-0 mx-auto">
             This isn&apos;t a GIF. Drag the slider and watch the window move, variables update, and the explanation change — all in sync.
           </p>

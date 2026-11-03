@@ -21,7 +21,7 @@ export default function BadgeCard({ title, slug, difficulty, BadgeComponent }: B
   return (
     <Link 
       href={`/learn/${slug}`}
-      className="group flex flex-col items-center gap-[12px] rounded-[var(--radius)] border border-[var(--border)] bg-white p-[28px_20px] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
+      className="group flex flex-col items-center gap-[12px] rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised p-[28px_20px] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
     >
       <div className="transition-transform duration-200 group-hover:rotate-3">
         <BadgeComponent />

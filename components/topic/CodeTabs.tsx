@@ -100,7 +100,7 @@ export function CodeTabs({ code, renderedCode, activeLine, steps }: CodeTabsProp
           transition: background 0.15s ease;
         }
         .clickable-line:hover {
-          background: rgba(200, 144, 10, 0.1) !important;
+          background: var(--surface-amber) !important;
         }
       `}</style>
       <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--border)' }}>
@@ -113,7 +113,7 @@ export function CodeTabs({ code, renderedCode, activeLine, steps }: CodeTabsProp
               fontFamily: 'var(--font-dmmono)',
               fontSize: 13,
               background: activeLanguage === lang ? 'var(--accent-coral)' : 'transparent',
-              color: activeLanguage === lang ? 'white' : 'var(--text-secondary)',
+              color: activeLanguage === lang ? 'var(--paper-raised)' : 'var(--text-secondary)',
               border: 'none',
               cursor: 'pointer',
               borderBottom:
@@ -133,7 +133,7 @@ export function CodeTabs({ code, renderedCode, activeLine, steps }: CodeTabsProp
         style={{
           overflow: 'auto',
           maxHeight: '400px',
-          background: '#F5F2ED',
+          background: 'var(--paper-sunken)',
           padding: '16px',
           borderRadius: '0 0 8px 8px',
         }}

@@ -17,7 +17,7 @@ export function HeroBlock({ topic }: { topic: LearningTopicPage }) {
   }[topic.difficulty];
 
   return (
-    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-white px-8 py-10 shadow-[var(--shadow-card)]">
+    <section className="rounded-[var(--radius)] border border-[var(--border)] bg-paper-raised px-8 py-10 shadow-[var(--shadow-card)]">
       <nav aria-label="Breadcrumb" className="mb-6 font-dmsans text-[13px] font-medium text-[var(--text-muted)]">
         <Link href="/learn" className="hover:text-[var(--text-primary)] transition-colors">
           {CATEGORY_LABELS[topic.category] ?? 'Topics'}
@@ -26,7 +26,7 @@ export function HeroBlock({ topic }: { topic: LearningTopicPage }) {
         <span className="text-[var(--text-primary)]" aria-current="page">{topic.title}</span>
       </nav>
       <Badge className="h-[120px] w-[120px]" />
-      <h1 className="mt-6 font-lora text-5xl font-bold text-[var(--text-primary)]">{topic.title}</h1>
+      <h1 className="mt-6 font-serif text-5xl font-bold text-[var(--text-primary)]">{topic.title}</h1>
       <p className="mt-4 max-w-3xl font-dmsans text-[18px] leading-relaxed text-[var(--text-secondary)]">
         {topic.overview.summary}
       </p>

@@ -28,14 +28,14 @@ function DragHandle({ id }: { id: string }) {
         height: 22,
         borderRadius: '50%',
         background: 'var(--accent-coral)',
-        color: 'white',
+        color: 'var(--paper-raised)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 12,
         fontWeight: 700,
         cursor: isDragging ? 'grabbing' : 'grab',
-        boxShadow: isDragging ? '0 4px 16px rgba(212,96,58,0.4)' : '0 2px 6px rgba(0,0,0,0.1)',
+        boxShadow: isDragging ? 'var(--shadow-2)' : '0 2px 6px rgba(0,0,0,0.1)',
         touchAction: 'none',
       }}
     >
@@ -64,8 +64,8 @@ function DropNode({
       animate={{
         scale: deleted ? 0 : 1,
         opacity: deleted ? 0 : 1,
-        borderColor: isOver && isTarget ? '#F59E0B' : isOver ? '#EF4444' : '#E5E0D8',
-        boxShadow: isOver && isTarget ? '0 0 0 3px rgba(245,158,11,0.3)' : '0 2px 6px rgba(0,0,0,0.06)',
+        borderColor: isOver && isTarget ? 'var(--amber)' : isOver ? 'var(--role-error)' : 'var(--rule)',
+        boxShadow: isOver && isTarget ? '0 0 0 3px color-mix(in srgb, var(--amber) 30%, transparent)' : '0 2px 6px rgba(0,0,0,0.06)',
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       style={{
@@ -74,8 +74,8 @@ function DropNode({
         gap: 8,
         padding: '12px 18px',
         borderRadius: 12,
-        background: 'white',
-        border: '2px solid #E5E0D8',
+        background: 'var(--paper-raised)',
+        border: '2px solid var(--rule)',
         fontFamily: 'var(--font-dmmono)',
         fontSize: 18,
         fontWeight: 600,
@@ -173,7 +173,7 @@ export function VisualDebugger({ challenge }: VisualDebuggerProps) {
       style={{
         borderRadius: 'var(--radius)',
         border: '1px solid var(--border)',
-        background: 'white',
+        background: 'var(--paper-raised)',
         boxShadow: 'var(--shadow-card)',
         padding: 32,
         marginTop: 40,
@@ -314,7 +314,7 @@ export function VisualDebugger({ challenge }: VisualDebuggerProps) {
       <div
         style={{
           marginTop: 24,
-          background: '#F5F2ED',
+          background: 'var(--paper-sunken)',
           borderRadius: 'var(--radius-sm)',
           padding: 16,
           overflow: 'auto',
@@ -332,7 +332,7 @@ export function VisualDebugger({ challenge }: VisualDebuggerProps) {
                 style={{
                   padding: '2px 8px',
                   borderLeft: isHighlighted ? '3px solid var(--state-success)' : '3px solid transparent',
-                  background: isHighlighted ? 'rgba(22,163,74,0.08)' : 'transparent',
+                  background: isHighlighted ? 'color-mix(in srgb, var(--role-found) 8%, transparent)' : 'transparent',
                   opacity: isComplete ? 1 : isHighlighted ? 1 : 0.35,
                   transition: 'all 0.4s ease',
                 }}

@@ -49,8 +49,7 @@ export function ArrayDiagram({
           y={CELL_TOP - 4}
           height={CELL_H + 8}
           rx={CELL_RX + 4}
-          fill="rgba(212,96,58,0.09)"
-          stroke="#D4603A"
+          style={{ fill: 'var(--coral-wash)', stroke: 'var(--coral)' }}
           strokeWidth={2.5}
           animate={{ x: windowX, width: windowW }}
           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
@@ -71,8 +70,8 @@ export function ArrayDiagram({
               width={CELL_W} height={CELL_H}
               rx={CELL_RX}
               animate={{
-                fill: isHL ? 'rgba(202,138,4,0.18)' : isCmp ? 'rgba(212,96,58,0.12)' : '#FFFFFF',
-                stroke: inWin ? '#D4603A' : '#E5E0D8',
+                fill: isHL ? 'color-mix(in srgb, var(--role-compare) 18%, transparent)' : isCmp ? 'color-mix(in srgb, var(--coral) 12%, transparent)' : 'var(--paper-raised)',
+                stroke: inWin ? 'var(--coral)' : 'var(--rule)',
                 strokeWidth: inWin ? 0.5 : 1,  // window rect covers the border
               }}
               transition={{ duration: 0.25 }}
@@ -83,7 +82,7 @@ export function ArrayDiagram({
               x={cellCX(i)} y={CELL_TOP + CELL_H / 2}
               textAnchor="middle" dominantBaseline="central"
               fontFamily="DM Mono, monospace" fontSize={22} fontWeight={600}
-              fill="#1A1A18"
+              style={{ fill: 'var(--ink)' }}
             >
               {val}
             </text>
@@ -91,7 +90,7 @@ export function ArrayDiagram({
             <text
               x={cellCX(i)} y={CELL_TOP + CELL_H + 18}
               textAnchor="middle"
-              fontFamily="DM Mono, monospace" fontSize={11} fill="#9C9890"
+              fontFamily="DM Mono, monospace" fontSize={11} style={{ fill: 'var(--ink-3)' }}
             >
               {i}
             </text>
@@ -112,14 +111,14 @@ export function ArrayDiagram({
             <motion.polygon
               points="-10,0 10,0 0,14"
               transform={`translate(0, ${CELL_TOP - 20})`}
-              fill="#16A34A"
+              style={{ fill: 'var(--role-found)' }}
             />
             {/* Label */}
             <text
               y={CELL_TOP - 26}
               textAnchor="middle"
               fontFamily="DM Mono, monospace" fontSize={13} fontWeight={700}
-              fill="#16A34A"
+              style={{ fill: 'var(--role-found)' }}
             >
               L
             </text>
@@ -139,13 +138,13 @@ export function ArrayDiagram({
             <motion.polygon
               points="-10,0 10,0 0,14"
               transform={`translate(0, ${CELL_TOP - 20})`}
-              fill="#EA580C"
+              style={{ fill: 'var(--role-ptr-b)' }}
             />
             <text
               y={CELL_TOP - 26}
               textAnchor="middle"
               fontFamily="DM Mono, monospace" fontSize={13} fontWeight={700}
-              fill="#EA580C"
+              style={{ fill: 'var(--role-ptr-b)' }}
             >
               R
             </text>

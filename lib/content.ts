@@ -1,8 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 
-import { LESSONS, isCurriculumSlug } from '@/lib/curriculum';
-import type { CurriculumGroupId, LearningTopicPage, TopicDifficulty, TopicMeta } from '@/types/learning';
+import { LESSONS, getLessonMeta, isCurriculumSlug } from '@/lib/curriculum';
+import { isLessonV2 } from '@/types/learning';
+import type {
+  CurriculumGroupId,
+  LearningTopicPage,
+  LessonFile,
+  TopicDifficulty,
+  TopicMeta,
+} from '@/types/learning';
 
 export type CatalogCategory = 'data-structure' | 'algorithm';
 
@@ -34,13 +41,13 @@ function filePathForSlug(slug: string) {
   return path.join(TOPICS_DIR, `${slug}.json`);
 }
 
-function readTopicJson(slug: string): LearningTopicPage | null {
+function readTopicJson(slug: string): LessonFile | null {
   const filePath = filePathForSlug(slug);
   if (!fs.existsSync(filePath)) {
     return null;
   }
 
-  return JSON.parse(fs.readFileSync(filePath, 'utf8')) as LearningTopicPage;
+  return JSON.parse(fs.readFileSync(filePath, 'utf8')) as LessonFile;
 }
 
 function createPlaceholderTopic(slug: string): LearningTopicPage | null {
@@ -85,10 +92,11 @@ export function getAllTopicSlugs(): string[] {
 }
 
 /**
- * Reads content/topics/<slug>.json when present, otherwise a placeholder for curriculum lessons.
+ * Reads content/topics/<slug>.json when present (v1 `LearningTopicPage` or v2 `LessonV2`;
+ * narrow with `isLessonV2`), otherwise a v1 placeholder for curriculum lessons.
  * Returns null for any slug that is not in the curriculum.
  */
-export function getTopicBySlug(slug: string): LearningTopicPage | null {
+export function getTopicBySlug(slug: string): LessonFile | null {
   if (!isCurriculumSlug(slug)) {
     return null;
   }
@@ -96,19 +104,46 @@ export function getTopicBySlug(slug: string): LearningTopicPage | null {
   return readTopicJson(slug) || createPlaceholderTopic(slug);
 }
 
+/**
+ * Lightweight metadata for every lesson. v1 files supply their own fields; v2 lessons
+ * take title, difficulty and summary from content/curriculum.json.
+ */
 export function getTopicMetaList(): TopicMeta[] {
-  return getAllTopicSlugs()
-    .map((slug) => getTopicBySlug(slug))
-    .filter((topic): topic is LearningTopicPage => Boolean(topic))
-    .map((topic) => ({
+  const list: TopicMeta[] = [];
+
+  for (const slug of getAllTopicSlugs()) {
+    const topic = getTopicBySlug(slug);
+    if (!topic) {
+      continue;
+    }
+
+    if (isLessonV2(topic)) {
+      const meta = getLessonMeta(slug);
+      if (!meta) {
+        continue;
+      }
+      list.push({
+        id: slug,
+        slug,
+        title: meta.title,
+        category: CATEGORY_BY_GROUP[meta.group],
+        difficulty: meta.difficulty,
+        tags: [slug, CATEGORY_BY_GROUP[meta.group]],
+        overview: { summary: meta.oneLiner },
+      });
+      continue;
+    }
+
+    list.push({
       id: topic.id,
       slug: topic.slug,
       title: topic.title,
       category: topic.category,
       difficulty: topic.difficulty,
       tags: topic.tags,
-      overview: {
-        summary: topic.overview.summary,
-      },
-    }));
+      overview: { summary: topic.overview.summary },
+    });
+  }
+
+  return list;
 }

@@ -24,7 +24,12 @@
       "trigger": "You need instant access by position.",
       "notThisWhen": "You insert or delete in the middle a lot.",
       "prereqs": [],
-      "related": ["vectors", "strings", "two-pointers", "prefix-sum"]
+      "related": [
+        "vectors",
+        "strings",
+        "two-pointers",
+        "prefix-sum"
+      ]
     },
     {
       "slug": "vectors",
@@ -37,8 +42,13 @@
       "oneLiner": "An array that grows by moving into a bigger home.",
       "trigger": "You need an array but don't know the final size.",
       "notThisWhen": "Every single append must be fast, never occasionally slow.",
-      "prereqs": ["arrays"],
-      "related": ["arrays", "stacks"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "arrays",
+        "stacks"
+      ]
     },
     {
       "slug": "strings",
@@ -50,8 +60,15 @@
       "minutes": 30,
       "oneLiner": "An array of characters with its own tricks.",
       "trigger": "The input is text: words, palindromes, anagrams, substrings.",
-      "prereqs": ["arrays"],
-      "related": ["hash-maps", "sliding-window", "two-pointers", "tries"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "hash-maps",
+        "sliding-window",
+        "two-pointers",
+        "tries"
+      ]
     },
     {
       "slug": "linked-lists",
@@ -64,8 +81,14 @@
       "oneLiner": "A chain of nodes, each holding the way to the next.",
       "trigger": "You rewire order often, or the problem hands you a ListNode.",
       "notThisWhen": "You need to jump straight to the k-th element.",
-      "prereqs": ["arrays"],
-      "related": ["fast-and-slow-pointers", "stacks", "queues"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "fast-and-slow-pointers",
+        "stacks",
+        "queues"
+      ]
     },
     {
       "slug": "stacks",
@@ -77,8 +100,14 @@
       "minutes": 30,
       "oneLiner": "Last in, first out — a pile of plates.",
       "trigger": "Matching pairs, undo, or 'the most recent unresolved thing'.",
-      "prereqs": ["arrays"],
-      "related": ["queues", "recursion", "bfs-dfs"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "queues",
+        "recursion",
+        "bfs-dfs"
+      ]
     },
     {
       "slug": "queues",
@@ -90,8 +119,14 @@
       "minutes": 25,
       "oneLiner": "First in, first out — a line at the counter.",
       "trigger": "Process things in the order they arrived, level by level.",
-      "prereqs": ["arrays"],
-      "related": ["stacks", "bfs-dfs", "heaps"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "stacks",
+        "bfs-dfs",
+        "heaps"
+      ]
     },
     {
       "slug": "hash-maps",
@@ -104,8 +139,14 @@
       "oneLiner": "Turn a key into a bucket number and look there directly.",
       "trigger": "'Have I seen this before?' or 'how many times?'.",
       "notThisWhen": "You need the keys in sorted order.",
-      "prereqs": ["arrays"],
-      "related": ["strings", "prefix-sum", "sliding-window"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "strings",
+        "prefix-sum",
+        "sliding-window"
+      ]
     },
     {
       "slug": "trees",
@@ -117,8 +158,15 @@
       "minutes": 40,
       "oneLiner": "Each node has up to two children; problems split in half.",
       "trigger": "Hierarchies, or the problem hands you a TreeNode.",
-      "prereqs": ["recursion"],
-      "related": ["bst", "heaps", "bfs-dfs", "recursion"]
+      "prereqs": [
+        "recursion"
+      ],
+      "related": [
+        "bst",
+        "heaps",
+        "bfs-dfs",
+        "recursion"
+      ]
     },
     {
       "slug": "bst",
@@ -130,8 +178,14 @@
       "minutes": 35,
       "oneLiner": "A tree where left is smaller and right is bigger, all the way down.",
       "trigger": "Sorted order that must stay sorted while you insert and delete.",
-      "prereqs": ["trees", "binary-search"],
-      "related": ["trees", "binary-search"]
+      "prereqs": [
+        "trees",
+        "binary-search"
+      ],
+      "related": [
+        "trees",
+        "binary-search"
+      ]
     },
     {
       "slug": "heaps",
@@ -143,8 +197,15 @@
       "minutes": 35,
       "oneLiner": "Always hand me the smallest (or largest) next.",
       "trigger": "'Top K', 'K-th largest', or repeatedly take the best option.",
-      "prereqs": ["trees", "arrays"],
-      "related": ["queues", "greedy", "sorting"]
+      "prereqs": [
+        "trees",
+        "arrays"
+      ],
+      "related": [
+        "queues",
+        "greedy",
+        "sorting"
+      ]
     },
     {
       "slug": "graphs",
@@ -156,8 +217,14 @@
       "minutes": 45,
       "oneLiner": "Dots and lines: anything connected to anything.",
       "trigger": "Networks, maps, dependencies, or a grid you can walk.",
-      "prereqs": ["hash-maps", "queues"],
-      "related": ["bfs-dfs", "trees"]
+      "prereqs": [
+        "hash-maps",
+        "queues"
+      ],
+      "related": [
+        "bfs-dfs",
+        "trees"
+      ]
     },
     {
       "slug": "tries",
@@ -169,8 +236,14 @@
       "minutes": 30,
       "oneLiner": "A tree of letters where shared prefixes share a path.",
       "trigger": "Autocomplete, prefix search, or many words checked at once.",
-      "prereqs": ["trees", "strings"],
-      "related": ["strings", "trees"]
+      "prereqs": [
+        "trees",
+        "strings"
+      ],
+      "related": [
+        "strings",
+        "trees"
+      ]
     },
     {
       "slug": "two-pointers",
@@ -183,8 +256,14 @@
       "oneLiner": "Two fingers on the data, moving with purpose.",
       "trigger": "A sorted array and a pair or triple that must meet a target.",
       "notThisWhen": "The array is unsorted and order matters — try a hash map.",
-      "prereqs": ["arrays"],
-      "related": ["sliding-window", "fast-and-slow-pointers", "binary-search"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "sliding-window",
+        "fast-and-slow-pointers",
+        "binary-search"
+      ]
     },
     {
       "slug": "sliding-window",
@@ -192,13 +271,20 @@
       "group": "algorithms",
       "glyph": "sliding-window",
       "difficulty": "beginner",
-      "status": "draft",
+      "status": "live",
       "minutes": 35,
       "oneLiner": "A frame that slides along; you only update its edges.",
       "trigger": "'Contiguous subarray / substring' with a size or a condition.",
       "notThisWhen": "The elements don't have to be next to each other.",
-      "prereqs": ["arrays", "two-pointers"],
-      "related": ["two-pointers", "prefix-sum", "hash-maps"]
+      "prereqs": [
+        "arrays",
+        "two-pointers"
+      ],
+      "related": [
+        "two-pointers",
+        "prefix-sum",
+        "hash-maps"
+      ]
     },
     {
       "slug": "fast-and-slow-pointers",
@@ -210,8 +296,14 @@
       "minutes": 25,
       "oneLiner": "A hare and a tortoise: if there's a loop, they meet.",
       "trigger": "Cycles, or the middle of a linked list in one pass.",
-      "prereqs": ["linked-lists", "two-pointers"],
-      "related": ["linked-lists", "two-pointers"]
+      "prereqs": [
+        "linked-lists",
+        "two-pointers"
+      ],
+      "related": [
+        "linked-lists",
+        "two-pointers"
+      ]
     },
     {
       "slug": "prefix-sum",
@@ -223,8 +315,13 @@
       "minutes": 25,
       "oneLiner": "Precompute running totals; any range sum is one subtraction.",
       "trigger": "Many range-sum questions, or 'subarray sums to k'.",
-      "prereqs": ["arrays"],
-      "related": ["sliding-window", "hash-maps"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "sliding-window",
+        "hash-maps"
+      ]
     },
     {
       "slug": "binary-search",
@@ -237,8 +334,14 @@
       "oneLiner": "Halve the search space with every question.",
       "trigger": "Sorted data, or 'find the smallest value that works'.",
       "notThisWhen": "There's no order to exploit.",
-      "prereqs": ["arrays"],
-      "related": ["searching", "bst", "two-pointers"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "searching",
+        "bst",
+        "two-pointers"
+      ]
     },
     {
       "slug": "sorting",
@@ -250,8 +353,15 @@
       "minutes": 45,
       "oneLiner": "Put things in order, then problems get easier.",
       "trigger": "Order would make pairs, duplicates or intervals obvious.",
-      "prereqs": ["arrays", "recursion"],
-      "related": ["two-pointers", "greedy", "heaps"]
+      "prereqs": [
+        "arrays",
+        "recursion"
+      ],
+      "related": [
+        "two-pointers",
+        "greedy",
+        "heaps"
+      ]
     },
     {
       "slug": "searching",
@@ -263,8 +373,13 @@
       "minutes": 20,
       "oneLiner": "Choosing how to find something based on how it's stored.",
       "trigger": "'Find X' — the right method depends on sorted, hashed or raw.",
-      "prereqs": ["arrays"],
-      "related": ["binary-search", "hash-maps"]
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "binary-search",
+        "hash-maps"
+      ]
     },
     {
       "slug": "recursion",
@@ -276,8 +391,14 @@
       "minutes": 50,
       "oneLiner": "Solve a smaller copy of the problem; undo choices that fail.",
       "trigger": "'All combinations / subsets / permutations', or self-similar structure.",
-      "prereqs": ["stacks"],
-      "related": ["trees", "dynamic-programming", "bfs-dfs"]
+      "prereqs": [
+        "stacks"
+      ],
+      "related": [
+        "trees",
+        "dynamic-programming",
+        "bfs-dfs"
+      ]
     },
     {
       "slug": "bfs-dfs",
@@ -289,8 +410,16 @@
       "minutes": 45,
       "oneLiner": "Explore ripple by ripple (BFS) or path by path (DFS).",
       "trigger": "Shortest steps in an unweighted graph, islands, or levels.",
-      "prereqs": ["graphs", "queues", "stacks"],
-      "related": ["graphs", "trees", "recursion"]
+      "prereqs": [
+        "graphs",
+        "queues",
+        "stacks"
+      ],
+      "related": [
+        "graphs",
+        "trees",
+        "recursion"
+      ]
     },
     {
       "slug": "greedy",
@@ -303,8 +432,14 @@
       "oneLiner": "Take the best-looking move now — when you can prove it's safe.",
       "trigger": "Intervals, scheduling, or 'minimum number of …' with a clear best pick.",
       "notThisWhen": "A locally good choice can trap you later — reach for DP.",
-      "prereqs": ["sorting"],
-      "related": ["dynamic-programming", "heaps", "sorting"]
+      "prereqs": [
+        "sorting"
+      ],
+      "related": [
+        "dynamic-programming",
+        "heaps",
+        "sorting"
+      ]
     },
     {
       "slug": "dynamic-programming",
@@ -316,8 +451,13 @@
       "minutes": 60,
       "oneLiner": "Remember answers to small problems; build the big one from them.",
       "trigger": "'Number of ways', 'min/max cost', and choices that overlap.",
-      "prereqs": ["recursion"],
-      "related": ["recursion", "greedy"]
+      "prereqs": [
+        "recursion"
+      ],
+      "related": [
+        "recursion",
+        "greedy"
+      ]
     }
   ]
 }

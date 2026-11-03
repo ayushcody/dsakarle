@@ -1,1172 +1,396 @@
 {
-  "id": "sliding-window",
+  "schemaVersion": 2,
   "slug": "sliding-window",
-  "title": "Sliding Window",
-  "category": "algorithm",
-  "difficulty": "beginner",
-  "estimatedMinutes": 50,
-  "prerequisites": [],
-  "tags": [
-    "array",
-    "subarray",
-    "window"
-  ],
-  "overview": {
-    "summary": "Sliding Window turns repeated contiguous-range work into a single flowing pass across the data.",
-    "learningObjectives": [
-      "Recognize contiguous-window problems quickly.",
-      "Track how left and right cooperate to maintain an invariant.",
-      "Explain why shrinking restores a violated constraint.",
-      "Read window code by watching the diagram first."
-    ],
-    "interviewRelevance": "This pattern appears constantly in array and string interviews."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A delivery app logs its orders hour by hour. How do you find the busiest 3-hour stretch of the day without adding up every stretch from scratch?",
     "paragraphs": [
-      "Think of monitoring a rolling 3-hour electricity bill, not the entire month every time. You keep one live window and update it as each new reading arrives.",
-      "Streaming analytics, fraud monitoring, and substring problems all work the same way: only the current contiguous slice matters."
+      "You have 24 numbers, one per hour: 4, 7, 3, 9, 12, 8, 5, and so on. The slow way adds up every possible stretch separately: 22 stretches, 3 numbers each, 66 additions in total.",
+      "Now look at two neighbouring stretches, hours 3 to 5 and hours 4 to 6. They share two of their three hours. Why add those two again?"
     ],
-    "ahaMoment": "A window saves work because the next answer is almost the same as the previous one."
+    "aha": "Don't rebuild the stretch, move it. When it slides one hour, subtract the hour that left and add the hour that arrived. That costs the same two steps whether the stretch is 3 hours long or 3,000."
   },
-  "definition": {
-    "technicalDefinition": "Sliding Window is a technique for maintaining information about a contiguous range while moving that range through an array or string in linear time.",
-    "vocabulary": [
-      {
-        "term": "window",
-        "definition": "The current contiguous range being examined."
-      },
-      {
-        "term": "expand",
-        "definition": "Move the right edge to include a new element."
-      },
-      {
-        "term": "shrink",
-        "definition": "Move the left edge to discard an old element."
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "nums",
+      "cells": [
+        2,
+        1,
+        5,
+        1,
+        3,
+        2
+      ],
+      "pointers": [
+        {
+          "name": "left",
+          "index": 1,
+          "role": "ptrA"
+        },
+        {
+          "name": "right",
+          "index": 3,
+          "role": "ptrB"
+        }
+      ],
+      "window": {
+        "start": 1,
+        "end": 3
       }
-    ],
-    "keyProperties": [
-      "The left and right boundaries only move forward.",
-      "The algorithm maintains an invariant about the current range.",
-      "Each element is usually added once and removed once."
+    },
+    "callouts": [
+      {
+        "target": "window",
+        "text": "the window"
+      },
+      {
+        "target": "ptr:right",
+        "text": "add on the right"
+      },
+      {
+        "target": "ptr:left",
+        "text": "drop on the left"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "Imagine a camera frame sliding over a long mural. Only what is inside the frame matters right now.",
-      "As the frame moves right, one item enters and one item may leave."
+      "Sit by a train window and you only see one slice of the landscape. As the train rolls on, one new tree appears at the front edge and one old tree slips off the back edge.",
+      "You never re-look at the trees in the middle. You just notice what entered and what left. A sliding window is that frame laid over an array."
     ],
-    "clickSentence": "Do not recompute the whole range. Update only what changed at the edges.",
-    "diagramType": "SlidingWindowDiagram",
-    "cells": [
-      2,
-      1,
-      5,
-      1,
-      3,
-      2,
-      4,
-      1
+    "click": "Never recompute the window. When it moves, add the one that entered and subtract the one that left.",
+    "glossary": [
+      {
+        "term": "window",
+        "definition": "The stretch of neighbouring elements you are looking at right now, from left to right."
+      },
+      {
+        "term": "expand",
+        "definition": "Move the right edge forward so one more element joins the window."
+      },
+      {
+        "term": "shrink",
+        "definition": "Move the left edge forward so the oldest element leaves the window."
+      },
+      {
+        "term": "invariant",
+        "definition": "The rule your window must satisfy after every step, like 'exactly k numbers' or 'no repeated letters'."
+      },
+      {
+        "term": "fixed window",
+        "definition": "A window whose size is given (k). It always expands once and shrinks once per step."
+      },
+      {
+        "term": "variable window",
+        "definition": "A window whose size changes. It expands until the rule is met or broken, then shrinks until it is fixed or as small as it can be."
+      }
     ],
-    "diagramState": {
-      "left": 0,
-      "right": 2,
-      "windowStart": 0,
-      "windowEnd": 2,
-      "highlighted": [
-        0,
-        1,
-        2
-      ]
-    }
+    "definition": "A sliding window keeps a running summary (a sum, a count, a set of letters) of a contiguous range of an array or string. Two indices, left and right, mark the edges of the range and only ever move forward. Each element enters the window once and leaves at most once, so the summary is updated at the edges instead of recomputed, and the whole pass takes O(n) time."
   },
-  "structure": {
-    "memoryDescription": [
-      "Sliding Window itself is not a data structure. It is a strategy layered on top of arrays or strings.",
-      "The state usually lives in a few scalar variables: left, right, a running summary, and sometimes a frequency map."
+  "stage": {
+    "tracks": [
+      {
+        "id": "fixed",
+        "label": "Fixed size (k)",
+        "tracer": "sliding-window/max-sum-k",
+        "predict": {
+          "tags": [
+            "expand-or-shrink",
+            "new-best"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "variable",
+        "label": "Variable size",
+        "tracer": "sliding-window/min-len-target",
+        "predict": {
+          "tags": [
+            "expand-or-shrink"
+          ],
+          "max": 3
+        }
+      }
     ],
-    "definitionCode": {
-      "python": "left = 0\nright = 0\nwindow_sum = 0",
-      "javascript": "let left = 0;\nlet right = 0;\nlet windowSum = 0;",
-      "java": "int left = 0;\nint right = 0;\nint windowSum = 0;",
-      "cpp": "int left = 0;\nint right = 0;\nint windowSum = 0;"
-    },
-    "memoryLayout": [
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The problem says contiguous, subarray or substring.",
+      "A window size is given: \"of size k\" or \"k consecutive\".",
+      "It asks for the longest or shortest stretch such that some condition holds.",
+      "Brute force would re-check overlapping ranges again and again."
+    ],
+    "notWhen": [
+      "The elements don't have to be next to each other (subsequences, pairs anywhere): think hash maps or dynamic programming.",
+      "You need to compare pairs from both ends of a sorted array: that is two pointers.",
+      "Numbers can be negative and the rule is \"sum at least target\": shrinking no longer lowers the sum, so reach for prefix sums with a monotonic deque."
+    ],
+    "quiz": [
       {
-        "label": "left",
-        "value": "start index of the active window"
+        "problem": "Given an array of daily sales and a number k, return the largest total of any k consecutive days.",
+        "answer": "sliding-window",
+        "options": [
+          "binary-search",
+          "hash-maps",
+          "sliding-window",
+          "dynamic-programming"
+        ],
+        "explanation": "\"k consecutive\" means a contiguous window of fixed size. Slide it and update the total at the two edges."
       },
       {
-        "label": "right",
-        "value": "end index of the active window"
+        "problem": "Given a sorted array, find two numbers anywhere in it that add up to a target.",
+        "answer": "two-pointers",
+        "options": [
+          "two-pointers",
+          "sliding-window",
+          "prefix-sum",
+          "binary-search"
+        ],
+        "explanation": "The two numbers don't have to sit next to each other, so there is no window. Because the array is sorted, one pointer at each end can close in on the target."
       },
       {
-        "label": "window_sum",
-        "value": "cached total for the current range"
+        "problem": "Count the subarrays whose sum equals k. The numbers can be negative.",
+        "answer": "prefix-sum",
+        "options": [
+          "sliding-window",
+          "heaps",
+          "prefix-sum",
+          "greedy"
+        ],
+        "explanation": "With negatives, shrinking the window doesn't always lower the sum, so the window rule breaks. Running totals with a lookup of earlier totals handle it."
       },
       {
-        "label": "max_sum",
-        "value": "best answer seen so far"
+        "problem": "Find the longest substring that contains at most 2 different letters.",
+        "answer": "sliding-window",
+        "options": [
+          "sliding-window",
+          "two-pointers",
+          "tries",
+          "recursion"
+        ],
+        "explanation": "A substring is contiguous and the rule (at most 2 different letters) can be checked as the window grows, so expand and shrink a variable window."
+      },
+      {
+        "problem": "In how many different ways can you climb n stairs if each move is 1 or 2 steps?",
+        "answer": "dynamic-programming",
+        "options": [
+          "sliding-window",
+          "hash-maps",
+          "binary-search",
+          "dynamic-programming"
+        ],
+        "explanation": "There is no array to slide over. Each answer is built from the answers for smaller staircases, which is dynamic programming."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "SlidingWindowDiagram",
-    "array": [
-      2,
-      1,
-      5,
-      1,
-      3,
-      2,
-      4,
-      1
-    ],
-    "constraintLabel": "window size",
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {
-          "left": 0,
-          "right": 0,
-          "windowStart": 0,
-          "windowEnd": 0,
-          "highlighted": [
-            0
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 0,
-          "window_sum": 0,
-          "max_sum": 0
-        },
-        "constraintValue": 0,
-        "constraintMax": 3,
-        "explanation": "Initialize the window on the first cell. We have not added any value yet.",
-        "activeLine": 1
+        "text": "window = 0, best = nothing yet, left = 0",
+        "anchor": "init"
       },
       {
-        "stepIndex": 1,
-        "diagramState": {
-          "left": 0,
-          "right": 0,
-          "windowStart": 0,
-          "windowEnd": 0,
-          "highlighted": [
-            0
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 0,
-          "window_sum": 0,
-          "max_sum": 0
-        },
-        "constraintValue": 0,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 0.",
-        "activeLine": 5
+        "text": "for each right from 0 to n - 1:"
       },
       {
-        "stepIndex": 2,
-        "diagramState": {
-          "left": 0,
-          "right": 0,
-          "windowStart": 0,
-          "windowEnd": 0,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 0,
-          "window_sum": 2,
-          "max_sum": 0
-        },
-        "constraintValue": 1,
-        "constraintMax": 3,
-        "explanation": "Add nums[0] = 2 to the running window sum.",
-        "activeLine": 6
+        "text": "add nums[right] to the window",
+        "anchor": "expand",
+        "indent": 1
       },
       {
-        "stepIndex": 3,
-        "diagramState": {
-          "left": 0,
-          "right": 1,
-          "windowStart": 0,
-          "windowEnd": 1,
-          "highlighted": [
-            1
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 1,
-          "window_sum": 2,
-          "max_sum": 0
-        },
-        "constraintValue": 1,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 1.",
-        "activeLine": 5
+        "text": "if the window holds more than k numbers:",
+        "indent": 1
       },
       {
-        "stepIndex": 4,
-        "diagramState": {
-          "left": 0,
-          "right": 1,
-          "windowStart": 0,
-          "windowEnd": 1,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 1,
-          "window_sum": 3,
-          "max_sum": 0
-        },
-        "constraintValue": 2,
-        "constraintMax": 3,
-        "explanation": "Add nums[1] = 1 to the running window sum.",
-        "activeLine": 6
+        "text": "drop nums[left] and move left on",
+        "anchor": "shrink",
+        "indent": 2
       },
       {
-        "stepIndex": 5,
-        "diagramState": {
-          "left": 0,
-          "right": 2,
-          "windowStart": 0,
-          "windowEnd": 2,
-          "highlighted": [
-            2
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 2,
-          "window_sum": 3,
-          "max_sum": 0
-        },
-        "constraintValue": 2,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 2.",
-        "activeLine": 5
+        "text": "if the window holds exactly k numbers:",
+        "indent": 1
       },
       {
-        "stepIndex": 6,
-        "diagramState": {
-          "left": 0,
-          "right": 2,
-          "windowStart": 0,
-          "windowEnd": 2,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 2,
-          "window_sum": 8,
-          "max_sum": 0
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Add nums[2] = 5 to the running window sum.",
-        "activeLine": 6
+        "text": "best = the better of best and the window",
+        "anchor": "record",
+        "indent": 2
       },
       {
-        "stepIndex": 7,
-        "diagramState": {
-          "left": 0,
-          "right": 2,
-          "windowStart": 0,
-          "windowEnd": 2,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 2,
-          "window_sum": 8,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "A full window of size 3 is in place. Compare its sum against the best answer so far.",
-        "activeLine": 10
-      },
-      {
-        "stepIndex": 8,
-        "diagramState": {
-          "left": 0,
-          "right": 3,
-          "windowStart": 0,
-          "windowEnd": 3,
-          "highlighted": [
-            3
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 3,
-          "window_sum": 8,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 3.",
-        "activeLine": 5
-      },
-      {
-        "stepIndex": 9,
-        "diagramState": {
-          "left": 0,
-          "right": 3,
-          "windowStart": 0,
-          "windowEnd": 3,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 3,
-          "window_sum": 9,
-          "max_sum": 8
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "Add nums[3] = 1 to the running window sum.",
-        "activeLine": 6
-      },
-      {
-        "stepIndex": 10,
-        "diagramState": {
-          "left": 0,
-          "right": 3,
-          "windowStart": 0,
-          "windowEnd": 3,
-          "highlighted": [
-            0
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 3,
-          "window_sum": 9,
-          "max_sum": 8
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "The window is too large, so the constraint gauge turns red and we must shrink from the left.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 11,
-        "diagramState": {
-          "left": 0,
-          "right": 3,
-          "windowStart": 0,
-          "windowEnd": 3,
-          "highlighted": [
-            0
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 0,
-          "right": 3,
-          "window_sum": 7,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Subtract nums[0] = 2 before moving left forward.",
-        "activeLine": 8
-      },
-      {
-        "stepIndex": 12,
-        "diagramState": {
-          "left": 1,
-          "right": 3,
-          "windowStart": 1,
-          "windowEnd": 3,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 1,
-          "right": 3,
-          "window_sum": 7,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Shift left to 1. The window is valid again.",
-        "activeLine": 9
-      },
-      {
-        "stepIndex": 13,
-        "diagramState": {
-          "left": 1,
-          "right": 3,
-          "windowStart": 1,
-          "windowEnd": 3,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 1,
-          "right": 3,
-          "window_sum": 7,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "A full window of size 3 is in place. Compare its sum against the best answer so far.",
-        "activeLine": 10
-      },
-      {
-        "stepIndex": 14,
-        "diagramState": {
-          "left": 1,
-          "right": 4,
-          "windowStart": 1,
-          "windowEnd": 4,
-          "highlighted": [
-            4
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 1,
-          "right": 4,
-          "window_sum": 7,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 4.",
-        "activeLine": 5
-      },
-      {
-        "stepIndex": 15,
-        "diagramState": {
-          "left": 1,
-          "right": 4,
-          "windowStart": 1,
-          "windowEnd": 4,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 1,
-          "right": 4,
-          "window_sum": 10,
-          "max_sum": 8
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "Add nums[4] = 3 to the running window sum.",
-        "activeLine": 6
-      },
-      {
-        "stepIndex": 16,
-        "diagramState": {
-          "left": 1,
-          "right": 4,
-          "windowStart": 1,
-          "windowEnd": 4,
-          "highlighted": [
-            1
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 1,
-          "right": 4,
-          "window_sum": 10,
-          "max_sum": 8
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "The window is too large, so the constraint gauge turns red and we must shrink from the left.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 17,
-        "diagramState": {
-          "left": 1,
-          "right": 4,
-          "windowStart": 1,
-          "windowEnd": 4,
-          "highlighted": [
-            1
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 1,
-          "right": 4,
-          "window_sum": 9,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Subtract nums[1] = 1 before moving left forward.",
-        "activeLine": 8
-      },
-      {
-        "stepIndex": 18,
-        "diagramState": {
-          "left": 2,
-          "right": 4,
-          "windowStart": 2,
-          "windowEnd": 4,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 2,
-          "right": 4,
-          "window_sum": 9,
-          "max_sum": 8
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Shift left to 2. The window is valid again.",
-        "activeLine": 9
-      },
-      {
-        "stepIndex": 19,
-        "diagramState": {
-          "left": 2,
-          "right": 4,
-          "windowStart": 2,
-          "windowEnd": 4,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 2,
-          "right": 4,
-          "window_sum": 9,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "A full window of size 3 is in place. Compare its sum against the best answer so far.",
-        "activeLine": 10
-      },
-      {
-        "stepIndex": 20,
-        "diagramState": {
-          "left": 2,
-          "right": 5,
-          "windowStart": 2,
-          "windowEnd": 5,
-          "highlighted": [
-            5
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 2,
-          "right": 5,
-          "window_sum": 9,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 5.",
-        "activeLine": 5
-      },
-      {
-        "stepIndex": 21,
-        "diagramState": {
-          "left": 2,
-          "right": 5,
-          "windowStart": 2,
-          "windowEnd": 5,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 2,
-          "right": 5,
-          "window_sum": 11,
-          "max_sum": 9
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "Add nums[5] = 2 to the running window sum.",
-        "activeLine": 6
-      },
-      {
-        "stepIndex": 22,
-        "diagramState": {
-          "left": 2,
-          "right": 5,
-          "windowStart": 2,
-          "windowEnd": 5,
-          "highlighted": [
-            2
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 2,
-          "right": 5,
-          "window_sum": 11,
-          "max_sum": 9
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "The window is too large, so the constraint gauge turns red and we must shrink from the left.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 23,
-        "diagramState": {
-          "left": 2,
-          "right": 5,
-          "windowStart": 2,
-          "windowEnd": 5,
-          "highlighted": [
-            2
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 2,
-          "right": 5,
-          "window_sum": 6,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Subtract nums[2] = 5 before moving left forward.",
-        "activeLine": 8
-      },
-      {
-        "stepIndex": 24,
-        "diagramState": {
-          "left": 3,
-          "right": 5,
-          "windowStart": 3,
-          "windowEnd": 5,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 3,
-          "right": 5,
-          "window_sum": 6,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Shift left to 3. The window is valid again.",
-        "activeLine": 9
-      },
-      {
-        "stepIndex": 25,
-        "diagramState": {
-          "left": 3,
-          "right": 5,
-          "windowStart": 3,
-          "windowEnd": 5,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 3,
-          "right": 5,
-          "window_sum": 6,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "A full window of size 3 is in place. Compare its sum against the best answer so far.",
-        "activeLine": 10
-      },
-      {
-        "stepIndex": 26,
-        "diagramState": {
-          "left": 3,
-          "right": 6,
-          "windowStart": 3,
-          "windowEnd": 6,
-          "highlighted": [
-            6
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 3,
-          "right": 6,
-          "window_sum": 6,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 6.",
-        "activeLine": 5
-      },
-      {
-        "stepIndex": 27,
-        "diagramState": {
-          "left": 3,
-          "right": 6,
-          "windowStart": 3,
-          "windowEnd": 6,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 3,
-          "right": 6,
-          "window_sum": 10,
-          "max_sum": 9
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "Add nums[6] = 4 to the running window sum.",
-        "activeLine": 6
-      },
-      {
-        "stepIndex": 28,
-        "diagramState": {
-          "left": 3,
-          "right": 6,
-          "windowStart": 3,
-          "windowEnd": 6,
-          "highlighted": [
-            3
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 3,
-          "right": 6,
-          "window_sum": 10,
-          "max_sum": 9
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "The window is too large, so the constraint gauge turns red and we must shrink from the left.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 29,
-        "diagramState": {
-          "left": 3,
-          "right": 6,
-          "windowStart": 3,
-          "windowEnd": 6,
-          "highlighted": [
-            3
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 3,
-          "right": 6,
-          "window_sum": 9,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Subtract nums[3] = 1 before moving left forward.",
-        "activeLine": 8
-      },
-      {
-        "stepIndex": 30,
-        "diagramState": {
-          "left": 4,
-          "right": 6,
-          "windowStart": 4,
-          "windowEnd": 6,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 4,
-          "right": 6,
-          "window_sum": 9,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Shift left to 4. The window is valid again.",
-        "activeLine": 9
-      },
-      {
-        "stepIndex": 31,
-        "diagramState": {
-          "left": 4,
-          "right": 6,
-          "windowStart": 4,
-          "windowEnd": 6,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 4,
-          "right": 6,
-          "window_sum": 9,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "A full window of size 3 is in place. Compare its sum against the best answer so far.",
-        "activeLine": 10
-      },
-      {
-        "stepIndex": 32,
-        "diagramState": {
-          "left": 4,
-          "right": 7,
-          "windowStart": 4,
-          "windowEnd": 7,
-          "highlighted": [
-            7
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 4,
-          "right": 7,
-          "window_sum": 9,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Expand the window to include index 7.",
-        "activeLine": 5
-      },
-      {
-        "stepIndex": 33,
-        "diagramState": {
-          "left": 4,
-          "right": 7,
-          "windowStart": 4,
-          "windowEnd": 7,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 4,
-          "right": 7,
-          "window_sum": 10,
-          "max_sum": 9
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "Add nums[7] = 1 to the running window sum.",
-        "activeLine": 6
-      },
-      {
-        "stepIndex": 34,
-        "diagramState": {
-          "left": 4,
-          "right": 7,
-          "windowStart": 4,
-          "windowEnd": 7,
-          "highlighted": [
-            4
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 4,
-          "right": 7,
-          "window_sum": 10,
-          "max_sum": 9
-        },
-        "constraintValue": 4,
-        "constraintMax": 3,
-        "explanation": "The window is too large, so the constraint gauge turns red and we must shrink from the left.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 35,
-        "diagramState": {
-          "left": 4,
-          "right": 7,
-          "windowStart": 4,
-          "windowEnd": 7,
-          "highlighted": [
-            4
-          ],
-          "comparing": []
-        },
-        "variables": {
-          "left": 4,
-          "right": 7,
-          "window_sum": 7,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Subtract nums[4] = 3 before moving left forward.",
-        "activeLine": 8
-      },
-      {
-        "stepIndex": 36,
-        "diagramState": {
-          "left": 5,
-          "right": 7,
-          "windowStart": 5,
-          "windowEnd": 7,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 5,
-          "right": 7,
-          "window_sum": 7,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Shift left to 5. The window is valid again.",
-        "activeLine": 9
-      },
-      {
-        "stepIndex": 37,
-        "diagramState": {
-          "left": 5,
-          "right": 7,
-          "windowStart": 5,
-          "windowEnd": 7,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 5,
-          "right": 7,
-          "window_sum": 7,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "A full window of size 3 is in place. Compare its sum against the best answer so far.",
-        "activeLine": 10
-      },
-      {
-        "stepIndex": 38,
-        "diagramState": {
-          "left": 5,
-          "right": 7,
-          "windowStart": 5,
-          "windowEnd": 7,
-          "highlighted": [],
-          "comparing": []
-        },
-        "variables": {
-          "left": 5,
-          "right": 7,
-          "window_sum": 7,
-          "max_sum": 9
-        },
-        "constraintValue": 3,
-        "constraintMax": 3,
-        "explanation": "Finish scanning. The maximum sum of any size-3 window is 9.",
-        "activeLine": 12
+        "text": "return best",
+        "anchor": "done"
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Expand Right",
-      "description": "Add the incoming element so the window covers one more index.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "def max_sum_subarray(nums, k):\n    left = 0\n    window_sum = 0\n    max_sum = float('-inf')\n\n    for right in range(len(nums)):\n        window_sum += nums[right]\n        if right - left + 1 > k:\n            window_sum -= nums[left]\n            left += 1\n        if right - left + 1 == k:\n            max_sum = max(max_sum, window_sum)\n\n    return max_sum",
-        "javascript": "function maxSumSubarray(nums, k) {\n  let left = 0;\n  let windowSum = 0;\n  let maxSum = -Infinity;\n\n  for (let right = 0; right < nums.length; right += 1) {\n    windowSum += nums[right];\n    if (right - left + 1 > k) {\n      windowSum -= nums[left];\n      left += 1;\n    }\n    if (right - left + 1 === k) {\n      maxSum = Math.max(maxSum, windowSum);\n    }\n  }\n\n  return maxSum;\n}",
-        "java": "class Solution {\n  public int maxSumSubarray(int[] nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = Integer.MIN_VALUE;\n\n    for (int right = 0; right < nums.length; right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = Math.max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n}",
-        "cpp": "class Solution {\npublic:\n  int maxSumSubarray(vector<int>& nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = INT_MIN;\n\n    for (int right = 0; right < nums.size(); right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n};"
-      },
-      "visualNote": "The orange pointer advances and the highlight rectangle stretches to the right."
-    },
-    {
-      "name": "Shrink Left",
-      "description": "Drop the oldest element when the window is too large or violates a constraint.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "def max_sum_subarray(nums, k):\n    left = 0\n    window_sum = 0\n    max_sum = float('-inf')\n\n    for right in range(len(nums)):\n        window_sum += nums[right]\n        if right - left + 1 > k:\n            window_sum -= nums[left]\n            left += 1\n        if right - left + 1 == k:\n            max_sum = max(max_sum, window_sum)\n\n    return max_sum",
-        "javascript": "function maxSumSubarray(nums, k) {\n  let left = 0;\n  let windowSum = 0;\n  let maxSum = -Infinity;\n\n  for (let right = 0; right < nums.length; right += 1) {\n    windowSum += nums[right];\n    if (right - left + 1 > k) {\n      windowSum -= nums[left];\n      left += 1;\n    }\n    if (right - left + 1 === k) {\n      maxSum = Math.max(maxSum, windowSum);\n    }\n  }\n\n  return maxSum;\n}",
-        "java": "class Solution {\n  public int maxSumSubarray(int[] nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = Integer.MIN_VALUE;\n\n    for (int right = 0; right < nums.length; right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = Math.max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n}",
-        "cpp": "class Solution {\npublic:\n  int maxSumSubarray(vector<int>& nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = INT_MIN;\n\n    for (int right = 0; right < nums.size(); right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n};"
-      },
-      "visualNote": "The green pointer advances and the highlight rectangle snaps inward from the left."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "for right in range(n):\n  add value at right\n  while constraint is broken:\n    remove value at left\n    left += 1\n  update answer",
-    "whenToUse": "Use Sliding Window when the answer depends on a contiguous segment and neighboring windows overlap heavily.",
-    "timeComplexity": "O(n) because each pointer only moves forward.",
-    "spaceComplexity": "O(1) to O(k) depending on extra state like a frequency map."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "Given a string, find the length of the longest substring with at most K distinct characters.",
-    "correctPatternId": "sliding-window",
-    "distractors": [
-      "two-pointers",
-      "prefix-sum",
-      "hash-maps"
     ],
-    "explanation": "The substring must stay contiguous, and we must maintain a constraint while expanding and shrinking a live window."
+    "tracer": "sliding-window/max-sum-k",
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": [
+      "Each element is added once by right and dropped at most once by left, so the whole pass is at most 2n small steps: O(n).",
+      "For a variable-size window, turn the \"too many?\" if into a while loop. Keep shrinking until the rule holds again (or, for \"shortest\", until the window stops being big enough).",
+      "Space depends on the summary you keep: a running sum is O(1), a set or a count of letters grows with the window or the alphabet.",
+      "left and right only move forward. If you need to move one backwards, this isn't the pattern."
+    ]
   },
   "examples": [
     {
-      "title": "Maximum Sum Subarray of Size K",
+      "title": "Maximum Average Subarray I",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/maximum-average-subarray-i/",
-      "problemStatement": "Find the maximum sum of any contiguous subarray of fixed size k.",
-      "inputExample": "nums = [2,1,5,1,3,2,4,1], k = 3",
-      "outputExample": "9",
-      "steps": [
-        "Build the first full window of size 3.",
-        "Record its sum as the current best.",
-        "Slide right by removing the leftmost element and adding the new rightmost one.",
-        "Keep updating the best sum whenever the window is valid."
+      "url": "https://leetcode.com/problems/maximum-average-subarray-i/",
+      "problem": "Given an integer array nums and an integer k, find the contiguous subarray of length k with the largest average, and return that average.",
+      "input": "nums = [1,12,-5,-6,50,3], k = 4",
+      "output": "12.75",
+      "approach": [
+        "The window has a fixed size, so its average is just its sum divided by k. Compare sums and divide once at the end.",
+        "Sum the first 4 numbers: 1 + 12 - 5 - 6 = 2. That is the best so far.",
+        "Slide right: add the new number, subtract the one that left. The sums are 51 (12, -5, -6, 50) and then 42 (-5, -6, 50, 3).",
+        "The best sum is 51, so the answer is 51 / 4 = 12.75."
       ],
-      "code": {
-        "python": "def max_sum_subarray(nums, k):\n    left = 0\n    window_sum = 0\n    max_sum = float('-inf')\n\n    for right in range(len(nums)):\n        window_sum += nums[right]\n        if right - left + 1 > k:\n            window_sum -= nums[left]\n            left += 1\n        if right - left + 1 == k:\n            max_sum = max(max_sum, window_sum)\n\n    return max_sum",
-        "javascript": "function maxSumSubarray(nums, k) {\n  let left = 0;\n  let windowSum = 0;\n  let maxSum = -Infinity;\n\n  for (let right = 0; right < nums.length; right += 1) {\n    windowSum += nums[right];\n    if (right - left + 1 > k) {\n      windowSum -= nums[left];\n      left += 1;\n    }\n    if (right - left + 1 === k) {\n      maxSum = Math.max(maxSum, windowSum);\n    }\n  }\n\n  return maxSum;\n}",
-        "java": "class Solution {\n  public int maxSumSubarray(int[] nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = Integer.MIN_VALUE;\n\n    for (int right = 0; right < nums.length; right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = Math.max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n}",
-        "cpp": "class Solution {\npublic:\n  int maxSumSubarray(vector<int>& nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = INT_MIN;\n\n    for (int right = 0; right < nums.size(); right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n};"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "rationale": "Each index enters and leaves the sum once."
+      "code": "sliding-window/max-average",
+      "time": "O(n)",
+      "space": "O(1)"
     },
     {
-      "title": "Smallest Subarray With Sum At Least S",
+      "title": "Minimum Size Subarray Sum",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/minimum-size-subarray-sum/",
-      "problemStatement": "Return the minimum length of a contiguous subarray whose sum is at least the target.",
-      "inputExample": "target = 7, nums = [2,3,1,2,4,3]",
-      "outputExample": "2",
-      "steps": [
-        "Expand right until the sum reaches the target.",
-        "Shrink left as aggressively as possible while preserving validity.",
-        "Record the best valid length seen."
+      "url": "https://leetcode.com/problems/minimum-size-subarray-sum/",
+      "problem": "Given an array of positive integers nums and a positive integer target, return the minimal length of a contiguous subarray whose sum is at least target, or 0 if there is none.",
+      "input": "target = 7, nums = [2,3,1,2,4,3]",
+      "output": "2",
+      "approach": [
+        "The size isn't given, so this is a variable window. Expand right until the sum reaches the target.",
+        "While the sum is still at least target, record the length and shrink from the left to look for a shorter one.",
+        "The window [2, 3, 1, 2] is the first that works (length 4). Shrinking and expanding finds [1, 2, 4] (length 3) and finally [4, 3] (length 2).",
+        "Numbers are positive, so shrinking always lowers the sum. That is why the loop is safe."
       ],
-      "code": {
-        "python": "def max_sum_subarray(nums, k):\n    left = 0\n    window_sum = 0\n    max_sum = float('-inf')\n\n    for right in range(len(nums)):\n        window_sum += nums[right]\n        if right - left + 1 > k:\n            window_sum -= nums[left]\n            left += 1\n        if right - left + 1 == k:\n            max_sum = max(max_sum, window_sum)\n\n    return max_sum",
-        "javascript": "function maxSumSubarray(nums, k) {\n  let left = 0;\n  let windowSum = 0;\n  let maxSum = -Infinity;\n\n  for (let right = 0; right < nums.length; right += 1) {\n    windowSum += nums[right];\n    if (right - left + 1 > k) {\n      windowSum -= nums[left];\n      left += 1;\n    }\n    if (right - left + 1 === k) {\n      maxSum = Math.max(maxSum, windowSum);\n    }\n  }\n\n  return maxSum;\n}",
-        "java": "class Solution {\n  public int maxSumSubarray(int[] nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = Integer.MIN_VALUE;\n\n    for (int right = 0; right < nums.length; right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = Math.max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n}",
-        "cpp": "class Solution {\npublic:\n  int maxSumSubarray(vector<int>& nums, int k) {\n    int left = 0;\n    int windowSum = 0;\n    int maxSum = INT_MIN;\n\n    for (int right = 0; right < nums.size(); right++) {\n      windowSum += nums[right];\n      if (right - left + 1 > k) {\n        windowSum -= nums[left];\n        left++;\n      }\n      if (right - left + 1 == k) {\n        maxSum = max(maxSum, windowSum);\n      }\n    }\n\n    return maxSum;\n  }\n};"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "rationale": "The left pointer only moves when a valid window exists."
+      "code": "sliding-window/min-len-target",
+      "tracer": "sliding-window/min-len-target",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+      "problem": "Given a string s, return the length of the longest substring that contains no repeated character.",
+      "input": "s = \"abcabcbb\"",
+      "output": "3",
+      "approach": [
+        "The rule is \"no repeated letters\", so keep a set of the letters inside the window.",
+        "Before adding s[right], shrink from the left while that letter is already in the set.",
+        "Then add it and compare the window length with the best so far.",
+        "The longest window is \"abc\" (length 3). \"bca\" and \"cab\" tie it, and none is longer."
+      ],
+      "code": "sliding-window/longest-unique-substring",
+      "time": "O(n)",
+      "space": "O(min(n, alphabet size))"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What makes Sliding Window possible?",
+      "question": "Why is a sliding window faster than re-adding every stretch from scratch?",
       "options": [
-        "The array is sorted",
-        "Recursion is involved",
-        "Windows overlap heavily",
-        "We always need a stack"
+        "It sorts the array first.",
+        "It skips the middle of the array.",
+        "Neighbouring windows overlap, so only the two edges need updating.",
+        "It splits the array in half with recursion."
       ],
-      "correctIndex": 2,
-      "explanation": "We reuse most of the previous window instead of recomputing it from scratch."
+      "answer": 2,
+      "explanation": "Each new window shares almost all of its elements with the previous one, so you only add the element that arrived and remove the one that left."
     },
     {
-      "question": "When should the left pointer move?",
+      "question": "A window of size 3 slides one step to the right. What changes?",
       "options": [
-        "Only when the constraint needs repair",
-        "Every iteration",
-        "Only after sorting",
-        "Never"
+        "One number leaves on the left and one arrives on the right.",
+        "All three numbers are replaced.",
+        "Only a new number is added on the right.",
+        "The window is rebuilt starting from the left edge."
       ],
-      "correctIndex": 0,
-      "explanation": "The left pointer exists to restore the invariant after expansion."
+      "answer": 0,
+      "explanation": "Two of the three numbers stay. The oldest leaves and the next one joins, so the size stays at 3."
     },
     {
-      "question": "Why is the runtime often O(n)?",
+      "question": "There is a while loop inside the for loop. Why is the sliding window still O(n)?",
       "options": [
-        "Arrays are cached",
-        "The window is recursive",
-        "Pointers only move forward",
-        "Because of binary search"
+        "The while loop only runs once in total.",
+        "The array is processed in chunks of size k.",
+        "The inner loop is skipped when the input is sorted.",
+        "left only moves forward, so across the whole run it moves at most n times."
       ],
-      "correctIndex": 2,
-      "explanation": "Each element is entered once and removed once in the common pattern."
+      "answer": 3,
+      "explanation": "right makes n moves and left makes at most n moves. The inner loop doesn't restart left, so the total stays about 2n."
     },
     {
-      "question": "What kind of problems should trigger this pattern first?",
+      "question": "For \"shortest subarray with sum at least target\" (positive numbers), when do you shrink?",
       "options": [
-        "Contiguous range problems",
-        "Graph traversal",
-        "Heap ordering",
-        "Tree rotations"
+        "After every expand, whatever the sum is.",
+        "While the sum is still at least the target.",
+        "Only when the sum is below the target.",
+        "Never. You only expand."
       ],
-      "correctIndex": 0,
-      "explanation": "Sliding Window is about contiguous subarrays and substrings."
+      "answer": 1,
+      "explanation": "As long as the sum still reaches the target, a shorter window might also work, so keep dropping from the left. Stop when the sum falls below the target."
+    },
+    {
+      "question": "Which of these is a poor fit for a plain sliding window?",
+      "options": [
+        "Longest substring with no repeated letter.",
+        "Largest sum of 5 consecutive days.",
+        "Count subarrays that sum to k when numbers can be negative.",
+        "Shortest run of positive numbers adding up to at least 20."
+      ],
+      "answer": 2,
+      "explanation": "Negative numbers mean that shrinking can raise the sum, so you can't tell when to expand or shrink. The other three have a rule that moves in one clear direction."
     }
   ],
   "practice": [
     {
-      "title": "Maximum Average Subarray I",
-      "url": "https://leetcode.com/problems/maximum-average-subarray-i/",
+      "title": "Maximum Number of Vowels in a Substring of Given Length",
+      "url": "https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/",
       "difficulty": "easy",
-      "keyInsight": "Fixed-size window with rolling sum."
+      "insight": "The window size is fixed, so it is the same slide as the sum problem, but you keep a count of vowels instead of a sum."
     },
     {
-      "title": "Minimum Size Subarray Sum",
-      "url": "https://leetcode.com/problems/minimum-size-subarray-sum/",
+      "title": "Max Consecutive Ones III",
+      "url": "https://leetcode.com/problems/max-consecutive-ones-iii/",
       "difficulty": "medium",
-      "keyInsight": "Shrink left once the target is satisfied."
-    },
-    {
-      "title": "Longest Substring Without Repeating Characters",
-      "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
-      "difficulty": "medium",
-      "keyInsight": "Use a dynamic window with frequency tracking."
-    },
-    {
-      "title": "Permutation in String",
-      "url": "https://leetcode.com/problems/permutation-in-string/",
-      "difficulty": "medium",
-      "keyInsight": "Keep a fixed-size character balance window."
-    },
-    {
-      "title": "Find All Anagrams in a String",
-      "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/",
-      "difficulty": "medium",
-      "keyInsight": "Slide a fixed-size frequency window."
-    },
-    {
-      "title": "Maximum Erasure Value",
-      "url": "https://leetcode.com/problems/maximum-erasure-value/",
-      "difficulty": "medium",
-      "keyInsight": "Maintain uniqueness while maximizing a running sum."
+      "insight": "Don't flip anything. Just look for the longest window that contains at most k zeros."
     },
     {
       "title": "Fruit Into Baskets",
       "url": "https://leetcode.com/problems/fruit-into-baskets/",
       "difficulty": "medium",
-      "keyInsight": "At most K distinct values."
+      "insight": "It is the longest window with at most two different values, so keep a small count of each value and shrink when a third appears."
     },
     {
       "title": "Longest Repeating Character Replacement",
       "url": "https://leetcode.com/problems/longest-repeating-character-replacement/",
       "difficulty": "medium",
-      "keyInsight": "Track the dominant character count inside the window."
+      "insight": "A window is fine when its length minus the count of its most common letter is at most k."
+    },
+    {
+      "title": "Permutation in String",
+      "url": "https://leetcode.com/problems/permutation-in-string/",
+      "difficulty": "medium",
+      "insight": "A permutation has the same letter counts as the original, so slide a window of that exact length and compare counts."
+    },
+    {
+      "title": "Find All Anagrams in a String",
+      "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/",
+      "difficulty": "medium",
+      "insight": "Same fixed window as the permutation problem, but record every start index where the counts match instead of stopping at the first."
+    },
+    {
+      "title": "Minimum Window Substring",
+      "url": "https://leetcode.com/problems/minimum-window-substring/",
+      "difficulty": "hard",
+      "insight": "Expand until the window has every needed letter, then shrink while it still does, tracking how many letters are still missing."
+    },
+    {
+      "title": "Sliding Window Maximum",
+      "url": "https://leetcode.com/problems/sliding-window-maximum/",
+      "difficulty": "hard",
+      "insight": "A running sum won't give you a maximum. Keep only the indices that could still become the maximum, in order, and drop the rest."
     }
   ]
 }
