@@ -427,7 +427,7 @@
       "group": "algorithms",
       "glyph": "greedy",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 35,
       "oneLiner": "Take the best-looking move now — when you can prove it's safe.",
       "trigger": "Intervals, scheduling, or 'minimum number of …' with a clear best pick.",
