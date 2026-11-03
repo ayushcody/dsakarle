@@ -1,271 +1,420 @@
 {
-  "id": "linked-lists",
+  "schemaVersion": 2,
   "slug": "linked-lists",
-  "title": "Linked Lists",
-  "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 45,
-  "prerequisites": [
-    "arrays"
-  ],
-  "tags": [
-    "data-structure",
-    "pointers",
-    "memory"
-  ],
-  "overview": {
-    "summary": "A Linked List is a linear data structure where elements are not stored in contiguous memory. Instead, each element points to the next one.",
-    "learningObjectives": [
-      "Understand node-based structures (data + pointer).",
-      "Trace pointer updates during insertion and deletion.",
-      "Explain the trade-offs between Arrays and Linked Lists."
-    ],
-    "interviewRelevance": "Linked Lists are fundamental for testing pointer manipulation, edge case handling (null pointers), and understanding dynamic memory allocation."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A treasure hunt gives you a first clue, and every clue only tells you where the next one is hidden. How do you slip a new clue into the middle of the hunt without rewriting all the clues after it?",
     "paragraphs": [
-      "Imagine a scavenger hunt. You are given the first clue. It contains some information, and the exact location of the next clue.",
-      "You don't know where all the clues are at the start, you just follow them one by one. This is exactly how a Linked List operates."
+      "Clue 1 says \"look under the red bench\". Under the bench is clue 2: \"check the oak tree\". Under the oak is clue 3, and so on. Nobody holds the whole route. Each clue knows one thing: the next stop.",
+      "Now you want a new clue between clue 2 and clue 3. If the clues sat in a row of boxes, you would have to shift every later clue one box along. Here, only two notes change. What are they?"
     ],
-    "ahaMoment": "Because nodes point to each other, they don't need to be sitting next to each other in memory. You can grow the list indefinitely!"
+    "aha": "The order lives in the arrows, not in the places. Write the new clue so it points at clue 3, then change clue 2 to point at the new clue. Nothing else moves, however long the hunt is. Finding the spot still means following clues from the start, but the change itself is two writes."
   },
-  "definition": {
-    "technicalDefinition": "A Linked List is a sequence of nodes where each node contains data and a reference (or link) to the next node in the sequence.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "linked-list",
+      "nodes": [
+        {
+          "id": "n0",
+          "value": 12
+        },
+        {
+          "id": "n1",
+          "value": 7
+        },
+        {
+          "id": "n2",
+          "value": 31
+        },
+        {
+          "id": "n3",
+          "value": 5
+        }
+      ],
+      "links": [
+        {
+          "from": "n0",
+          "to": "n1"
+        },
+        {
+          "from": "n1",
+          "to": "n2"
+        },
+        {
+          "from": "n2",
+          "to": "n3"
+        },
+        {
+          "from": "n3",
+          "to": null
+        }
+      ],
+      "pointers": [
+        {
+          "name": "head",
+          "target": "n0",
+          "role": "ptrA"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "Node",
-        "definition": "The basic unit of a linked list, containing data and a pointer."
+        "target": "node:n1",
+        "text": "value"
       },
       {
-        "term": "Head",
-        "definition": "The first node in a linked list. You lose the list if you lose the head."
+        "target": "node:n2",
+        "text": "next link"
       },
       {
-        "term": "Tail",
-        "definition": "The last node in the list, whose next pointer is usually Null."
-      },
-      {
-        "term": "Null (or None)",
-        "definition": "Indicates the end of the list."
+        "target": "node:null",
+        "text": "end: null"
       }
-    ],
-    "keyProperties": [
-      "Dynamic size (can grow or shrink at runtime).",
-      "O(1) insertions/deletions at the head (or known nodes).",
-      "O(n) random access (must traverse from the head)."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A train with separate cars. Each car is hooked only to the one directly behind it."
+      "Picture a train of carriages. Each carriage carries its cargo (the value) and has one coupling that hooks it to the carriage behind it, and the last carriage's coupling hooks to nothing.",
+      "You only hold the front carriage. To reach carriage 5 you walk through 1, 2, 3 and 4, and to add a carriage in the middle you unhook one coupling and hook in two."
     ],
-    "clickSentence": "Changing the 'next' pointer physically rewires the structure.",
-    "diagramType": "LinkedListDiagram",
-    "cells": [],
-    "diagramState": {
-      "nodes": [
-        {
-          "id": "A",
-          "val": 10
-        },
-        {
-          "id": "B",
-          "val": 20
-        },
-        {
-          "id": "C",
-          "val": 30
-        }
-      ],
-      "edges": [
-        {
-          "source": "A",
-          "target": "B"
-        },
-        {
-          "source": "B",
-          "target": "C"
-        }
-      ]
-    }
-  },
-  "structure": {
-    "memoryDescription": [
-      "Unlike Arrays, Linked List nodes are scattered randomly across the computer's memory.",
-      "The 'pointer' holds the physical memory address of the next node so the computer knows where to jump."
-    ],
-    "definitionCode": {
-      "python": "class Node:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next",
-      "javascript": "class Node {\n    constructor(val = 0, next = null) {\n        this.val = val;\n        this.next = next;\n    }\n}",
-      "java": "class ListNode {\n    int val;\n    ListNode next;\n    ListNode(int val) { this.val = val; }\n}",
-      "cpp": "struct ListNode {\n    int val;\n    ListNode *next;\n    ListNode(int x) : val(x), next(NULL) {}\n};"
-    },
-    "memoryLayout": [
+    "click": "A node knows only its value and who comes next, so changing a next link is changing the order.",
+    "glossary": [
       {
-        "label": "Head Node",
-        "value": "{ val: 10, next: 0x4B2 }"
+        "term": "node",
+        "definition": "One box in the list: a value plus a next link."
       },
       {
-        "label": "Middle Node",
-        "value": "{ val: 20, next: 0x9A1 }"
+        "term": "head",
+        "definition": "The first node. It is the only one you hold on to, so if you lose it you lose the whole list."
       },
       {
-        "label": "Tail Node",
-        "value": "{ val: 30, next: null }"
+        "term": "next",
+        "definition": "The link inside a node that says which node comes after it."
+      },
+      {
+        "term": "null",
+        "definition": "\"Nothing here.\" The last node's next is null, which marks the end of the list (None in Python, nullptr in C++)."
+      },
+      {
+        "term": "dummy node",
+        "definition": "A throwaway node placed in front of the head so that the head stops being a special case."
+      },
+      {
+        "term": "in-place",
+        "definition": "Changing the links of the nodes you already have instead of building a new list, so no extra space is needed."
       }
-    ]
+    ],
+    "definition": "A singly linked list is a chain of nodes. Each node stores a value and a reference, next, to the following node, and the last node's next is null. You reach the list through its head. Reading the k-th node takes k steps from the head, but once you hold a node, inserting after it or deleting the node after it rewrites only a constant number of links."
   },
-  "stepper": {
-    "diagramType": "LinkedListDiagram",
-    "array": [],
-    "steps": [
+  "stage": {
+    "tracks": [
       {
-        "stepIndex": 0,
-        "diagramState": {
-          "nodes": [
-            {
-              "id": "A",
-              "val": 10
-            },
-            {
-              "id": "B",
-              "val": 20
-            },
-            {
-              "id": "C",
-              "val": 30
-            }
+        "id": "traverse",
+        "label": "Traverse",
+        "tracer": "linked-lists/traverse",
+        "predict": {
+          "tags": [
+            "next-node"
           ],
-          "edges": [
-            {
-              "source": "A",
-              "target": "B"
-            },
-            {
-              "source": "B",
-              "target": "C"
-            }
-          ]
-        },
-        "variables": {
-          "current": "Node(10)"
-        },
-        "explanation": "Interactive traversal visualization for Linked Lists is coming soon.",
-        "activeLine": 1
+          "max": 2
+        }
+      },
+      {
+        "id": "insert",
+        "label": "Insert",
+        "tracer": "linked-lists/insert-after",
+        "predict": {
+          "tags": [
+            "walk-or-stop",
+            "link-order"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "delete",
+        "label": "Delete",
+        "tracer": "linked-lists/delete",
+        "predict": {
+          "tags": [
+            "prev-trails",
+            "where-prev-points"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "reverse",
+        "label": "Reverse",
+        "tracer": "linked-lists/reverse",
+        "predict": {
+          "tags": [
+            "where-does-curr-next-point"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The problem hands you a head (a ListNode) instead of an array.",
+      "You insert or delete in the middle a lot, and you already hold the spot.",
+      "It says in place, or O(1) extra space, on a list.",
+      "The job is rewiring the order: reverse, merge, splice or reorder."
+    ],
+    "notWhen": [
+      "You need the k-th element fast: an array jumps there in O(1), a list has to walk k steps.",
+      "You need to look something up by value: a hash map finds it without walking.",
+      "The list may loop back on itself, or you need its middle: it is still a list, but the move is fast and slow pointers."
+    ],
+    "quiz": [
+      {
+        "problem": "Given the head of a linked list, decide whether the list contains a cycle.",
+        "answer": "fast-and-slow-pointers",
+        "options": [
+          "linked-lists",
+          "hash-maps",
+          "fast-and-slow-pointers",
+          "binary-search"
+        ],
+        "explanation": "The data is a linked list, but the trick is two pointers at different speeds. If there is a loop, the fast one eventually catches the slow one."
+      },
+      {
+        "problem": "A million numbers are stored, and you must read the one at position 1000, again and again, very quickly.",
+        "answer": "arrays",
+        "options": [
+          "linked-lists",
+          "arrays",
+          "queues",
+          "stacks"
+        ],
+        "explanation": "A list would walk 1000 nodes every time. An array computes the address and jumps straight to it."
+      },
+      {
+        "problem": "An editor has an undo button that removes the most recent change first, then the one before it.",
+        "answer": "stacks",
+        "options": [
+          "stacks",
+          "linked-lists",
+          "queues",
+          "heaps"
+        ],
+        "explanation": "Last in, first out is exactly a stack. You could build one from a list, but the rule you need is the stack's."
+      },
+      {
+        "problem": "Given the head of a singly linked list, reverse it in place and return the new head.",
+        "answer": "linked-lists",
+        "options": [
+          "arrays",
+          "sorting",
+          "binary-search",
+          "linked-lists"
+        ],
+        "explanation": "You are handed nodes and asked to rewire their next links. That is plain linked-list pointer work: prev, curr and nxt."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Insert at Head",
-      "description": "Create a new node, point it to the current head, and update the head pointer.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "new_node = Node(5)\nnew_node.next = head\nhead = new_node",
-        "javascript": "const newNode = new Node(5);\nnewNode.next = head;\nhead = newNode;",
-        "java": "ListNode newNode = new ListNode(5);\nnewNode.next = head;\nhead = newNode;",
-        "cpp": "ListNode* newNode = new ListNode(5);\nnewNode->next = head;\nhead = newNode;"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "prev = null, curr = head",
+        "anchor": "init"
       },
-      "visualNote": "Shows a new node linking to the first node, and the 'Head' label sliding over."
-    },
-    {
-      "name": "Traversal",
-      "description": "Walk through the list node by node until you hit null.",
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "curr = head\nwhile curr:\n    print(curr.val)\n    curr = curr.next",
-        "javascript": "let curr = head;\nwhile (curr) {\n    console.log(curr.val);\n    curr = curr.next;\n}",
-        "java": "ListNode curr = head;\nwhile (curr != null) {\n    System.out.println(curr.val);\n    curr = curr.next;\n}",
-        "cpp": "ListNode* curr = head;\nwhile (curr != nullptr) {\n    cout << curr->val << endl;\n    curr = curr->next;\n}"
+      {
+        "text": "while curr is not null:",
+        "anchor": "check"
       },
-      "visualNote": "A pointer marker jumps from node to node."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "dummy = new Node(0)\ndummy.next = head\ncurr = head\nwhile curr:\n  process(curr)\n  curr = curr.next\nreturn dummy.next",
-    "whenToUse": "When you need frequent insertions/deletions at specific points, or when you don't know the ultimate size of the data structure.",
-    "timeComplexity": "O(n) for access, O(1) for known insertion.",
-    "spaceComplexity": "O(n) total memory."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are building a music player's 'Next Song' and 'Previous Song' feature, where users can dynamically insert songs into the queue anywhere.",
-    "correctPatternId": "linked-lists",
-    "distractors": [
-      "arrays",
-      "binary-search",
-      "hash-maps"
+      {
+        "text": "nxt = curr.next (remember the way on)",
+        "anchor": "save",
+        "indent": 1
+      },
+      {
+        "text": "curr.next = prev (turn the arrow around)",
+        "anchor": "flip",
+        "indent": 1
+      },
+      {
+        "text": "prev = curr, curr = nxt (slide forward)",
+        "anchor": "advance",
+        "indent": 1
+      },
+      {
+        "text": "return prev (the new head)",
+        "anchor": "done"
+      }
     ],
-    "explanation": "A Doubly Linked List is perfect here. Inserting a song just means rewiring two pointers, whereas an array would require shifting the entire queue of songs."
+    "tracer": "linked-lists/reverse",
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": [
+      "Walking the list once touches every node once, so traversing, searching and reversing are O(n).",
+      "Once you stand on the right node, inserting after it or deleting the next one is O(1): a couple of link writes. Getting there is the O(n) part.",
+      "Before you overwrite curr.next, make sure something else still points at the rest of the list. Save it first, as nxt does in the reversal.",
+      "A dummy node in front of the head means deleting the head is the same code as deleting any other node, because there is always a prev.",
+      "Check for null before you read curr.next, and test an empty list, a single node and the tail."
+    ]
   },
   "examples": [
     {
-      "title": "Reverse a Linked List",
+      "title": "Reverse Linked List",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/reverse-linked-list/",
-      "problemStatement": "Given the head of a singly linked list, reverse the list, and return the reversed list.",
-      "inputExample": "head = [1,2,3,4,5]",
-      "outputExample": "[5,4,3,2,1]",
-      "steps": [
-        "Maintain three pointers: prev, curr, and next.",
-        "Save the next node.",
-        "Reverse the curr pointer to point to prev.",
-        "Shift prev and curr forward."
+      "url": "https://leetcode.com/problems/reverse-linked-list/",
+      "problem": "Given the head of a singly linked list, reverse the list and return the new head.",
+      "input": "head = [1,2,3,4,5]",
+      "output": "[5,4,3,2,1]",
+      "approach": [
+        "Keep three pointers: prev (starts as null), curr (starts at the head) and nxt.",
+        "Save nxt = curr.next first, so turning the arrow around doesn't lose the rest of the list.",
+        "Flip curr.next = prev, then slide on: prev = curr and curr = nxt.",
+        "When curr is null every arrow points backwards, and prev is the new head."
       ],
-      "code": {
-        "python": "prev, curr = None, head\nwhile curr:\n    nxt = curr.next\n    curr.next = prev\n    prev = curr\n    curr = nxt\nreturn prev",
-        "javascript": "let prev = null, curr = head;\nwhile (curr) {\n    let nxt = curr.next;\n    curr.next = prev;\n    prev = curr;\n    curr = nxt;\n}\nreturn prev;",
-        "java": "ListNode prev = null, curr = head;\nwhile (curr != null) {\n    ListNode nxt = curr.next;\n    curr.next = prev;\n    prev = curr;\n    curr = nxt;\n}\nreturn prev;",
-        "cpp": "ListNode* prev = nullptr;\nListNode* curr = head;\nwhile (curr != nullptr) {\n    ListNode* nxt = curr->next;\n    curr->next = prev;\n    prev = curr;\n    curr = nxt;\n}\nreturn prev;"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "rationale": "By flipping the pointers one by one, we reverse the structure in-place."
+      "code": "linked-lists/reverse",
+      "tracer": "linked-lists/reverse",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Merge Two Sorted Lists",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/merge-two-sorted-lists/",
+      "problem": "Given the heads of two sorted linked lists, merge them into one sorted list made by splicing together the nodes of the two, and return its head.",
+      "input": "list1 = [1,2,4], list2 = [1,3,4]",
+      "output": "[1,1,2,3,4,4]",
+      "approach": [
+        "Start a result list with a dummy node, and keep a tail pointer on its last node.",
+        "Compare the front nodes of the two lists. Link the smaller one after tail and move that list forward.",
+        "Move tail onto the node you just attached, and repeat until one list runs out.",
+        "Point tail.next at whatever is left of the other list, and return dummy.next."
+      ],
+      "code": "linked-lists/merge-two-lists",
+      "time": "O(m + n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Remove Nth Node From End of List",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+      "problem": "Given the head of a linked list, remove the n-th node from the end of the list and return its head.",
+      "input": "head = [1,2,3,4,5], n = 2",
+      "output": "[1,2,3,5]",
+      "approach": [
+        "You can't count back from the end, but you can keep two pointers n nodes apart. Start both on a dummy node and move fast n steps ahead.",
+        "Now move both one step at a time until fast is on the last node. The gap stays n, so slow ends just before the node to remove.",
+        "Delete with the bypass from before: slow.next = slow.next.next.",
+        "The dummy node makes removing the head (n equal to the length) work without a special case."
+      ],
+      "code": "linked-lists/remove-nth-from-end",
+      "time": "O(n)",
+      "space": "O(1)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What is the primary advantage of a Linked List over an Array?",
+      "question": "You insert a new node after curr. Why do you set node.next = curr.next before curr.next = node?",
       "options": [
-        "O(1) insertion and deletion if you have the node reference.",
-        "O(1) random access by index.",
-        "They use less memory.",
-        "They are inherently sorted."
+        "It is faster to write the new node's link first.",
+        "curr.next is the only link to the rest of the list, so overwriting it first would lose that rest.",
+        "Python and Java require the new node's link to be written first.",
+        "The order doesn't matter, because both writes give the same list."
       ],
-      "correctIndex": 0,
-      "explanation": "Because you only have to rewire pointers, inserting or deleting a node doesn't require shifting millions of elements like an array would."
+      "answer": 1,
+      "explanation": "Until the new node points at curr's old next, nothing else points at the rest of the list. Hook the new node onto it first, then redirect curr."
     },
     {
-      "question": "Why is a 'Dummy Node' often used in Linked List problems?",
+      "question": "Why does deleting a node from a singly linked list need the node before it?",
       "options": [
-        "To make the list run faster.",
-        "To store extra variables.",
-        "To avoid special edge cases when modifying the 'head' of the list.",
-        "To convert it into a Doubly Linked List."
+        "Only that earlier node's next link points at the doomed node, and that link is the one that has to change.",
+        "Nodes can only be removed from the left.",
+        "The earlier node stores the value that must be erased.",
+        "The doomed node can't be read until the previous one is freed."
       ],
-      "correctIndex": 2,
-      "explanation": "A dummy node placed before the head ensures that the head can be modified or deleted without writing custom 'if head == null' edge case logic."
+      "answer": 0,
+      "explanation": "A node has no link backwards. To skip it you must rewrite the one link that points at it, and that link lives in the previous node. That is why delete carries prev along behind curr."
+    },
+    {
+      "question": "How do reading the k-th element of a linked list and of an array compare?",
+      "options": [
+        "Both take O(1).",
+        "The list takes O(1) and the array takes O(k).",
+        "The list walks k links from the head, which takes O(k). The array jumps straight there in O(1).",
+        "Both take O(k), because the elements have to be counted."
+      ],
+      "answer": 2,
+      "explanation": "An array computes where element k is. A list only knows where the next node is, so you follow the links one at a time."
+    },
+    {
+      "question": "In the reversal loop, what goes wrong if you flip curr.next = prev without saving nxt first?",
+      "options": [
+        "Nothing, because prev still remembers the old list.",
+        "The values inside the nodes get swapped.",
+        "The loop becomes slower, but still correct.",
+        "You lose the rest of the list, because nothing points at the nodes after curr any more."
+      ],
+      "answer": 3,
+      "explanation": "curr.next was the only way forward. Overwrite it without a copy and the nodes after curr are unreachable. Saving nxt first keeps the way on."
+    },
+    {
+      "question": "What does a dummy node in front of the head buy you when you delete a node?",
+      "options": [
+        "It makes the list run faster.",
+        "Deleting the head is the same bypass as deleting any other node, because there is always a prev.",
+        "It stores the number of nodes so you can stop early.",
+        "It lets you delete a node without knowing its value."
+      ],
+      "answer": 1,
+      "explanation": "Without it, the head has no node before it, so it needs its own special case. With a dummy, prev starts on the dummy and the same prev.next = curr.next works everywhere."
     }
   ],
   "practice": [
     {
-      "title": "Reverse Linked List",
-      "url": "https://leetcode.com/problems/reverse-linked-list/",
-      "difficulty": "easy",
-      "keyInsight": "Maintain prev and next pointers to flip the arrows."
-    },
-    {
-      "title": "Merge Two Sorted Lists",
-      "url": "https://leetcode.com/problems/merge-two-sorted-lists/",
-      "difficulty": "easy",
-      "keyInsight": "Use a dummy node and a pointer to sew the lists together."
-    },
-    {
       "title": "Linked List Cycle",
       "url": "https://leetcode.com/problems/linked-list-cycle/",
       "difficulty": "easy",
-      "keyInsight": "Use the Fast and Slow pointer pattern."
+      "insight": "A pointer that moves two nodes per step will eventually catch one that moves a single node per step, if (and only if) the list loops."
+    },
+    {
+      "title": "Middle of the Linked List",
+      "url": "https://leetcode.com/problems/middle-of-the-linked-list/",
+      "difficulty": "easy",
+      "insight": "Move one pointer twice as fast as another. Where is the slow one when the fast one runs out of list?"
+    },
+    {
+      "title": "Palindrome Linked List",
+      "url": "https://leetcode.com/problems/palindrome-linked-list/",
+      "difficulty": "easy",
+      "insight": "You can't walk backwards, but you can reverse the second half in place and compare it with the first half."
+    },
+    {
+      "title": "Intersection of Two Linked Lists",
+      "url": "https://leetcode.com/problems/intersection-of-two-linked-lists/",
+      "difficulty": "easy",
+      "insight": "If each pointer switches to the other list's head after reaching its own end, both walk the same total distance. Think about where they meet."
+    },
+    {
+      "title": "Add Two Numbers",
+      "url": "https://leetcode.com/problems/add-two-numbers/",
+      "difficulty": "medium",
+      "insight": "Add digit by digit like on paper, carrying as you go, and build the answer behind a dummy node."
+    },
+    {
+      "title": "Reorder List",
+      "url": "https://leetcode.com/problems/reorder-list/",
+      "difficulty": "medium",
+      "insight": "It combines three moves you know: find the middle, reverse the second half, then weave the two halves together."
+    },
+    {
+      "title": "LRU Cache",
+      "url": "https://leetcode.com/problems/lru-cache/",
+      "difficulty": "medium",
+      "insight": "A hash map finds a node instantly, and a doubly linked list lets you pull it out and move it to the front in O(1)."
+    },
+    {
+      "title": "Reverse Nodes in k-Group",
+      "url": "https://leetcode.com/problems/reverse-nodes-in-k-group/",
+      "difficulty": "hard",
+      "insight": "Reverse one group of k with the same prev/curr/nxt loop, then reconnect it to the groups before and after."
     }
   ]
 }

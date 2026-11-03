@@ -1,275 +1,407 @@
 {
-  "id": "arrays",
+  "schemaVersion": 2,
   "slug": "arrays",
-  "title": "Arrays",
-  "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 30,
-  "prerequisites": [],
-  "tags": [
-    "data-structure",
-    "basics",
-    "memory"
-  ],
-  "overview": {
-    "summary": "An array is a contiguous block of memory used to store a collection of items of the same type.",
-    "learningObjectives": [
-      "Understand how contiguous memory allows O(1) index access.",
-      "Recognize the cost of shifting elements during insertions and deletions.",
-      "Trace basic array operations."
-    ],
-    "interviewRelevance": "Arrays are the most fundamental data structure. Almost every interview question relies on them."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "Your phone holds 10,000 songs. Tap song number 7,342 and it starts at once. How does it find that song without counting past the first 7,341?",
     "paragraphs": [
-      "Imagine a row of identical parking spaces. Every space has a number, and they are placed right next to each other.",
-      "If you know the number of a specific parking space, you can drive straight to it without checking the others."
+      "If you were walking along a shelf of 10,000 records, you would count your way there, and a longer shelf would mean a longer walk. Yet the phone takes the same tiny moment for song 7,342 as for song 1.",
+      "Here is the clue. The songs sit in one unbroken row of boxes, all the same size, and the phone knows where the first box starts."
     ],
-    "ahaMoment": "Because the spaces are contiguous, jumping to any specific slot is instant."
+    "aha": "Same-size boxes in an unbroken row turn counting into arithmetic: the box you want is at start + number × box size. One multiply and one add, whether the box is number 7 or number 7,000. That is an array. The price is that the row must stay unbroken, so squeezing a new box into the middle means moving everything after it."
   },
-  "definition": {
-    "technicalDefinition": "An array is a data structure that stores elements in contiguous memory locations, allowing O(1) random access via an index.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "nums",
+      "cells": [
+        7,
+        3,
+        9,
+        4,
+        1
+      ],
+      "addresses": {
+        "base": 1000,
+        "size": 4
+      },
+      "pointers": [
+        {
+          "name": "i",
+          "index": 3,
+          "role": "focus"
+        }
+      ],
+      "marks": [
+        {
+          "index": 3,
+          "role": "focus"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "index",
-        "definition": "The numerical position of an element in the array (usually starting at 0)."
+        "target": "cell:3",
+        "text": "index: which box"
       },
       {
-        "term": "contiguous",
-        "definition": "Memory slots that are physically next to each other."
+        "target": "cell:1",
+        "text": "address: where it sits"
       },
       {
-        "term": "random access",
-        "definition": "The ability to access any element instantly in O(1) time."
+        "target": "cell:4",
+        "text": "same-size boxes, no gaps"
       }
-    ],
-    "keyProperties": [
-      "Fixed size in memory (in static languages).",
-      "O(1) time complexity to read or write a specific index.",
-      "O(n) time complexity to insert or delete elements (due to shifting)."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A set of post office boxes all in a single row."
+      "Picture a corridor of lockers, all the same width, bolted side by side and numbered from 0 at the door.",
+      "To reach locker 7 you don't open the first six to check. You know every locker is one width wide, so you walk 7 widths from the door and you are there. An array is that corridor in memory."
     ],
-    "clickSentence": "Math makes it fast: Address = StartAddress + (Index * ItemSize).",
-    "diagramType": "ArrayDiagram",
-    "cells": [
-      10,
-      20,
-      30,
-      40,
-      50
-    ],
-    "diagramState": {
-      "highlighted": [
-        2
-      ]
-    }
-  },
-  "structure": {
-    "memoryDescription": [
-      "Arrays ask the operating system for one solid block of memory.",
-      "This guarantees that element [3] is physically adjacent to element [2]."
-    ],
-    "definitionCode": {
-      "python": "arr = [10, 20, 30, 40, 50]",
-      "javascript": "const arr = [10, 20, 30, 40, 50];",
-      "java": "int[] arr = {10, 20, 30, 40, 50};",
-      "cpp": "int arr[] = {10, 20, 30, 40, 50};"
-    },
-    "memoryLayout": [
+    "click": "Same-size boxes in an unbroken row, so the box you want is at start + index × size and you can go straight to it.",
+    "glossary": [
       {
-        "label": "arr[0]",
-        "value": "10"
+        "term": "index",
+        "definition": "The number of a box, counting from 0. The first box is index 0, so a list of 5 has indexes 0 to 4."
       },
       {
-        "label": "arr[1]",
-        "value": "20"
+        "term": "element",
+        "definition": "The value stored in one box."
       },
       {
-        "label": "arr[2]",
-        "value": "30"
+        "term": "contiguous",
+        "definition": "Side by side with no gaps. An array's boxes are contiguous in memory."
+      },
+      {
+        "term": "address",
+        "definition": "Where a box lives in memory, as a number. Address = start + index × size of one box."
+      },
+      {
+        "term": "capacity",
+        "definition": "How many boxes the array was built with. It is fixed. The size is how many of them are in use."
+      },
+      {
+        "term": "shift",
+        "definition": "Copying elements one slot over to open a gap (insert) or close one (delete). Every shifted element is one step of work."
       }
-    ]
-  },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [
-      10,
-      20,
-      30,
-      40,
-      50
     ],
-    "steps": [
+    "definition": "An array is a fixed number of same-size slots stored next to each other in memory and numbered from 0. Because the slots are contiguous, the address of slot i is base + i × size, so reading or writing any slot takes the same constant time, O(1). The cost of that speed is rigidity: the capacity is fixed, inserting or deleting in the middle shifts every element after it (O(n)), and finding a value you only know by content means scanning, also O(n) in the worst case."
+  },
+  "stage": {
+    "tracks": [
       {
-        "stepIndex": 0,
-        "diagramState": {
-          "highlighted": []
-        },
-        "variables": {
-          "index": 0,
-          "target": 30
-        },
-        "explanation": "Let's search for the value 30 in this array using a simple linear scan.",
-        "activeLine": 2
-      },
-      {
-        "stepIndex": 1,
-        "diagramState": {
-          "comparing": [
-            0
-          ]
-        },
-        "variables": {
-          "index": 0,
-          "value": 10,
-          "target": 30
-        },
-        "explanation": "Checking index 0. The value is 10. Not our target.",
-        "activeLine": 3
-      },
-      {
-        "stepIndex": 2,
-        "diagramState": {
-          "comparing": [
-            1
-          ]
-        },
-        "variables": {
-          "index": 1,
-          "value": 20,
-          "target": 30
-        },
-        "explanation": "Checking index 1. The value is 20. Not our target.",
-        "activeLine": 3
-      },
-      {
-        "stepIndex": 3,
-        "diagramState": {
-          "comparing": [
-            2
+        "id": "access",
+        "label": "Access",
+        "tracer": "arrays/access",
+        "predict": {
+          "tags": [
+            "jump-or-count",
+            "which-address"
           ],
-          "highlighted": [
-            2
-          ]
-        },
-        "variables": {
-          "index": 2,
-          "value": 30,
-          "target": 30
-        },
-        "explanation": "Checking index 2. Found our target 30!",
-        "activeLine": 4
+          "max": 2
+        }
+      },
+      {
+        "id": "insert",
+        "label": "Insert",
+        "tracer": "arrays/insert",
+        "predict": {
+          "tags": [
+            "how-many-shift",
+            "which-moves-next"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "delete",
+        "label": "Delete",
+        "tracer": "arrays/delete",
+        "predict": {
+          "tags": [
+            "how-many-shift",
+            "which-moves-next"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "search",
+        "label": "Search",
+        "tracer": "arrays/linear-search",
+        "predict": {
+          "tags": [
+            "where-stop",
+            "found-yet"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "You read or change items by their position, again and again.",
+      "The data is a plain list that mostly stays the same length.",
+      "The problem says \"given an array\" and asks you to scan, count, compare or rearrange it.",
+      "You know, or can bound, how many items there will be."
+    ],
+    "notWhen": [
+      "You keep inserting or deleting in the middle of a long list. Every change shifts everything after it, so look at linked lists.",
+      "You look things up by a key, like a name or an id, instead of a position. Hash maps find them without scanning.",
+      "You ask the same \"sum from here to there\" question over and over. Precompute running totals with prefix sums instead of re-adding."
+    ],
+    "quiz": [
+      {
+        "problem": "Store the temperature for each of the last 365 days, then read the temperature of day 200 many times.",
+        "answer": "arrays",
+        "options": [
+          "linked-lists",
+          "arrays",
+          "hash-maps",
+          "stacks"
+        ],
+        "explanation": "The day number is a position, and you only read by position. An array jumps straight to day 200 in one step."
+      },
+      {
+        "problem": "Given thousands of customer names, answer \"is Priya a customer?\" quickly, many times over.",
+        "answer": "hash-maps",
+        "options": [
+          "arrays",
+          "queues",
+          "hash-maps",
+          "trees"
+        ],
+        "explanation": "You search by content, not by position. Scanning an array checks every name each time, while a hash map goes to the right bucket directly."
+      },
+      {
+        "problem": "A long list gets thousands of inserts and deletes at its front, and you never read by position.",
+        "answer": "linked-lists",
+        "options": [
+          "arrays",
+          "prefix-sum",
+          "linked-lists",
+          "sorting"
+        ],
+        "explanation": "In an array every front insert shifts the whole list. A linked list only rewires a couple of links."
+      },
+      {
+        "problem": "A list of numbers never changes. You get 100,000 questions of the form \"what is the sum from index l to r?\"",
+        "answer": "prefix-sum",
+        "options": [
+          "arrays",
+          "sliding-window",
+          "greedy",
+          "prefix-sum"
+        ],
+        "explanation": "Re-adding each range is slow. Store running totals once, then every range sum is one subtraction."
+      },
+      {
+        "problem": "Find where a number sits in a sorted list of a million numbers as fast as you can.",
+        "answer": "binary-search",
+        "options": [
+          "binary-search",
+          "arrays",
+          "hash-maps",
+          "sorting"
+        ],
+        "explanation": "The list is already sorted, so each question can throw away half of what is left. That is about 20 looks, not a million."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Access",
-      "description": "Read an element directly by its index.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "val = arr[2]",
-        "javascript": "const val = arr[2];",
-        "java": "int val = arr[2];",
-        "cpp": "int val = arr[2];"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "if size == capacity: stop, there is no room",
+        "anchor": "room"
       },
-      "visualNote": "The memory slot is accessed instantly."
-    },
-    {
-      "name": "Search",
-      "description": "Iterate through the array to find a specific value.",
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "for i in range(len(arr)):\n    if arr[i] == target:\n        return i",
-        "javascript": "for (let i = 0; i < arr.length; i++) {\n    if (arr[i] === target) return i;\n}",
-        "java": "for (int i = 0; i < arr.length; i++) {\n    if (arr[i] == target) return i;\n}",
-        "cpp": "for (int i = 0; i < arr.size(); i++) {\n    if (arr[i] == target) return i;\n}"
+      {
+        "text": "for j from size down to i + 1:"
       },
-      "visualNote": "Highlights each cell sequentially until the target is found."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "val = array[index]\nfor i from 0 to array.length:\n  process(array[i])",
-    "whenToUse": "Use Arrays when you need fast random access and size is known or doesn't change frequently.",
-    "timeComplexity": "O(1) Access, O(n) Search/Insert/Delete.",
-    "spaceComplexity": "O(n) memory to store n items."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You need to store a list of daily temperatures and frequently check the temperature on specific days by index.",
-    "correctPatternId": "arrays",
-    "distractors": [
-      "linked-lists",
-      "stacks",
-      "hash-maps"
+      {
+        "text": "copy nums[j - 1] into nums[j]",
+        "anchor": "shift",
+        "indent": 1
+      },
+      {
+        "text": "nums[i] = value",
+        "anchor": "write"
+      },
+      {
+        "text": "size = size + 1, and return it",
+        "anchor": "done"
+      }
     ],
-    "explanation": "Arrays provide O(1) random access, making them perfect for looking up items by a known index."
+    "tracer": "arrays/insert",
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": [
+      "Insert shown here. Delete is the mirror image: slide the elements after index i one slot left, then clear the last slot.",
+      "Access is O(1): address = base + i × size, so every index costs one jump.",
+      "Insert and delete are O(n) in the worst case because up to n elements shift. At the very end nothing has to move, so they are O(1) there.",
+      "Search by value is O(n): in the worst case every slot is looked at. A sorted array can do better with binary search.",
+      "Insert and delete work in place, so they use O(1) extra space. The array itself takes O(n). A full array can't grow: you would copy everything into a bigger one."
+    ]
   },
   "examples": [
     {
-      "title": "Contains Duplicate",
+      "title": "Remove Element",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/contains-duplicate/",
-      "problemStatement": "Given an integer array nums, return true if any value appears at least twice in the array.",
-      "inputExample": "nums = [1,2,3,1]",
-      "outputExample": "true",
-      "steps": [
-        "Iterate through the array.",
-        "Store seen values in a Hash Set.",
-        "If a value is already in the set, we found a duplicate."
+      "url": "https://leetcode.com/problems/remove-element/",
+      "problem": "Given an integer array nums and a value val, remove every occurrence of val in place. Return k, the number of elements not equal to val. The first k slots of nums must hold them, in any order.",
+      "input": "nums = [3,2,2,3], val = 3",
+      "output": "2, with nums = [2,2,_,_]",
+      "approach": [
+        "Deleting each 3 with a shift would cost O(n) per delete. Instead, make one pass and keep a write position for the next slot to fill.",
+        "Walk through the array with read. Whenever nums[read] is not val, copy it into nums[write] and move write on.",
+        "Here 3 is skipped, 2 goes to slot 0, 2 goes to slot 1, and the last 3 is skipped.",
+        "write ends at 2. The first 2 slots hold [2, 2], and whatever sits after them doesn't matter."
       ],
-      "code": {
-        "python": "seen = set()\nfor num in nums:\n    if num in seen:\n        return True\n    seen.add(num)\nreturn False",
-        "javascript": "const seen = new Set();\nfor (const num of nums) {\n    if (seen.has(num)) return true;\n    seen.add(num);\n}\nreturn false;",
-        "java": "Set<Integer> seen = new HashSet<>();\nfor (int num : nums) {\n    if (seen.contains(num)) return true;\n    seen.add(num);\n}\nreturn false;",
-        "cpp": "std::unordered_set<int> seen;\nfor (int num : nums) {\n    if (seen.count(num)) return true;\n    seen.insert(num);\n}\nreturn false;"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(n)",
-      "rationale": "We traverse the array once while utilizing auxiliary space to track elements."
+      "code": "arrays/remove-element",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Move Zeroes",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/move-zeroes/",
+      "problem": "Given an integer array nums, move all 0s to the end while keeping the order of the other numbers. Do it in place.",
+      "input": "nums = [0,1,0,3,12]",
+      "output": "[1,3,12,0,0]",
+      "approach": [
+        "Keep a write position: the slot where the next non-zero number belongs.",
+        "Walk through with read. When nums[read] is not 0, swap it with nums[write] and move write on.",
+        "Each non-zero number lands in the next free front slot, so their order never changes. The zeroes are pushed behind them by the swaps.",
+        "One pass, no extra array: 1, 3 and 12 go to slots 0, 1 and 2, and the zeroes end up at the back."
+      ],
+      "code": "arrays/move-zeroes",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Rotate Array",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/rotate-array/",
+      "problem": "Given an integer array nums, rotate it to the right by k steps, in place.",
+      "input": "nums = [1,2,3,4,5,6,7], k = 3",
+      "output": "[5,6,7,1,2,3,4]",
+      "approach": [
+        "Shifting everything by one, k times, costs O(n × k). Three reversals do the same job in O(n).",
+        "First reduce k to k % n, so that rotating by n or more doesn't repeat laps.",
+        "Reverse the whole array: [7,6,5,4,3,2,1]. Then reverse the first k numbers: [5,6,7,4,3,2,1].",
+        "Finally reverse the remaining n - k numbers: [5,6,7,1,2,3,4]. Each number was swapped a constant number of times."
+      ],
+      "code": "arrays/rotate-array",
+      "time": "O(n)",
+      "space": "O(1)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Why is array access O(1)?",
+      "question": "Why can the computer read nums[500] as fast as nums[0]?",
       "options": [
-        "The computer searches all elements instantly.",
-        "Arrays are stored in the CPU cache.",
-        "Elements are contiguous, so memory addresses are calculated with simple math.",
-        "Arrays are mapped to hash values."
+        "It keeps the first 500 boxes in a faster kind of memory.",
+        "Computers count so quickly that 500 steps don't show.",
+        "The boxes are the same size and side by side, so the address is start + 500 × size.",
+        "It sorts the boxes before it reads."
       ],
-      "correctIndex": 2,
-      "explanation": "The memory address of any index is found by adding (Index * Size) to the starting address."
+      "answer": 2,
+      "explanation": "No counting happens. One multiply and one add give the address, and that costs the same for any index."
     },
     {
-      "question": "What is the primary drawback of a static array?",
+      "question": "An array starts at address 2000 and each box takes 8 bytes. Where does index 5 live?",
       "options": [
-        "Fixed size means you must guess capacity up front.",
-        "They use too much CPU.",
-        "They cannot store objects.",
-        "Accessing the middle element is slow."
+        "2040",
+        "2005",
+        "2048",
+        "2013"
       ],
-      "correctIndex": 0,
-      "explanation": "Static arrays cannot grow. If you run out of space, you must create a new, larger array."
+      "answer": 0,
+      "explanation": "Skip 5 boxes of 8 bytes: 2000 + 5 × 8 = 2040. The result is 2005 if you forget the box size, and 2048 if you skip one box too many."
+    },
+    {
+      "question": "You insert a number at index 0 of an array that holds 100 numbers and has room to spare. How many numbers move?",
+      "options": [
+        "0",
+        "1",
+        "50",
+        "100"
+      ],
+      "answer": 3,
+      "explanation": "Index 0 is the front, so every one of the 100 numbers shifts one slot right to make a gap. That is why insert is O(n)."
+    },
+    {
+      "question": "Why does insert shift from the last number backwards, not from the front?",
+      "options": [
+        "Starting at the end is faster.",
+        "Copying from the front would overwrite numbers that haven't moved yet.",
+        "Arrays only allow writes near the end.",
+        "The last number is always the biggest."
+      ],
+      "answer": 1,
+      "explanation": "Copying nums[i] into nums[i + 1] first would destroy the old nums[i + 1]. Moving the last number into the free slot keeps every number safe."
+    },
+    {
+      "question": "You search an unsorted array of n numbers for a value that isn't there. How many slots do you look at?",
+      "options": [
+        "1",
+        "About log n",
+        "All n of them",
+        "Only the first half"
+      ],
+      "answer": 2,
+      "explanation": "Nothing tells you where the value might be, so you can only rule slots out by checking them. Not found means all n were checked."
     }
   ],
   "practice": [
     {
-      "title": "Two Sum",
-      "url": "https://leetcode.com/problems/two-sum/",
+      "title": "Running Sum of 1d Array",
+      "url": "https://leetcode.com/problems/running-sum-of-1d-array/",
       "difficulty": "easy",
-      "keyInsight": "Iterate the array while storing complements in a hash map."
+      "insight": "Each new total is the previous total plus one more number, so a single left-to-right pass is enough."
     },
     {
-      "title": "Best Time to Buy and Sell Stock",
-      "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+      "title": "Contains Duplicate",
+      "url": "https://leetcode.com/problems/contains-duplicate/",
       "difficulty": "easy",
-      "keyInsight": "Track the lowest minimum price as you iterate."
+      "insight": "Scanning for repeats for every number is slow. Remember what you have seen and ask whether the current number is in there."
+    },
+    {
+      "title": "Merge Sorted Array",
+      "url": "https://leetcode.com/problems/merge-sorted-array/",
+      "difficulty": "easy",
+      "insight": "The free room is at the end of the array, so fill from the back, taking the bigger number each time. Nothing gets overwritten."
+    },
+    {
+      "title": "Remove Duplicates from Sorted Array",
+      "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/",
+      "difficulty": "easy",
+      "insight": "Equal numbers sit side by side. Use a write position and only copy a number when it differs from the one before it."
+    },
+    {
+      "title": "Find Pivot Index",
+      "url": "https://leetcode.com/problems/find-pivot-index/",
+      "difficulty": "easy",
+      "insight": "At each index, the right sum is the total minus the left sum minus the current number. Keep the left sum as you go."
+    },
+    {
+      "title": "Product of Array Except Self",
+      "url": "https://leetcode.com/problems/product-of-array-except-self/",
+      "difficulty": "medium",
+      "insight": "The answer at i is everything to its left times everything to its right. Build the left products in one pass and fold in the right products in another."
+    },
+    {
+      "title": "Maximum Subarray",
+      "url": "https://leetcode.com/problems/maximum-subarray/",
+      "difficulty": "medium",
+      "insight": "At each number decide: extend the run you have, or start fresh here. A run with a negative total only drags the next number down."
+    },
+    {
+      "title": "First Missing Positive",
+      "url": "https://leetcode.com/problems/first-missing-positive/",
+      "difficulty": "hard",
+      "insight": "Use the array as its own lookup: a number v between 1 and n belongs at index v - 1, so swap each one home and look for the first slot that is wrong."
     }
   ]
 }

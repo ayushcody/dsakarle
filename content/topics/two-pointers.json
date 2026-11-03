@@ -1,515 +1,408 @@
 {
-  "id": "two-pointers",
+  "schemaVersion": 2,
   "slug": "two-pointers",
-  "title": "Two Pointers",
-  "category": "algorithm",
-  "difficulty": "beginner",
-  "estimatedMinutes": 45,
-  "prerequisites": [],
-  "tags": [
-    "array",
-    "sorted-array",
-    "pointers"
-  ],
-  "overview": {
-    "summary": "Two Pointers uses two moving indices to narrow the search space without nested loops.",
-    "learningObjectives": [
-      "Know when opposite-direction pointers are valid.",
-      "Explain why sorted order makes pointer moves meaningful.",
-      "Trace pointer movement visually before reading code."
-    ],
-    "interviewRelevance": "It is one of the most reused linear-time interview patterns."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "You have an $18 gift card and a shop's price list, sorted from cheapest to priciest: 1, 2, 4, 6, 8, 10, 15. Which two items cost exactly $18 together, without trying every pair?",
     "paragraphs": [
-      "Imagine two people scanning a queue from opposite ends to find a pair that meets a rule. They do not need to restart from scratch every time.",
-      "Whenever the data is ordered, pointer movement tells you which side can be safely discarded."
+      "Trying every pair works. Seven prices make 21 pairs. A hundred prices make 4,950 pairs, and the count grows with the square of the list.",
+      "But this list is sorted, and that is a clue. Take the cheapest item (1) and the priciest (15): together they cost 16, which is not enough. What does that tell you about the 1?"
     ],
-    "ahaMoment": "One comparison can eliminate an entire set of impossible pairs."
+    "aha": "The 1 is out. Even next to the priciest item it falls short, so it can't be in any answer. One look throws away an item and all of its pairs. Keep checking the two ends and dropping one, and the answer turns up in a single pass: at most n - 1 checks instead of about n² / 2."
   },
-  "definition": {
-    "technicalDefinition": "Two Pointers is a pattern that maintains two indices whose movement is guided by the relationship between the current state and the target condition.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "nums",
+      "cells": [
+        1,
+        2,
+        4,
+        6,
+        8,
+        10,
+        15
+      ],
+      "pointers": [
+        {
+          "name": "left",
+          "index": 0,
+          "role": "ptrA"
+        },
+        {
+          "name": "right",
+          "index": 6,
+          "role": "ptrB"
+        }
+      ],
+      "window": {
+        "start": 0,
+        "end": 6
+      },
+      "marks": [
+        {
+          "index": 0,
+          "role": "compare"
+        },
+        {
+          "index": 6,
+          "role": "compare"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "left pointer",
-        "definition": "The index tracking the low side of the search."
+        "target": "ptr:left",
+        "text": "smallest"
       },
       {
-        "term": "right pointer",
-        "definition": "The index tracking the high side of the search."
+        "target": "ptr:right",
+        "text": "largest"
       },
       {
-        "term": "discard",
-        "definition": "Move one pointer because a whole region can no longer contain the answer."
+        "target": "window",
+        "text": "move the one that helps"
       }
-    ],
-    "keyProperties": [
-      "Most useful on sorted arrays or when relative order has meaning.",
-      "Often replaces O(n²) pair scanning with O(n).",
-      "Each move removes impossible candidates."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "Two people walk toward each other across a bridge, comparing notes at each meeting point."
+      "Two friends stand at opposite ends of a bookshelf where the books are sorted from cheapest to priciest. Together they must pick two books that cost exactly your budget.",
+      "If the two books cost too little, the friend on the cheap end steps toward the middle. If they cost too much, the friend on the pricey end does."
     ],
-    "clickSentence": "If the array is sorted, moving one side changes the sum in a predictable direction.",
-    "diagramType": "TwoPointersDiagram",
-    "cells": [
-      1,
-      2,
-      4,
-      6,
-      8,
-      10,
-      15
-    ],
-    "diagramState": {
-      "left": 0,
-      "right": 6,
-      "comparing": [
-        0,
-        6
-      ]
-    }
-  },
-  "structure": {
-    "memoryDescription": [
-      "Two Pointers uses only the original array plus two integer indices.",
-      "The pattern is cheap in memory because the state is mostly positional."
-    ],
-    "definitionCode": {
-      "python": "left = 0\nright = len(nums) - 1",
-      "javascript": "let left = 0;\nlet right = nums.length - 1;",
-      "java": "int left = 0;\nint right = nums.length - 1;",
-      "cpp": "int left = 0;\nint right = nums.size() - 1;"
-    },
-    "memoryLayout": [
+    "click": "Sorted order makes every move safe: a sum that is too small can only be fixed by a bigger left number, and a sum that is too big only by a smaller right number.",
+    "glossary": [
       {
-        "label": "left",
-        "value": "low-side candidate index"
+        "term": "pointer",
+        "definition": "An index that remembers a position in the array. You can move it, and you can read the number under it."
       },
       {
-        "label": "right",
-        "value": "high-side candidate index"
+        "term": "converging pointers",
+        "definition": "One pointer starts at each end and they walk toward each other until they meet. This is the pair-sum shape."
       },
       {
-        "label": "sorted array",
-        "value": "gives meaning to pointer movement"
+        "term": "same-direction pointers",
+        "definition": "Both pointers start at the front and move forward, but at different speeds or jobs. One reads ahead, the other keeps track of what is kept."
+      },
+      {
+        "term": "slow and fast",
+        "definition": "In the same-direction shape, slow is the writer (the end of the result so far) and fast is the reader that scouts ahead."
+      },
+      {
+        "term": "discard",
+        "definition": "Rule a number out for good. A pointer only moves past a number once it can't be part of any answer."
+      },
+      {
+        "term": "in place",
+        "definition": "Changing the array itself, using no extra array. Same-direction pointers do this by writing over numbers they no longer need."
       }
-    ]
-  },
-  "stepper": {
-    "diagramType": "TwoPointersDiagram",
-    "array": [
-      1,
-      2,
-      4,
-      6,
-      8,
-      10,
-      15
     ],
-    "steps": [
+    "definition": "Two pointers keeps two indices into an array or string and moves them by a rule, so that every step rules out possibilities instead of re-checking them. In the converging form, one pointer starts at each end of a sorted sequence and they move toward each other. In the same-direction form, a fast pointer reads ahead while a slow pointer marks where the result is written. Pointers never move backwards, so a pass takes O(n) time and O(1) extra space."
+  },
+  "stage": {
+    "tracks": [
       {
-        "stepIndex": 0,
-        "diagramState": {
-          "left": 0,
-          "right": 6,
-          "comparing": [
-            0,
-            6
-          ]
-        },
-        "variables": {
-          "left": 0,
-          "right": 6,
-          "current_sum": 16,
-          "target": 18
-        },
-        "explanation": "Compare nums[0] + nums[6] = 16 against target 18.",
-        "activeLine": 4
-      },
-      {
-        "stepIndex": 1,
-        "diagramState": {
-          "left": 1,
-          "right": 6
-        },
-        "variables": {
-          "left": 1,
-          "right": 6,
-          "current_sum": 17,
-          "target": 18
-        },
-        "explanation": "The sum is too small, so move the left pointer right to increase it.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 2,
-        "diagramState": {
-          "left": 1,
-          "right": 6,
-          "comparing": [
-            1,
-            6
-          ]
-        },
-        "variables": {
-          "left": 1,
-          "right": 6,
-          "current_sum": 17,
-          "target": 18
-        },
-        "explanation": "Compare nums[1] + nums[6] = 17 against target 18.",
-        "activeLine": 4
-      },
-      {
-        "stepIndex": 3,
-        "diagramState": {
-          "left": 2,
-          "right": 6
-        },
-        "variables": {
-          "left": 2,
-          "right": 6,
-          "current_sum": 19,
-          "target": 18
-        },
-        "explanation": "The sum is too small, so move the left pointer right to increase it.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 4,
-        "diagramState": {
-          "left": 2,
-          "right": 6,
-          "comparing": [
-            2,
-            6
-          ]
-        },
-        "variables": {
-          "left": 2,
-          "right": 6,
-          "current_sum": 19,
-          "target": 18
-        },
-        "explanation": "Compare nums[2] + nums[6] = 19 against target 18.",
-        "activeLine": 4
-      },
-      {
-        "stepIndex": 5,
-        "diagramState": {
-          "left": 2,
-          "right": 5
-        },
-        "variables": {
-          "left": 2,
-          "right": 5,
-          "current_sum": 14,
-          "target": 18
-        },
-        "explanation": "The sum is too large, so move the right pointer left to decrease it.",
-        "activeLine": 9
-      },
-      {
-        "stepIndex": 6,
-        "diagramState": {
-          "left": 2,
-          "right": 5,
-          "comparing": [
-            2,
-            5
-          ]
-        },
-        "variables": {
-          "left": 2,
-          "right": 5,
-          "current_sum": 14,
-          "target": 18
-        },
-        "explanation": "Compare nums[2] + nums[5] = 14 against target 18.",
-        "activeLine": 4
-      },
-      {
-        "stepIndex": 7,
-        "diagramState": {
-          "left": 3,
-          "right": 5
-        },
-        "variables": {
-          "left": 3,
-          "right": 5,
-          "current_sum": 16,
-          "target": 18
-        },
-        "explanation": "The sum is too small, so move the left pointer right to increase it.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 8,
-        "diagramState": {
-          "left": 3,
-          "right": 5,
-          "comparing": [
-            3,
-            5
-          ]
-        },
-        "variables": {
-          "left": 3,
-          "right": 5,
-          "current_sum": 16,
-          "target": 18
-        },
-        "explanation": "Compare nums[3] + nums[5] = 16 against target 18.",
-        "activeLine": 4
-      },
-      {
-        "stepIndex": 9,
-        "diagramState": {
-          "left": 4,
-          "right": 5
-        },
-        "variables": {
-          "left": 4,
-          "right": 5,
-          "current_sum": 18,
-          "target": 18
-        },
-        "explanation": "The sum is too small, so move the left pointer right to increase it.",
-        "activeLine": 7
-      },
-      {
-        "stepIndex": 10,
-        "diagramState": {
-          "left": 4,
-          "right": 5,
-          "comparing": [
-            4,
-            5
-          ]
-        },
-        "variables": {
-          "left": 4,
-          "right": 5,
-          "current_sum": 18,
-          "target": 18
-        },
-        "explanation": "Compare nums[4] + nums[5] = 18 against target 18.",
-        "activeLine": 4
-      },
-      {
-        "stepIndex": 11,
-        "diagramState": {
-          "left": 4,
-          "right": 5,
-          "comparing": [
-            4,
-            5
+        "id": "converging",
+        "label": "Converging",
+        "tracer": "two-pointers/pair-sum",
+        "predict": {
+          "tags": [
+            "which-pointer-moves"
           ],
-          "highlighted": [
-            4,
-            5
-          ]
-        },
-        "variables": {
-          "left": 4,
-          "right": 5,
-          "current_sum": 18,
-          "target": 18
-        },
-        "explanation": "The pair matches the target, so we can stop here.",
-        "activeLine": 5
+          "max": 4
+        }
+      },
+      {
+        "id": "same-direction",
+        "label": "Same direction",
+        "tracer": "two-pointers/dedupe",
+        "predict": {
+          "tags": [
+            "write-or-skip"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The data is sorted (or you can sort it) and you need a pair that meets a target.",
+      "You need to compare the two ends of something, like a palindrome check.",
+      "The problem says in place, or asks you to remove, partition or merge using O(1) extra space.",
+      "Brute force would try every pair, and sorted order tells you which side to give up on."
+    ],
+    "notWhen": [
+      "The array is unsorted and you need the original indices: use a hash map.",
+      "You need a contiguous stretch whose size depends on a rule (longest, shortest): that is a sliding window.",
+      "The problem is about a cycle or the middle of a linked list: that is fast and slow pointers."
+    ],
+    "quiz": [
+      {
+        "problem": "Given a sorted array and a target, return the positions of two numbers that add up to the target.",
+        "answer": "two-pointers",
+        "options": [
+          "binary-search",
+          "two-pointers",
+          "hash-maps",
+          "prefix-sum"
+        ],
+        "explanation": "The array is sorted, so one pointer at each end can close in on the target. Each step drops one number that cannot be in the answer."
+      },
+      {
+        "problem": "Given an unsorted array, return the indices of two numbers that add up to a target.",
+        "answer": "hash-maps",
+        "options": [
+          "sorting",
+          "two-pointers",
+          "hash-maps",
+          "sliding-window"
+        ],
+        "explanation": "Sorting would scramble the original indices you have to return. A hash map remembers each number you've seen, so one pass finds its partner."
+      },
+      {
+        "problem": "Find the longest run of consecutive days where the total sales stay under a budget (sales are never negative).",
+        "answer": "sliding-window",
+        "options": [
+          "sliding-window",
+          "two-pointers",
+          "prefix-sum",
+          "greedy"
+        ],
+        "explanation": "A run of consecutive days is a contiguous window whose size depends on a rule. Expand on the right, shrink on the left."
+      },
+      {
+        "problem": "Decide whether a linked list has a cycle in it, using no extra memory.",
+        "answer": "fast-and-slow-pointers",
+        "options": [
+          "two-pointers",
+          "hash-maps",
+          "recursion",
+          "fast-and-slow-pointers"
+        ],
+        "explanation": "A list has no indices to compare, and the pointers need different speeds. If there is a cycle, the fast one eventually laps the slow one."
+      },
+      {
+        "problem": "Check whether a sentence reads the same forwards and backwards, ignoring punctuation and capital letters.",
+        "answer": "two-pointers",
+        "options": [
+          "strings",
+          "binary-search",
+          "two-pointers",
+          "recursion"
+        ],
+        "explanation": "A palindrome means the two ends match, then the next two in, and so on. Walk a pointer in from each end and compare."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Compare Pair",
-      "description": "Inspect the current left/right pair to see how it relates to the target.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "current = nums[left] + nums[right]",
-        "javascript": "const current = nums[left] + nums[right];",
-        "java": "int current = nums[left] + nums[right];",
-        "cpp": "int current = nums[left] + nums[right];"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "left = 0, right = n - 1",
+        "anchor": "init"
       },
-      "visualNote": "Both pointer markers stay in view while the compared cells are tinted."
-    },
-    {
-      "name": "Move the Correct Pointer",
-      "description": "Shift the pointer that can improve the answer while preserving correctness.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "if current < target:\n    left += 1\nelse:\n    right -= 1",
-        "javascript": "if (current < target) left += 1;\nelse right -= 1;",
-        "java": "if (current < target) left++;\nelse right--;",
-        "cpp": "if (current < target) left++;\nelse right--;"
+      {
+        "text": "while left < right:"
       },
-      "visualNote": "Only one pointer moves after each comparison."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "left = 0\nright = n - 1\nwhile left < right:\n  evaluate(left, right)\n  move the pointer that discards impossible answers",
-    "whenToUse": "Use Two Pointers when pair relationships matter and order lets you reason about which side to move.",
-    "timeComplexity": "O(n) because each pointer crosses the array at most once.",
-    "spaceComplexity": "O(1) extra memory."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "A sorted array contains numbers. Find whether any pair sums to a target value.",
-    "correctPatternId": "two-pointers",
-    "distractors": [
-      "sliding-window",
-      "binary-search",
-      "prefix-sum"
+      {
+        "text": "total = nums[left] + nums[right]",
+        "anchor": "compare",
+        "indent": 1
+      },
+      {
+        "text": "if total == target:",
+        "anchor": "found",
+        "indent": 1
+      },
+      {
+        "text": "return the positions of left and right",
+        "anchor": "done",
+        "indent": 2
+      },
+      {
+        "text": "if total < target: left = left + 1",
+        "anchor": "move-left",
+        "indent": 1
+      },
+      {
+        "text": "otherwise: right = right - 1",
+        "anchor": "move-right",
+        "indent": 1
+      },
+      {
+        "text": "return \"no pair\" ([-1, -1])",
+        "anchor": "done"
+      }
     ],
-    "explanation": "Sorted order lets one comparison tell you which side to move next."
+    "tracer": "two-pointers/pair-sum",
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": [
+      "Why it never misses the answer: if the sum is too small, then left plus even the biggest number still in play falls short, so left can't be in any pair. If the sum is too big, right can't be in any pair either. Only numbers that can't be part of an answer are ever dropped.",
+      "Each step moves one pointer inward, so there are at most n - 1 steps: O(n). Only a few variables are kept, so the extra space is O(1).",
+      "The array must be sorted. If it isn't, sorting first costs O(n log n) and scrambles the original positions.",
+      "For the same-direction shape, slow marks the last number kept and fast reads ahead. Both only move forward, so that is O(n) time and O(1) space too.",
+      "LeetCode counts positions from 1, so the code returns left + 1 and right + 1, and [-1, -1] when no pair exists."
+    ]
   },
   "examples": [
     {
-      "title": "Two Sum II",
-      "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
-      "problemStatement": "Find two numbers in a sorted array that add up to a target.",
-      "inputExample": "numbers = [1,2,4,6,8,10,15], target = 18",
-      "outputExample": "[2, 6]",
-      "steps": [
-        "Start with the widest possible pair.",
-        "If the sum is too large, decrease the right side.",
-        "If the sum is too small, increase the left side.",
-        "Stop when the pair matches the target."
+      "title": "Two Sum II - Input Array Is Sorted",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+      "problem": "Given a sorted array of integers numbers and a target, return the 1-indexed positions of the two numbers that add up to the target. Use only constant extra space.",
+      "input": "numbers = [2,7,11,15], target = 9",
+      "output": "[1,2]",
+      "approach": [
+        "The array is sorted, so put left on the first number and right on the last.",
+        "2 + 15 = 17 is more than 9. Even the smallest number can't pair with 15, so drop 15 and move right back to 11.",
+        "2 + 11 = 13 is still more than 9, so drop 11 and move right back to 7.",
+        "2 + 7 = 9 is the target. The numbers sit at positions 1 and 2 counting from 1, so the answer is [1, 2]."
       ],
-      "code": {
-        "python": "left, right = 0, len(nums) - 1",
-        "javascript": "let left = 0, right = nums.length - 1;",
-        "java": "int left = 0, right = nums.length - 1;",
-        "cpp": "int left = 0, right = nums.size() - 1;"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "rationale": "Each comparison removes one impossible side."
+      "code": "two-pointers/pair-sum",
+      "time": "O(n)",
+      "space": "O(1)"
     },
     {
       "title": "Valid Palindrome",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/valid-palindrome/",
-      "problemStatement": "Compare a string from both ends until the middle.",
-      "inputExample": "s = \"racecar\"",
-      "outputExample": "true",
-      "steps": [
-        "Compare the outermost characters.",
-        "Move inward when they match.",
-        "Fail immediately on a mismatch."
+      "url": "https://leetcode.com/problems/valid-palindrome/",
+      "problem": "Given a string s, return true if it reads the same forwards and backwards after you lowercase every letter and ignore everything that isn't a letter or a digit.",
+      "input": "s = \"A man, a plan, a canal: Panama\"",
+      "output": "true",
+      "approach": [
+        "Put left on the first character and right on the last. The pointers will walk toward each other.",
+        "If left is on a space or a symbol, move it on. Do the same for right. Only letters and digits count.",
+        "Compare the two characters in lowercase. If they differ, the answer is false. If they match, move both pointers inward.",
+        "The pointers meet without a mismatch, so the answer is true. \"amanaplanacanalpanama\" reads the same both ways."
       ],
-      "code": {
-        "python": "left, right = 0, len(s) - 1",
-        "javascript": "let left = 0, right = s.length - 1;",
-        "java": "int left = 0, right = s.length() - 1;",
-        "cpp": "int left = 0, right = s.size() - 1;"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(1)",
-      "rationale": "You only compare matching symmetric positions."
+      "code": "two-pointers/valid-palindrome",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Container With Most Water",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/container-with-most-water/",
+      "problem": "Given an array height of n wall heights, pick two walls so that, with the x-axis, they hold the most water. Return that amount.",
+      "input": "height = [1,8,6,2,5,4,8,3,7]",
+      "output": "49",
+      "approach": [
+        "Water held is the distance between the walls times the shorter wall. Start with the widest pair: walls 1 and 7, 8 apart, so 8 x 1 = 8.",
+        "The shorter wall limits the water. Moving the taller wall inward can only make the container narrower and no taller, so it can't help.",
+        "So always move the pointer on the shorter wall. Here that moves left to the wall of height 8.",
+        "Keep the best area seen. Walls 8 and 7 are 7 apart: 7 x 7 = 49. No later pair beats it, so the answer is 49."
+      ],
+      "code": "two-pointers/container-with-most-water",
+      "time": "O(n)",
+      "space": "O(1)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Why does sorted order matter?",
+      "question": "The numbers under left and right add up to less than the target. Why is it safe to drop the left number for good?",
       "options": [
-        "It makes pointer moves meaningful",
-        "It guarantees recursion",
-        "It uses more memory",
-        "It avoids loops"
+        "The right pointer will make up the difference later.",
+        "Even with the biggest number still in play it falls short, so it can't be in any answer.",
+        "Small numbers are never part of an answer.",
+        "It saves memory to forget the first number."
       ],
-      "correctIndex": 0,
-      "explanation": "Without sorted order, moving left or right would not predictably change the result."
+      "answer": 1,
+      "explanation": "The right number is the biggest left in play, so no other partner could do better. If left plus right is too small, left can't reach the target at all."
     },
     {
-      "question": "What happens if the current sum is too large?",
+      "question": "The pointers sit on the ends of [1, 3, 5, 8] and the target is 10. 1 + 8 = 9. What happens next?",
       "options": [
-        "Move left leftward",
-        "Sort again",
-        "Move right leftward",
-        "Use a stack"
+        "Right moves back to 5.",
+        "Both pointers move one step.",
+        "The answer [1, 4] is returned.",
+        "Left moves forward to 3."
       ],
-      "correctIndex": 2,
-      "explanation": "Reducing the larger side decreases the sum on a sorted array."
+      "answer": 3,
+      "explanation": "9 is below 10, so left needs a bigger number. Left moves forward to 3 and the 1 is dropped for good."
     },
     {
-      "question": "Why is the runtime O(n)?",
+      "question": "Why does the converging search take O(n) time and not O(n²)?",
       "options": [
-        "Each pointer moves at most n steps",
-        "The array is hashed",
-        "We recurse on halves",
-        "We skip memory"
+        "Each step moves a pointer inward, so there are at most n - 1 steps.",
+        "It sorts the array first.",
+        "It only looks at the middle element.",
+        "It skips every other number."
       ],
-      "correctIndex": 0,
-      "explanation": "Neither pointer ever moves backward."
+      "answer": 0,
+      "explanation": "Every step drops exactly one number. The pointers can only close the gap n - 1 times before they meet."
     },
     {
-      "question": "What does each move do conceptually?",
+      "question": "What goes wrong if you run converging pointers on an unsorted array?",
       "options": [
-        "Add a new subtree",
-        "Resize the array",
-        "Discard impossible answers",
-        "Sort the input"
+        "It still works but takes longer.",
+        "It sorts the array as it goes.",
+        "A move can drop a number that was part of the answer, so it can miss it.",
+        "It always returns [-1, -1]."
       ],
-      "correctIndex": 2,
-      "explanation": "Pointer movement removes regions that cannot contain the answer anymore."
+      "answer": 2,
+      "explanation": "The whole argument depends on sorted order. Without it, a too-small sum doesn't tell you the left number is useless."
+    },
+    {
+      "question": "In remove-duplicates with slow and fast pointers, what does slow mark?",
+      "options": [
+        "The next number fast will read.",
+        "The last unique number kept so far.",
+        "The middle of the array.",
+        "How many duplicates were found."
+      ],
+      "answer": 1,
+      "explanation": "Everything up to slow is the unique prefix. When fast finds a number different from the one under slow, slow steps forward and that number is copied there."
     }
   ],
   "practice": [
     {
-      "title": "Two Sum II",
-      "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+      "title": "Reverse String",
+      "url": "https://leetcode.com/problems/reverse-string/",
       "difficulty": "easy",
-      "keyInsight": "Move one side based on the current sum."
+      "insight": "Swap the two ends, then move both pointers inward until they meet."
     },
     {
-      "title": "Valid Palindrome",
-      "url": "https://leetcode.com/problems/valid-palindrome/",
+      "title": "Move Zeroes",
+      "url": "https://leetcode.com/problems/move-zeroes/",
       "difficulty": "easy",
-      "keyInsight": "Compare symmetric positions."
+      "insight": "It is the same-direction shape from remove-duplicates: fast reads every number and slow marks where the next non-zero belongs."
     },
     {
       "title": "Squares of a Sorted Array",
       "url": "https://leetcode.com/problems/squares-of-a-sorted-array/",
       "difficulty": "easy",
-      "keyInsight": "Largest square comes from one of the ends."
+      "insight": "The biggest square is at one of the two ends, so fill the answer from the back, taking the larger end each time."
     },
     {
-      "title": "Container With Most Water",
-      "url": "https://leetcode.com/problems/container-with-most-water/",
+      "title": "Boats to Save People",
+      "url": "https://leetcode.com/problems/boats-to-save-people/",
       "difficulty": "medium",
-      "keyInsight": "Discard the shorter wall."
+      "insight": "Sort the weights. The heaviest person either shares a boat with the lightest person or has to go alone."
     },
     {
       "title": "3Sum",
       "url": "https://leetcode.com/problems/3sum/",
       "difficulty": "medium",
-      "keyInsight": "Fix one value and run two pointers inside."
-    },
-    {
-      "title": "3Sum Closest",
-      "url": "https://leetcode.com/problems/3sum-closest/",
-      "difficulty": "medium",
-      "keyInsight": "Pointer movement continuously improves the candidate."
+      "insight": "Sort, fix one number, then run converging pointers on the rest. Skip repeated values so you don't report the same triple twice."
     },
     {
       "title": "Sort Colors",
       "url": "https://leetcode.com/problems/sort-colors/",
       "difficulty": "medium",
-      "keyInsight": "Same-direction pointers also count as two-pointer thinking."
+      "insight": "Keep pointers for where the 0s end and where the 2s begin, and swap each number you scan into the right zone."
+    },
+    {
+      "title": "3Sum Closest",
+      "url": "https://leetcode.com/problems/3sum-closest/",
+      "difficulty": "medium",
+      "insight": "Like 3Sum, but remember the sum closest to the target so far and move the pointers by comparing each sum with the target."
     },
     {
       "title": "Trapping Rain Water",
       "url": "https://leetcode.com/problems/trapping-rain-water/",
       "difficulty": "hard",
-      "keyInsight": "Move the side with the smaller boundary."
+      "insight": "The water over a bar is limited by the shorter of the tallest bars on its two sides, so always move the pointer on the lower side."
     }
   ]
 }

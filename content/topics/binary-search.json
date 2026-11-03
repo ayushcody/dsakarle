@@ -1,238 +1,447 @@
 {
-  "id": "binary-search",
+  "schemaVersion": 2,
   "slug": "binary-search",
-  "title": "Binary Search",
-  "category": "algorithm",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 50,
-  "prerequisites": [
-    "arrays"
-  ],
-  "tags": [
-    "array",
-    "search",
-    "divide-and-conquer"
-  ],
-  "overview": {
-    "summary": "Binary Search is a divide-and-conquer algorithm that finds a target in a sorted array in O(log N) time by repeatedly halving the search space.",
-    "learningObjectives": [
-      "Understand why the array MUST be sorted.",
-      "Master the mid-point calculation to avoid integer overflow.",
-      "Identify the three main templates of Binary Search (exact match, lower bound, upper bound)."
-    ],
-    "interviewRelevance": "Binary search is the ultimate optimization when a brute-force O(N) scan is too slow. Finding the O(log N) solution is a mandatory interview milestone."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "I'm thinking of a number from 1 to 100. You can ask yes/no questions like \"Is it more than 50?\". How few questions do you need to be sure of my number?",
     "paragraphs": [
-      "Imagine guessing a number between 1 and 100. If you guess 50 and I say 'Higher!', you instantly eliminate 1 through 50. You don't need to check them.",
-      "By always guessing in the exact middle of the remaining possibilities, you can find the answer in a maximum of 7 guesses instead of 100."
+      "The slow way is to ask \"Is it 1? Is it 2? Is it 3?\" and keep going. If I picked 100, that takes 100 questions.",
+      "Now ask \"Is it more than 50?\" and hear \"yes\". One question just crossed out 1 through 50. You never have to think about them again."
     ],
-    "ahaMoment": "Every single comparison eliminates exactly half of the remaining data."
+    "aha": "Each question halves what's left: 100 → 50 → 25 → 13 → 7 → 4 → 2 → 1. Seven questions are always enough, because that is how many times 100 can be halved. This is log₂: a million numbers take only 20 questions."
   },
-  "definition": {
-    "technicalDefinition": "Binary Search is a search algorithm that finds the position of a target value within a sorted array by comparing the target value to the middle element of the array.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "nums",
+      "cells": [
+        2,
+        5,
+        8,
+        12,
+        16,
+        23,
+        38,
+        56,
+        72
+      ],
+      "pointers": [
+        {
+          "name": "lo",
+          "index": 5,
+          "role": "ptrA"
+        },
+        {
+          "name": "hi",
+          "index": 8,
+          "role": "ptrB"
+        },
+        {
+          "name": "mid",
+          "index": 6,
+          "role": "focus"
+        }
+      ],
+      "window": {
+        "start": 5,
+        "end": 8
+      },
+      "marks": [
+        {
+          "index": 0,
+          "role": "discarded"
+        },
+        {
+          "index": 1,
+          "role": "discarded"
+        },
+        {
+          "index": 2,
+          "role": "discarded"
+        },
+        {
+          "index": 3,
+          "role": "discarded"
+        },
+        {
+          "index": 4,
+          "role": "discarded"
+        },
+        {
+          "index": 6,
+          "role": "compare"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "Search Space",
-        "definition": "The range of indices `[left, right]` where the target might still exist."
+        "target": "ptr:lo",
+        "text": "lo"
       },
       {
-        "term": "Midpoint",
-        "definition": "The index exactly halfway between the current `left` and `right` boundaries."
+        "target": "cell:6",
+        "text": "check the middle"
       },
       {
-        "term": "Logarithmic Time",
-        "definition": "O(log N). The time increases linearly only as the data size increases exponentially."
+        "target": "cell:2",
+        "text": "this half is gone"
       }
-    ],
-    "keyProperties": [
-      "Requires random access (like an Array, not a Linked List).",
-      "Requires the data to be sorted (or at least monotonic).",
-      "Reduces search space by 50% on every iteration."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A dictionary. To find 'Monkey', you open to the middle ('M'). You know instantly whether to search the left half or right half of the book."
+      "To find \"monkey\" in a paper dictionary you don't start at page one. You open it in the middle and land on \"M\", then see that \"monkey\" comes later, so the whole front half of the book is out.",
+      "Open the middle of what's left, and again, and again. Each peek removes half of the pages, which is why even a huge dictionary takes only a few peeks."
     ],
-    "clickSentence": "If you know it's not in the left half, you never have to look at the left half again.",
-    "diagramType": "ArrayDiagram",
-    "cells": [
-      2,
-      5,
-      8,
-      12,
-      16,
-      23,
-      38,
-      56,
-      72,
-      91
+    "click": "Look at the middle. Because the list is sorted, that one look tells you which half can't hold your target, so throw that half away.",
+    "glossary": [
+      {
+        "term": "sorted",
+        "definition": "The numbers go from smallest to largest, left to right. Binary search only works when this is true."
+      },
+      {
+        "term": "lo",
+        "definition": "The left edge of the range where the target could still be."
+      },
+      {
+        "term": "hi",
+        "definition": "The right edge of that range. Everything outside lo and hi has been ruled out."
+      },
+      {
+        "term": "mid",
+        "definition": "The index in the middle of lo and hi. It is the one cell you look at each round."
+      },
+      {
+        "term": "invariant",
+        "definition": "The promise that stays true every round: if the target is in the array, it is somewhere between lo and hi."
+      },
+      {
+        "term": "lower bound",
+        "definition": "The first position whose value is at least the target. It is also where the target would be inserted to keep the list sorted."
+      },
+      {
+        "term": "monotonic",
+        "definition": "A yes/no answer that flips only once, like no, no, no, yes, yes, yes. That single flip is what lets you search for it by halving."
+      }
     ],
-    "diagramState": {}
+    "definition": "Binary search finds a value, or the boundary where a yes/no answer flips, in a sorted or monotonic sequence. It keeps a range [lo, hi] that must contain the answer, looks at the middle element, and uses that one comparison to discard half of the range. The range shrinks from n to n/2 to n/4 and so on, so the search takes O(log n) comparisons and O(1) extra space."
   },
-  "structure": {
-    "memoryDescription": [
-      "Binary Search requires zero extra memory. It operates entirely in-place.",
-      "It simply maintains two integer pointers: `left` and `right`."
+  "stage": {
+    "tracks": [
+      {
+        "id": "find",
+        "label": "Find a value",
+        "tracer": "binary-search/classic",
+        "predict": {
+          "tags": [
+            "which-half"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "boundary",
+        "label": "First position ≥ target",
+        "tracer": "binary-search/first-true",
+        "predict": {
+          "tags": [
+            "which-half",
+            "boundary"
+          ],
+          "max": 3
+        }
+      }
     ],
-    "definitionCode": {
-      "python": "left, right = 0, len(arr) - 1",
-      "javascript": "let left = 0, right = arr.length - 1;",
-      "java": "int left = 0, right = arr.length - 1;",
-      "cpp": "int left = 0, right = arr.size() - 1;"
-    },
-    "memoryLayout": [
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The data is sorted (or you can sort it once) and you need to find a value, or the spot where it belongs.",
+      "The problem asks for the minimum or maximum value that works: the smallest speed, the least capacity, the largest size.",
+      "You can test one candidate answer quickly, and the test is monotonic: if 5 works, then 6, 7 and 8 work too.",
+      "The statement asks for O(log n), or n is so big that looking at everything is too slow."
+    ],
+    "notWhen": [
+      "The data is unsorted and you only need one lookup: a plain scan (or a hash map for many lookups) costs less than sorting first.",
+      "The yes/no test flips more than once: if 5 works, 6 fails and 7 works, one peek can't tell you which half to drop.",
+      "The data is in a linked list: you can't jump to the middle in one step, so every halving costs a walk."
+    ],
+    "quiz": [
       {
-        "label": "Left Pointer",
-        "value": "Tracks the start of the valid window."
+        "problem": "Given a sorted array of distinct integers and a target, return the index of the target, or -1 if it isn't there. It must run in O(log n).",
+        "answer": "binary-search",
+        "options": [
+          "two-pointers",
+          "binary-search",
+          "hash-maps",
+          "sliding-window"
+        ],
+        "explanation": "Sorted data plus an O(log n) requirement is the textbook signal. Compare with the middle and drop half of the array each time."
       },
       {
-        "label": "Right Pointer",
-        "value": "Tracks the end of the valid window."
+        "problem": "Koko has n piles of bananas and h hours. Each hour she eats from one pile at speed k. Find the smallest k that lets her finish all the piles in h hours.",
+        "answer": "binary-search",
+        "options": [
+          "greedy",
+          "heaps",
+          "dynamic-programming",
+          "binary-search"
+        ],
+        "explanation": "Nothing is sorted, but the test \"does speed k finish in time?\" flips once: slow speeds fail, fast speeds pass. Binary search on the answer finds the first speed that passes."
       },
       {
-        "label": "Mid Pointer",
-        "value": "Calculated dynamically: left + (right - left) // 2"
+        "problem": "Given an unsorted array, return the indices of the two numbers that add up to a target.",
+        "answer": "hash-maps",
+        "options": [
+          "binary-search",
+          "sorting",
+          "hash-maps",
+          "two-pointers"
+        ],
+        "explanation": "The array is unsorted and you need many lookups. Storing each number you've seen in a hash map answers \"have I seen target − x?\" in one step."
+      },
+      {
+        "problem": "Given a sorted array, find two numbers anywhere in it that add up to a target.",
+        "answer": "two-pointers",
+        "options": [
+          "sliding-window",
+          "prefix-sum",
+          "two-pointers",
+          "binary-search"
+        ],
+        "explanation": "You're not looking for one value, you're looking for a pair. One pointer at each end closes in on the answer, and each step rules out a whole end."
+      },
+      {
+        "problem": "Versions 1 to n of a product were shipped, and every version after the first bad one is also bad. Find the first bad version with as few checks as possible.",
+        "answer": "binary-search",
+        "options": [
+          "binary-search",
+          "recursion",
+          "searching",
+          "greedy"
+        ],
+        "explanation": "The checks read good, good, good, bad, bad, bad. A single flip is monotonic, so halving finds the boundary in O(log n) checks."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [
-      2,
-      5,
-      8,
-      12,
-      16,
-      23,
-      38,
-      56,
-      72,
-      91
-    ],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Binary Search visualization coming soon.",
-        "activeLine": 1
+        "text": "lo = 0, hi = n − 1",
+        "anchor": "init"
+      },
+      {
+        "text": "while lo <= hi:"
+      },
+      {
+        "text": "mid = lo + (hi − lo) / 2",
+        "anchor": "mid",
+        "indent": 1
+      },
+      {
+        "text": "if nums[mid] == target:",
+        "anchor": "check",
+        "indent": 1
+      },
+      {
+        "text": "return mid",
+        "anchor": "done",
+        "indent": 2
+      },
+      {
+        "text": "else if nums[mid] < target:",
+        "anchor": "check",
+        "indent": 1
+      },
+      {
+        "text": "lo = mid + 1   (drop the left half)",
+        "anchor": "go-right",
+        "indent": 2
+      },
+      {
+        "text": "else:",
+        "indent": 1
+      },
+      {
+        "text": "hi = mid − 1   (drop the right half)",
+        "anchor": "go-left",
+        "indent": 2
+      },
+      {
+        "text": "return −1",
+        "anchor": "done"
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Calculate Midpoint",
-      "description": "Find the center. Use `left + (right - left) // 2` instead of `(left + right) // 2` to prevent integer overflow in languages like Java/C++.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "mid = left + (right - left) // 2",
-        "javascript": "const mid = left + Math.floor((right - left) / 2);",
-        "java": "int mid = left + (right - left) / 2;",
-        "cpp": "int mid = left + (right - left) / 2;"
-      },
-      "visualNote": "A pointer drops exactly in the middle of the active window."
-    },
-    {
-      "name": "Adjust Boundaries",
-      "description": "If mid is too small, move `left` past mid. If mid is too big, move `right` behind mid.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "if arr[mid] < target:\n    left = mid + 1\nelse:\n    right = mid - 1"
-      },
-      "visualNote": "Half of the array greys out, completely eliminated from the search."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "left = 0\nright = N - 1\nwhile left <= right:\n  mid = left + (right - left) // 2\n  if arr[mid] == target: return mid\n  if arr[mid] < target: left = mid + 1\n  else: right = mid - 1\nreturn -1",
-    "whenToUse": "Whenever an array is sorted and you need to find an element, or when searching for an optimal numerical answer within a known range ('Binary Search on Answer').",
-    "timeComplexity": "O(log N)",
-    "spaceComplexity": "O(1)"
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are given a sorted array of 100,000 integers and a target value. Return the index if the target is found.",
-    "correctPatternId": "binary-search",
-    "distractors": [
-      "two-pointers",
-      "sliding-window",
-      "hash-maps"
     ],
-    "explanation": "The array is already SORTED. Any time you see a sorted array and a search task, Binary Search is the intended O(log N) optimal approach."
+    "tracer": "binary-search/classic",
+    "time": "O(log n)",
+    "space": "O(1)",
+    "notes": [
+      "Each round throws away half of the range, so n numbers need at most about log₂ n rounds. 1,000 numbers take 10 looks and a million take 20.",
+      "Write the middle as lo + (hi − lo) / 2. The shorter (lo + hi) / 2 can overflow a 32-bit int in Java and C++ when both are large. Both forms give the same answer otherwise.",
+      "Off-by-one bugs live in two places: the loop test and the moves. With an inclusive range [lo, hi] the loop is lo <= hi and the moves are mid + 1 and mid − 1, because mid has already been checked.",
+      "To find a boundary instead of a value (first position ≥ target, smallest speed that works), use the half-open range [lo, hi): loop while lo < hi, set hi = mid when mid might be the answer and lo = mid + 1 when it can't.",
+      "The array has to be sorted first. If it isn't, sorting costs O(n log n), which only pays off when you search many times."
+    ]
   },
   "examples": [
     {
       "title": "Binary Search",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/binary-search/",
-      "problemStatement": "Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.",
-      "inputExample": "nums = [-1,0,3,5,9,12], target = 9",
-      "outputExample": "4",
-      "steps": [
-        "Initialize left=0, right=len-1.",
-        "While left <= right, calculate mid.",
-        "If nums[mid] == target, return mid.",
-        "If nums[mid] < target, target must be to the right, so left = mid + 1.",
-        "If nums[mid] > target, target must be to the left, so right = mid - 1."
+      "url": "https://leetcode.com/problems/binary-search/",
+      "problem": "Given a sorted array of integers nums and an integer target, return the index of target in nums, or -1 if it is not there. Your solution must run in O(log n).",
+      "input": "nums = [-1,0,3,5,9,12], target = 9",
+      "output": "4",
+      "approach": [
+        "The array is sorted, so one comparison with the middle can rule out half of it.",
+        "lo = 0, hi = 5, so mid = 2 and nums[2] = 3. That is smaller than 9, so drop the left half: lo = 3.",
+        "Now lo = 3, hi = 5, so mid = 4 and nums[4] = 9. That is the target, so return 4.",
+        "If lo ever passes hi, every position has been ruled out, so return -1."
       ],
-      "code": {
-        "python": "def search(nums, target):\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1"
-      },
-      "timeComplexity": "O(log N)",
-      "spaceComplexity": "O(1)",
-      "rationale": "This is the purest form of the pattern."
+      "code": "binary-search/classic",
+      "tracer": "binary-search/classic",
+      "time": "O(log n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Search Insert Position",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/search-insert-position/",
+      "problem": "Given a sorted array of distinct integers and a target, return the index of the target if it is found. If not, return the index where it would be inserted to keep the array sorted. Run in O(log n).",
+      "input": "nums = [1,3,5,6], target = 2",
+      "output": "1",
+      "approach": [
+        "The insert position is the first index whose number is at least the target. That is the \"first position ≥ target\" template.",
+        "Search the half-open range [0, 4). mid = 2 holds 5, which is at least 2, so mid might be the answer: hi = 2.",
+        "mid = 1 holds 3, at least 2 again, so hi = 1. mid = 0 holds 1, below 2, so skip it: lo = 1.",
+        "lo and hi meet at 1, so 2 belongs at index 1. If every number were smaller, lo would end at n, one past the end."
+      ],
+      "code": "binary-search/first-true",
+      "tracer": "binary-search/first-true",
+      "time": "O(log n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Koko Eating Bananas",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/koko-eating-bananas/",
+      "problem": "Koko has piles of bananas and h hours. Each hour she picks one pile and eats k bananas from it (finishing early if the pile has fewer, but not moving on until the hour is up). Return the smallest k that lets her eat all the piles within h hours.",
+      "input": "piles = [3,6,7,11], h = 8",
+      "output": "4",
+      "approach": [
+        "Nothing here is sorted, but the speeds are: if speed k is fast enough, so is every speed above it. The test flips from \"too slow\" to \"fast enough\" exactly once.",
+        "Search the speeds 1 to 11 (the biggest pile) for the first one that works. At speed k a pile takes ceil(pile / k) hours, so add those up.",
+        "k = 6 takes 1 + 1 + 2 + 2 = 6 hours, which fits in 8, so keep it. k = 3 takes 10 hours, too slow. k = 5 takes 8, fits.",
+        "k = 4 also takes 1 + 2 + 2 + 3 = 8 hours, and lo = hi = 4, so the smallest working speed is 4. It is the same first-true loop, with an hours calculation as the test."
+      ],
+      "code": "binary-search/koko-eating-bananas",
+      "time": "O(n log m), where m is the biggest pile",
+      "space": "O(1)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Why use `left + (right - left) / 2` instead of `(left + right) / 2`?",
+      "question": "You compare nums[mid] with the target in a sorted array and nums[mid] is smaller. What now?",
       "options": [
-        "It is mathematically faster.",
-        "To prevent integer overflow if left and right are very large numbers.",
-        "To handle negative numbers.",
-        "It's just a style preference."
+        "Search only the left half.",
+        "Search only the right half, starting at mid + 1.",
+        "Start again from index 0.",
+        "Stop: the target isn't in the array."
       ],
-      "correctIndex": 1,
-      "explanation": "If left and right are near the 32-bit integer limit (2.14 billion), adding them together `(left + right)` will overflow into a negative number before the division happens, causing a crash."
+      "answer": 1,
+      "explanation": "The array is sorted, so everything left of mid is even smaller than nums[mid]. The target can only be to the right, and mid itself has already been checked."
     },
     {
-      "question": "What is the condition for the standard while loop in Binary Search?",
+      "question": "About how many looks does binary search need, at most, to search 1,000 sorted numbers?",
       "options": [
-        "while left < right",
-        "while left != right",
-        "while True",
-        "while left <= right"
+        "About 1,000",
+        "About 500",
+        "About 100",
+        "About 10"
       ],
-      "correctIndex": 3,
-      "explanation": "Using `<=` ensures that we check the element even when `left` and `right` converge onto the exact same index."
+      "answer": 3,
+      "explanation": "Each look halves the range: 1,000 → 500 → 250 and so on. 2 multiplied by itself 10 times is 1,024, so 10 looks are enough."
+    },
+    {
+      "question": "Why write mid = lo + (hi − lo) / 2 instead of (lo + hi) / 2?",
+      "options": [
+        "lo + hi can overflow an int when both are large; this form never does.",
+        "It is much faster to compute.",
+        "It makes mid round up instead of down.",
+        "It lets the method work on unsorted arrays."
+      ],
+      "answer": 0,
+      "explanation": "hi − lo is never bigger than hi, so adding it to lo stays in range. Adding lo + hi first can pass the largest int in Java or C++."
+    },
+    {
+      "question": "In the \"first position ≥ target\" loop, why is it hi = mid and not hi = mid − 1 when nums[mid] ≥ target?",
+      "options": [
+        "Because mid − 1 could be negative.",
+        "Because arrays are zero-indexed.",
+        "Because mid itself might be the first big-enough number.",
+        "Because the loop would never stop otherwise."
+      ],
+      "answer": 2,
+      "explanation": "nums[mid] is big enough, but something to its left might be too. Dropping mid could throw away the very answer you are looking for, so you keep it as the new edge."
+    },
+    {
+      "question": "Which of these is a good fit for \"binary search on the answer\"?",
+      "options": [
+        "Find the largest number in an unsorted list.",
+        "Find the smallest ship capacity that delivers every package within D days, when a bigger ship never hurts.",
+        "Count the vowels in a word.",
+        "Reverse a linked list."
+      ],
+      "answer": 1,
+      "explanation": "Capacity is monotonic: if a ship can do the job, any bigger ship can too. You can test one capacity quickly, so you halve the range of capacities."
     }
   ],
   "practice": [
     {
-      "title": "Binary Search",
-      "url": "https://leetcode.com/problems/binary-search/",
-      "difficulty": "easy",
-      "keyInsight": "The foundational template."
-    },
-    {
-      "title": "Search Insert Position",
-      "url": "https://leetcode.com/problems/search-insert-position/",
-      "difficulty": "easy",
-      "keyInsight": "When the loop breaks, `left` will be exactly at the correct insertion index."
-    },
-    {
       "title": "First Bad Version",
       "url": "https://leetcode.com/problems/first-bad-version/",
       "difficulty": "easy",
-      "keyInsight": "Use `while left < right` and don't skip mid when moving the right pointer."
+      "insight": "The checks read good, good, bad, bad: the first-true shape. Keep mid when it is bad, because it could be the first one."
     },
     {
-      "title": "Koko Eating Bananas",
-      "url": "https://leetcode.com/problems/koko-eating-bananas/",
+      "title": "Sqrt(x)",
+      "url": "https://leetcode.com/problems/sqrtx/",
+      "difficulty": "easy",
+      "insight": "You are searching the numbers 0 to x for the biggest m with m * m <= x. Compare with m <= x / m to dodge overflow."
+    },
+    {
+      "title": "Find First and Last Position of Element in Sorted Array",
+      "url": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/",
       "difficulty": "medium",
-      "keyInsight": "Binary Search on the Answer. Guess a speed, check if it works, adjust."
+      "insight": "Run the first-position search twice: once for the first index with a value ≥ target, once for the first index with a value > target."
+    },
+    {
+      "title": "Find Minimum in Rotated Sorted Array",
+      "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+      "difficulty": "medium",
+      "insight": "Compare nums[mid] with the last element. That one comparison tells you whether the drop (the minimum) is on the left or the right of mid."
+    },
+    {
+      "title": "Search in Rotated Sorted Array",
+      "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "difficulty": "medium",
+      "insight": "At any mid, at least one half is still properly sorted. Check whether the target falls inside that sorted half, and keep that half or drop it."
+    },
+    {
+      "title": "Capacity To Ship Packages Within D Days",
+      "url": "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/",
+      "difficulty": "medium",
+      "insight": "Binary search on the answer: try a capacity, simulate loading the days, and ask whether it fits. The smallest capacity can't be less than the heaviest package."
+    },
+    {
+      "title": "Search a 2D Matrix",
+      "url": "https://leetcode.com/problems/search-a-2d-matrix/",
+      "difficulty": "medium",
+      "insight": "If you read the rows one after another the matrix is one sorted list. Turn a middle index into a row and column with division and remainder."
+    },
+    {
+      "title": "Median of Two Sorted Arrays",
+      "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+      "difficulty": "hard",
+      "insight": "Don't merge. Binary search how many elements the shorter array gives to the left half, until both left-side maxima are at most both right-side minima."
     }
   ]
 }

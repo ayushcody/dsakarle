@@ -52,6 +52,12 @@ describe('tracer registry', () => {
 
   describe('stubs', () => {
     const stubs = loaded.filter(({ tracer }) => isStub(tracer))
+    if (stubs.length === 0) {
+      it('none left — every registered tracer is implemented', () => {
+        expect(stubs).toEqual([])
+      })
+      return
+    }
     it.each(stubs.map(({ id }) => id))('%s throws "not implemented" until the lesson is written', async (id) => {
       const tracer = await loadTracer(id)
       expect(() => tracer.run({})).toThrow(/not implemented/)
