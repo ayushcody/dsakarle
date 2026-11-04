@@ -93,7 +93,7 @@ export function ProgressRing({ className, onNavigate }: { className?: string; on
       <Link
         href="/learn"
         onClick={onNavigate}
-        aria-label={`Progress: ${label}`}
+        aria-label={`${percent}% complete. ${label}`}
         className={cn(
           'inline-flex h-10 items-center gap-2 rounded-card px-2 text-ink-2 hover:bg-coral-wash hover:text-ink',
           focusRing,
@@ -209,7 +209,7 @@ export function SiteHeader() {
           Skip to content
         </a>
         <div className="flex h-full items-center gap-2 px-4 md:px-6">
-          <Logo href="/" size="md" className="-ml-1 px-1 py-1" />
+          <Logo href="/" size="md" className="-ml-1 min-h-[44px] px-1" />
 
           <nav aria-label="Main" className="ml-2 hidden items-center md:flex lg:ml-6">
             {NAV_ITEMS.map((item) => {
@@ -236,18 +236,18 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={openPalette}
-              aria-label="Search lessons"
               aria-keyshortcuts="Control+K Meta+K"
               className={cn(
                 'inline-flex h-11 w-11 items-center justify-center gap-2 rounded-card text-ink-2 transition-colors hover:bg-coral-wash hover:text-ink',
                 'md:h-10 md:w-10',
-                'lg:w-[236px] lg:justify-start lg:border lg:border-rule lg:bg-paper-sunken lg:px-3 lg:text-ink-3 lg:hover:border-rule-strong lg:hover:bg-paper-sunken',
+                'lg:w-[236px] lg:justify-start lg:border lg:border-control lg:bg-paper-sunken lg:px-3 lg:text-ink-3 lg:hover:border-ink-3 lg:hover:bg-paper-sunken',
                 focusRing,
               )}
             >
               <SearchIcon className="shrink-0" />
-              <span className="hidden flex-1 text-left text-[14px] lg:inline">Search lessons…</span>
-              <Kbd className="hidden lg:inline-flex">{shortcut}</Kbd>
+              {/* Visible from lg up; screen-reader-only below, so the accessible name always equals the visible text. */}
+              <span className="sr-only text-left text-[14px] lg:not-sr-only lg:flex-1">Search lessons…</span>
+              <Kbd aria-hidden="true" className="hidden lg:inline-flex">{shortcut}</Kbd>
             </button>
 
             <span className="hidden lg:inline-flex">
@@ -292,7 +292,7 @@ export function SiteHeader() {
             className="absolute inset-y-0 right-0 flex w-[min(88vw,360px)] flex-col overflow-y-auto border-l border-rule bg-paper-raised shadow-2"
           >
             <div className="flex h-16 shrink-0 items-center justify-between border-b border-rule px-4">
-              <Logo href="/" size="sm" onClick={closeMenu} className="px-1 py-1" />
+              <Logo href="/" size="sm" onClick={closeMenu} className="min-h-[44px] px-1" />
               <button
                 type="button"
                 onClick={closeMenu}
@@ -329,7 +329,7 @@ export function SiteHeader() {
                 type="button"
                 onClick={openSearchFromMenu}
                 className={cn(
-                  'flex min-h-[48px] items-center gap-3 rounded-card border border-rule bg-paper-sunken px-3 text-left text-[15px] text-ink-2 hover:border-rule-strong',
+                  'flex min-h-[48px] items-center gap-3 rounded-card border border-control bg-paper-sunken px-3 text-left text-[15px] text-ink-2 hover:border-ink-3',
                   focusRing,
                 )}
               >

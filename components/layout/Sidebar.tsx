@@ -153,7 +153,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
                 openPalette();
               }}
               className={cn(
-                'flex min-h-[44px] flex-1 items-center gap-2 rounded-card border border-rule bg-paper-sunken px-3 text-left text-[14px] text-ink-3 hover:border-rule-strong',
+                'flex min-h-[44px] flex-1 items-center gap-2 rounded-card border border-control bg-paper-sunken px-3 text-left text-[14px] text-ink-3 hover:border-ink-3',
                 focusRing,
               )}
             >
@@ -224,7 +224,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
           ))}
           <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 px-3 text-[12px] text-ink-3" aria-hidden="true">
             <span className="inline-flex items-center gap-1">
-              <span className="text-role-found">✓</span> done
+              <span className="text-found-ink">✓</span> done
             </span>
             <span className="inline-flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-coral" /> live

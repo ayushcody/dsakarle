@@ -25,7 +25,7 @@ export interface RenderedCode {
   langs: Record<Lang, RenderedLang>;
 }
 
-const THEMES = { light: 'github-light', dark: 'github-dark' } as const;
+const THEMES = { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' } as const;
 
 let highlighterPromise: Promise<Highlighter> | null = null;
 function getHighlighter(): Promise<Highlighter> {

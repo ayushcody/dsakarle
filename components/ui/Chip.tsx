@@ -26,10 +26,10 @@ export type ChipProps = StaticChipProps | SelectableChipProps;
 const tones: Record<ChipVariant, string> = {
   neutral: 'border-rule bg-paper-sunken text-ink-2',
   coral: 'border-transparent bg-coral-wash text-coral-ink',
-  teal: 'border-transparent bg-[var(--role-ptr-a-wash)] text-teal',
-  amber: 'border-transparent bg-[color-mix(in_srgb,var(--amber)_16%,transparent)] text-[var(--role-compare)]',
-  found: 'border-transparent bg-[var(--role-found-wash)] text-role-found',
-  error: 'border-transparent bg-[var(--role-error-wash)] text-role-error',
+  teal: 'border-transparent bg-[var(--role-ptr-a-wash)] text-teal-ink',
+  amber: 'border-transparent bg-[color-mix(in_srgb,var(--amber)_16%,transparent)] text-amber-ink',
+  found: 'border-transparent bg-[var(--role-found-wash)] text-found-ink',
+  error: 'border-transparent bg-[var(--role-error-wash)] text-error-ink',
 };
 
 const shell =

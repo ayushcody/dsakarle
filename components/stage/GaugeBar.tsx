@@ -1,8 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useMemo } from 'react'
 
 import { cn } from '@/components/ui'
+import type { Gauge } from '@/lib/engine/types'
 import { spring } from '@/lib/motion'
 
 import { useStage } from './StageProvider'
@@ -16,8 +18,25 @@ const MAX_SLOTS = 16
  */
 export function GaugeBar({ className }: { className?: string }) {
   const gauge = useStage((s) => s.frames[s.index]?.gauge)
-  if (!gauge) return null
+  const frames = useStage((s) => s.frames)
+  // A run that uses a gauge keeps its space on frames without one, so the rest of the column does not jump.
+  const sample = useMemo(() => {
+    const first = frames.find((f) => f.gauge)?.gauge
+    return first ? { gauge: first, over: frames.some((f) => f.gauge && f.gauge.value > f.gauge.max) } : null
+  }, [frames])
+  if (!sample) return null
 
+  return (
+    <div className={cn('grid', className)}>
+      <div className="min-w-0 [grid-area:1/1]">{gauge ? <GaugeView gauge={gauge} /> : null}</div>
+      <div aria-hidden="true" className="pointer-events-none invisible min-w-0 [grid-area:1/1]">
+        <GaugeView gauge={sample.over ? { ...sample.gauge, value: sample.gauge.max + 1 } : sample.gauge} />
+      </div>
+    </div>
+  )
+}
+
+function GaugeView({ gauge, className }: { gauge: Gauge; className?: string }) {
   const { value, max, label } = gauge
   const over = value > max
   const segmented = max > 0 && max <= MAX_SLOTS

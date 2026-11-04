@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 
+import { ScrollRegion } from '@/components/stage/primitives/ScrollRegion'
 import { cn, focusRing } from '@/components/ui/cn'
 import { useLessonSteps } from './LessonShell'
 import { SECTION_DEFS } from './sections'
@@ -13,7 +14,7 @@ import { SECTION_DEFS } from './sections'
  */
 export function LessonStrip() {
   const { steps, done, activeSection } = useLessonSteps()
-  const listRef = useRef<HTMLOListElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   // "You are here": the item whose section range holds the reading line. Items
   // that share a section (Watch / Try) resolve to the first one not yet ticked.
@@ -39,7 +40,12 @@ export function LessonStrip() {
       aria-label="Lesson steps"
       className="sticky top-[64px] z-30 -mx-4 mt-6 border-y border-rule bg-paper px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0"
     >
-      <ol ref={listRef} className="relative flex items-center gap-1 overflow-x-auto py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <ScrollRegion
+        ref={listRef}
+        label="Lesson steps, scrolls sideways"
+        className="rounded-cell py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+      <ol className="relative m-0 flex list-none items-center gap-1 p-0">
         {steps.map((step, index) => {
           const isDone = done.has(step.key)
           const isCurrent = step.key === currentKey
@@ -63,7 +69,7 @@ export function LessonStrip() {
                   aria-hidden="true"
                   className={cn(
                     'inline-flex h-5 w-5 items-center justify-center rounded-full border text-[11px] leading-none',
-                    isDone ? 'border-transparent bg-[var(--role-found-wash)] text-role-found' : 'border-rule-strong',
+                    isDone ? 'border-transparent bg-[var(--role-found-wash)] text-found-ink' : 'border-rule-strong',
                   )}
                 >
                   {isDone ? '✓' : index + 1}
@@ -80,6 +86,7 @@ export function LessonStrip() {
           )
         })}
       </ol>
+      </ScrollRegion>
     </nav>
   )
 }

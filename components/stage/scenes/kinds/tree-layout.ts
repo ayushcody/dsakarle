@@ -540,6 +540,17 @@ export function layoutTreeGeometry(scene: TreeScene, density: Density = "comfort
       x = n.cx + s * 0.55 * r;
       y = n.cy - 0.84 * r;
     }
+    // Trie edge labels (a letter beside each edge) must stay readable: a tag above a node would
+    // sit on the incoming edge's letter, a tag below it on an outgoing one. Slide the tag sideways,
+    // away from the letter, until it clears it.
+    const halfW = Math.max(16, t.name.length * 3.8 + 10);
+    const near = edges.filter(
+      (e) => e.label !== null && (t.side === "above" ? e.child === t.nodeId : e.parent === t.nodeId),
+    );
+    for (const e of near) {
+      const gap = halfW + 9;
+      if (Math.abs(x - e.labelAt.x) < gap) x = e.labelAt.x + (x >= e.labelAt.x ? gap : -gap);
+    }
     tags.push({ key: t.key, name: t.name, role: t.role, nodeId: t.nodeId, x, y, offset, side: t.side, box: tagBox(t.side, x, y, offset) });
     if (t.role === "focus") rings.push({ key: `ring-${t.key}`, cx: n.cx, cy: n.cy, r: r + 3 });
   }
@@ -597,53 +608,67 @@ export function resolveTreeTargetIn(layout: TreeLayout, target: string): TargetI
 // ---------------------------------------------------------------------------
 
 export function describeTreeScene(scene: TreeScene): string {
-  if (scene.nodes.length === 0) {
-    const empty = isTrieScene(scene) ? "Trie" : "Tree";
-    return `${empty}: empty.`;
-  }
   const trie = isTrieScene(scene);
+  if (scene.nodes.length === 0) return `${trie ? "Trie" : "Tree"}: empty.`;
   const byId = new Map<string, TreeNode>();
   for (const n of scene.nodes) if (!byId.has(n.id)) byId.set(n.id, n);
+
+  // Where each node sits, as words a listener can follow: "left-right" for a
+  // tree, the letters spelled so far for a trie. Internal ids never appear.
+  const path = new Map<string, string>();
+  const walk = (id: string | null | undefined, here: string) => {
+    if (id === null || id === undefined || path.has(id)) return;
+    const n = byId.get(id);
+    if (!n) return;
+    path.set(id, here);
+    n.children.forEach((c, i) => {
+      if (c === null || c === undefined) return;
+      if (trie) walk(c, here + (n.edgeLabels?.[i] ?? ""));
+      else walk(c, here ? `${here}-${i === 0 ? "left" : "right"}` : i === 0 ? "left" : "right");
+    });
+  };
+  walk(scene.root, "");
 
   const counts = new Map<string, number>();
   for (const n of byId.values()) counts.set(String(n.value), (counts.get(String(n.value)) ?? 0) + 1);
   const name = (id: string | null | undefined): string => {
     if (id === null || id === undefined) return "none";
     const n = byId.get(id);
-    if (!n) return id;
+    if (!n) return "unknown";
+    const where = path.get(id);
+    if (trie) return where ? `"${where}"` : "the root";
     const v = String(n.value);
-    if (v === "") return id;
-    return (counts.get(v) ?? 0) > 1 ? `${v} (${id})` : v;
+    if (v === "") return where ? `the ${where} node` : "the root";
+    return (counts.get(v) ?? 0) > 1 && where !== undefined ? `${v} (${where || "root"})` : v;
   };
   const list = (items: string[]) => (items.length ? items.join("; ") : "none");
-
   const parts: string[] = [];
-  parts.push(
-    `${trie ? "Trie" : "Binary tree"} with ${byId.size} node${byId.size === 1 ? "" : "s"}.`,
-  );
-  parts.push(scene.root === null ? "Root: none." : `Root: ${name(scene.root)}.`);
 
-  const rows: string[] = [];
-  for (const n of byId.values()) {
-    const kids = n.children
-      .map((c, i) => ({ c, i }))
-      .filter(({ c }) => c !== null && c !== undefined);
-    const tail = n.terminal ? " ends a word" : "";
-    if (trie) {
-      if (kids.length === 0 && !tail) continue;
-      const via = kids.map(({ c, i }) => {
-        const l = n.edgeLabels?.[i];
-        return l && l !== name(c) ? `${name(c)} via ${l}` : name(c);
-      });
-      rows.push(`${name(n.id)}${tail}${kids.length ? `: children ${via.join(", ")}` : ""}`);
-    } else {
-      if (kids.length === 0) continue;
+  if (trie) {
+    const words = [...byId.values()].filter((n) => n.terminal).map((n) => path.get(n.id)).filter((w): w is string => !!w);
+    parts.push(`Trie with ${byId.size} node${byId.size === 1 ? "" : "s"}.`);
+    parts.push(words.length ? `Words stored: ${words.join(", ")}.` : "No complete words yet.");
+  } else {
+    parts.push(`Binary tree with ${byId.size} node${byId.size === 1 ? "" : "s"}.`);
+    parts.push(scene.root === null ? "Root: none." : `Root ${name(scene.root)}.`);
+    const rows: string[] = [];
+    for (const n of byId.values()) {
+      if (!path.has(n.id)) continue;
       const left = n.children[0] ?? null;
       const right = n.children[1] ?? null;
-      rows.push(`${name(n.id)}: left ${name(left)}, right ${name(right)}`);
+      if (left === null && right === null) continue;
+      const who = `${name(n.id)}'s`;
+      rows.push(
+        left !== null && right !== null
+          ? `${who} children ${name(left)} and ${name(right)}`
+          : left !== null
+            ? `${who} left child ${name(left)}`
+            : `${who} right child ${name(right)}`,
+      );
     }
+    if (rows.length) parts.push(`${rows.join("; ")}.`);
   }
-  if (rows.length) parts.push(`Structure: ${list(rows)}.`);
+
   if (scene.floating?.length) parts.push(`Not yet attached: ${scene.floating.map(name).join(", ")}.`);
   if (scene.pointers?.length)
     parts.push(`Pointers: ${list(scene.pointers.map((p) => `${p.name} at ${p.target === null ? "null" : name(p.target)}`))}.`);

@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 
 import { CodePanel } from '@/components/stage/CodePanel'
+import { ScrollRegion } from '@/components/stage/primitives/ScrollRegion'
 import type { RenderedCodeProp } from '@/components/stage/contracts'
 import { Chip } from '@/components/ui/Chip'
 import { Disclosure } from '@/components/ui/Disclosure'
@@ -53,10 +54,8 @@ export function CodeSection({ template, title, code, anchorOrder, eyebrow }: Cod
     >
       <figure className="m-0">
         <figcaption className="t-eyebrow mb-2">Pseudocode</figcaption>
-        <ol
-          aria-label="Pseudocode"
-          className="overflow-x-auto rounded-card border border-rule bg-paper-sunken py-3 font-mono text-[14px] leading-7 text-ink"
-        >
+        <ScrollRegion label="Pseudocode, scrolls sideways" className="rounded-card border border-rule bg-paper-sunken py-3 font-mono text-[14px] leading-7 text-ink">
+        <ol aria-label="Pseudocode" className="m-0 list-none p-0">
           {pseudocode.map((line, index) => {
             const n = ruleNumber(line.anchor)
             return (
@@ -75,6 +74,7 @@ export function CodeSection({ template, title, code, anchorOrder, eyebrow }: Cod
             )
           })}
         </ol>
+        </ScrollRegion>
         <p className="t-caption mt-2 text-ink-3">
           The faint numbers are the rules in the Rule Rail under the stage. Same numbers, same order.
         </p>
@@ -91,8 +91,12 @@ export function CodeSection({ template, title, code, anchorOrder, eyebrow }: Cod
       )}
 
       <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Cost">
-        <Chip variant="coral">Time · {time}</Chip>
-        <Chip variant="teal">Space · {space}</Chip>
+        <Chip variant="coral" className="max-w-full !whitespace-normal py-1.5 !leading-snug">
+          Time · {time}
+        </Chip>
+        <Chip variant="teal" className="max-w-full !whitespace-normal py-1.5 !leading-snug">
+          Space · {space}
+        </Chip>
       </div>
 
       {notes && notes.length > 0 ? (

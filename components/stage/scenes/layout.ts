@@ -564,7 +564,7 @@ export function layoutLinkedList(
     from: string;
     to: string | null;
     role: ArrowRole;
-    kind: "straight" | "arc" | "cross";
+    kind: "straight" | "arc" | "cross" | "loop";
     arcB: number;
   };
   const rawLinks: RawLink[] = [];
@@ -578,7 +578,10 @@ export function layoutLinkedList(
     const bCol = b ? b.col : nullBox.col;
     const bFloating = b ? b.floating : false;
     const role: ArrowRole = l.role ?? "neutral";
-    if (!a.floating && !bFloating && a.row === bRow) {
+    if (l.to === l.from) {
+      // tail.next = tail: a small loop on the node's top-right shoulder.
+      rawLinks.push({ from: l.from, to: l.to, role, kind: "loop", arcB: 0 });
+    } else if (!a.floating && !bFloating && a.row === bRow) {
       const dc = bCol - a.col;
       if (dc === 1) rawLinks.push({ from: l.from, to: l.to, role, kind: "straight", arcB: 0 });
       else {
@@ -658,7 +661,11 @@ export function layoutLinkedList(
     let from: Point;
     let to: Point;
     let curve = 0;
-    if (l.kind === "straight") {
+    if (l.kind === "loop") {
+      from = { x: a.cx + NODE_PORT_DX, y: a.cy - a.h / 2 - NODE_GAP };
+      to = { x: a.cx + a.w / 2 + NODE_GAP + 1, y: a.cy - 3 };
+      curve = -1.3;
+    } else if (l.kind === "straight") {
       from = { x: a.cx + a.w / 2 + NODE_GAP, y: a.cy };
       to = { x: bcx - bw / 2 - NODE_GAP, y: bcy };
     } else if (l.kind === "arc") {
@@ -1226,22 +1233,63 @@ export function describeScene(scene: Scene): string {
       return parts.join(" ");
     }
     case "linked-list": {
-      const label = (id: string | null) => (id === null ? "null" : id);
-      const parts = [
-        `Linked list: ${scene.nodes.map((n) => `${n.id} holds ${n.value}`).join(", ") || "empty"}.`,
-      ];
-      if (scene.links.length)
-        parts.push(
-          `Links: ${list(scene.links.map((l) => `${l.from} points to ${label(l.to)}`))}.`,
-        );
+      // Say what the list holds, in order, by value: "12 → 7 → 31 → null".
+      const floatSet = new Set(scene.floating ?? []);
+      const byId = new Map(scene.nodes.map((n) => [n.id, n]));
+      const counts = new Map<string, number>();
+      for (const n of scene.nodes) counts.set(String(n.value), (counts.get(String(n.value)) ?? 0) + 1);
+      const name = (id: string | null): string => {
+        if (id === null) return "null";
+        const n = byId.get(id);
+        if (!n) return "unknown";
+        const v = String(n.value);
+        if ((counts.get(v) ?? 0) < 2) return v;
+        const pos = scene.nodes.filter((x) => !floatSet.has(x.id)).findIndex((x) => x.id === id);
+        return pos >= 0 ? `${v} (node ${pos + 1})` : `${v} (loose)`;
+      };
+      const next = new Map<string, string | null>();
+      for (const l of scene.links) if (!next.has(l.from)) next.set(l.from, l.to);
+      const main = scene.nodes.filter((n) => !floatSet.has(n.id));
+      const parts: string[] = [];
+      if (main.length === 0) parts.push("Linked list: empty.");
+      else {
+        const hasIncoming = new Set<string>();
+        for (const [from, to] of next) if (to !== null && to !== from && !floatSet.has(from)) hasIncoming.add(to);
+        const head = main.find((n) => !hasIncoming.has(n.id)) ?? main[0];
+        const chain: string[] = [];
+        const seen = new Set<string>();
+        let cur: string | null = head.id;
+        let tail = "null";
+        while (cur !== null) {
+          if (seen.has(cur)) {
+            tail = cur === chain[chain.length - 1] ? "itself (a loop)" : `back to ${name(cur)} (a loop)`;
+            break;
+          }
+          seen.add(cur);
+          chain.push(cur);
+          if (!next.has(cur)) {
+            tail = "";
+            break;
+          }
+          cur = next.get(cur) ?? null;
+        }
+        const text = chain.map(name);
+        if (tail === "null") text.push("null");
+        else if (tail) text.push(tail);
+        parts.push(`Linked list: ${text.join(" → ")}.`);
+        // Nodes outside the chain (an unlinked tail, a reversed half): list their own links.
+        const rest = scene.links.filter((l) => !seen.has(l.from) && !floatSet.has(l.from) && byId.has(l.from));
+        if (rest.length)
+          parts.push(`Also: ${list(rest.map((l) => `${name(l.from)} → ${name(l.to)}`))}.`);
+      }
       if (scene.floating?.length)
-        parts.push(`Not yet linked in: ${scene.floating.join(", ")}.`);
-      if (scene.pointers?.length)
         parts.push(
-          `Pointers: ${list(scene.pointers.map((p) => `${p.name} at ${label(p.target)}`))}.`,
+          `Not yet linked in: ${scene.floating.map((id) => name(id)).join(", ")}${scene.links.some((l) => floatSet.has(l.from)) ? `, pointing to ${list(scene.links.filter((l) => floatSet.has(l.from)).map((l) => name(l.to)))}` : ""}.`,
         );
+      if (scene.pointers?.length)
+        parts.push(`Pointers: ${list(scene.pointers.map((p) => `${p.name} at ${name(p.target)}`))}.`);
       if (scene.marks?.length)
-        parts.push(`Marked: ${list(scene.marks.map((mk) => `${mk.id} ${mk.role}`))}.`);
+        parts.push(`Marked: ${list(scene.marks.map((mk) => `${name(mk.id)} ${mk.role}`))}.`);
       if (scene.annotations?.length)
         parts.push(`Notes: ${list(scene.annotations.map((a) => a.text))}.`);
       return parts.join(" ");

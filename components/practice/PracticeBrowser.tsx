@@ -77,6 +77,7 @@ function ProblemRow({
 }) {
   const [open, setOpen] = useState(false)
   const insightId = useId()
+  const titleId = `${insightId}-title`
   const difficulty = DIFFICULTY[item.difficulty]
   const longInsight = (item.insight?.length ?? 0) > 70
 
@@ -85,7 +86,7 @@ function ProblemRow({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <h3 className="min-w-0 font-serif text-[18px] font-semibold leading-6 text-ink">
+            <h3 id={titleId} className="min-w-0 font-serif text-[18px] font-semibold leading-6 text-ink">
               <a
                 href={item.url}
                 target="_blank"
@@ -116,7 +117,7 @@ function ProblemRow({
                   aria-expanded={open}
                   aria-controls={insightId}
                   onClick={() => setOpen((v) => !v)}
-                  className={cn('mt-0.5 inline-flex min-h-[32px] items-center rounded-cell text-[13px] font-semibold text-coral-ink underline underline-offset-4', focusRing)}
+                  className={cn('-my-1 mt-0.5 inline-flex min-h-[40px] items-center rounded-cell text-[13px] font-semibold text-coral-ink underline underline-offset-4', focusRing)}
                 >
                   {open ? 'Show less' : 'Show the whole hint'}
                 </button>
@@ -139,7 +140,7 @@ function ProblemRow({
               </Chip>
             </Link>
           ) : null}
-          <Chip selectable selected={solved} onClick={() => onToggle(item.url)}>
+          <Chip selectable selected={solved} aria-describedby={titleId} onClick={() => onToggle(item.url)}>
             I solved this
           </Chip>
         </div>
@@ -225,8 +226,8 @@ export function PracticeBrowser({
               placeholder="e.g. two sum, window, palindrome"
               autoComplete="off"
               className={cn(
-                'min-h-[44px] w-full rounded-card border border-rule bg-paper-sunken px-4 font-sans text-[15px] text-ink placeholder:text-ink-3',
-                'hover:border-rule-strong',
+                'min-h-[44px] w-full rounded-card border border-control bg-paper-sunken px-4 font-sans text-[15px] text-ink placeholder:text-ink-3',
+                'hover:border-ink-3',
                 focusRing,
               )}
             />
@@ -324,7 +325,8 @@ export function PracticeBrowser({
         </div>
       </div>
 
-      {/* List */}
+      {/* List. The h2 is screen-reader-only; it keeps the order h1 > h2 > h3 for the problem titles. */}
+      <h2 className="sr-only">Problems</h2>
       {filtered.length ? (
         <ul className="mt-4 space-y-3">
           {filtered.map((item) => (

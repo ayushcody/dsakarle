@@ -31,13 +31,13 @@ function LessonCard({ lesson }: { lesson: CurriculumLesson }) {
       </div>
       <p
         className={cn(
-          't-caption min-h-[36px] text-ink-3 transition-opacity duration-150',
+          't-caption min-h-[36px] text-ink-2 transition-opacity duration-150',
           'lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100',
         )}
       >
         <span className="font-semibold text-ink-2">When:</span> {lesson.trigger}
       </p>
-      <p className="t-caption text-ink-3">{lesson.minutes} min</p>
+      <p className="t-caption text-ink-2">{lesson.minutes} min</p>
     </Card>
   );
 }

@@ -6,6 +6,7 @@ import { MethodSteps } from '@/components/about/MethodSteps'
 import { Glyph } from '@/components/glyph'
 import { Button, Callout, Chip, Disclosure } from '@/components/ui'
 import { LESSONS, liveLessons } from '@/lib/curriculum'
+import { NameStory } from '@/components/about/NameStory'
 
 export const metadata: Metadata = {
   title: 'About — DSA Karle',
@@ -51,6 +52,7 @@ export default function AboutPage() {
           </Button>
         </div>
       </header>
+      <NameStory className="mt-10 max-w-[62ch]" />
 
       {/* The method */}
       <Section id="method" eyebrow="How a lesson works" title="Picture, watch, predict, try, code.">

@@ -58,12 +58,14 @@ export function SceneView({
           className={className}
           ariaLabel={ariaLabel}
           notes={notes}
-          renderPart={(part, partNotes) => (
+          renderPart={(part, partNotes, i) => (
             <SceneView
               scene={part}
               density={density}
-              pickable={pickable}
-              onPick={onPick}
+              // A `cell` predict is answered in the first part (the grid, tree, graph or list);
+              // the queue / stack / table beside it is context, not a target.
+              pickable={pickable && i === 0}
+              onPick={pickable && i === 0 ? onPick : undefined}
               notes={partNotes}
               minNoteRows={minNoteRows}
             />

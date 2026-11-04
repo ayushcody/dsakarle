@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { memo, useMemo, useRef } from 'react'
 import type { ReactNode } from 'react'
 
 import { Disclosure, cn, focusRing } from '@/components/ui'
@@ -18,6 +18,8 @@ import { Legend } from './primitives'
 import type { LegendRole } from './primitives'
 import { SceneRenderer } from './scenes/SceneRenderer'
 import type { PickTarget, RenderedCodeProp } from './contracts'
+import { tallestSceneFrames } from './scenes/reserve'
+import type { Density } from './scenes/layout'
 
 const LEGEND_ORDER: LegendRole[] = ['ptrA', 'ptrB', 'focus', 'window', 'compare', 'changed', 'visited', 'discarded', 'found', 'error']
 
@@ -51,6 +53,22 @@ function runRoles(frames: Frame[]): LegendRole[] {
   for (const f of frames) sceneRoles(f.scene, seen)
   return LEGEND_ORDER.filter((r) => seen.has(r))
 }
+
+/**
+ * Invisible copies of the run's tallest frames, stacked in the live scene's grid
+ * cell. They never change while stepping, so the cell keeps its height.
+ */
+const ReservedScenes = memo(function ReservedScenes({ scenes, density }: { scenes: Scene[]; density: Density }) {
+  return (
+    <>
+      {scenes.map((scene, i) => (
+        <div key={i} aria-hidden="true" className="pointer-events-none invisible flex min-w-0 items-center justify-center [grid-area:1/1]">
+          <SceneRenderer scene={scene} density={density} className="w-full" />
+        </div>
+      ))}
+    </>
+  )
+})
 
 export interface StageViewProps {
   tracer: AnyTracer
@@ -98,6 +116,8 @@ export function StageView({
   const pickable = asking && pickKind === 'cell'
 
   const roles = useMemo(() => runRoles(frames), [frames])
+  const density: Density = hero ? 'compact' : 'comfortable'
+  const reserved = useMemo(() => tallestSceneFrames(frames, density, density === 'comfortable' ? 1 : 0).map((i) => frames[i].scene), [frames, density])
   const onPick = pickable ? (t: PickTarget) => api.answer(t) : undefined
 
   return (
@@ -114,22 +134,26 @@ export function StageView({
         <div className="flex min-w-0 flex-col gap-4">
           {playgroundSlot}
 
-          <div className="graph-paper flex items-center justify-center overflow-hidden rounded-card border border-rule p-3 shadow-1 sm:p-5">
-            {frame ? (
-              <SceneRenderer
-                scene={frame.scene}
-                onPick={onPick}
-                pickable={pickable}
-                density={hero ? 'compact' : 'comfortable'}
-                ariaLabel={frame.say}
-                className="w-full"
-              />
-            ) : null}
+          {/* One grid cell: the live scene plus invisible copies of the tallest frames, so the card never changes height. */}
+          <div className="graph-paper grid items-center overflow-hidden rounded-card border border-rule p-3 shadow-1 sm:p-5">
+            <div className="flex min-w-0 items-center justify-center [grid-area:1/1]">
+              {frame ? (
+                <SceneRenderer
+                  scene={frame.scene}
+                  onPick={onPick}
+                  pickable={pickable}
+                  density={density}
+                  ariaLabel={frame.say}
+                  className="w-full"
+                />
+              ) : null}
+            </div>
+            <ReservedScenes scenes={reserved} density={density} />
           </div>
 
           <Narration scopeRef={rootRef} compact={hero} />
-          <FinishNudge canTryOwn={canTryOwn} onTryOwn={() => onTryOwn?.()} onFinish={onFinish} quiet={hero} />
           <Controls compact={hero} />
+          <FinishNudge canTryOwn={canTryOwn} onTryOwn={() => onTryOwn?.()} onFinish={onFinish} quiet={hero} />
         </div>
 
         {hero ? null : (

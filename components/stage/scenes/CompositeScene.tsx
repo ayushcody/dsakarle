@@ -17,7 +17,7 @@ export interface CompositeSceneProps {
   /** Extra notes (picture callouts), handed to the part that owns each target. */
   notes?: Annotation[];
   /** Draws one part. Injected by SceneRenderer so this file never imports it back. */
-  renderPart: (scene: Exclude<Scene, CompositeData>, notes: Annotation[]) => ReactNode;
+  renderPart: (scene: Exclude<Scene, CompositeData>, notes: Annotation[], index: number) => ReactNode;
 }
 
 /**
@@ -60,7 +60,7 @@ export function CompositeScene({
               {part.title}
             </figcaption>
           )}
-          {renderPart(part.scene, assigned[i])}
+          {renderPart(part.scene, assigned[i], i)}
         </figure>
       ))}
     </div>

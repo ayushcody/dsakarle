@@ -295,8 +295,8 @@ export function CommandPalette() {
           <button
             type="button"
             onClick={close}
-            className="hidden items-center rounded-cell focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] sm:inline-flex"
-            aria-label="Close search"
+            className="hidden min-h-[40px] items-center rounded-cell px-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] sm:inline-flex"
+            aria-label="Esc to close search"
           >
             <Kbd>Esc</Kbd>
           </button>
@@ -350,9 +350,9 @@ export function CommandPalette() {
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="block truncate font-sans text-[15px] font-semibold text-ink">{entry.lesson.title}</span>
-                          <span className="block truncate text-[13px] text-ink-3">{entry.lesson.oneLiner}</span>
+                          <span className={cn('block truncate text-[13px]', selected ? 'text-ink-2' : 'text-ink-3')}>{entry.lesson.oneLiner}</span>
                         </span>
-                        <span className="hidden shrink-0 text-[12px] text-ink-3 sm:inline">
+                        <span className={cn('hidden shrink-0 text-[12px] sm:inline', selected ? 'text-ink-2' : 'text-ink-3')}>
                           {getGroup(entry.lesson.group)?.title}
                         </span>
                         <Chip variant={entry.lesson.status === 'live' ? 'coral' : 'neutral'} className="shrink-0">
@@ -364,7 +364,7 @@ export function CommandPalette() {
                         <span className="shrink-0 text-ink-2">{entry.action.icon}</span>
                         <span className="min-w-0 flex-1">
                           <span className="block truncate font-sans text-[15px] font-semibold text-ink">{entry.action.label}</span>
-                          <span className="block truncate text-[13px] text-ink-3">{entry.action.hint}</span>
+                          <span className={cn('block truncate text-[13px]', selected ? 'text-ink-2' : 'text-ink-3')}>{entry.action.hint}</span>
                         </span>
                       </>
                     )}

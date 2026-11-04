@@ -17,13 +17,15 @@ export interface PlaygroundInputProps {
   className?: string
 }
 
-/** "Up to 12 numbers between -99 and 99" from the tracer's limits and field kinds. */
-function limitsHint(fields: InputField[], l: InputLimits): string {
-  const arrayField = fields.find((f) => f.kind === 'int-array' || f.kind === 'string-array' || f.kind === 'string')
-  if (!arrayField) return `Whole numbers between ${l.min} and ${l.max}.`
-  if (arrayField.kind === 'int-array') return `Up to ${l.maxN} numbers between ${l.min} and ${l.max}.`
-  if (arrayField.kind === 'string') return `Up to ${l.maxN} characters.`
-  return `Up to ${l.maxN} words.`
+/**
+ * A card-level limit, only where it is true. A number list that has no help text of its own gets
+ * "Up to 12 numbers between -99 and 99", taken from the tracer's limits. Every other field explains
+ * itself through its own `help` (shown under the field), because a single limit such as "6 characters"
+ * is wrong for grids, edge lists, operation lists and multi-word fields.
+ */
+function limitsHint(fields: InputField[], l: InputLimits): string | null {
+  const bare = fields.find((f) => f.kind === 'int-array' && !f.help)
+  return bare ? `Up to ${l.maxN} numbers between ${l.min} and ${l.max}.` : null
 }
 
 const sameValues = (a: Record<string, string>, b: Record<string, string>) =>
@@ -80,7 +82,7 @@ export function PlaygroundInput({ tracer, presetIndex = 0, initialValues, onRun,
         <h3 id={`${uid}-h`} className="font-serif text-[20px] font-semibold leading-7 text-ink">
           Your input
         </h3>
-        <p className="text-[13px] leading-[18px] text-ink-3">{hint}</p>
+        {hint ? <p className="text-[13px] leading-[18px] text-ink-2">{hint}</p> : null}
       </div>
 
       <div className="flex flex-wrap items-start gap-3">
@@ -89,7 +91,7 @@ export function PlaygroundInput({ tracer, presetIndex = 0, initialValues, onRun,
           const err = errors[f.name]
           const narrow = f.kind === 'int'
           return (
-            <div key={f.name} className={cn('flex min-w-0 flex-col gap-1', narrow ? 'w-28' : 'min-w-[12rem] flex-1')}>
+            <div key={f.name} className={cn('flex min-w-0 flex-col gap-1', narrow ? 'w-full sm:max-w-[14rem]' : 'min-w-[12rem] flex-1')}>
               <label htmlFor={id} className="text-[13px] font-semibold text-ink-2">
                 {f.label}
               </label>
@@ -114,7 +116,8 @@ export function PlaygroundInput({ tracer, presetIndex = 0, initialValues, onRun,
                 aria-invalid={err ? true : undefined}
                 aria-describedby={err ? `${id}-err` : f.help ? `${id}-help` : undefined}
                 className={cn(
-                  'h-11 w-full rounded-cell border bg-paper-sunken px-3 font-mono text-[15px] text-ink placeholder:text-ink-3',
+                  'h-11 rounded-cell border bg-paper-sunken px-3 font-mono text-[15px] text-ink placeholder:text-ink-3',
+                  narrow ? 'w-28' : 'w-full',
                   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]',
                   err ? 'border-role-error' : 'border-rule hover:border-rule-strong',
                 )}
@@ -125,7 +128,7 @@ export function PlaygroundInput({ tracer, presetIndex = 0, initialValues, onRun,
                   {err}
                 </p>
               ) : f.help ? (
-                <p id={`${id}-help`} className={cn('text-[12px] leading-4 text-ink-3', narrow && 'sr-only')}>
+                <p id={`${id}-help`} className="text-[12px] leading-4 text-ink-2">
                   {f.help}
                 </p>
               ) : null}

@@ -115,7 +115,7 @@ export function CheckSection({
                     aria-hidden="true"
                     className={cn(
                       'mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold leading-none',
-                      results[i] ? 'bg-[var(--role-found-wash)] text-role-found' : 'bg-[var(--role-error-wash)] text-role-error',
+                      results[i] ? 'bg-[var(--role-found-wash)] text-found-ink' : 'bg-[var(--role-error-wash)] text-error-ink',
                     )}
                   >
                     {results[i] ? '✓' : '✕'}
@@ -186,9 +186,9 @@ export function CheckSection({
                         className={cn(
                           'mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 text-[11px] font-bold leading-none',
                           showRight
-                            ? 'border-role-found bg-role-found text-paper'
+                            ? 'border-found-ink bg-found-ink text-paper'
                             : showWrong
-                              ? 'border-role-error bg-role-error text-paper'
+                              ? 'border-error-ink bg-error-ink text-paper'
                               : selected
                                 ? 'border-coral bg-coral'
                                 : 'border-rule-strong',
@@ -215,7 +215,7 @@ export function CheckSection({
                     isCorrect ? 'border-l-role-found bg-[var(--role-found-wash)]' : 'border-l-role-error bg-[var(--role-error-wash)]',
                   )}
                 >
-                  <p className={cn('text-[15px] font-semibold', isCorrect ? 'text-role-found' : 'text-role-error')}>
+                  <p className={cn('text-[15px] font-semibold', isCorrect ? 'text-found-ink' : 'text-error-ink')}>
                     <span aria-hidden="true">{isCorrect ? '✓ ' : '✕ '}</span>
                     {isCorrect ? 'Correct.' : 'Not quite.'}
                   </p>

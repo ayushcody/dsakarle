@@ -12,8 +12,8 @@ export function SearchButton() {
       onClick={openPalette}
       className={cn(
         focusRing,
-        'flex min-h-[48px] w-full max-w-xl items-center gap-3 rounded-card border border-rule bg-paper-sunken px-4 text-left',
-        'font-sans text-[15px] text-ink-3 transition-colors duration-150 hover:border-rule-strong hover:bg-paper-raised',
+        'flex min-h-[48px] w-full max-w-xl items-center gap-3 rounded-card border border-control bg-paper-sunken px-4 text-left',
+        'font-sans text-[15px] text-ink-3 transition-colors duration-150 hover:border-ink-3 hover:bg-paper-raised',
       )}
     >
       <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">

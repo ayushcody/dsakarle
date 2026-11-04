@@ -45,7 +45,7 @@ export function LessonRow({ lesson, done }: { lesson: CurriculumLesson; done: bo
               href={`/learn/${lesson.slug}`}
               data-row-link=""
               className={cn(
-                'min-h-[28px] font-serif text-[19px] font-semibold leading-7 text-ink outline-none',
+                'min-h-[40px] py-1.5 font-serif text-[19px] font-semibold leading-7 text-ink outline-none',
                 'after:absolute after:inset-0 after:rounded-cell',
                 'hover:text-coral-ink',
                 'focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[var(--focus-ring)]',
@@ -54,7 +54,7 @@ export function LessonRow({ lesson, done }: { lesson: CurriculumLesson; done: bo
               {lesson.title}
             </Link>
             {done ? (
-              <span className="inline-flex items-center gap-1 text-[12px] font-medium text-role-found">
+              <span className="inline-flex items-center gap-1 text-[12px] font-medium text-found-ink">
                 <CheckMark />
                 <span className="sr-only">Completed</span>
               </span>
@@ -82,7 +82,7 @@ export function LessonRow({ lesson, done }: { lesson: CurriculumLesson; done: bo
                   {i > 0 ? <span aria-hidden="true">, </span> : null}
                   <Link
                     href={`/learn/${p.slug}`}
-                    className="relative z-10 inline-flex min-h-[28px] items-center rounded-cell px-0.5 text-ink-2 underline decoration-rule-strong underline-offset-2 hover:text-coral-ink hover:decoration-coral focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                    className="relative z-10 -my-2 inline-flex min-h-[44px] items-center rounded-cell px-1 text-ink-2 underline decoration-rule-strong underline-offset-2 hover:text-coral-ink hover:decoration-coral focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
                   >
                     {p.title}
                   </Link>

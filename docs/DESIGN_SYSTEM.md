@@ -20,20 +20,24 @@ This file is the contract for token names. Agents implement against these names 
 | `--paper-sunken` | `#F4ECE3` | `#141210` | code blocks, inputs, wells |
 | `--ink` | `#1D1B19` | `#EDE6DC` | primary text |
 | `--ink-2` | `#4A4540` | `#B8AFA3` | secondary text |
-| `--ink-3` | `#6F6861` | `#8C8378` | muted text (must stay ≥ 4.5:1 on paper) |
+| `--ink-3` | `#6F6861` | `#9C9387` | muted text (must stay ≥ 4.5:1 on paper, raised and sunken; on coral or teal washes use `--ink-2`) |
 | `--rule` | `rgba(29,27,25,0.12)` | `rgba(237,230,220,0.14)` | borders, dividers |
 | `--rule-strong` | `rgba(29,27,25,0.24)` | `rgba(237,230,220,0.28)` | focused or hovered borders |
+| `--control-border` | `#8A8279` | `#7D7569` | border of text fields and search triggers (≥ 3:1 against every surface, WCAG 1.4.11). Tailwind: `border-control` |
 | `--grid` | `rgba(29,27,25,0.045)` | `rgba(237,230,220,0.05)` | graph-paper lines (Stage only) |
 
 **Brand**
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--coral` | `#CC5A37` | `#F08A64` | brand accent, primary buttons, links |
-| `--coral-ink` | `#A83A1D` | `#F5A584` | coral text on paper (AA) |
+| `--coral` | `#CC5A37` | `#F08A64` | brand accent for strokes, icons, rings and large text only. Not a text colour and not a fill behind small text (3.82:1 with paper) |
+| `--coral-ink` | `#A83A1D` | `#F5A584` | coral text on paper (AA), and the **primary button fill** (paper text on it is 5.9:1 light, 9.0:1 dark) |
+| `--coral-ink-2` | `#8C2F16` | `#F9BDA2` | primary button hover and active fill |
 | `--coral-wash` | `rgba(204,90,55,0.10)` | `rgba(240,138,100,0.14)` | active nav and selected backgrounds |
-| `--amber` | `#D99B26` | `#F2C14E` | secondary accent |
-| `--teal` | `#1E7B6C` | `#4FB7A5` | tertiary accent |
+| `--amber` | `#D99B26` | `#F2C14E` | secondary accent (strokes, fills) |
+| `--amber-ink` | `#855A05` | `#F2C14E` | amber as **text** (chips, callout titles); 5.6:1 on paper. `--role-compare` is for strokes only |
+| `--teal` | `#1E7B6C` | `#4FB7A5` | tertiary accent (strokes, icons) |
+| `--teal-ink` | `#17695C` | `#4FB7A5` | teal as **text**, also on the teal wash (5.2:1) |
 | `--focus-ring` | `#CC5A37` | `#F08A64` | `:focus-visible` outline, 2px with 2px offset |
 
 **Semantic roles.** Used only through `lib/stage/semantics.ts` and the Stage primitives. Every role also has a non-colour cue.
@@ -55,6 +59,8 @@ This file is the contract for token names. Agents implement against these names 
 | `--role-found-wash` | `rgba(47,143,78,0.12)` | `rgba(92,199,126,0.16)` | | |
 | `--role-error` | `#C23B3B` | `#F07171` | violation, wrong | ✕ glyph, zigzag |
 | `--role-error-wash` | `rgba(194,59,59,0.10)` | `rgba(240,113,113,0.14)` | | |
+| `--found-ink` | `#256F3A` | `#5CC77E` | success as **text** (and on its wash). `--role-found` is for strokes, fills and glyphs | |
+| `--error-ink` | `#A82F2F` | `#F07171` | error as **text** (and on its wash). `--role-error` is for strokes, fills and glyphs | |
 
 **Legacy aliases.** Existing components still use these names. They must keep working in both themes until the legacy code is retired in Phase 5. Define them only as aliases of the new tokens.
 
@@ -120,7 +126,7 @@ Legacy font variables are aliases: `--font-dmsans` maps to `--font-sans` and `--
 - **Graph paper:** the `.graph-paper` utility draws a 24px grid in `--grid` on `--paper-raised`. It is used only on the Stage surface.
 
 ## 5. Tailwind mapping (`tailwind.config.ts`)
-- **Colours:** `paper`, `paper-raised`, `paper-sunken`, `ink`, `ink-2`, `ink-3`, `rule`, `rule-strong`, `coral`, `coral-ink`, `coral-wash`, `amber`, `teal`. Also `role-ptr-a`, `role-ptr-b`, `role-focus`, `role-compare`, `role-found`, `role-error`, each as `var(--…)`.
+- **Colours:** `paper`, `paper-raised`, `paper-sunken`, `ink`, `ink-2`, `ink-3`, `rule`, `rule-strong`, `coral`, `coral-ink`, `coral-ink-2`, `coral-wash`, `amber`, `amber-ink`, `teal`, `teal-ink`, `found-ink`, `error-ink`, `control` (the `--control-border` token). Also `role-ptr-a`, `role-ptr-b`, `role-focus`, `role-compare`, `role-found`, `role-error`, each as `var(--…)`.
 - **Font families:** `serif`, `sans`, `mono`, `hand`. Keep `dmsans` and `dmmono` as aliases, and add `lora` → serif as a temporary alias until the sweep.
 - **Border radius:** `cell`, `card`, `pill`.
 - **Shadows:** `1` and `2`.
@@ -144,6 +150,11 @@ Legacy font variables are aliases: `--font-dmsans` maps to `--font-sans` and `--
 - **Focus:** always visible, using `--focus-ring`.
 - **Keyboard:** everything interactive is reachable. The Stage uses ←/→, Space, Home/End.
 - **Contrast:** WCAG AA in both themes. Any text in `--ink-3` must still reach 4.5:1.
+  - Text colours: `ink`, `ink-2`, `ink-3`, `coral-ink`, `amber-ink`, `teal-ink`, `found-ink`, `error-ink`. Never use `coral`, `amber`, `teal`, `role-found` or `role-error` for small text; they are for strokes, icons and fills (3:1).
+  - A filled primary button is `bg-coral-ink` (hover `bg-coral-ink-2`) with `text-paper`. `bg-coral` is only for bars, dots and rings.
+  - Inside a coral or teal wash, `--ink-3` is below 4.5:1 in dark mode. Use `--ink-2` there.
+- **Names match labels.** If a control shows text, its accessible name must start with that text. Do not put an `aria-label` on it; use `aria-describedby` for extra context (see the "I solved this" toggles).
+- **Scrollers are focusable.** Any element that can scroll (`overflow-x/y: auto`) and has no focusable child gets `tabIndex={0}`, `role="region"`, an `aria-label` and a visible focus ring.
 - **Colour is never the only signal.** Every role keeps its non-colour cue from the table in section 2.
 
 ## 8. Voice in the UI

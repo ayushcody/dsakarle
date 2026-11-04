@@ -21,8 +21,8 @@ const rules: Record<CalloutVariant, string> = {
 
 const titleTone: Record<CalloutVariant, string> = {
   aha: 'text-coral-ink',
-  tip: 'text-teal',
-  warning: 'text-[var(--role-compare)]',
+  tip: 'text-teal-ink',
+  warning: 'text-amber-ink',
   note: 'text-ink-2',
 };
 

@@ -95,7 +95,7 @@ export function RightSidebar({ outline, steps }: { outline: OutlineItem[]; steps
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
-                    className={`font-dmsans text-sm block px-3 py-2 rounded-md transition-colors ${item.id === activeId ? 'bg-[var(--surface-coral)] text-[var(--accent-coral)] font-medium' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'}`}
+                    className={`font-dmsans text-sm block px-3 py-2 rounded-md transition-colors ${item.id === activeId ? 'bg-[var(--surface-coral)] text-coral-ink font-medium' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'}`}
                   >
                     {i + 1}. {item.label}
                   </a>
@@ -147,7 +147,7 @@ export function RightSidebar({ outline, steps }: { outline: OutlineItem[]; steps
           <p className="font-dmsans text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
             Try solving one easy problem now to lock in the concept!
           </p>
-          <Link href="/practice" className="inline-flex items-center gap-2 px-4 py-2 border border-[var(--accent-coral)] text-[var(--accent-coral)] font-dmsans font-bold text-xs rounded-md hover:bg-[var(--accent-coral)] hover:text-[var(--white)] transition-colors">
+          <Link href="/practice" className="inline-flex items-center gap-2 px-4 py-2 min-h-10 border border-coral-ink text-coral-ink font-dmsans font-bold text-xs rounded-md hover:bg-coral-ink hover:text-paper transition-colors">
             Solve Problem &rarr;
           </Link>
         </div>

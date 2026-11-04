@@ -31,7 +31,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))]">
           <div className="sm:col-span-2 md:col-span-1">
             <Logo href="/" size="md" className="-ml-1 px-1 py-1" />
-            <p className="mt-4 max-w-[34ch] text-[15px] leading-6 text-ink-2">
+            <p className="mt-3 font-serif text-[17px] font-semibold leading-6 text-ink">
+              <span className="text-coral-ink">Karle</span> means &ldquo;do it.&rdquo; Don&rsquo;t just read it.
+            </p>
+            <p className="mt-2 max-w-[34ch] text-[15px] leading-6 text-ink-2">
               Learn data structures and algorithms by watching them run.
             </p>
           </div>

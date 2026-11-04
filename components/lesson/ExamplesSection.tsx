@@ -21,7 +21,12 @@ function IoBlock({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
       <p className="t-eyebrow mb-1">{label}</p>
-      <pre className="m-0 overflow-x-auto rounded-cell border border-rule bg-paper-sunken px-3 py-2 font-mono text-[13px] leading-6 text-ink">
+      <pre
+        role="region"
+        aria-label={label}
+        tabIndex={0}
+        className={`m-0 overflow-x-auto rounded-cell border border-rule bg-paper-sunken px-3 py-2 font-mono text-[13px] leading-6 text-ink ${focusRing}`}
+      >
         {value}
       </pre>
     </div>

@@ -7,6 +7,8 @@ import { cn } from '@/components/ui'
 import type { AnchorId } from '@/lib/engine/types'
 import { spring } from '@/lib/motion'
 
+import { ScrollRegion } from './primitives/ScrollRegion'
+
 import { useStage } from './StageProvider'
 
 export interface RuleRailProps {
@@ -23,7 +25,7 @@ export interface RuleRailProps {
 export function RuleRail({ anchors, className }: RuleRailProps) {
   const at = useStage((s) => s.frames[s.index]?.at)
   const uid = useId()
-  const listRef = useRef<HTMLOListElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
   const entries = Object.entries(anchors)
 
   // On the horizontal layout keep the active chip in view without scrolling the page.
@@ -43,10 +45,12 @@ export function RuleRail({ anchors, className }: RuleRailProps) {
       <h3 id={`${uid}-h`} className="t-eyebrow mb-2">
         The rules
       </h3>
-      <ol
+      <ScrollRegion
         ref={listRef}
-        className="-mx-1 flex list-none gap-2 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:p-0"
+        label="Rules"
+        className="-mx-1 rounded-cell px-1 pb-1 lg:mx-0 lg:overflow-visible lg:p-0"
       >
+      <ol className="m-0 flex list-none gap-2 p-0 lg:flex-col lg:gap-1">
         {entries.map(([id, text], i) => {
           const active = id === at
           return (
@@ -71,12 +75,13 @@ export function RuleRail({ anchors, className }: RuleRailProps) {
                 aria-hidden="true"
                 className={cn(
                   'relative mt-px inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-pill font-mono text-[12px] font-semibold',
-                  active ? 'bg-coral text-paper' : 'bg-paper-sunken text-ink-3',
+                  active ? 'bg-coral-ink text-paper' : 'bg-paper-sunken text-ink-2',
                 )}
               >
                 {i + 1}
               </span>
-              <span className={cn('relative whitespace-nowrap lg:whitespace-normal', active && 'font-medium')}>
+              {/* Same weight active or not: a bolder active rule would wrap differently and move the column. */}
+              <span className="relative whitespace-nowrap lg:whitespace-normal">
                 <span className="sr-only">{active ? 'Current rule: ' : `Rule ${i + 1}: `}</span>
                 {text}
               </span>
@@ -84,6 +89,7 @@ export function RuleRail({ anchors, className }: RuleRailProps) {
           )
         })}
       </ol>
+      </ScrollRegion>
     </section>
   )
 }

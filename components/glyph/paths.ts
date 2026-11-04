@@ -63,6 +63,21 @@ const head = (tx: number, ty: number, deg: number, len = 2.4) => {
   return `M${n(x1)} ${n(y1)}L${n(tx)} ${n(ty)}L${n(x2)} ${n(y2)}`
 }
 
+/** Circular arc on (cx, cy, r) from angle a0 to a1 (degrees, 0 = right, 90 = down), clockwise on screen. */
+const arc = (cx: number, cy: number, r: number, a0: number, a1: number) => {
+  const pt = (a: number): Pt => [cx + r * Math.cos((a * Math.PI) / 180), cy + r * Math.sin((a * Math.PI) / 180)]
+  const [x0, y0] = pt(a0)
+  const [x1, y1] = pt(a1)
+  const large = (((a1 - a0) % 360) + 360) % 360 > 180 ? 1 : 0
+  return `M${n(x0)} ${n(y0)}A${n(r)} ${n(r)} 0 ${large} 1 ${n(x1)} ${n(y1)}`
+}
+
+/** Point on a circle at angle `a` (degrees, 0 = right, 90 = down). */
+const onCircle = (cx: number, cy: number, r: number, a: number): Pt => [
+  cx + r * Math.cos((a * Math.PI) / 180),
+  cy + r * Math.sin((a * Math.PI) / 180),
+]
+
 // ----------------------------------------------------------------- shapes
 const treeRoot: Pt = [12, 4.5]
 const treeL: Pt = [6.5, 12]
@@ -74,9 +89,24 @@ const bstRoot: Pt = [12, 5]
 const bstL: Pt = [6, 12.5]
 const bstR: Pt = [18, 12.5]
 
-const heapRoot: Pt = [12, 9.8]
-const heapL: Pt = [5.8, 18.8]
-const heapR: Pt = [18.2, 18.8]
+// Heap: a three-node pyramid. The top node is bigger and has a solid core: it is the one you always get.
+const heapRoot: Pt = [12, 7.6]
+const heapL: Pt = [5, 18.4]
+const heapR: Pt = [19, 18.4]
+
+// Fast and slow pointers: a rho. A tail leads into a loop; on the loop, a hollow slow runner and a
+// solid fast runner well ahead of it (clockwise).
+const rhoC: Pt = [14.4, 14.4]
+const rhoR = 7.2
+const rhoEntry = 225
+const rhoSlow = 322
+const rhoFast = 96
+const rhoSlowR = 1.9
+// angle of the loop that the hollow ring covers, so the loop line meets the ring's outline
+const rhoGap = (2 * Math.asin(rhoSlowR / (2 * rhoR)) * 180) / Math.PI
+const rhoEntryPt = onCircle(...rhoC, rhoR, rhoEntry)
+const rhoSlowPt = onCircle(...rhoC, rhoR, rhoSlow)
+const rhoFastPt = onCircle(...rhoC, rhoR, rhoFast)
 
 const gA: Pt = [5, 6.5]
 const gB: Pt = [18.5, 5]
@@ -154,15 +184,14 @@ export const GLYPHS: Record<GlyphKey, GlyphDef> = {
     ],
   },
 
-  // A tree wearing a crown: the root is the one you always get.
+  // A three-node pyramid; the top node is bigger, with a solid core: the root is always the best.
   heaps: {
     title: 'Heap: the top of the tree is always the best',
     paths: [
-      `${circ(...heapRoot, 3)}${circ(...heapL, 2.2)}${circ(...heapR, 2.2)}`,
-      `${edge(heapRoot, 3, heapL, 2.2)}${edge(heapRoot, 3, heapR, 2.2)}`,
-      'M9.6 4.4L10.3 2.4L12 3.7L13.7 2.4L14.4 4.4Z',
+      `${circ(...heapRoot, 3.6)}${circ(...heapL, 2.4)}${circ(...heapR, 2.4)}`,
+      `${edge(heapRoot, 3.6, heapL, 2.4)}${edge(heapRoot, 3.6, heapR, 2.4)}`,
+      circ(...heapRoot, 0.7),
     ],
-    dots: [[12, 9.8]],
   },
 
   // Four dots and lines that cross.
@@ -195,11 +224,16 @@ export const GLYPHS: Record<GlyphKey, GlyphDef> = {
     paths: [rr(3, 13.5, 18, 6.5, 2.2), 'M7.5 13.5V20M12 13.5V20M16.5 13.5V20', 'M7.5 10.8V7.5H16.5V10.8'],
   },
 
-  // A loop (rho) with two runners, one well ahead of the other.
+  // A rho: a tail runs into a loop; a hollow slow runner and a solid fast one far ahead of it.
   'fast-and-slow-pointers': {
     title: 'Fast and slow pointers: two runners on a loop',
-    paths: [circ(13.5, 14.5, 6.5), 'M3.5 4.5L8.9 10'],
-    dots: [[19.1, 17.8], [17.8, 9.4]],
+    paths: [
+      `M2.6 2.8L${n(rhoEntryPt[0] - 1.4)} ${n(rhoEntryPt[1] - 1.4)}${head(rhoEntryPt[0] - 0.6, rhoEntryPt[1] - 0.6, 45, 2.4)}`,
+      arc(...rhoC, rhoR, rhoEntry, rhoSlow - rhoGap),
+      arc(...rhoC, rhoR, rhoSlow + rhoGap, rhoEntry + 360),
+      circ(...rhoSlowPt, rhoSlowR),
+      circ(...rhoFastPt, 1.2),
+    ],
   },
 
   // A rising staircase of running totals.
@@ -240,10 +274,10 @@ export const GLYPHS: Record<GlyphKey, GlyphDef> = {
     dots: [[5, 12]],
   },
 
-  // A claw closing on the coin that is best right now.
+  // Two coins; the bigger one gets the tick: take the best one right now.
   greedy: {
     title: 'Greedy: grab the best one right now',
-    paths: ['M12 2.5V6.2', 'M12 6.2C8 6.2 6.2 9 6.6 13.5M12 6.2C16 6.2 17.8 9 17.4 13.5', circ(12, 15, 2.8), 'M5 20.5H19'],
+    paths: [circ(4.4, 17.7, 2.8), circ(15.8, 14.5, 6), 'M12.6 14.6L14.9 16.9L19.2 11.9'],
   },
 
   // A small grid of answers; the empty cell is built from filled neighbours.

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 
 import { Chip } from '@/components/ui/Chip'
 import { focusRing } from '@/components/ui/cn'
@@ -39,6 +39,7 @@ function ExternalIcon() {
 /** Where to take it next: curated problems, each with a hint (not a solution) and a "solved" toggle. */
 export function PracticeSection({ problems, eyebrow }: { problems: PracticeProblemV2[]; eyebrow: string }) {
   const [solved, setSolved] = useState<string[]>([])
+  const idBase = useId()
 
   useEffect(() => {
     setSolved(readSolved())
@@ -70,7 +71,8 @@ export function PracticeSection({ problems, eyebrow }: { problems: PracticeProbl
         {solvedHere} of {problems.length} solved
       </p>
       <ul className="space-y-3">
-        {problems.map((problem) => {
+        {problems.map((problem, index) => {
+          const titleId = `${idBase}-${index}-title`
           const difficulty = PROBLEM_DIFFICULTY[problem.difficulty]
           const isSolved = solved.includes(problem.url)
           return (
@@ -78,7 +80,7 @@ export function PracticeSection({ problems, eyebrow }: { problems: PracticeProbl
               <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                    <h3 className="t-h3 text-ink">{problem.title}</h3>
+                    <h3 id={titleId} className="t-h3 text-ink">{problem.title}</h3>
                     <Chip variant={difficulty.variant}>{difficulty.label}</Chip>
                   </div>
                   <p className="mt-2 max-w-[62ch] text-[15px] leading-6 text-ink-2">
@@ -92,13 +94,13 @@ export function PracticeSection({ problems, eyebrow }: { problems: PracticeProbl
                   href={problem.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-flex min-h-[40px] items-center gap-1.5 rounded-cell text-[14px] font-semibold text-coral-ink underline underline-offset-4 ${focusRing}`}
+                  className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-cell text-[14px] font-semibold text-coral-ink underline underline-offset-4 ${focusRing}`}
                 >
                   Open on LeetCode
                   <ExternalIcon />
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>
-                <Chip selectable selected={isSolved} onClick={() => toggle(problem.url)} aria-label={`I solved ${problem.title}`}>
+                <Chip selectable selected={isSolved} onClick={() => toggle(problem.url)} aria-describedby={titleId}>
                   {isSolved ? 'Solved' : 'I solved this'}
                 </Chip>
               </div>

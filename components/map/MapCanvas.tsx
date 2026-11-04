@@ -234,8 +234,10 @@ export default function MapCanvas({ filter }: { filter: MapFilter }) {
                         }}
                       >
                         {lines.map((line, i) => (
+                          // The trailing space on all but the last line keeps the link's text ("Binary Search Trees")
+                          // equal to its aria-label prefix; without it the lines would concatenate as "SearchTrees".
                           <tspan key={line} x={0} y={NODE_R + 17 + i * 14}>
-                            {line}
+                            {i < lines.length - 1 ? `${line} ` : line}
                           </tspan>
                         ))}
                       </text>

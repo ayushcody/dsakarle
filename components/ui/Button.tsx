@@ -37,7 +37,7 @@ const base =
   'aria-disabled:cursor-not-allowed aria-disabled:opacity-50 disabled:cursor-not-allowed disabled:opacity-50';
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-coral text-paper hover:bg-coral-ink active:bg-coral-ink',
+  primary: 'bg-coral-ink text-paper hover:bg-coral-ink-2 active:bg-coral-ink-2',
   secondary:
     'border border-rule bg-paper-raised text-ink hover:border-rule-strong hover:bg-paper-sunken',
   ghost: 'bg-transparent text-ink-2 hover:bg-coral-wash hover:text-ink',

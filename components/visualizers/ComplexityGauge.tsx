@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import * as d3 from 'd3';
+import { axisBottom, axisLeft, curveBasis, format, scaleLinear, scaleLog, select, line as d3line } from 'd3';
 
 type ComplexityName = 'O(1)' | 'O(log n)' | 'O(n)' | 'O(n log n)' | 'O(n²)' | 'O(2ⁿ)';
 
@@ -49,7 +49,7 @@ export function ComplexityGauge({ highlight, title }: ComplexityGaugeProps) {
   const drawChart = useCallback(() => {
     if (!svgRef.current) return;
 
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     svg.selectAll('*').remove();
 
     const W = 600;
@@ -63,20 +63,20 @@ export function ComplexityGauge({ highlight, title }: ComplexityGaugeProps) {
     const g = svg.append('g').attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
 
     // Scales
-    const xScale = d3.scaleLinear().domain([1, n]).range([0, w]);
-    const yScale = d3.scaleLog().domain([1, Math.max(ops['O(n²)'] || 1, 10)]).range([h, 0]).clamp(true);
+    const xScale = scaleLinear().domain([1, n]).range([0, w]);
+    const yScale = scaleLog().domain([1, Math.max(ops['O(n²)'] || 1, 10)]).range([h, 0]).clamp(true);
 
     // Axes
     g.append('g')
       .attr('transform', `translate(0,${h})`)
-      .call(d3.axisBottom(xScale).ticks(5).tickFormat((d) => d3.format('.0s')(d as number)))
+      .call(axisBottom(xScale).ticks(5).tickFormat((d) => format('.0s')(d as number)))
       .selectAll('text')
       .style('fill', 'var(--ink-3)')
       .style('font-size', '10px')
       .style('font-family', 'var(--font-mono)');
 
     g.append('g')
-      .call(d3.axisLeft(yScale).ticks(4, '.0s'))
+      .call(axisLeft(yScale).ticks(4, '.0s'))
       .selectAll('text')
       .style('fill', 'var(--ink-3)')
       .style('font-size', '10px')
@@ -119,11 +119,10 @@ export function ComplexityGauge({ highlight, title }: ComplexityGaugeProps) {
         }
       }
 
-      const line = d3
-        .line<[number, number]>()
+      const line = d3line<[number, number]>()
         .x((d) => xScale(d[0]))
         .y((d) => yScale(d[1]))
-        .curve(d3.curveBasis);
+        .curve(curveBasis);
 
       g.append('path')
         .datum(points)

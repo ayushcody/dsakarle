@@ -24,7 +24,7 @@ function ClueList({ title, items, tone }: { title: string; items: string[]; tone
               aria-hidden="true"
               className={cn(
                 'mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold leading-none',
-                tone === 'yes' ? 'bg-[var(--role-found-wash)] text-role-found' : 'bg-[var(--role-error-wash)] text-role-error',
+                tone === 'yes' ? 'bg-[var(--role-found-wash)] text-found-ink' : 'bg-[var(--role-error-wash)] text-error-ink',
               )}
             >
               {tone === 'yes' ? '✓' : '✕'}
@@ -114,7 +114,7 @@ function RecognitionCard({
       <div aria-live="polite" className="mt-4 empty:mt-0">
         {state.resolved ? (
           <div className="rounded-r-card border-l-[3px] border-l-role-found bg-[var(--role-found-wash)] px-4 py-3">
-            <p className="text-[15px] font-semibold text-role-found">
+            <p className="text-[15px] font-semibold text-found-ink">
               <span aria-hidden="true">✓ </span>
               {answerMeta?.title ?? item.answer}
               {state.firstTry ? ' — spotted it first try' : ''}
@@ -123,7 +123,7 @@ function RecognitionCard({
           </div>
         ) : lastWrong ? (
           <div className="rounded-r-card border-l-[3px] border-l-role-error bg-[var(--role-error-wash)] px-4 py-3">
-            <p className="text-[15px] font-semibold text-role-error">
+            <p className="text-[15px] font-semibold text-error-ink">
               <span aria-hidden="true">✕ </span>Not quite.
             </p>
             {lastWrongMeta ? (

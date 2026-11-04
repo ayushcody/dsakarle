@@ -20,14 +20,18 @@
   --ink-3: #6F6861;
   --rule: rgba(29, 27, 25, 0.12);
   --rule-strong: rgba(29, 27, 25, 0.24);
+  --control-border: #8A8279; /* >= 3:1 on paper, raised and sunken: edges of text fields and search triggers */
   --grid: rgba(29, 27, 25, 0.045);
 
   /* Brand */
   --coral: #CC5A37;
   --coral-ink: #A83A1D;
+  --coral-ink-2: #8C2F16; /* primary button hover/active fill */
   --coral-wash: rgba(204, 90, 55, 0.10);
   --amber: #D99B26;
+  --amber-ink: #855A05; /* amber as TEXT (AA); --role-compare stays for strokes */
   --teal: #1E7B6C;
+  --teal-ink: #17695C; /* teal as TEXT on teal washes (AA) */
   --focus-ring: #CC5A37;
 
   /* Semantic roles (use via lib/stage/semantics.ts and Stage primitives) */
@@ -46,6 +50,8 @@
   --role-found-wash: rgba(47, 143, 78, 0.12);
   --role-error: #C23B3B;
   --role-error-wash: rgba(194, 59, 59, 0.10);
+  --found-ink: #256F3A; /* success as TEXT (AA, also on its wash) */
+  --error-ink: #A82F2F; /* error as TEXT (AA, also on its wash) */
 
   /* Shape and elevation */
   --r-cell: 6px;
@@ -77,16 +83,20 @@
     --paper-sunken: #141210;
     --ink: #EDE6DC;
     --ink-2: #B8AFA3;
-    --ink-3: #8C8378;
+    --ink-3: #9C9387;
     --rule: rgba(237, 230, 220, 0.14);
     --rule-strong: rgba(237, 230, 220, 0.28);
+    --control-border: #7D7569;
     --grid: rgba(237, 230, 220, 0.05);
 
     --coral: #F08A64;
     --coral-ink: #F5A584;
+    --coral-ink-2: #F9BDA2;
     --coral-wash: rgba(240, 138, 100, 0.14);
     --amber: #F2C14E;
+    --amber-ink: #F2C14E;
     --teal: #4FB7A5;
+    --teal-ink: #4FB7A5;
     --focus-ring: #F08A64;
 
     --role-ptr-a: #4FB7A5;
@@ -104,6 +114,8 @@
     --role-found-wash: rgba(92, 199, 126, 0.16);
     --role-error: #F07171;
     --role-error-wash: rgba(240, 113, 113, 0.14);
+    --found-ink: #5CC77E;
+    --error-ink: #F07171;
 
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -129,16 +141,20 @@
   --paper-sunken: #141210;
   --ink: #EDE6DC;
   --ink-2: #B8AFA3;
-  --ink-3: #8C8378;
+  --ink-3: #9C9387;
   --rule: rgba(237, 230, 220, 0.14);
   --rule-strong: rgba(237, 230, 220, 0.28);
+  --control-border: #7D7569;
   --grid: rgba(237, 230, 220, 0.05);
 
   --coral: #F08A64;
   --coral-ink: #F5A584;
+  --coral-ink-2: #F9BDA2;
   --coral-wash: rgba(240, 138, 100, 0.14);
   --amber: #F2C14E;
+  --amber-ink: #F2C14E;
   --teal: #4FB7A5;
+  --teal-ink: #4FB7A5;
   --focus-ring: #F08A64;
 
   --role-ptr-a: #4FB7A5;
@@ -156,6 +172,8 @@
   --role-found-wash: rgba(92, 199, 126, 0.16);
   --role-error: #F07171;
   --role-error-wash: rgba(240, 113, 113, 0.14);
+  --found-ink: #5CC77E;
+  --error-ink: #F07171;
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -402,7 +420,7 @@
 
   .button-primary {
     border-radius: var(--r-cell);
-    background: var(--coral);
+    background: var(--coral-ink);
     color: var(--paper-raised);
     font-family: var(--font-sans), system-ui, sans-serif;
     font-weight: 500;
@@ -414,7 +432,7 @@
 
   .button-primary:hover {
     transform: translateY(-2px);
-    background: var(--coral-ink);
+    background: var(--coral-ink-2);
     box-shadow: var(--shadow-2);
   }
 

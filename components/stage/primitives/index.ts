@@ -26,3 +26,5 @@ export {
   makeStageIds,
 } from "./ids";
 export type { StageIds } from "./ids";
+export { ScrollRegion } from "./ScrollRegion";
+export type { ScrollRegionProps } from "./ScrollRegion";

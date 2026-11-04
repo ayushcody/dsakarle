@@ -67,7 +67,7 @@ export default function NotFound() {
       <OutOfBounds />
       <h1 className="t-h1 mt-8 text-center text-ink">That page is not in the notebook.</h1>
       <p
-        className="mt-4 rounded-card border border-rule bg-paper-sunken px-4 py-3 text-center font-mono text-[14px] text-role-error"
+        className="mt-4 rounded-card border border-rule bg-paper-sunken px-4 py-3 text-center font-mono text-[14px] text-error-ink"
         role="note"
       >
         IndexError: page 404 is out of range
