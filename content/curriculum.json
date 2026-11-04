@@ -193,7 +193,7 @@
       "group": "data-structures",
       "glyph": "heaps",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 35,
       "oneLiner": "Always hand me the smallest (or largest) next.",
       "trigger": "'Top K', 'K-th largest', or repeatedly take the best option.",
