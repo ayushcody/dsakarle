@@ -349,7 +349,7 @@
       "group": "algorithms",
       "glyph": "sorting",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 45,
       "oneLiner": "Put things in order, then problems get easier.",
       "trigger": "Order would make pairs, duplicates or intervals obvious.",

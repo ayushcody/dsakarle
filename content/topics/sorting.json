@@ -1,211 +1,449 @@
 {
-  "id": "sorting",
+  "schemaVersion": 2,
   "slug": "sorting",
-  "title": "Sorting Algorithms",
-  "category": "algorithm",
-  "difficulty": "intermediate",
-  "estimatedMinutes": 60,
-  "prerequisites": [
-    "arrays",
-    "recursion"
-  ],
-  "tags": [
-    "array",
-    "sort",
-    "divide-and-conquer"
-  ],
-  "overview": {
-    "summary": "Sorting algorithms arrange elements in a certain order (usually ascending). Understanding how they work internally is crucial for grasping time complexity limits.",
-    "learningObjectives": [
-      "Understand why O(N^2) sorts (Bubble, Insertion) are too slow for large data.",
-      "Understand the mechanics of O(N log N) sorts (Merge Sort, Quick Sort).",
-      "Know when to use your language's built-in sort vs writing a custom comparator."
-    ],
-    "interviewRelevance": "While you rarely write a sort from scratch in an interview, you constantly use `.sort()` to enable patterns like Two Pointers or Binary Search."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "You sort ten playing cards by picking each one up and sliding it into place in your hand. Why would that same method be hopeless for a million exam scores?",
     "paragraphs": [
-      "Imagine having a shuffled deck of 52 cards and trying to find the 7 of Spades. You have to look at every card. But if the deck is sorted, you can find it instantly.",
-      "Databases sort their tables. E-commerce sites sort by price. High scores are sorted. Sorting is the most fundamental optimization step before any search."
+      "With ten cards, each new card passes about half of the cards already in your hand. The whole job is a few dozen moves, and you barely notice.",
+      "Now try the same slide-it-into-place method on a million scores. It needs about n × n ÷ 4 moves, which is roughly 250 billion. Even at a billion moves a second, that is over four minutes for a single sort."
     ],
-    "ahaMoment": "You can't sort anything faster than O(N log N) using comparisons. That is a mathematical ceiling."
+    "aha": "Sort two halves separately and then merge them, and the job takes only about n × log₂ n steps: around 20 million for a million scores. Merging two sorted piles is cheap, and halving only goes about 20 levels deep. That is the gap between n² and n log n."
   },
-  "definition": {
-    "technicalDefinition": "A Sorting Algorithm puts elements of a list into an order. The most frequently used orders are numerical order and lexicographical order.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "nums",
+      "cells": [
+        2,
+        4,
+        7,
+        9,
+        null,
+        3
+      ],
+      "pointers": [
+        {
+          "name": "j",
+          "index": 3,
+          "role": "ptrB"
+        }
+      ],
+      "window": {
+        "start": 0,
+        "end": 4
+      },
+      "marks": [
+        {
+          "index": 3,
+          "role": "compare"
+        },
+        {
+          "index": 4,
+          "role": "focus"
+        }
+      ],
+      "annotations": [
+        {
+          "target": "cell:4",
+          "text": "key = 5"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "In-Place",
-        "definition": "The algorithm sorts the array without needing extra memory (e.g., Quick Sort)."
+        "target": "window",
+        "text": "sorted hand"
       },
       {
-        "term": "Stable",
-        "definition": "Items with the same value retain their original relative order (e.g., Merge Sort)."
+        "target": "cell:4",
+        "text": "key held aside"
       },
       {
-        "term": "Comparator",
-        "definition": "A custom function passed to a sort method to define how two elements should be compared."
+        "target": "cell:5",
+        "text": "not placed yet"
       }
-    ],
-    "keyProperties": [
-      "O(N log N) is the fastest comparison-based sort.",
-      "O(N) sorting is possible ONLY under strict conditions (e.g., Counting Sort when max value is small)."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "Merge Sort: Divide a giant stack of tests into piles of 1, sort them, then merge pairs of piles together.",
-      "Quick Sort: Pick a pivot. Put all tests with lower scores to the left, higher to the right. Repeat on the left and right piles."
+      "Sorting a hand of cards: you pick up one card at a time and slide it left past every bigger card until it fits. That is insertion sort. It is great when the hand is small or nearly in order.",
+      "Now picture two stacks of exam papers, each already sorted by score. To merge them you only ever compare the top paper of each stack: the lower score goes onto the new pile, and you repeat. Merge sort keeps halving a big stack until every pile is one paper, then merges the piles back up.",
+      "Quick sort splits by a different rule. Pick one paper as the pivot, put lower scores on its left and higher ones on its right. The pivot is now in its final spot, and each side is a smaller pile to sort the same way."
     ],
-    "clickSentence": "Divide and Conquer is the secret to breaking the O(N^2) barrier.",
-    "diagramType": "ArrayDiagram",
-    "cells": [
-      5,
-      2,
-      9,
-      1,
-      5,
-      6
-    ],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "Merge Sort requires O(N) extra memory to hold the merged arrays.",
-      "Quick Sort requires O(log N) extra memory for the recursion stack, but sorts the array in-place."
-    ],
-    "definitionCode": {
-      "python": "arr.sort() # Timsort (O(N log N))",
-      "javascript": "arr.sort((a, b) => a - b); // Must provide comparator for numbers!",
-      "java": "Arrays.sort(arr); // Dual-Pivot Quicksort / Timsort",
-      "cpp": "std::sort(arr.begin(), arr.end()); // Introsort"
-    },
-    "memoryLayout": [
+    "click": "Sorting gets cheaper when you split the job: two small sorted piles merge in a single pass, so halving beats comparing everything with everything.",
+    "glossary": [
       {
-        "label": "Unsorted",
-        "value": "[5, 2, 9, 1]"
+        "term": "stable",
+        "definition": "Equal items keep their original order. If two exam papers both score 80, the one that came first still comes first after sorting."
       },
       {
-        "label": "Sorted",
-        "value": "[1, 2, 5, 9]"
+        "term": "in-place",
+        "definition": "The sort rearranges the array itself and needs only a few extra variables, not a second array. Insertion sort and quick sort are in-place; merge sort needs a buffer."
+      },
+      {
+        "term": "comparison sort",
+        "definition": "A sort that learns the order only by asking \"is a smaller than b?\". Insertion, merge and quick sort are all comparison sorts."
+      },
+      {
+        "term": "pivot",
+        "definition": "The number quick sort picks to split a range: smaller numbers go on its left and the rest on its right. Here it is the last number of the range."
+      },
+      {
+        "term": "partition",
+        "definition": "Rearranging a range around the pivot so everything smaller is on the left and everything else is on the right. The pivot lands in its final slot."
+      },
+      {
+        "term": "divide and conquer",
+        "definition": "Split a problem into smaller copies of itself, solve each copy, then combine the answers. Merge sort and quick sort both work this way."
+      },
+      {
+        "term": "O(n log n) lower bound",
+        "definition": "No comparison sort can beat about n × log₂ n comparisons in the worst case. There are n! possible orders and each comparison can at most halve them."
+      }
+    ],
+    "definition": "Sorting rearranges a sequence so its items are in order under some comparison rule. Insertion sort grows a sorted prefix one item at a time and takes O(n²) time in the average and worst cases. Merge sort splits the range in half, sorts each half and merges them, and takes O(n log n) time in every case with O(n) extra space. Quick sort partitions the range around a pivot and recurses on both sides, and takes O(n log n) time on average but O(n²) in the worst case."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "insertion",
+        "label": "Insertion sort",
+        "tracer": "sorting/insertion-sort",
+        "predict": {
+          "tags": [
+            "shift-or-place"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "merge",
+        "label": "Merge sort",
+        "tracer": "sorting/merge-sort",
+        "predict": {
+          "tags": [
+            "which-goes-first"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "quick",
+        "label": "Quick sort",
+        "tracer": "sorting/quick-sort",
+        "predict": {
+          "tags": [
+            "swap-or-not"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The statement says sorted, order, rank, smallest first, or asks you to arrange or merge things by some rule.",
+      "Related items need to sit side by side: overlapping intervals, duplicates, or the closest pair.",
+      "You will search the same data many times, so sorting once lets binary search or two pointers do the rest.",
+      "A custom order is the whole trick, like ordering by end time or by which of a+b and b+a is bigger."
+    ],
+    "notWhen": [
+      "You only need the largest, smallest or top k. One pass or a heap does less work than ordering everything.",
+      "The values live in a tiny known range, like 0, 1 and 2 or the letters a to z. Counting beats a comparison sort and runs in O(n).",
+      "You need one lookup in unsorted data. A hash map answers it in O(n) total, and sorting first would cost O(n log n) and scramble the original indexes."
+    ],
+    "quiz": [
+      {
+        "problem": "Given an array of intervals [start, end], merge every pair that overlaps and return the merged list.",
+        "answer": "sorting",
+        "options": [
+          "greedy",
+          "sorting",
+          "two-pointers",
+          "heaps"
+        ],
+        "explanation": "Sort by start. After that, any interval that overlaps the previous one is its neighbour, so a single sweep can merge them."
+      },
+      {
+        "problem": "Return the k-th largest element of an unsorted array. You don't need any other element in order.",
+        "answer": "heaps",
+        "options": [
+          "binary-search",
+          "sorting",
+          "hash-maps",
+          "heaps"
+        ],
+        "explanation": "Sorting would work, but it orders everything when you only need one position. A min-heap of size k tracks the top k in O(n log k)."
+      },
+      {
+        "problem": "Given a list of non-negative integers, arrange them to form the largest possible number. For [3, 30, 34, 5, 9] the answer is \"9534330\".",
+        "answer": "sorting",
+        "options": [
+          "sorting",
+          "strings",
+          "greedy",
+          "hash-maps"
+        ],
+        "explanation": "The order is the whole problem: put a before b when gluing a then b beats b then a. Sort with that custom comparison."
+      },
+      {
+        "problem": "Given an unsorted array and a target, return the indices of two numbers that add up to the target.",
+        "answer": "hash-maps",
+        "options": [
+          "sorting",
+          "hash-maps",
+          "two-pointers",
+          "binary-search"
+        ],
+        "explanation": "Sorting would scramble the indices you must return. A hash map remembers each number's index and finds target − x in one step."
+      },
+      {
+        "problem": "You have meetings with start and end times and one room. Attend as many meetings as possible without any overlap.",
+        "answer": "greedy",
+        "options": [
+          "greedy",
+          "sorting",
+          "heaps",
+          "two-pointers"
+        ],
+        "explanation": "Sorting by end time is only the prep. The real idea is greedy: always take the meeting that ends earliest and still fits, because it leaves the most room."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Sorting visualization coming soon.",
-        "activeLine": 1
+        "text": "merged = a buffer as long as nums, then sort_range(0, n − 1)",
+        "anchor": "init"
+      },
+      {
+        "text": "sort_range(lo, hi):"
+      },
+      {
+        "text": "if lo >= hi: return   (one number is already sorted)",
+        "anchor": "base",
+        "indent": 1
+      },
+      {
+        "text": "mid = (lo + hi) / 2",
+        "anchor": "split",
+        "indent": 1
+      },
+      {
+        "text": "sort_range(lo, mid), then sort_range(mid + 1, hi)",
+        "anchor": "split",
+        "indent": 1
+      },
+      {
+        "text": "i = lo, j = mid + 1, k = lo",
+        "anchor": "merge",
+        "indent": 1
+      },
+      {
+        "text": "while both halves still have numbers:",
+        "indent": 1
+      },
+      {
+        "text": "put the smaller of nums[i] and nums[j] into merged[k]; ties go left",
+        "anchor": "take",
+        "indent": 2
+      },
+      {
+        "text": "move that pointer and k forward",
+        "anchor": "take",
+        "indent": 2
+      },
+      {
+        "text": "copy whatever is left of the half that remains",
+        "anchor": "drain",
+        "indent": 1
+      },
+      {
+        "text": "copy merged[lo .. hi] back into nums",
+        "anchor": "copy",
+        "indent": 1
+      },
+      {
+        "text": "return nums",
+        "anchor": "done"
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Merge Sort",
-      "description": "Recursively split the array in half until sizes are 1. Then merge the sorted halves.",
-      "timeComplexity": "O(N log N)",
-      "spaceComplexity": "O(N)",
-      "code": {
-        "python": "def mergeSort(arr):\n    if len(arr) > 1:\n        mid = len(arr)//2\n        L = arr[:mid]\n        R = arr[mid:]\n        mergeSort(L)\n        mergeSort(R)\n        # Merge logic omitted for brevity"
-      },
-      "visualNote": "Array breaks down to single blocks, then zippers back together."
-    },
-    {
-      "name": "Quick Sort",
-      "description": "Pick a pivot. Partition array so left < pivot and right > pivot. Recurse on halves.",
-      "timeComplexity": "O(N log N)",
-      "spaceComplexity": "O(log N)",
-      "code": {
-        "python": "def quicksort(arr, low, high):\n    if low < high:\n        pi = partition(arr, low, high)\n        quicksort(arr, low, pi-1)\n        quicksort(arr, pi+1, high)"
-      },
-      "visualNote": "A pivot is selected, and elements swap around it."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "arr.sort(custom_comparator)\n# Now use Binary Search, Two Pointers, or Greedy",
-    "whenToUse": "When you need to find duplicates, closest pairs, or optimize an O(N^2) problem down to O(N log N) by organizing the data first.",
-    "timeComplexity": "O(N log N)",
-    "spaceComplexity": "Language dependent (usually O(1) to O(N))"
-  },
-  "recognitionQuiz": {
-    "problemStatement": "Given an array of integers, find if any two numbers sum to target. You are not allowed to use extra memory.",
-    "correctPatternId": "sorting",
-    "distractors": [
-      "hash-maps",
-      "binary-search",
-      "prefix-sum"
     ],
-    "explanation": "A Hash Map uses O(N) extra memory. If you SORT the array first (in-place, O(N log N) time, O(1) space), you can then use Two Pointers to find the sum."
+    "tracer": "sorting/merge-sort",
+    "time": "O(n log n)",
+    "space": "O(n)",
+    "notes": [
+      "Merge sort takes O(n log n) in the best, average and worst case. It is stable, and not in-place: the buffer costs O(n) extra space. Halving gives about log₂ n levels, and every level merges n numbers.",
+      "Insertion sort is O(n) when the input is already sorted and O(n²) on average and in the worst case. It is stable and in-place, uses O(1) extra space, and is hard to beat on tiny or nearly sorted inputs.",
+      "Quick sort is O(n log n) on average and O(n²) in the worst case. It is in-place but not stable, and its recursion uses O(log n) stack space on average.",
+      "The worst case for quick sort is easy to hit with a last-element pivot: on an already sorted array the pivot is always the biggest number, so each round peels off just one number (n + (n − 1) + ... + 1 comparisons).",
+      "Picking the pivot at random, or the median of the first, middle and last numbers, makes that bad case a matter of bad luck instead of bad input. The expected time becomes O(n log n) for every input.",
+      "No comparison sort can beat O(n log n) in the worst case. n numbers can be ordered n! ways and each comparison at most halves the possibilities, so you need about log₂(n!) ≈ n log₂ n comparisons.",
+      "In real code, just call the language's sort. Python: nums.sort() or sorted(items, key=lambda p: p[1]). Use key=, because Python 3's sort has no positional comparator; functools.cmp_to_key wraps an old-style one. Its sort is stable.",
+      "Java: Arrays.sort(nums) for an int[], and Arrays.sort(items, Comparator.comparingInt(p -> p[1])) or (a, b) -> Integer.compare(a[0], b[0]) for objects and rows. Avoid a[0] - b[0], which can overflow.",
+      "C++: std::sort(v.begin(), v.end()) for numbers, and std::sort(v.begin(), v.end(), [](const auto& a, const auto& b) { return a[1] < b[1]; }) with a lambda. std::sort is not guaranteed stable; use std::stable_sort when equal items must keep their order.",
+      "Write a sort yourself only when asked to, or when sorting is not the point: quick sort's partition powers k-th largest, and merge sort's merge step powers counting inversions."
+    ]
   },
   "examples": [
     {
+      "title": "Sort an Array",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/sort-an-array/",
+      "problem": "Given an array of integers nums, sort it in ascending order and return it. Solve it without using any built-in sorting function, in O(n log n) time.",
+      "input": "nums = [5,2,3,1]",
+      "output": "[1,2,3,5]",
+      "approach": [
+        "Split [5, 2, 3, 1] into [5, 2] and [3, 1], then into single numbers. A single number is already sorted.",
+        "Merge [5] with [2]: 2 is smaller, so you get [2, 5]. Merge [3] with [1] to get [1, 3].",
+        "Merge [2, 5] with [1, 3]: take 1 (it beats 2), then 2 (it beats 3), then 3 (it beats 5), then copy the leftover 5. The result is [1, 2, 3, 5].",
+        "There are about log₂ n levels of merging and each level handles n numbers, so the time is O(n log n) in every case. The buffer costs O(n) space."
+      ],
+      "code": "sorting/merge-sort",
+      "tracer": "sorting/merge-sort",
+      "time": "O(n log n)",
+      "space": "O(n)"
+    },
+    {
+      "title": "Sort Colors",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/sort-colors/",
+      "problem": "Given an array nums with n objects coloured red, white or blue, represented by 0, 1 and 2, sort them in place so that the same colours are together in the order 0, 1, 2.",
+      "input": "nums = [2,0,2,1,1,0]",
+      "output": "[0,0,1,1,2,2]",
+      "approach": [
+        "There are only three values, so a full O(n log n) sort is overkill. Partition the array into three zones with three pointers: low, mid and high.",
+        "low is the next slot for a 0, high is the next slot for a 2, and mid scans. Start with low = 0, mid = 0, high = 5.",
+        "nums[mid] = 2 swaps to the high end: [0,0,2,1,1,2] and high = 4. Don't move mid, because the swapped-in number hasn't been looked at yet.",
+        "A 0 swaps with low and both pointers move on, and a 1 just moves mid. When mid passes high the array is [0,0,1,1,2,2], after one pass in O(n) time and O(1) space."
+      ],
+      "code": "sorting/sort-colors",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
       "title": "Merge Intervals",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/merge-intervals/",
-      "problemStatement": "Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals.",
-      "inputExample": "intervals = [[1,3],[2,6],[8,10],[15,18]]",
-      "outputExample": "[[1,6],[8,10],[15,18]]",
-      "steps": [
-        "Sort the intervals based on their start times.",
-        "Create an empty result array and push the first interval.",
-        "Iterate through the rest of the intervals.",
-        "If the current interval's start is <= the last merged interval's end, they overlap! Update the end.",
-        "Otherwise, push the current interval to the result."
+      "url": "https://leetcode.com/problems/merge-intervals/",
+      "problem": "Given an array of intervals where intervals[i] = [start, end], merge all overlapping intervals and return the non-overlapping intervals that cover all of them.",
+      "input": "intervals = [[1,3],[2,6],[8,10],[15,18]]",
+      "output": "[[1,6],[8,10],[15,18]]",
+      "approach": [
+        "Sort the intervals by start with a key or comparator: Python key=, Java Comparator, C++ lambda. Now every overlap sits next to the interval it overlaps.",
+        "Walk through them with a merged list. [1,3] goes in first.",
+        "[2,6] starts at 2, which is at most the last end (3), so they overlap: stretch the last interval's end to max(3, 6) = 6.",
+        "[8,10] starts after 6, so it begins a new interval, and so does [15,18]. The sort costs O(n log n) and the sweep O(n)."
       ],
-      "code": {
-        "python": "def merge(intervals):\n    intervals.sort(key=lambda x: x[0])\n    merged = []\n    for interval in intervals:\n        if not merged or merged[-1][1] < interval[0]:\n            merged.append(interval)\n        else:\n            merged[-1][1] = max(merged[-1][1], interval[1])\n    return merged"
-      },
-      "timeComplexity": "O(N log N)",
-      "spaceComplexity": "O(N) for sorting space / output",
-      "rationale": "By sorting by start time, we guarantee that any overlapping intervals will be directly adjacent to each other in the array."
+      "code": "sorting/merge-intervals",
+      "time": "O(n log n)",
+      "space": "O(n) for the output"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "In JavaScript, what happens if you call `[10, 2, 30].sort()` without a comparator function?",
+      "question": "About how many moves does insertion sort need, on average, to sort 1,000,000 shuffled numbers?",
       "options": [
-        "It sorts them numerically: [2, 10, 30]",
-        "It throws an error.",
-        "It does nothing.",
-        "It sorts them alphabetically as strings: [10, 2, 30]"
+        "About 1,000,000",
+        "About 250 billion (n² ÷ 4)",
+        "About 20 million",
+        "About 1,000"
       ],
-      "correctIndex": 3,
-      "explanation": "JS `sort()` converts everything to strings by default! '10' comes before '2'. You MUST pass `(a, b) => a - b` to sort numbers correctly."
+      "answer": 1,
+      "explanation": "Each number slides past about half of the numbers already in the hand, so the total is around n × n ÷ 4. The 20 million figure is what merge sort needs."
     },
     {
-      "question": "What does it mean for a sort to be 'Stable'?",
+      "question": "Which cost does merge sort pay that quick sort mostly avoids?",
       "options": [
-        "It never crashes.",
-        "If two elements are equal, they remain in the same relative order as they were in the original array.",
-        "It always runs in O(N log N) time.",
-        "It doesn't use extra memory."
+        "It can take O(n²) time.",
+        "It isn't stable.",
+        "It can't handle duplicates.",
+        "It needs O(n) extra memory for the buffer."
       ],
-      "correctIndex": 1,
-      "explanation": "Stability is crucial when you sort by one property (e.g., Last Name), and then sort by another property (e.g., First Name) without messing up the first sort."
+      "answer": 3,
+      "explanation": "Merge sort writes each merge into a buffer as long as the array. Quick sort partitions in place and only needs stack space for its recursion."
+    },
+    {
+      "question": "Quick sort always uses the last number as the pivot, and you give it an array that is already sorted. What happens?",
+      "options": [
+        "Every round peels off just one number, so it takes O(n²) time.",
+        "It finishes in O(n) because nothing has to move.",
+        "It finishes in O(n log n), like normal.",
+        "It fails because the pivot is the biggest number."
+      ],
+      "answer": 0,
+      "explanation": "The pivot is the biggest number, so one side is empty and the other holds n − 1 numbers. That is n rounds of shrinking-by-one work, about n² / 2 steps."
+    },
+    {
+      "question": "Why can't any sort that works by comparing pairs beat O(n log n) in the worst case?",
+      "options": [
+        "Computers can only compare one pair of numbers at a time.",
+        "Comparisons are slower than swaps.",
+        "There are n! possible orders, and each comparison can at most halve them.",
+        "Every sort must touch each number once per memory level."
+      ],
+      "answer": 2,
+      "explanation": "Think of 20 yes/no questions: each one at most halves the possibilities. To tell n! orders apart you need log₂(n!) questions, which grows like n log₂ n."
+    },
+    {
+      "question": "You sort people by age, then run a stable sort by city. Two people live in the same city. Who comes first?",
+      "options": [
+        "The younger one, because a stable sort keeps their earlier order.",
+        "The one whose name comes first.",
+        "The older one.",
+        "It is random."
+      ],
+      "answer": 0,
+      "explanation": "A stable sort never swaps equal items, so people tied on city stay in the order the age sort left them: youngest first."
     }
   ],
   "practice": [
     {
-      "title": "Merge Intervals",
-      "url": "https://leetcode.com/problems/merge-intervals/",
-      "difficulty": "medium",
-      "keyInsight": "Sort by start time."
+      "title": "Merge Sorted Array",
+      "url": "https://leetcode.com/problems/merge-sorted-array/",
+      "difficulty": "easy",
+      "insight": "Fill nums1 from the back: the bigger of the two last numbers goes into the last free slot, so nothing you still need gets overwritten."
     },
     {
-      "title": "Sort Colors",
-      "url": "https://leetcode.com/problems/sort-colors/",
-      "difficulty": "medium",
-      "keyInsight": "Dutch National Flag problem. Sort in O(N) time using three pointers."
+      "title": "Valid Anagram",
+      "url": "https://leetcode.com/problems/valid-anagram/",
+      "difficulty": "easy",
+      "insight": "Two anagrams sort to the same string, so sort both and compare. Then ask whether counting the letters gets you there faster."
     },
     {
-      "title": "K Closest Points to Origin",
-      "url": "https://leetcode.com/problems/k-closest-points-to-origin/",
+      "title": "Largest Number",
+      "url": "https://leetcode.com/problems/largest-number/",
       "difficulty": "medium",
-      "keyInsight": "Custom comparator based on distance formula."
+      "insight": "Don't sort by value. Sort by which of a + b and b + a, glued as strings, makes the bigger number."
+    },
+    {
+      "title": "Top K Frequent Elements",
+      "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+      "difficulty": "medium",
+      "insight": "Count first, then order by count. You don't need a full sort: group numbers by frequency, or keep only k of them in a heap."
+    },
+    {
+      "title": "Kth Largest Element in an Array",
+      "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+      "difficulty": "medium",
+      "insight": "A quick sort partition puts the pivot at its final index. If that index is the one you want you are done; otherwise only one side is left to explore."
+    },
+    {
+      "title": "Sort List",
+      "url": "https://leetcode.com/problems/sort-list/",
+      "difficulty": "medium",
+      "insight": "A linked list can't be indexed, so merge sort fits: find the middle with slow and fast pointers, sort each half, then merge the lists."
+    },
+    {
+      "title": "Non-overlapping Intervals",
+      "url": "https://leetcode.com/problems/non-overlapping-intervals/",
+      "difficulty": "medium",
+      "insight": "Sort by end time, keep every interval that starts at or after the last kept end, and count the ones you have to drop."
+    },
+    {
+      "title": "Count of Smaller Numbers After Self",
+      "url": "https://leetcode.com/problems/count-of-smaller-numbers-after-self/",
+      "difficulty": "hard",
+      "insight": "The merge step already compares the left half with the right half. Sort indices instead of values, and count the right-half numbers that jump ahead of each left-half number."
     }
   ]
 }
