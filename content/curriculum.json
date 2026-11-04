@@ -232,7 +232,7 @@
       "group": "data-structures",
       "glyph": "tries",
       "difficulty": "advanced",
-      "status": "draft",
+      "status": "live",
       "minutes": 30,
       "oneLiner": "A tree of letters where shared prefixes share a path.",
       "trigger": "Autocomplete, prefix search, or many words checked at once.",
