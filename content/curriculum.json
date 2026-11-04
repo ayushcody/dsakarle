@@ -154,7 +154,7 @@
       "group": "data-structures",
       "glyph": "trees",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 40,
       "oneLiner": "Each node has up to two children; problems split in half.",
       "trigger": "Hierarchies, or the problem hands you a TreeNode.",
