@@ -213,7 +213,7 @@
       "group": "data-structures",
       "glyph": "graphs",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 45,
       "oneLiner": "Dots and lines: anything connected to anything.",
       "trigger": "Networks, maps, dependencies, or a grid you can walk.",
