@@ -406,7 +406,7 @@
       "group": "algorithms",
       "glyph": "bfs-dfs",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 45,
       "oneLiner": "Explore ripple by ripple (BFS) or path by path (DFS).",
       "trigger": "Shortest steps in an unweighted graph, islands, or levels.",
