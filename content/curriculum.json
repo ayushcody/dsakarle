@@ -174,7 +174,7 @@
       "group": "data-structures",
       "glyph": "bst",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 35,
       "oneLiner": "A tree where left is smaller and right is bigger, all the way down.",
       "trigger": "Sorted order that must stay sorted while you insert and delete.",
