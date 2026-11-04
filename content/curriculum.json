@@ -387,7 +387,7 @@
       "group": "algorithms",
       "glyph": "recursion",
       "difficulty": "intermediate",
-      "status": "draft",
+      "status": "live",
       "minutes": 50,
       "oneLiner": "Solve a smaller copy of the problem; undo choices that fail.",
       "trigger": "'All combinations / subsets / permutations', or self-similar structure.",
