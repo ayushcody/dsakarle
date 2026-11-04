@@ -115,7 +115,7 @@
       "group": "data-structures",
       "glyph": "queues",
       "difficulty": "beginner",
-      "status": "draft",
+      "status": "live",
       "minutes": 25,
       "oneLiner": "First in, first out — a line at the counter.",
       "trigger": "Process things in the order they arrived, level by level.",
