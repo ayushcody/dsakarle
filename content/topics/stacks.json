@@ -1,241 +1,407 @@
 {
-  "id": "stacks",
+  "schemaVersion": 2,
   "slug": "stacks",
-  "title": "Stacks",
-  "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 35,
-  "prerequisites": [
-    "arrays",
-    "linked-lists"
-  ],
-  "tags": [
-    "data-structure",
-    "LIFO"
-  ],
-  "overview": {
-    "summary": "A Stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle.",
-    "learningObjectives": [
-      "Understand the LIFO principle.",
-      "Implement a Stack using an Array or Linked List.",
-      "Recognize problems that require reversing order or matching pairs."
-    ],
-    "interviewRelevance": "Stacks are incredibly common in technical interviews, specifically for parsing strings, balancing parentheses, and tracking history."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "You type a word, delete a line, paste a block. Then you press Ctrl+Z, and the editor undoes the paste. Press it again and the delete is undone. How does it always know the last thing you did?",
     "paragraphs": [
-      "Think of a stack of plates at a buffet. You can only take the plate that is right on top.",
-      "When a new plate is washed, it is placed on the very top of the stack. The last plate added is the first one taken. This is LIFO."
+      "The editor could keep a long history and search it for the newest action every time. But that would get slower as you work, and undo feels instant even after an hour of typing.",
+      "Think about what undo actually needs: the most recent action, then the one before it, then the one before that. Never one from the middle. What would you keep your actions in so the newest is always right there?"
     ],
-    "ahaMoment": "A Stack inherently reverses the order of elements. Whatever went in last, comes out first!"
+    "aha": "Keep the actions in a pile where you can only touch the top. Every new action goes on top, and undo takes the top one off. The newest is always on top, so there is nothing to search. That pile is a stack, and its rule is that the last item in is the first item out."
   },
-  "definition": {
-    "technicalDefinition": "A Stack is an abstract data type that serves as a collection of elements, with two principal operations: push (adds an element) and pop (removes the most recently added element).",
-    "vocabulary": [
-      {
-        "term": "Push",
-        "definition": "Insert an element onto the top of the stack."
-      },
-      {
-        "term": "Pop",
-        "definition": "Remove the top element from the stack."
-      },
-      {
-        "term": "Peek / Top",
-        "definition": "Look at the top element without removing it."
-      },
-      {
-        "term": "LIFO",
-        "definition": "Last-In-First-Out."
-      },
-      {
-        "term": "Monotonic Stack",
-        "definition": "A stack that maintains elements in non-increasing or non-decreasing order."
+  "shape": {
+    "scene": {
+      "kind": "stack",
+      "label": "stack",
+      "items": [
+        4,
+        9,
+        2
+      ],
+      "capacity": 6,
+      "marks": [
+        {
+          "index": 2,
+          "role": "focus"
+        }
+      ],
+      "incoming": {
+        "value": 6,
+        "direction": "push"
       }
-    ],
-    "keyProperties": [
-      "O(1) Push and Pop operations.",
-      "O(n) search (since you only have direct access to the top).",
-      "Can be implemented via Arrays or Linked Lists."
+    },
+    "callouts": [
+      {
+        "target": "top",
+        "text": "top: the only door"
+      },
+      {
+        "target": "item:0",
+        "text": "bottom: waits longest"
+      },
+      {
+        "target": "incoming",
+        "text": "push lands on top"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A tube of tennis balls. You can only put a ball in the top, and take a ball from the top."
+      "Picture a pile of clean plates in a canteen. A new plate goes on top of the pile, and a plate is taken from the top too. To reach the plate at the bottom, every plate above it has to come off first."
     ],
-    "clickSentence": "Use a Stack whenever you need to 'go back' or process the most recent thing first.",
-    "diagramType": "StackDiagram",
-    "cells": [],
-    "diagramState": {}
+    "click": "A stack only lets you touch the newest item, so the last thing in is always the first thing out.",
+    "glossary": [
+      {
+        "term": "push",
+        "definition": "Put a new item on top of the stack."
+      },
+      {
+        "term": "pop",
+        "definition": "Remove the top item and hand it back to you."
+      },
+      {
+        "term": "peek / top",
+        "definition": "Look at the top item without removing it. The stack stays exactly as it was."
+      },
+      {
+        "term": "LIFO",
+        "definition": "Last in, first out: the item pushed most recently is the first one popped."
+      },
+      {
+        "term": "underflow",
+        "definition": "Trying to pop or peek an empty stack. There is nothing to give back, so check for empty first."
+      },
+      {
+        "term": "call stack",
+        "definition": "The stack your program uses to remember where each function call should return to. Recursion is a stack at work."
+      },
+      {
+        "term": "monotonic stack",
+        "definition": "A stack kept in order (never rising, say) by popping every item that can no longer matter before pushing the next one."
+      }
+    ],
+    "definition": "A stack is a collection with two main operations: push adds an item to one end, called the top, and pop removes the item most recently added. Only the top is reachable, so items leave in the reverse of the order they arrived. Push, pop and peek each take O(1) time, but finding an item deeper in the stack means popping everything above it."
   },
-  "structure": {
-    "memoryDescription": [
-      "If implemented with an Array, the 'top' of the stack is just the end of the array.",
-      "If implemented with a Linked List, the 'top' of the stack is the Head of the list."
+  "stage": {
+    "tracks": [
+      {
+        "id": "push-pop",
+        "label": "Push & pop",
+        "tracer": "stacks/push-pop",
+        "predict": {
+          "tags": [
+            "what-pops",
+            "peek-removes",
+            "pop-empty"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "parentheses",
+        "label": "Matching brackets",
+        "tracer": "stacks/valid-parentheses",
+        "predict": {
+          "tags": [
+            "push-or-pop",
+            "match"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "monotonic",
+        "label": "Monotonic stack",
+        "tracer": "stacks/next-greater",
+        "predict": {
+          "tags": [
+            "pop-or-stay"
+          ],
+          "max": 3
+        }
+      }
     ],
-    "definitionCode": {
-      "python": "stack = []\nstack.append(1)  # Push\ntop = stack.pop() # Pop",
-      "javascript": "const stack = [];\nstack.push(1);  // Push\nconst top = stack.pop(); // Pop",
-      "java": "Stack<Integer> stack = new Stack<>();\nstack.push(1); // Push\nint top = stack.pop(); // Pop",
-      "cpp": "std::stack<int> stack;\nstack.push(1); // Push\nint top = stack.top(); stack.pop();"
-    },
-    "memoryLayout": [
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The newest unfinished thing has to be dealt with first: the last bracket opened, the last action to undo.",
+      "You match things that nest: brackets, tags, quotes, or a path with \"..\" in it.",
+      "For every item you need the nearest bigger or smaller item to its left or right.",
+      "You keep the previous state and go back to it later: undo, back button, backtracking."
+    ],
+    "notWhen": [
+      "Items must be served in the order they arrived (first in, first out): that is a queue.",
+      "You need the smallest or largest item at any moment, not the newest: that is a heap.",
+      "You need an item by position or by value, not just the top: an array or a hash map reaches it directly."
+    ],
+    "quiz": [
       {
-        "label": "Top",
-        "value": "30 (Most recently added)"
+        "problem": "Given a string of ( ) [ ] { } characters, decide whether every opening bracket is closed by the right kind, in the right order.",
+        "answer": "stacks",
+        "options": [
+          "hash-maps",
+          "stacks",
+          "two-pointers",
+          "recursion"
+        ],
+        "explanation": "The bracket you must close next is always the one opened most recently. Last in, first out is a stack."
       },
       {
-        "label": "Middle",
-        "value": "20"
+        "problem": "Customers join a line at a ticket desk. Serve them in the order they arrived.",
+        "answer": "queues",
+        "options": [
+          "stacks",
+          "heaps",
+          "arrays",
+          "queues"
+        ],
+        "explanation": "First come, first served is first in, first out. A stack would serve the newest customer first, which is the wrong rule."
       },
       {
-        "label": "Bottom",
-        "value": "10 (Oldest)"
+        "problem": "For each day's temperature, find how many days you must wait until a warmer day.",
+        "answer": "stacks",
+        "options": [
+          "sliding-window",
+          "prefix-sum",
+          "binary-search",
+          "stacks"
+        ],
+        "explanation": "Keep the days still waiting on a stack. A warmer day pops every cooler day on top of it, and each pop is an answer."
+      },
+      {
+        "problem": "List every subset of the numbers [1, 2, 3].",
+        "answer": "recursion",
+        "options": [
+          "stacks",
+          "recursion",
+          "greedy",
+          "heaps"
+        ],
+        "explanation": "Choose to take or skip each number, and undo the choice when you come back. The call stack does that undoing for you, but the pattern to learn is recursion and backtracking."
+      },
+      {
+        "problem": "Return the first character in a string that appears only once.",
+        "answer": "hash-maps",
+        "options": [
+          "hash-maps",
+          "stacks",
+          "queues",
+          "strings"
+        ],
+        "explanation": "Count each letter in a map, then scan the string again for the first count of 1. Nothing here needs newest-first order."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "StackDiagram",
-    "array": [],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive visualization for Stacks is coming soon.",
-        "activeLine": 1
+        "text": "stack = empty",
+        "anchor": "init"
+      },
+      {
+        "text": "for each character ch in s:"
+      },
+      {
+        "text": "if ch is an opener:",
+        "indent": 1
+      },
+      {
+        "text": "push ch",
+        "anchor": "push",
+        "indent": 2
+      },
+      {
+        "text": "else (ch is a closer):",
+        "indent": 1
+      },
+      {
+        "text": "if stack is empty or top is not ch's partner: return false",
+        "anchor": "check",
+        "indent": 2
+      },
+      {
+        "text": "pop the top (that pair is matched)",
+        "anchor": "pop",
+        "indent": 2
+      },
+      {
+        "text": "return stack is empty",
+        "anchor": "done"
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Push",
-      "description": "Add an item to the top of the stack.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "stack.append(val)",
-        "javascript": "stack.push(val);",
-        "java": "stack.push(val);",
-        "cpp": "stack.push(val);"
-      },
-      "visualNote": "A new element drops down from the top."
-    },
-    {
-      "name": "Pop",
-      "description": "Remove the top item.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "val = stack.pop()",
-        "javascript": "const val = stack.pop();",
-        "java": "int val = stack.pop();",
-        "cpp": "int val = stack.top(); stack.pop();"
-      },
-      "visualNote": "The top element is pulled off the stack."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "stack = []\nfor item in data:\n  if condition(item, stack.top):\n    stack.pop()\n  else:\n    stack.push(item)",
-    "whenToUse": "Parsing expressions, checking valid parentheses, tracking previous states (undo buttons), or implementing DFS.",
-    "timeComplexity": "O(n) if processing a sequence.",
-    "spaceComplexity": "O(n) max stack depth."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You need to implement the 'Undo' button in a text editor.",
-    "correctPatternId": "stacks",
-    "distractors": [
-      "arrays",
-      "queues",
-      "hash-maps"
     ],
-    "explanation": "Undo requires reverting the MOST RECENT action first. This perfectly matches the Last-In-First-Out (LIFO) model of a Stack."
+    "tracer": "stacks/valid-parentheses",
+    "time": "O(n)",
+    "space": "O(n)",
+    "notes": [
+      "Each character is pushed at most once and popped at most once, so one pass takes O(n) time. In the worst case (all openers) the stack holds n items, so space is O(n).",
+      "Check for empty before you pop or peek. Popping an empty stack is an underflow: Python and Java throw an error, and in C++ it is undefined behaviour.",
+      "In Java, use ArrayDeque, not java.util.Stack. Stack is an old class built on Vector, which locks on every call, and the Java docs themselves recommend Deque instead. ArrayDeque's push, pop and peek work on the top like a stack should.",
+      "In C++, std::stack::pop() returns nothing. Read top() first if you need the value, as the Daily Temperatures code does.",
+      "A monotonic stack keeps its items in order by popping whatever can no longer matter. The while loop looks nested, but every item is pushed once and popped once, so the whole pass is still O(n).",
+      "Push indices instead of values when you need distances or positions: temps[index] gives the value back, and i - j gives the gap."
+    ]
   },
   "examples": [
     {
       "title": "Valid Parentheses",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/valid-parentheses/",
-      "problemStatement": "Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
-      "inputExample": "s = \"()[]{}\"",
-      "outputExample": "true",
-      "steps": [
-        "Iterate through the string.",
-        "If it's an opening bracket, push to stack.",
-        "If it's a closing bracket, pop from stack and check if they match.",
-        "Stack must be empty at the end."
+      "url": "https://leetcode.com/problems/valid-parentheses/",
+      "problem": "Given a string s containing just the characters ( ) { } [ ], determine whether it is valid: every open bracket is closed by the same type, and in the correct order.",
+      "input": "s = \"()[]{}\"",
+      "output": "true",
+      "approach": [
+        "Read left to right. An opener has not found its closer yet, so push it.",
+        "A closer must match the opener on top of the stack, because that is the one opened most recently. If the stack is empty or the top is a different kind, return false.",
+        "If it matches, pop the opener: that pair is done.",
+        "At the end the stack must be empty. Any opener left on it was never closed."
       ],
-      "code": {
-        "python": "stack = []\nmapping = {')': '(', '}': '{', ']': '['}\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            return False\n    else:\n        stack.append(char)\nreturn not stack",
-        "javascript": "const stack = [];\nconst map = {')': '(', '}': '{', ']': '['};\nfor (let char of s) {\n    if (map[char]) {\n        if (stack.pop() !== map[char]) return false;\n    } else {\n        stack.push(char);\n    }\n}\nreturn stack.length === 0;",
-        "java": "Stack<Character> stack = new Stack<>();\nfor (char c : s.toCharArray()) {\n    if (c == '(') stack.push(')');\n    else if (c == '{') stack.push('}');\n    else if (c == '[') stack.push(']');\n    else if (stack.isEmpty() || stack.pop() != c) return false;\n}\nreturn stack.isEmpty();",
-        "cpp": "std::stack<char> st;\nfor (char c : s) {\n    if (c == '(' || c == '{' || c == '[') st.push(c);\n    else {\n        if (st.empty()) return false;\n        if (c == ')' && st.top() != '(') return false;\n        if (c == '}' && st.top() != '{') return false;\n        if (c == ']' && st.top() != '[') return false;\n        st.pop();\n    }\n}\nreturn st.empty();"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(n)",
-      "rationale": "The stack perfectly tracks the most recent unclosed bracket, ensuring it gets closed first."
+      "code": "stacks/valid-parentheses",
+      "tracer": "stacks/valid-parentheses",
+      "time": "O(n)",
+      "space": "O(n)"
+    },
+    {
+      "title": "Min Stack",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/min-stack/",
+      "problem": "Design a stack that supports push, pop, top, and retrieving the minimum element, each in constant time.",
+      "input": "[\"MinStack\",\"push\",\"push\",\"push\",\"getMin\",\"pop\",\"top\",\"getMin\"], [[],[-2],[0],[-3],[],[],[],[]]",
+      "output": "[null,null,null,null,-3,null,0,-2]",
+      "approach": [
+        "Searching the whole stack for the smallest value would take O(n), too slow.",
+        "Store a pair with every item: the value, and the smallest value at or below it.",
+        "On push, the new pair's smallest is min(val, the smallest stored on the old top), or val itself if the stack is empty.",
+        "getMin just reads the smallest from the top pair. Popping a pair throws away that item's minimum too, so the older minimum is automatically back."
+      ],
+      "code": "stacks/min-stack",
+      "time": "O(1) per operation",
+      "space": "O(n)"
+    },
+    {
+      "title": "Daily Temperatures",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/daily-temperatures/",
+      "problem": "Given an array temperatures, return an array answer where answer[i] is the number of days after day i until a warmer temperature. If there is no such day, answer[i] is 0.",
+      "input": "temperatures = [73,74,75,71,69,72,76,73]",
+      "output": "[1,1,4,2,1,1,0,0]",
+      "approach": [
+        "Keep a stack of day indices that are still waiting for a warmer day. Their temperatures never rise from bottom to top.",
+        "For each new day i, compare it with the day j on top. If day i is warmer, day j's wait is i - j: record it and pop.",
+        "Keep popping while the new day beats the top. When it does not, everything underneath is at least as warm, so stop.",
+        "Push day i so it can wait too. Days still on the stack at the end never see a warmer day, so they keep 0."
+      ],
+      "code": "stacks/next-greater",
+      "tracer": "stacks/next-greater",
+      "time": "O(n)",
+      "space": "O(n)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Which principle does a Stack follow?",
+      "question": "Start with an empty stack. Push 4, push 9, push 2, pop, push 7, pop. Which value is on top now?",
       "options": [
-        "FIFO (First In, First Out)",
-        "FILO (First In, Last Out)",
-        "LIFO (Last In, First Out)",
-        "Random Access"
+        "4",
+        "7",
+        "9",
+        "2"
       ],
-      "correctIndex": 2,
-      "explanation": "LIFO. The last item pushed onto the stack is the first item popped off. (Note: FILO is technically identical, but LIFO is the standard industry term)."
+      "answer": 2,
+      "explanation": "After the three pushes the stack is 4, 9, 2. pop removes 2, push 7 gives 4, 9, 7, and the last pop removes 7. That leaves 4, 9 with 9 on top."
+    },
+    {
+      "question": "Why can't Valid Parentheses just count the openers and closers?",
+      "options": [
+        "Counting loses the order. In ([)] the counts balance, but the ) arrives while [ is the most recent unclosed opener.",
+        "Counting is slower than using a stack.",
+        "A counter can only hold positive numbers.",
+        "Counting works, but only for one kind of bracket at a time, so it needs three counters."
+      ],
+      "answer": 0,
+      "explanation": "Counts say how many brackets are open, not which one is open most recently. The stack's top is always that most recent one, and that is the bracket a closer has to match."
     },
     {
       "question": "What happens if you pop an empty stack?",
       "options": [
-        "Stack Underflow Error",
-        "Stack Overflow Error",
-        "It returns 0",
-        "It crashes the OS"
+        "It returns 0.",
+        "It returns the item that was popped last.",
+        "It quietly does nothing, in every language.",
+        "It is an underflow: there is nothing to remove. Python and Java throw an error and C++ is undefined, so check for empty first."
       ],
-      "correctIndex": 0,
-      "explanation": "Attempting to pop from an empty stack is called a Stack Underflow."
+      "answer": 3,
+      "explanation": "An empty stack has no top to give back. What goes wrong depends on the language, so the safe habit is to test for empty before every pop or peek."
+    },
+    {
+      "question": "In Daily Temperatures, why does the stack hold indices rather than temperatures?",
+      "options": [
+        "Indices are smaller numbers, so the stack uses less memory.",
+        "An index gives you both the day and, through temps[j], its temperature. The answer needs the day gap i - j.",
+        "A stack of temperatures cannot hold repeated values.",
+        "The problem statement requires it."
+      ],
+      "answer": 1,
+      "explanation": "If you stored only temperatures you would know that a warmer day came, but not how many days ago the waiting day was. The index carries the position, and the temperature is one lookup away."
+    },
+    {
+      "question": "The monotonic stack code has a while loop inside a for loop. Why is it still O(n) overall?",
+      "options": [
+        "The while loop never runs more than twice per day.",
+        "Popping is free, so it does not count.",
+        "Every index is pushed once and popped at most once, so all the while-loop pops across the whole run add up to at most n.",
+        "The array is sorted, so the while loop exits at once."
+      ],
+      "answer": 2,
+      "explanation": "One day may pop many items, but each item can only be popped once in its life. Counting pops across the whole run gives at most n, so the total work is O(n), not O(n squared)."
     }
   ],
   "practice": [
     {
-      "title": "Valid Parentheses",
-      "url": "https://leetcode.com/problems/valid-parentheses/",
+      "title": "Implement Queue using Stacks",
+      "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
       "difficulty": "easy",
-      "keyInsight": "Push openers, pop and check closers."
+      "insight": "Pouring one stack into another reverses the order. What does reversing twice give you?"
     },
     {
-      "title": "Min Stack",
-      "url": "https://leetcode.com/problems/min-stack/",
-      "difficulty": "medium",
-      "keyInsight": "Store a tuple of (val, current_min) at every stack level."
-    },
-    {
-      "title": "Evaluate Reverse Polish Notation",
-      "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/",
-      "difficulty": "medium",
-      "keyInsight": "Push numbers. When you see an operator, pop two numbers, evaluate, and push result."
-    },
-    {
-      "title": "Implement Stack using Queues",
-      "url": "https://leetcode.com/problems/implement-stack-using-queues/",
+      "title": "Remove All Adjacent Duplicates In String",
+      "url": "https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/",
       "difficulty": "easy",
-      "keyInsight": "After push, rotate all previous elements behind the new one."
-    },
-    {
-      "title": "Daily Temperatures",
-      "url": "https://leetcode.com/problems/daily-temperatures/",
-      "difficulty": "medium",
-      "keyInsight": "Monotonic decreasing stack tracks unresolved days."
+      "insight": "The top of the stack is the last letter you kept. Compare each new letter with it before deciding."
     },
     {
       "title": "Next Greater Element I",
       "url": "https://leetcode.com/problems/next-greater-element-i/",
       "difficulty": "easy",
-      "keyInsight": "Monotonic stack processes elements right to left."
+      "insight": "It is the same pop-when-bigger pass as Daily Temperatures, but you record the value instead of the gap, and look answers up by number."
+    },
+    {
+      "title": "Evaluate Reverse Polish Notation",
+      "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/",
+      "difficulty": "medium",
+      "insight": "Numbers wait on the stack, and an operator uses the two most recent ones. Mind the order for subtraction and division."
+    },
+    {
+      "title": "Removing Stars From a String",
+      "url": "https://leetcode.com/problems/removing-stars-from-a-string/",
+      "difficulty": "medium",
+      "insight": "A star deletes the character kept just before it, and the stack top is exactly that character."
+    },
+    {
+      "title": "Simplify Path",
+      "url": "https://leetcode.com/problems/simplify-path/",
+      "difficulty": "medium",
+      "insight": "Split the path on slashes: a folder name goes on the stack, and a double dot undoes the most recent one."
+    },
+    {
+      "title": "Car Fleet",
+      "url": "https://leetcode.com/problems/car-fleet/",
+      "difficulty": "medium",
+      "insight": "Sort cars by position, then compare arrival times starting from the car nearest the target. A slower car ahead holds up whoever catches it."
+    },
+    {
+      "title": "Largest Rectangle in Histogram",
+      "url": "https://leetcode.com/problems/largest-rectangle-in-histogram/",
+      "difficulty": "hard",
+      "insight": "Keep bars on a stack in rising height. When a shorter bar arrives, each taller bar it pops has just found its right edge."
     }
   ]
 }

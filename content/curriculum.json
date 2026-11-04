@@ -96,7 +96,7 @@
       "group": "data-structures",
       "glyph": "stacks",
       "difficulty": "beginner",
-      "status": "draft",
+      "status": "live",
       "minutes": 30,
       "oneLiner": "Last in, first out — a pile of plates.",
       "trigger": "Matching pairs, undo, or 'the most recent unresolved thing'.",
