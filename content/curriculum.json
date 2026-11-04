@@ -37,7 +37,7 @@
       "group": "data-structures",
       "glyph": "vectors",
       "difficulty": "beginner",
-      "status": "draft",
+      "status": "live",
       "minutes": 20,
       "oneLiner": "An array that grows by moving into a bigger home.",
       "trigger": "You need an array but don't know the final size.",
