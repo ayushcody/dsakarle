@@ -447,7 +447,7 @@
       "group": "algorithms",
       "glyph": "dynamic-programming",
       "difficulty": "advanced",
-      "status": "draft",
+      "status": "live",
       "minutes": 60,
       "oneLiner": "Remember answers to small problems; build the big one from them.",
       "trigger": "'Number of ways', 'min/max cost', and choices that overlap.",

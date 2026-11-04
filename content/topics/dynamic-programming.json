@@ -1,211 +1,476 @@
 {
-  "id": "dynamic-programming",
+  "schemaVersion": 2,
   "slug": "dynamic-programming",
-  "title": "Dynamic Programming",
-  "category": "algorithm",
-  "difficulty": "advanced",
-  "estimatedMinutes": 90,
-  "prerequisites": [
-    "recursion"
-  ],
-  "tags": [
-    "algorithm",
-    "optimization",
-    "memoization"
-  ],
-  "overview": {
-    "summary": "Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems, and storing the results of those subproblems to avoid redundant calculations.",
-    "learningObjectives": [
-      "Identify overlapping subproblems.",
-      "Implement Top-Down DP (Memoization).",
-      "Implement Bottom-Up DP (Tabulation)."
-    ],
-    "interviewRelevance": "DP is the final boss of interview algorithms. Recognizing when a recursive problem is repeating work is the key to mastering it."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "How many different ways can you climb 10 stairs if every move is either 1 stair or 2 stairs?",
     "paragraphs": [
-      "If I ask you what 1 + 1 + 1 + 1 + 1 is, you count and say 5.",
-      "If I instantly add another '+ 1' to the end, do you recount all of them? No. You just say 6. You remembered the previous answer and built upon it. That is Dynamic Programming."
+      "Start listing them: ten 1-steps in a row, then eight 1-steps and one 2-step in every possible order, and so on. There are 89 routes in all, and each extra stair makes the list roughly 1.6 times longer. For 45 stairs the count passes 1.8 billion, so counting routes by hand is hopeless.",
+      "Now look only at the last move. You reached stair 10 either from stair 9 with a 1-step, or from stair 8 with a 2-step. Every route to stair 10 ends in one of those two ways."
     ],
-    "ahaMoment": "DP is just Recursion + A Notebook (Memory). If you have solved a problem before, write the answer down so you never have to solve it again."
+    "aha": "The routes to stair 10 are the routes to stair 9 plus the routes to stair 8: 55 + 34 = 89. Each answer reuses two smaller answers. So solve each stair once, write the answer down, and never count a route again."
   },
-  "definition": {
-    "technicalDefinition": "Dynamic programming is both a mathematical optimization method and a computer programming method. It solves problems by recursively breaking them down into overlapping subproblems and storing the solutions to avoid duplicate work.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "grid",
+      "label": "dp",
+      "rows": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          1,
+          3,
+          6,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "rowLabels": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "colLabels": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "marks": [
+        {
+          "r": 1,
+          "c": 3,
+          "role": "compare"
+        },
+        {
+          "r": 2,
+          "c": 2,
+          "role": "compare"
+        },
+        {
+          "r": 2,
+          "c": 3,
+          "role": "focus"
+        }
+      ],
+      "arrows": [
+        {
+          "from": [
+            1,
+            3
+          ],
+          "to": [
+            2,
+            3
+          ]
+        },
+        {
+          "from": [
+            2,
+            2
+          ],
+          "to": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "Overlapping Subproblems",
-        "definition": "When a recursive algorithm visits the exact same state multiple times."
+        "target": "cell:1,3",
+        "text": "read the cell above"
       },
       {
-        "term": "Optimal Substructure",
-        "definition": "When the optimal solution to the overall problem can be constructed from optimal solutions to its subproblems."
+        "target": "cell:2,2",
+        "text": "and the cell to the left"
       },
       {
-        "term": "Memoization (Top-Down)",
-        "definition": "Writing a recursive function and adding a hash map (or array) to cache the results."
-      },
-      {
-        "term": "Tabulation (Bottom-Up)",
-        "definition": "Building an array from the smallest subproblem up to the largest, using loops instead of recursion."
+        "target": "cell:2,3",
+        "text": "this cell = up + left"
       }
-    ],
-    "keyProperties": [
-      "Trades Space for Time.",
-      "Turns O(2^N) exponential time into O(N) or O(N^2) polynomial time.",
-      "State definitions are the hardest part of DP."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A spider web where many paths lead to the same intersection. If you leave a signpost at the intersection with the distance to the center, no one else arriving there has to measure it again."
+      "Think of a spreadsheet. Each cell holds a formula that reads a couple of cells above it or to its left, like =B2+C1. You fill the sheet from the top-left corner, and every cell is computed exactly once.",
+      "You never recompute a cell. You just read what is already there, and the answer you want is the last cell you fill."
     ],
-    "clickSentence": "Recursion says 'Solve this'. DP says 'Check if I already solved this. If not, solve it and save the answer'.",
-    "diagramType": "DPDiagram",
-    "cells": [],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "DP usually requires O(N) or O(N^2) extra memory to hold the 'cache' or 'DP Table'.",
-      "In Top-Down, this is usually a Hash Map or Array. In Bottom-Up, it is always an Array/Grid."
-    ],
-    "definitionCode": {
-      "python": "# Top-Down (Memoization)\ncache = {}\ndef fib(n):\n    if n in cache: return cache[n]\n    if n <= 1: return n\n    cache[n] = fib(n-1) + fib(n-2)\n    return cache[n]",
-      "javascript": "// Bottom-Up (Tabulation)\nfunction fib(n) {\n    if (n <= 1) return n;\n    const dp = new Array(n + 1).fill(0);\n    dp[1] = 1;\n    for (let i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}"
-    },
-    "memoryLayout": [
+    "click": "Solve each small version of the problem once, write the answer in a table, and build every bigger answer by reading from the table.",
+    "glossary": [
       {
-        "label": "DP Table (Array)",
-        "value": "Stores solutions. dp[3] = answer for subproblem 3."
+        "term": "subproblem",
+        "definition": "A smaller version of the same question, like \"how many ways to reach stair 7?\" inside \"how many ways to reach stair 10?\"."
       },
       {
-        "label": "State Transitions",
-        "value": "How dp[i] is calculated from dp[i-1], dp[i-2], etc."
+        "term": "overlapping subproblems",
+        "definition": "The same subproblem is needed again and again by different bigger ones. Stair 7 is needed by both stair 8 and stair 9. This is what makes a table worth building."
+      },
+      {
+        "term": "optimal substructure",
+        "definition": "The best answer to the big problem is made from the best answers to its subproblems. The fewest coins for 6 uses the fewest coins for a smaller amount."
+      },
+      {
+        "term": "state",
+        "definition": "The few numbers that name one subproblem: a stair number, a row and column, an amount. One table cell per state."
+      },
+      {
+        "term": "transition",
+        "definition": "The formula that builds one state from smaller ones, like dp[i] = dp[i − 1] + dp[i − 2] or the min over every coin."
+      },
+      {
+        "term": "base case",
+        "definition": "A state you can answer without the formula, like dp[0] = 1 (one way to stand still) or dp[0] = 0 (no coins make 0). Everything else is built on these."
+      },
+      {
+        "term": "memoization (top-down)",
+        "definition": "Write the recursion as it reads, but cache each answer by state so it is computed only once."
+      },
+      {
+        "term": "tabulation (bottom-up)",
+        "definition": "Skip the recursion. Fill a table from the base cases upward, in an order where every cell's inputs are already filled."
+      }
+    ],
+    "definition": "Dynamic programming solves a problem by splitting it into subproblems, solving each distinct subproblem once, and storing the answer so bigger problems can reuse it. It applies when subproblems overlap (plain recursion would repeat work) and, for min, max and counting questions, when the answer to the whole is built from answers to the parts (optimal substructure). The running time is roughly the number of states times the work to compute one state, and the table is the main memory cost."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "stairs",
+        "label": "One dimension: stairs",
+        "tracer": "dynamic-programming/climb-stairs",
+        "predict": {
+          "tags": [
+            "next-value"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "paths",
+        "label": "Two dimensions: grid paths",
+        "tracer": "dynamic-programming/unique-paths",
+        "predict": {
+          "tags": [
+            "which-cells",
+            "next-value"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "coins",
+        "label": "Best of many: coin change",
+        "tracer": "dynamic-programming/coin-change",
+        "predict": {
+          "tags": [
+            "best-coin"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The question asks \"how many ways\" or for the minimum or maximum cost, and brute force would try an exponential number of options.",
+      "The answer for a big input is built from answers to smaller inputs: stair n from n − 1 and n − 2, a cell from the cell above and the cell to its left.",
+      "A recursive solution would answer the same smaller question again and again.",
+      "What matters about the past is just a small state (a position, an amount, a length), not the whole path taken."
+    ],
+    "notWhen": [
+      "A local choice is provably safe, like always attending the meeting that ends first: a sort and one pass beat a table. That is greedy.",
+      "You must list every solution (all subsets, all orderings), not count or optimise them: the output itself is exponential, so use recursion.",
+      "The subproblems never repeat, such as the fewest steps through a maze: a breadth-first search visits each place once, with nothing to reuse."
+    ],
+    "quiz": [
+      {
+        "problem": "Count the distinct ways to climb n stairs when each move is 1 or 2 stairs.",
+        "answer": "dynamic-programming",
+        "options": [
+          "recursion",
+          "dynamic-programming",
+          "greedy",
+          "binary-search"
+        ],
+        "explanation": "\"How many ways\" plus a last move that is either of two choices gives ways(n) = ways(n − 1) + ways(n − 2). Plain recursion repeats work, so a table of ways(i) is the fix."
+      },
+      {
+        "problem": "Given meetings with start and end times, attend as many non-overlapping meetings as possible.",
+        "answer": "greedy",
+        "options": [
+          "dynamic-programming",
+          "two-pointers",
+          "greedy",
+          "heaps"
+        ],
+        "explanation": "Sort by end time and always take the meeting that ends first: that choice is provably safe, so no table is needed. A table would also work but does far more than necessary."
+      },
+      {
+        "problem": "Return every subset of a list of distinct numbers.",
+        "answer": "recursion",
+        "options": [
+          "recursion",
+          "dynamic-programming",
+          "prefix-sum",
+          "bfs-dfs"
+        ],
+        "explanation": "You must produce all of them, and there are 2ⁿ. Nothing is being counted or optimised, so there is no smaller answer to remember. Branch on take or skip with recursion."
+      },
+      {
+        "problem": "In a maze grid, find the fewest steps from the start to the exit, moving up, down, left or right.",
+        "answer": "bfs-dfs",
+        "options": [
+          "dynamic-programming",
+          "greedy",
+          "bfs-dfs",
+          "binary-search"
+        ],
+        "explanation": "A breadth-first search reaches every cell in order of distance, and the first time it reaches the exit is the shortest route. Cells can be entered from any side, so there is no simple fill order for a table."
+      },
+      {
+        "problem": "Find the fewest coins that make an amount, for any list of coin values, such as coins 1, 3 and 4 for amount 6.",
+        "answer": "dynamic-programming",
+        "options": [
+          "greedy",
+          "prefix-sum",
+          "dynamic-programming",
+          "recursion"
+        ],
+        "explanation": "Taking the biggest coin first gives 4 + 1 + 1 = 3 coins, but 3 + 3 = 2 coins is better. Greedy is not safe here, so try every coin for every amount and keep the minimum."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "DPDiagram",
-    "array": [],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive DP visualizer coming soon.",
-        "activeLine": 1
+        "text": "dp = a table of m rows × n columns",
+        "anchor": "init"
+      },
+      {
+        "text": "dp[r][0] = 1 for every row, dp[0][c] = 1 for every column",
+        "anchor": "base"
+      },
+      {
+        "text": "for r from 1 to m − 1:"
+      },
+      {
+        "text": "for c from 1 to n − 1:",
+        "indent": 1
+      },
+      {
+        "text": "up = dp[r − 1][c]",
+        "anchor": "look",
+        "indent": 2
+      },
+      {
+        "text": "left = dp[r][c − 1]",
+        "anchor": "look",
+        "indent": 2
+      },
+      {
+        "text": "dp[r][c] = up + left",
+        "anchor": "fill",
+        "indent": 2
+      },
+      {
+        "text": "return dp[m − 1][n − 1]",
+        "anchor": "done"
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Check Cache",
-      "description": "Before doing any work, check if the answer for this state is already known.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "if state in memo:\n    return memo[state]"
-      },
-      "visualNote": "A lookup skips a massive subtree of recursion."
-    },
-    {
-      "name": "State Transition",
-      "description": "Calculate the current answer using previously calculated smaller answers.",
-      "timeComplexity": "O(1) usually",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "dp[i] = dp[i-1] + cost[i]"
-      },
-      "visualNote": "Values from smaller indices flow into the larger index."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "def solve(state):\n  if state is base_case: return base_val\n  if state in memo: return memo[state]\n  ans = transition(solve(state - 1), solve(state - 2))\n  memo[state] = ans\n  return ans",
-    "whenToUse": "When asking for the 'maximum', 'minimum', or 'total number of ways' to do something, AND the problem has overlapping subproblems.",
-    "timeComplexity": "O(States * Time Per State)",
-    "spaceComplexity": "O(States) to store the DP table/memo."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
-    "correctPatternId": "dynamic-programming",
-    "distractors": [
-      "binary-search",
-      "greedy",
-      "two-pointers"
     ],
-    "explanation": "To get to step N, you either came from step N-1 or N-2. Thus, Ways(N) = Ways(N-1) + Ways(N-2). Because you will calculate Ways(3) multiple times while finding Ways(5), it has overlapping subproblems."
+    "tracer": "dynamic-programming/unique-paths",
+    "time": "O(m · n)",
+    "space": "O(m · n)",
+    "notes": [
+      "A recipe that works for most problems: (1) say what one table cell means, (2) fill the base cases, (3) write the formula that builds a cell from smaller ones, (4) pick an order where a cell's inputs are already filled, (5) read the answer from the right cell.",
+      "Time is the number of states times the work per state. Here that is m · n cells at O(1) each. Coin change is amount × number of coins, because each amount tries every coin.",
+      "The full table is not always needed. Each row here reads only the row above it, so one row of length n is enough: O(n) space. Climbing stairs needs only the last two numbers: O(1). Rolling storage like this is optional, and it gives up the table you would need to rebuild the actual path.",
+      "Top-down (memoization) writes the same formula as a recursive function and caches by state. It has the same number of states, and computes only the states the answer actually needs, but recursion can run deep. The code in this lesson is bottom-up in every language.",
+      "If a cell reads a cell that is not filled yet, the answer is wrong, not slow. Check the order first: row by row, left to right works whenever cells read only up and left."
+    ]
   },
   "examples": [
     {
       "title": "Climbing Stairs",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/climbing-stairs/",
-      "problemStatement": "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
-      "inputExample": "n = 3",
-      "outputExample": "3 (1+1+1, 1+2, 2+1)",
-      "steps": [
-        "Create an array `dp` of size `n+1`.",
-        "Base cases: `dp[1] = 1`, `dp[2] = 2`.",
-        "Iterate from 3 to n.",
-        "State transition: `dp[i] = dp[i-1] + dp[i-2]`.",
-        "Return `dp[n]`."
+      "url": "https://leetcode.com/problems/climbing-stairs/",
+      "problem": "You are climbing a staircase with n steps. Each time you can climb 1 or 2 steps. Return the number of distinct ways to reach the top.",
+      "input": "n = 10",
+      "output": "89",
+      "approach": [
+        "The last move into stair i was a 1-step from i − 1 or a 2-step from i − 2, so dp[i] = dp[i − 1] + dp[i − 2].",
+        "Base cases: dp[0] = 1 (stand still) and dp[1] = 1 (one step).",
+        "Fill left to right: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89. Each cell is written once and read at most twice more.",
+        "Only the last two cells are ever read, so two variables would also do, using O(1) space."
       ],
-      "code": {
-        "python": "def climbStairs(n):\n    if n <= 2: return n\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    dp[2] = 2\n    for i in range(3, n + 1):\n        dp[i] = dp[i-1] + dp[i-2]\n    return dp[n]"
-      },
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(N) (can be optimized to O(1))",
-      "rationale": "By building from the bottom up, we never recalculate the same step twice."
+      "code": "dynamic-programming/climb-stairs",
+      "tracer": "dynamic-programming/climb-stairs",
+      "time": "O(n)",
+      "space": "O(n), or O(1) with two rolling variables"
+    },
+    {
+      "title": "Unique Paths",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/unique-paths/",
+      "problem": "A robot starts at the top-left corner of an m × n grid and can only move right or down. Return how many different paths lead to the bottom-right corner.",
+      "input": "m = 3, n = 4",
+      "output": "10",
+      "approach": [
+        "dp[r][c] counts paths to cell (r, c). A path arrives from above or from the left, so dp[r][c] = dp[r − 1][c] + dp[r][c − 1].",
+        "The first row and first column are 1: the only way there is straight along the edge.",
+        "Row 1 fills as 1, 2, 3, 4 and row 2 as 1, 3, 6, 10, going row by row so the cell above and the cell to the left are always ready.",
+        "The bottom-right cell holds the answer, 10. Keeping one row at a time cuts the space to O(n)."
+      ],
+      "code": "dynamic-programming/unique-paths",
+      "tracer": "dynamic-programming/unique-paths",
+      "time": "O(m · n)",
+      "space": "O(m · n), or O(n) with one rolling row"
+    },
+    {
+      "title": "Coin Change",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/coin-change/",
+      "problem": "Given coin values and a total amount, return the fewest coins that make up the amount, or -1 if no combination of the coins can make it. You have an unlimited supply of each coin.",
+      "input": "coins = [1,3,4], amount = 6",
+      "output": "2",
+      "approach": [
+        "dp[a] is the fewest coins that make amount a. If the last coin is c, the rest is dp[a − c], so try every coin that fits: dp[a] = min over c of dp[a − c] + 1.",
+        "Base case: dp[0] = 0. Every other cell starts at \"infinity\", meaning not reachable yet. The code uses amount + 1, which can never win a minimum.",
+        "dp = [0, 1, 2, 1, 1, 2, 2]. For 6: coin 1 gives 3, coin 3 gives dp[3] + 1 = 2, coin 4 gives 3, and the minimum is 2 (3 + 3).",
+        "Taking the biggest coin first would give 4 + 1 + 1 = 3 coins, which is why greedy fails here. If dp[amount] is still infinity at the end, return -1."
+      ],
+      "code": "dynamic-programming/coin-change",
+      "tracer": "dynamic-programming/coin-change",
+      "time": "O(amount · number of coins)",
+      "space": "O(amount)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What is the primary difference between Backtracking and Dynamic Programming?",
+      "question": "Plain recursion for stairs, ways(n) = ways(n − 1) + ways(n − 2), becomes very slow around n = 40. Why?",
       "options": [
-        "Backtracking uses recursion, DP never does.",
-        "DP is always faster than O(N).",
-        "Backtracking uses less memory.",
-        "Backtracking explores ALL paths to find ALL solutions. DP stores answers to subproblems to find the BEST or TOTAL solutions efficiently."
+        "Recursion is always slower than a loop.",
+        "The numbers get too big for the computer to add.",
+        "It solves the same smaller stair counts over and over.",
+        "It has to sort the stairs before it starts."
       ],
-      "correctIndex": 3,
-      "explanation": "If a problem asks 'List all possible paths', you MUST use Backtracking. If it asks 'What is the MAXIMUM path' or 'HOW MANY paths', you use DP to avoid building the actual paths."
+      "answer": 2,
+      "explanation": "ways(5) needs ways(3) twice, ways(2) three times, and so on, so the number of calls grows exponentially. Caching each answer cuts that to one computation per stair."
     },
     {
-      "question": "What happens if a DP problem does NOT have overlapping subproblems?",
+      "question": "What is the difference between memoization and tabulation?",
       "options": [
-        "It crashes.",
-        "It is just standard Divide and Conquer (like Merge Sort).",
-        "You get a Stack Overflow.",
-        "You must use a Hash Map."
+        "Memoization is top-down (recursion plus a cache); tabulation is bottom-up (a loop that fills a table from the base cases).",
+        "Memoization finds the best answer; tabulation only counts.",
+        "Tabulation needs recursion; memoization never does.",
+        "Memoization is always O(n²) and tabulation is always O(n)."
       ],
-      "correctIndex": 1,
-      "explanation": "Merge sort divides the array into halves. The left half and right half have NO overlapping elements. Therefore, caching results doesn't help because you never solve the same problem twice."
+      "answer": 0,
+      "explanation": "They use the same states and the same formula. They differ only in order: memoization starts from the answer and recurses down, tabulation starts at the base cases and builds up."
+    },
+    {
+      "question": "In Unique Paths, why is every cell in the first row and first column equal to 1?",
+      "options": [
+        "Because the robot starts in that row and column.",
+        "Because the loop skips them, and they happen to be 0 plus 1.",
+        "Because up + left always equals 1 along an edge.",
+        "Because only one path reaches them: straight along the edge, with nothing above or to the left to add."
+      ],
+      "answer": 3,
+      "explanation": "An edge cell has no cell above it (first row) or to its left (first column), so the formula would read outside the table. Those cells are base cases that you set by hand."
+    },
+    {
+      "question": "Coins are 1, 3 and 4 and the amount is 6. Taking the biggest coin first gives 4 + 1 + 1 = 3 coins. What does the table method find?",
+      "options": [
+        "3 coins too, because the biggest coin is always best.",
+        "2 coins (3 + 3), because it tries every coin for every amount instead of committing to the biggest.",
+        "2 coins, because it sorts the coins from biggest to smallest.",
+        "-1, because 6 cannot be made."
+      ],
+      "answer": 1,
+      "explanation": "dp[6] looks at dp[5] + 1 = 3, dp[3] + 1 = 2 and dp[2] + 1 = 3, and keeps the minimum, 2. Greedy commits to one coin too early, which is why it is not safe for arbitrary coin values."
+    },
+    {
+      "question": "Unique Paths fills an m × n table. What are its running time and the smallest memory you can get away with?",
+      "options": [
+        "O(m + n) time and O(1) space.",
+        "O(m · n) time and O(m · n) space, and it cannot be reduced.",
+        "O(m · n) time, and O(n) space if you keep only one row at a time.",
+        "Exponential time, because it tries every path."
+      ],
+      "answer": 2,
+      "explanation": "There are m · n states and each is O(1) work. Every row reads only the row above, so a single rolling row of n cells is enough, as long as you don't need to rebuild the path itself."
     }
   ],
   "practice": [
     {
-      "title": "Climbing Stairs",
-      "url": "https://leetcode.com/problems/climbing-stairs/",
+      "title": "Min Cost Climbing Stairs",
+      "url": "https://leetcode.com/problems/min-cost-climbing-stairs/",
       "difficulty": "easy",
-      "keyInsight": "Literally just the Fibonacci sequence."
+      "insight": "The same shape as climbing stairs, but each cell holds a cost: the cheapest way to stand on step i comes from step i − 1 or i − 2."
     },
     {
       "title": "House Robber",
       "url": "https://leetcode.com/problems/house-robber/",
       "difficulty": "medium",
-      "keyInsight": "dp[i] = max(rob current + dp[i-2], skip current + dp[i-1])"
+      "insight": "At each house either rob it (add the best from two houses back) or skip it (keep the best from the previous house), and keep the larger."
     },
     {
-      "title": "Coin Change",
-      "url": "https://leetcode.com/problems/coin-change/",
+      "title": "Minimum Path Sum",
+      "url": "https://leetcode.com/problems/minimum-path-sum/",
       "difficulty": "medium",
-      "keyInsight": "dp[amount] = min(dp[amount - coin] + 1)"
+      "insight": "Unique Paths with costs: each cell adds its own cost to the smaller of the cell above and the cell to the left, instead of adding counts."
+    },
+    {
+      "title": "Longest Increasing Subsequence",
+      "url": "https://leetcode.com/problems/longest-increasing-subsequence/",
+      "difficulty": "medium",
+      "insight": "Let dp[i] be the longest increasing subsequence that ends at index i, and look back at every earlier smaller number."
     },
     {
       "title": "Longest Common Subsequence",
       "url": "https://leetcode.com/problems/longest-common-subsequence/",
       "difficulty": "medium",
-      "keyInsight": "2D DP grid comparing character by character."
+      "insight": "A 2D table over prefixes of both strings: matching characters extend the diagonal cell, otherwise take the larger of up and left."
+    },
+    {
+      "title": "Partition Equal Subset Sum",
+      "url": "https://leetcode.com/problems/partition-equal-subset-sum/",
+      "difficulty": "medium",
+      "insight": "Ask whether some subset adds up to half the total, with a table over sums where each number either joins the subset or doesn't."
+    },
+    {
+      "title": "Edit Distance",
+      "url": "https://leetcode.com/problems/edit-distance/",
+      "difficulty": "medium",
+      "insight": "dp[i][j] is the cost of turning the first i letters into the first j; insert, delete and replace each read a different neighbour."
+    },
+    {
+      "title": "Burst Balloons",
+      "url": "https://leetcode.com/problems/burst-balloons/",
+      "difficulty": "hard",
+      "insight": "Think about the last balloon to burst in a range, not the first: then the two sides are independent subproblems."
     }
   ]
 }
