@@ -347,7 +347,7 @@
     {
       "title": "Maximum Number of Vowels in a Substring of Given Length",
       "url": "https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/",
-      "difficulty": "easy",
+      "difficulty": "medium",
       "insight": "The window size is fixed, so it is the same slide as the sum problem, but you keep a count of vowels instead of a sum."
     },
     {
