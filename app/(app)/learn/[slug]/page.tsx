@@ -1,17 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { codeToHtml } from 'shiki';
-import type { Properties } from 'hast';
 
 import { LessonPage } from '@/components/lesson/LessonPage';
-import { ComingSoonTemplate } from '@/components/topic/ComingSoonTemplate';
-import { TopicPageRenderer } from '@/components/topic/TopicPageRenderer';
 import type { RenderedCodeProp } from '@/components/stage/contracts';
 import { getAllTopicSlugs, getTopicBySlug } from '@/lib/content';
 import { getLessonMeta } from '@/lib/curriculum';
 import { renderCode } from '@/lib/code/render';
-import { isLessonV2 } from '@/types/learning';
-import type { CodeLanguage, LessonV2 } from '@/types/learning';
+import type { LessonV2 } from '@/types/learning';
 
 export async function generateStaticParams() {
   return getAllTopicSlugs().map((slug) => ({ slug }));
@@ -44,59 +39,14 @@ async function renderLessonCode(lesson: LessonV2): Promise<Record<string, Render
   return code;
 }
 
-async function renderCodeBlocks(sourceByLanguage: Record<CodeLanguage, string>) {
-  const renderedCode = {} as Record<CodeLanguage, string>;
-
-  for (const lang of ['python', 'javascript', 'java', 'cpp'] as const) {
-    renderedCode[lang] = await codeToHtml(sourceByLanguage[lang] || '', {
-      lang,
-      // Dual themes: tokens carry --shiki-light/--shiki-dark; globals.css picks one per [data-theme].
-      themes: { light: 'github-light', dark: 'github-dark' },
-      defaultColor: false,
-      transformers: [
-        {
-          line(node, line) {
-            const properties = (node.properties || {}) as Properties;
-            properties['data-line'] = line;
-            properties.class = 'code-line';
-            node.properties = properties;
-          },
-        },
-      ],
-    });
-  }
-
-  return renderedCode;
-}
-
 export default async function TopicPage({ params }: { params: { slug: string } }) {
-  const topic = getTopicBySlug(params.slug);
-
-  if (!topic) {
+  // getTopicBySlug returns null for anything that is not a curriculum lesson with schemaVersion 2.
+  const lesson = getTopicBySlug(params.slug);
+  const meta = getLessonMeta(params.slug);
+  if (!lesson || !meta) {
     notFound();
   }
 
-  if (isLessonV2(topic)) {
-    const meta = getLessonMeta(params.slug);
-    if (!meta) {
-      notFound();
-    }
-    const code = await renderLessonCode(topic);
-    return <LessonPage lesson={topic} meta={meta} code={code} />;
-  }
-
-  if (topic.comingSoon) {
-    return <ComingSoonTemplate slug={params.slug} />;
-  }
-
-  const baseCode = topic.examples?.[0]?.code || {
-    python: '',
-    javascript: '',
-    java: '',
-    cpp: '',
-  };
-
-  const renderedCode = await renderCodeBlocks(baseCode);
-
-  return <TopicPageRenderer topic={topic} renderedCode={renderedCode} />;
+  const code = await renderLessonCode(lesson);
+  return <LessonPage lesson={lesson} meta={meta} code={code} />;
 }

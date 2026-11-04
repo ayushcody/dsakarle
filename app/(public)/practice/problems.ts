@@ -1,6 +1,5 @@
 import { LESSONS } from '@/lib/curriculum'
 import { getTopicBySlug } from '@/lib/content'
-import { isLessonV2 } from '@/types/learning'
 import type { GlyphId, ProblemDifficulty } from '@/types/learning'
 
 export interface PracticeItem {
@@ -40,30 +39,21 @@ interface RawProblem {
 }
 
 function practiceOf(slug: string): RawProblem[] {
-  const topic = getTopicBySlug(slug)
-  if (!topic) return []
-  const list = topic.practice ?? []
-  return list.flatMap((p) => {
-    const insight = isLessonV2(topic) ? (p as { insight?: string }).insight : (p as { keyInsight?: string }).keyInsight
-    return typeof p.title === 'string' && isUrl(p.url)
-      ? [{ title: p.title, url: p.url, difficulty: asDifficulty(p.difficulty), insight: insight?.trim() || null }]
-      : []
-  })
+  const lesson = getTopicBySlug(slug)
+  if (!lesson) return []
+  return (lesson.practice ?? []).flatMap((p) =>
+    typeof p.title === 'string' && isUrl(p.url)
+      ? [{ title: p.title, url: p.url, difficulty: asDifficulty(p.difficulty), insight: p.insight?.trim() || null }]
+      : [],
+  )
 }
 
 function examplesOf(slug: string): RawProblem[] {
-  const topic = getTopicBySlug(slug)
-  if (!topic) return []
-  if (isLessonV2(topic)) {
-    return topic.examples.flatMap((e) =>
-      typeof e.title === 'string' && isUrl(e.url)
-        ? [{ title: e.title, url: e.url, difficulty: asDifficulty(e.difficulty), insight: null }]
-        : [],
-    )
-  }
-  return (topic.examples ?? []).flatMap((e) =>
-    typeof e.title === 'string' && isUrl(e.leetcodeUrl)
-      ? [{ title: e.title, url: e.leetcodeUrl, difficulty: asDifficulty(e.difficulty), insight: null }]
+  const lesson = getTopicBySlug(slug)
+  if (!lesson) return []
+  return lesson.examples.flatMap((e) =>
+    typeof e.title === 'string' && isUrl(e.url)
+      ? [{ title: e.title, url: e.url, difficulty: asDifficulty(e.difficulty), insight: null }]
       : [],
   )
 }
