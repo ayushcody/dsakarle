@@ -29,23 +29,11 @@ function Cells({ y = 30, labels }: { y?: number; labels: string[] }) {
   );
 }
 
-const STEPS: { id: string; title: string; text: string; art: ReactNode }[] = [
-  {
-    id: 'picture',
-    title: 'Picture',
-    text: 'Start with a drawing of the shape and a question, before any code.',
-    art: (
-      <Sketch>
-        <Cells labels={['2', '1', '5', '1', '3', '2']} />
-        <path d="M48 8 C 44 14, 40 18, 36 26" className="stroke-coral" strokeLinecap="round" />
-        <path d="M33 21 L36 27 L41 23" className="stroke-coral" strokeLinecap="round" strokeLinejoin="round" />
-      </Sketch>
-    ),
-  },
+const PILLARS: { id: string; title: string; text: string; art: ReactNode }[] = [
   {
     id: 'watch',
     title: 'Watch',
-    text: 'Step through a real run, one move at a time, with a plain sentence for each.',
+    text: 'Step through real algorithms one move at a time, with a plain sentence for every step.',
     art: (
       <Sketch>
         <rect x={5} y={26} width={43} height={24} rx={4} className="fill-coral-wash stroke-coral" strokeLinecap="round" />
@@ -57,11 +45,11 @@ const STEPS: { id: string; title: string; text: string; art: ReactNode }[] = [
   {
     id: 'predict',
     title: 'Predict',
-    text: 'It pauses and asks what happens next. A wrong guess teaches you the rule.',
+    text: 'Guess the next move before it plays and get instant feedback. A wrong guess teaches you the rule.',
     art: (
       <Sketch>
         <Cells y={8} labels={['2', '1', '5', '1', '3', '2']} />
-        <text x={60} y={40} fontSize={16} textAnchor="middle" className="fill-coral-ink font-serif">
+        <text x={60} y={40} fontSize={16} textAnchor="middle" className="fill-coral-ink font-mono">
           ?
         </text>
         <rect x={8} y={44} width={34} height={14} rx={7} className={box} />
@@ -70,9 +58,9 @@ const STEPS: { id: string; title: string; text: string; art: ReactNode }[] = [
     ),
   },
   {
-    id: 'try',
-    title: 'Try',
-    text: 'Type your own numbers and watch the same algorithm run on them.',
+    id: 'practice',
+    title: 'Practice',
+    text: 'Try your own input and watch the same algorithm run on it. Then take on real LeetCode problems.',
     art: (
       <Sketch>
         <rect x={6} y={12} width={84} height={20} rx={5} className="fill-paper-sunken stroke-rule-strong" />
@@ -85,49 +73,29 @@ const STEPS: { id: string; title: string; text: string; art: ReactNode }[] = [
       </Sketch>
     ),
   },
-  {
-    id: 'code',
-    title: 'Code',
-    text: 'Then read it in Python, Java or C++, with the line you just watched lit up.',
-    art: (
-      <Sketch>
-        <g fontSize={7} className="font-mono">
-          <rect x={6} y={6} width={22} height={11} rx={3} className="fill-coral-wash stroke-coral" />
-          <text x={17} y={14} textAnchor="middle" className="fill-coral-ink">Py</text>
-          <rect x={31} y={6} width={26} height={11} rx={3} className={box} />
-          <text x={44} y={14} textAnchor="middle" className="fill-ink-2">Java</text>
-          <rect x={60} y={6} width={26} height={11} rx={3} className={box} />
-          <text x={73} y={14} textAnchor="middle" className="fill-ink-2">C++</text>
-        </g>
-        <rect x={6} y={22} width={84} height={36} rx={4} className="fill-paper-sunken stroke-rule" />
-        <rect x={9} y={30} width={78} height={7} rx={2} className="fill-coral-wash" stroke="none" />
-        <path d="M13 26 H46 M17 34 H62 M17 42 H54 M13 50 H38" className="stroke-ink-3" strokeLinecap="round" />
-      </Sketch>
-    ),
-  },
 ];
 
 export function HowItWorks() {
   return (
-    <section aria-labelledby="how-title" className="border-y border-rule bg-paper-sunken">
+    <section aria-labelledby="how-title" className="border-t border-rule">
       <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 md:py-24 lg:px-8">
         <Reveal>
-          <p className="t-eyebrow">How a lesson works</p>
-          <h2 id="how-title" className="t-h1 mt-3 max-w-[26ch] text-ink">
-            Five steps, the same every time.
+          <h2 id="how-title" className="t-h1 max-w-[26ch] text-ink">
+            How it works
           </h2>
+          <p className="t-body mt-3 max-w-[40rem] text-ink-2">Every lesson follows the same three moves.</p>
         </Reveal>
 
         <Reveal>
-          <ol className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
-            {STEPS.map((step, i) => (
-              <li key={step.id} className="relative flex flex-col gap-3">
-                <div className="flex items-end">{step.art}</div>
+          <ol className="mt-10 grid gap-6 md:grid-cols-3">
+            {PILLARS.map((p, i) => (
+              <li key={p.id} className="flex flex-col gap-4 rounded-card border border-rule bg-paper-raised p-6">
+                <div className="flex h-[72px] items-end">{p.art}</div>
                 <h3 className="t-h3 flex items-baseline gap-2 text-ink">
                   <span className="font-mono text-[13px] font-medium text-ink-3">{i + 1}</span>
-                  {step.title}
+                  {p.title}
                 </h3>
-                <p className="t-small text-ink-2">{step.text}</p>
+                <p className="t-small text-ink-2">{p.text}</p>
               </li>
             ))}
           </ol>

@@ -18,9 +18,9 @@ export function Continue() {
   const pct = Math.round((done / total) * 100);
 
   return (
-    <section aria-labelledby="continue-title" className="mx-auto w-full max-w-[1200px] px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+    <section aria-labelledby="continue-title" className="mx-auto w-full max-w-[1200px] px-4 py-12 sm:px-6 md:py-16 lg:px-8">
       <p className="t-eyebrow">Continue where you left off</p>
-      <div className="mt-6 flex flex-col gap-6 rounded-card border border-rule bg-paper-raised p-5 shadow-1 sm:flex-row sm:items-center sm:p-6">
+      <div className="mt-6 flex flex-col gap-6 rounded-card border border-rule bg-paper-raised p-5 sm:flex-row sm:items-center sm:p-6">
         {last ? <GlyphTile id={last.glyph} tileSize={48} glyphSize={48} decorative /> : null}
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <h2 id="continue-title" className="t-h3 text-ink">
@@ -44,7 +44,7 @@ export function Continue() {
           </div>
         </div>
         {last ? (
-          <Button href={`/learn/${last.slug}`} size="lg" trailingIcon="→" className="w-full sm:w-auto">
+          <Button href={`/learn/${last.slug}`} size="md" trailingIcon="→" className="w-full sm:w-auto">
             Continue
           </Button>
         ) : null}

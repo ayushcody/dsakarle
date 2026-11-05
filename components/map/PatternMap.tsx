@@ -42,10 +42,10 @@ export default function PatternMap() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 border-b border-rule pb-4 md:flex-row md:items-center md:justify-between">
         <div role="group" aria-label="Filter lessons" className="flex flex-wrap gap-2">
           {FILTERS.map((f) => (
-            <Chip key={f.value} selectable selected={filter === f.value} onClick={() => setFilter(f.value)}>
+            <Chip key={f.value} selectable selected={filter === f.value} onClick={() => setFilter(f.value)} className="px-3.5">
               {f.label}
             </Chip>
           ))}
@@ -64,8 +64,8 @@ export default function PatternMap() {
 
       {view === 'map' ? (
         <>
-          <MapLegend />
           <MapCanvas filter={filter} />
+          <MapLegend />
         </>
       ) : (
         <MapListView filter={filter} />

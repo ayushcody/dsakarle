@@ -23,20 +23,22 @@ const STEPS = [
   },
 ] as const
 
-/** The lesson method as a numbered list, drawn like a margin-numbered notebook page. */
+/** The lesson method as a calm numbered list. */
 export function MethodSteps({ className }: { className?: string }) {
   return (
-    <ol className={cn('grid gap-3 sm:grid-cols-2 lg:grid-cols-5', className)}>
+    <ol className={cn('divide-y divide-rule rounded-card border border-rule bg-paper-raised', className)}>
       {STEPS.map((step, i) => (
-        <li key={step.name} className="rounded-card border border-rule bg-paper-raised p-4 shadow-1">
-          <p className="font-hand text-[22px] leading-none text-coral-ink" aria-hidden="true">
+        <li key={step.name} className="flex gap-4 p-4 sm:p-5">
+          <span aria-hidden="true" className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-pill bg-paper-sunken font-mono text-[13px] font-medium text-ink-2">
             {i + 1}
-          </p>
-          <h3 className="t-h3 mt-2 text-ink">
-            <span className="sr-only">{i + 1}. </span>
-            {step.name}
-          </h3>
-          <p className="mt-2 text-[15px] leading-6 text-ink-2">{step.body}</p>
+          </span>
+          <div className="min-w-0">
+            <h3 className="text-[16px] font-semibold leading-6 text-ink">
+              <span className="sr-only">{i + 1}. </span>
+              {step.name}
+            </h3>
+            <p className="mt-1 text-[15px] leading-6 text-ink-2">{step.body}</p>
+          </div>
         </li>
       ))}
     </ol>

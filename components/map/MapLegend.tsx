@@ -10,7 +10,7 @@ function Swatch({ children }: { children: React.ReactNode }) {
 export function MapLegend() {
   const item = 'flex items-center gap-2';
   return (
-    <ul aria-label="Legend" className="t-small flex flex-wrap gap-x-6 gap-y-2 text-ink-2">
+    <ul aria-label="Legend" className="t-small flex flex-wrap gap-x-6 gap-y-2 rounded-card border border-rule bg-paper-raised px-4 py-3 text-ink-2">
       <li className={item}>
         <Swatch>
           <path d="M3 11H30" style={{ stroke: 'var(--ink-3)' }} strokeWidth="1.5" strokeLinecap="round" />

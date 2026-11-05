@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Glyph } from '@/components/glyph';
 import { Chip } from '@/components/ui';
-import { CURRICULUM } from '@/lib/curriculum';
+import { PATHS } from '@/lib/curriculum';
 import { PATTERN_GRAPH, matchesFilter } from './graph';
 import type { MapFilter, MapNode } from './graph';
 
@@ -32,16 +32,16 @@ function LinkList({ label, ids }: { label: string; ids: string[] }) {
 
 function Item({ node }: { node: MapNode }) {
   return (
-    <li className="border-b border-rule py-3 last:border-b-0">
+    <li className="py-3">
       <div className="flex items-center gap-3">
         <Glyph id={node.glyph} size={24} decorative className="text-ink-2" />
         <Link
           href={`/learn/${node.id}`}
-          className="inline-flex min-h-[44px] items-center rounded-cell font-serif text-[18px] font-semibold text-ink hover:text-coral-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          className="inline-flex min-h-[44px] items-center rounded-cell text-[16px] font-semibold text-ink hover:text-coral-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
         >
           {node.title}
         </Link>
-        {node.status === 'live' ? <Chip variant="coral">Live</Chip> : <Chip className="border-dashed">Draft</Chip>}
+        {node.status === 'live' ? null : <Chip className="border-dashed">Draft</Chip>}
       </div>
       <p className="t-small pl-9 text-ink-2">{node.oneLiner}</p>
       <div className="pl-9">
@@ -52,23 +52,37 @@ function Item({ node }: { node: MapNode }) {
   );
 }
 
-/** The same graph as grouped lists: every link, readable and keyboard-friendly. */
+/** The same graph as lists grouped path by section: every link, readable and keyboard-friendly. */
 export default function MapListView({ filter }: { filter: MapFilter }) {
   return (
-    <div className="grid gap-10 md:grid-cols-2 md:gap-12">
-      {CURRICULUM.groups.map((group) => {
-        const nodes = PATTERN_GRAPH.nodes.filter((n) => n.group === group.id && matchesFilter(n, filter));
-        if (nodes.length === 0) return null;
+    <div className="max-w-[760px] space-y-12">
+      {PATHS.map((path) => {
+        const sections = path.sections
+          .map((section) => ({
+            section,
+            nodes: section.lessons
+              .map((slug) => PATTERN_GRAPH.byId.get(slug))
+              .filter((n): n is MapNode => Boolean(n) && matchesFilter(n as MapNode, filter)),
+          }))
+          .filter((s) => s.nodes.length > 0);
+        if (sections.length === 0) return null;
         return (
-          <section key={group.id} aria-labelledby={`map-list-${group.id}`}>
-            <h2 id={`map-list-${group.id}`} className="t-h3 border-b border-rule-strong pb-2 text-ink">
-              {group.title}
+          <section key={path.id} aria-labelledby={`map-list-${path.id}`}>
+            <h2 id={`map-list-${path.id}`} className="t-h2 text-ink">
+              {path.title}
             </h2>
-            <ul>
-              {nodes.map((node) => (
-                <Item key={node.id} node={node} />
+            <div className="mt-4 space-y-6">
+              {sections.map(({ section, nodes }) => (
+                <div key={section.title}>
+                  <h3 className="t-eyebrow mb-1">{section.title}</h3>
+                  <ul className="divide-y divide-rule border-y border-rule">
+                    {nodes.map((node) => (
+                      <Item key={node.id} node={node} />
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </section>
         );
       })}

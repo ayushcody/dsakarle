@@ -12,9 +12,9 @@ function Skeleton() {
     <div
       role="status"
       aria-busy="true"
-      className={`graph-paper flex items-center justify-center rounded-card border border-rule shadow-1 ${STAGE_BOX}`}
+      className={`flex items-center justify-center rounded-card bg-paper-sunken ${STAGE_BOX}`}
     >
-      <p className="font-serif text-[18px] text-ink-3">Getting the demo ready…</p>
+      <p className="text-[15px] text-ink-3">Getting the demo ready…</p>
     </div>
   );
 }
@@ -34,7 +34,7 @@ const TRACKS: StageTrack[] = [
   },
 ];
 
-/** A real, paused run of the sliding-window tracer on a graph-paper card. Never autoplays. */
+/** A real, paused run of the sliding-window tracer inside the hero card. Never autoplays. */
 export function HeroStage() {
   return (
     <div className={STAGE_BOX}>

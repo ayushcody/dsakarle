@@ -63,25 +63,23 @@ function OutOfBounds() {
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-[720px] flex-1 flex-col justify-center px-4 py-16 sm:px-6">
-      <p className="t-eyebrow mb-4 text-center">404</p>
       <OutOfBounds />
       <h1 className="t-h1 mt-8 text-center text-ink">That page is not in the notebook.</h1>
       <p
-        className="mt-4 rounded-card border border-rule bg-paper-sunken px-4 py-3 text-center font-mono text-[14px] text-error-ink"
+        className="mt-4 rounded-card border border-rule bg-paper-raised px-4 py-3 text-center font-mono text-[14px] text-error-ink"
         role="note"
       >
         IndexError: page 404 is out of range
       </p>
       <p className="t-body mt-5 text-center text-ink-2">
-        The link may be old, or mistyped. Looking for a topic? Browse the lessons, or use the search on
-        the Learn page.
+        The link may be old, or mistyped. Pick a path and carry on, or check your progress.
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Button href="/learn" size="lg">
-          Browse lessons
+        <Button href="/paths" size="lg">
+          Explore paths
         </Button>
-        <Button href="/map" variant="secondary" size="lg">
-          Open the pattern map
+        <Button href="/dashboard" variant="secondary" size="lg">
+          Go to your dashboard
         </Button>
         <Link
           href="/"

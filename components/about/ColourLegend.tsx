@@ -68,9 +68,9 @@ const ROWS: LegendRow[] = [
 /** The colour language of the Stage. Every colour is paired with a mark so none of it relies on colour alone. */
 export function ColourLegend() {
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
+    <ul className="divide-y divide-rule rounded-card border border-rule bg-paper-raised">
       {ROWS.map((row) => (
-        <li key={row.name} className="flex items-start gap-3 rounded-card border border-rule bg-paper-raised p-3 shadow-1">
+        <li key={row.name} className="flex items-start gap-3 p-3 sm:p-4">
           {row.swatch}
           <div className="min-w-0">
             <p className="text-[15px] font-semibold leading-6 text-ink">{row.name}</p>
