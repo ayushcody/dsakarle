@@ -18,7 +18,7 @@ function Stamp({ tone }: { tone: 'found' | 'note' }) {
     <motion.svg
       aria-hidden="true"
       viewBox="0 0 32 32"
-      className="h-9 w-9 shrink-0"
+      className="h-7 w-7 shrink-0"
       initial={{ scale: 1.7, rotate: -14, opacity: 0 }}
       animate={{ scale: 1, rotate: -6, opacity: 1 }}
       transition={spring}
@@ -91,13 +91,13 @@ export function PredictCard({
       animate={{ opacity: 1, y: 0 }}
       transition={fade}
       className={cn(
-        'flex flex-col gap-3 rounded-card border border-rule border-l-[3px] border-l-coral bg-paper-raised p-4 shadow-1 outline-none',
+        'flex flex-col gap-3 rounded-card border border-rule border-l-[3px] border-l-coral-ink bg-paper-raised p-4 outline-none',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]',
         className,
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <p className="t-eyebrow !text-coral-ink">Your turn: predict</p>
+        <p className="t-eyebrow m-0 !text-coral-ink">Your turn: predict</p>
         {isOpen ? (
           <Button variant="link" onClick={() => onSkip?.()} className="!min-h-[32px] text-[14px]">
             Skip this one
@@ -105,12 +105,12 @@ export function PredictCard({
         ) : null}
       </div>
 
-      <p id={questionId} className={cn('font-serif text-[20px] leading-7 sm:text-[22px]', isDone ? 'text-ink-2' : 'text-ink')}>
+      <p id={questionId} className={cn('m-0 text-[17px] font-medium leading-[1.55]', isDone ? 'text-ink-2' : 'text-ink')}>
         {predict.prompt}
       </p>
 
       {isOpen && kind === 'choice' && options ? (
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Choose one">
+        <div className="flex flex-col items-stretch gap-2 sm:items-start" role="group" aria-label="Choose one">
           {options.map((opt, i) => {
             const bad = wrong !== undefined && String(wrong) === opt
             return (
@@ -121,7 +121,7 @@ export function PredictCard({
                 variant={bad ? 'error' : 'neutral'}
                 disabled={bad}
                 onClick={() => onAnswer?.(opt)}
-                className={cn('min-h-[44px] text-[15px]', focusRing)}
+                className={cn('min-h-[40px] !whitespace-normal py-2 text-left text-[15px]', focusRing)}
                 aria-keyshortcuts={String(i + 1)}
               >
                 <Kbd className="hidden lg:inline-flex">{i + 1}</Kbd>

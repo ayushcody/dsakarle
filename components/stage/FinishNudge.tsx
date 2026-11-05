@@ -47,7 +47,7 @@ export function FinishNudge({ canTryOwn, onTryOwn, onFinish, quiet = false, clas
     // The slot is always as tall as the nudge, so reaching the last step does not push the page down.
     <div className={cn('grid', className)}>
       {show ? (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={fade} role="status" className="min-w-0 [grid-area:1/1]">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade} role="status" className="min-w-0 [grid-area:1/1]">
           <Nudge canTryOwn={canTryOwn} onTryOwn={onTryOwn} right={right} total={total} />
         </motion.div>
       ) : null}
@@ -60,14 +60,14 @@ export function FinishNudge({ canTryOwn, onTryOwn, onFinish, quiet = false, clas
 
 function Nudge({ canTryOwn, onTryOwn, right, total }: { canTryOwn: boolean; onTryOwn?: () => void; right: number; total: number }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-card border border-rule border-l-[3px] border-l-role-found bg-[var(--role-found-wash)] px-4 py-3">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-card border border-rule border-l-[3px] border-l-role-found bg-paper-raised px-3 py-2.5">
       <span aria-hidden="true" className="text-[18px] font-bold leading-none text-found-ink">
         ✓
       </span>
-      <p className="min-w-0 flex-1 basis-56 text-[16px] leading-6 text-ink">
+      <p className="min-w-0 flex-1 basis-56 text-[15px] leading-6 text-ink">
         <span className="font-semibold">That is the whole run.</span>{' '}
-        {total > 0 ? `You called ${right} of ${total} correctly. ` : ''}
-        {canTryOwn ? 'Now see it work on an input you choose.' : 'Press Replay to watch it again.'}
+        {total > 0 ? `You called ${right} of ${total}. ` : ''}
+        {canTryOwn ? 'Now pick your own input.' : 'Press Replay to watch it again.'}
       </p>
       {canTryOwn ? (
         <Button onClick={onTryOwn} trailingIcon={<span>→</span>}>

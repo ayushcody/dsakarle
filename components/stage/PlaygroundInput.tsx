@@ -76,10 +76,10 @@ export function PlaygroundInput({ tracer, presetIndex = 0, initialValues, onRun,
       onSubmit={onSubmit}
       noValidate
       aria-labelledby={`${uid}-h`}
-      className={cn('flex flex-col gap-3 rounded-card border border-rule bg-paper-raised p-4 shadow-1', className)}
+      className={cn('flex flex-col gap-3 rounded-card border border-rule bg-paper-raised p-4', className)}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h3 id={`${uid}-h`} className="font-serif text-[20px] font-semibold leading-7 text-ink">
+        <h3 id={`${uid}-h`} className="text-[16px] font-semibold leading-6 text-ink">
           Your input
         </h3>
         {hint ? <p className="text-[13px] leading-[18px] text-ink-2">{hint}</p> : null}

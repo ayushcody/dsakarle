@@ -5,6 +5,8 @@ import { useMemo } from 'react'
 import type { ReactNode, RefObject } from 'react'
 
 import { cn } from '@/components/ui'
+
+import styles from './stage.module.css'
 import type { Frame, PredictCandidate } from '@/lib/engine/types'
 import { fade } from '@/lib/motion'
 
@@ -19,11 +21,7 @@ export interface NarrationProps {
   className?: string
 }
 
-const sayClass = (compact: boolean) =>
-  cn(
-    'font-serif text-ink',
-    compact ? 'text-[19px] leading-[1.45] sm:text-[21px]' : 'text-[21px] leading-[1.45] sm:text-[25px] sm:leading-[1.4]',
-  )
+const sayClass = (compact: boolean) => cn('m-0 text-ink', compact ? 'text-[17px] leading-[1.55]' : 'text-[17px] leading-[1.6] sm:text-[18px]')
 
 /** How many of the longest sentences / questions are kept as invisible height sizers. */
 const SAY_SIZERS = 3
@@ -46,9 +44,9 @@ function textSizers(frames: Frame[], predictAt: ReadonlySet<number>) {
 }
 
 /** Invisible, non-interactive copy laid over the live content so the slot never shrinks below it. */
-function Sizer({ children }: { children: ReactNode }) {
+function Sizer({ children, narrowOnly = false }: { children: ReactNode; narrowOnly?: boolean }) {
   return (
-    <div aria-hidden="true" className="pointer-events-none invisible min-w-0 [grid-area:1/1]">
+    <div aria-hidden="true" className={cn('pointer-events-none invisible min-w-0 [grid-area:1/1]', narrowOnly && styles.narrowOnly)}>
       {children}
     </div>
   )
@@ -71,16 +69,20 @@ export function Narration({ scopeRef, compact = false, className }: NarrationPro
   const sizers = useMemo(() => textSizers(frames, predictAt), [frames, predictAt])
 
   return (
-    <div className={cn('grid', compact ? 'min-h-[4.5rem]' : 'min-h-[6.5rem]', className)}>
+    <div className={cn('grid', 'min-h-[3.5rem]', className)}>
       <div className="min-w-0 [grid-area:1/1]">
         <div aria-live="polite" aria-atomic="true">
           {showPrompt ? null : (
-            <motion.p key={index} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={fade} className={sayClass(compact)}>
+            <motion.p key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade} className={sayClass(compact)}>
               {say || ' '}
             </motion.p>
           )}
         </div>
-        {showPrompt ? <PredictPrompt key={promptFrame} scopeRef={scopeRef} /> : null}
+        {showPrompt ? (
+          <div className={styles.predictLayer}>
+            <PredictPrompt key={promptFrame} scopeRef={scopeRef} />
+          </div>
+        ) : null}
       </div>
 
       {sizers.says.map((text, i) => (
@@ -90,10 +92,10 @@ export function Narration({ scopeRef, compact = false, className }: NarrationPro
       ))}
       {mayAsk
         ? sizers.predicts.flatMap((p, i) => [
-            <Sizer key={`done-${i}`}>
+            <Sizer key={`done-${i}`} narrowOnly>
               <PredictCard predict={p} status="revealed" />
             </Sizer>,
-            <Sizer key={`hint-${i}`}>
+            <Sizer key={`hint-${i}`} narrowOnly>
               <PredictCard predict={p} status="hint" wrong={p.options?.[0]} />
             </Sizer>,
           ])

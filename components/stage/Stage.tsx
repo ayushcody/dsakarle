@@ -191,9 +191,9 @@ export function Stage({ tracks, playground, variant = 'lesson', code, onGuidedFi
       <div
         role="status"
         aria-busy="true"
-        className={cn('graph-paper flex items-center justify-center rounded-card border border-rule p-6 shadow-1', hero ? 'min-h-[18rem]' : 'min-h-[30rem]', className)}
+        className={cn('flex items-center justify-center rounded-card border border-rule bg-paper-raised p-6', hero ? 'min-h-[18rem]' : 'min-h-[26rem] lg:min-h-[41rem]', className)}
       >
-        <p className="font-serif text-[18px] text-ink-3">{tracer ? 'That example could not be run.' : 'Getting the demo ready…'}</p>
+        <p className="text-[16px] text-ink-3">{tracer ? 'That example could not be run.' : 'Getting the demo ready…'}</p>
       </div>
     )
   }

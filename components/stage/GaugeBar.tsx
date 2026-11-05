@@ -46,10 +46,10 @@ function GaugeView({ gauge, className }: { gauge: Gauge; className?: string }) {
 
   return (
     <section className={className} aria-label={label}>
-      <div className="mb-2 flex items-baseline justify-between gap-3">
+      <div className="mb-1.5 flex items-baseline justify-between gap-3">
         <h3 className="t-eyebrow">{label}</h3>
         <p
-          className={cn('font-mono text-[15px] font-semibold', over ? 'text-role-error' : 'text-ink')}
+          className={cn('font-mono text-[14px] font-medium', over ? 'text-role-error' : 'text-ink')}
           role="img"
           aria-label={text}
         >
@@ -66,7 +66,7 @@ function GaugeView({ gauge, className }: { gauge: Gauge; className?: string }) {
             <span
               key={i}
               className={cn(
-                'h-3 flex-1 rounded-[3px] border transition-colors duration-150',
+                'h-2 flex-1 rounded-[3px] border transition-colors duration-150',
                 i < Math.min(value, max)
                   ? over
                     ? 'border-role-error bg-[var(--role-error-wash)]'
@@ -76,11 +76,11 @@ function GaugeView({ gauge, className }: { gauge: Gauge; className?: string }) {
             />
           ))}
           {Array.from({ length: extra }, (_, i) => (
-            <span key={`x${i}`} className="h-3 w-3 shrink-0 rounded-[3px] border border-dashed border-role-error bg-[var(--role-error-wash)]" />
+            <span key={`x${i}`} className="h-2 w-2 shrink-0 rounded-[3px] border border-dashed border-role-error bg-[var(--role-error-wash)]" />
           ))}
         </div>
       ) : (
-        <div className="h-3 overflow-hidden rounded-pill border border-rule bg-paper-sunken" aria-hidden="true">
+        <div className="h-2 overflow-hidden rounded-pill border border-rule bg-paper-sunken" aria-hidden="true">
           <motion.div
             className={cn('h-full', over ? 'bg-role-error' : 'bg-coral')}
             initial={false}

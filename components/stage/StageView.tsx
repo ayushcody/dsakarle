@@ -1,7 +1,7 @@
 'use client'
 
-import { memo, useMemo, useRef } from 'react'
-import type { ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 import { Disclosure, cn, focusRing } from '@/components/ui'
 import type { AnyTracer, Frame, Scene } from '@/lib/engine/types'
@@ -15,10 +15,12 @@ import { SyncedCode } from './CodePanel'
 import { useStage, useStageApi, useStageKeyboard } from './StageProvider'
 import { VarsPanel } from './VarsPanel'
 import { Legend } from './primitives'
+import { ScrollRegion } from './primitives/ScrollRegion'
 import type { LegendRole } from './primitives'
 import { SceneRenderer } from './scenes/SceneRenderer'
 import type { PickTarget, RenderedCodeProp } from './contracts'
-import { tallestSceneFrames } from './scenes/reserve'
+import { STAGE_BUCKETS, sceneHeightBuckets } from './scenes/reserve'
+import styles from './stage.module.css'
 import type { Density } from './scenes/layout'
 
 const LEGEND_ORDER: LegendRole[] = ['ptrA', 'ptrB', 'focus', 'window', 'compare', 'changed', 'visited', 'discarded', 'found', 'error']
@@ -55,20 +57,43 @@ function runRoles(frames: Frame[]): LegendRole[] {
 }
 
 /**
- * Invisible copies of the run's tallest frames, stacked in the live scene's grid
- * cell. They never change while stepping, so the cell keeps its height.
+ * The fixed-height scene box. The box height comes from CSS (computed from the
+ * pure layout, see scenes/reserve.ts); if a frame is taller than the box (the
+ * box is capped) the scene is scaled down to fit, measured once per frame before
+ * paint. Nothing here renders hidden copies of the svg.
  */
-const ReservedScenes = memo(function ReservedScenes({ scenes, density }: { scenes: Scene[]; density: Density }) {
+function SceneBox({ children }: { children: ReactNode }) {
+  const boxRef = useRef<HTMLDivElement>(null)
+  const fitRef = useRef<HTMLDivElement>(null)
+
+  useIsoLayoutEffect(() => {
+    const box = boxRef.current
+    const fit = fitRef.current
+    if (!box || !fit) return
+    const apply = () => {
+      const room = box.clientHeight - 32
+      const need = fit.offsetHeight
+      const k = need > 0 && room > 0 ? Math.min(1, room / need) : 1
+      fit.style.setProperty('--fit', String(Math.round(k * 1000) / 1000))
+    }
+    apply()
+    if (typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(apply)
+    ro.observe(box)
+    ro.observe(fit)
+    return () => ro.disconnect()
+  }, [])
+
   return (
-    <>
-      {scenes.map((scene, i) => (
-        <div key={i} aria-hidden="true" className="pointer-events-none invisible flex min-w-0 items-center justify-center [grid-area:1/1]">
-          <SceneRenderer scene={scene} density={density} className="w-full" />
-        </div>
-      ))}
-    </>
+    <div ref={boxRef} className={styles.sceneBox}>
+      <div ref={fitRef} className={styles.sceneFit}>
+        {children}
+      </div>
+    </div>
   )
-})
+}
+
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 export interface StageViewProps {
   tracer: AnyTracer
@@ -117,7 +142,14 @@ export function StageView({
 
   const roles = useMemo(() => runRoles(frames), [frames])
   const density: Density = hero ? 'compact' : 'comfortable'
-  const reserved = useMemo(() => tallestSceneFrames(frames, density, density === 'comfortable' ? 1 : 0).map((i) => frames[i].scene), [frames, density])
+  const heights = useMemo(() => sceneHeightBuckets(frames, density, density === 'comfortable' ? 1 : 0, !hero), [frames, density, hero])
+  const vars = useMemo(() => {
+    const o: Record<string, string> = {}
+    STAGE_BUCKETS.forEach((_, i) => {
+      o[`--sh${i}`] = `${heights[i]}px`
+    })
+    return o as CSSProperties
+  }, [heights])
   const onPick = pickable ? (t: PickTarget) => api.answer(t) : undefined
 
   return (
@@ -126,49 +158,59 @@ export function StageView({
       tabIndex={0}
       role="group"
       aria-label="Interactive walkthrough. Left and right arrows step, space plays or pauses."
-      className={cn('flex flex-col gap-4 rounded-card outline-none', focusRing, 'focus-visible:outline-offset-8', className)}
+      style={vars}
+      className={cn(
+        styles.root,
+        'flex flex-col gap-4 rounded-card border border-rule bg-paper-raised p-4 outline-none',
+        focusRing,
+        'focus-visible:outline-offset-4',
+        className,
+      )}
     >
       {header}
+      {playgroundSlot}
 
-      <div className={cn('grid gap-5', !hero && 'lg:grid-cols-[minmax(0,62fr)_minmax(0,38fr)] lg:gap-8')}>
-        <div className="flex min-w-0 flex-col gap-4">
-          {playgroundSlot}
+      <div className={cn(styles.body, hero ? styles.hero : styles.split)}>
+        <SceneBox>
+          {frame ? (
+            <SceneRenderer
+              scene={frame.scene}
+              onPick={onPick}
+              pickable={pickable}
+              density={density}
+              ariaLabel={frame.say}
+              className="w-full"
+            />
+          ) : null}
+        </SceneBox>
 
-          {/* One grid cell: the live scene plus invisible copies of the tallest frames, so the card never changes height. */}
-          <div className="graph-paper grid items-center overflow-hidden rounded-card border border-rule p-3 shadow-1 sm:p-5">
-            <div className="flex min-w-0 items-center justify-center [grid-area:1/1]">
-              {frame ? (
-                <SceneRenderer
-                  scene={frame.scene}
-                  onPick={onPick}
-                  pickable={pickable}
-                  density={density}
-                  ariaLabel={frame.say}
-                  className="w-full"
-                />
-              ) : null}
-            </div>
-            <ReservedScenes scenes={reserved} density={density} />
-          </div>
-
-          <Narration scopeRef={rootRef} compact={hero} />
-          <Controls compact={hero} />
-          <FinishNudge canTryOwn={canTryOwn} onTryOwn={() => onTryOwn?.()} onFinish={onFinish} quiet={hero} />
+        <div className={styles.sideOuter}>
+          <ScrollRegion label="Narration and rules, scrollable" axis="y" className={styles.sideScroll}>
+            <Narration scopeRef={rootRef} compact={hero} className={styles.narration} />
+            <FinishNudge
+              canTryOwn={canTryOwn}
+              onTryOwn={() => onTryOwn?.()}
+              onFinish={onFinish}
+              quiet={hero}
+              className={styles.nudge}
+            />
+            {hero ? null : (
+              <div className={cn(styles.rules, 'flex min-w-0 flex-col gap-5')}>
+                <RuleRail anchors={tracer.anchors} />
+                <VarsPanel vars={tracer.vars} />
+                <GaugeBar />
+                {roles.length > 0 ? (
+                  <section aria-label="Key to the marks">
+                    <h3 className="t-eyebrow mb-2">What the marks mean</h3>
+                    <Legend roles={roles} />
+                  </section>
+                ) : null}
+              </div>
+            )}
+          </ScrollRegion>
         </div>
 
-        {hero ? null : (
-          <div className="flex min-w-0 flex-col gap-5">
-            <RuleRail anchors={tracer.anchors} />
-            <VarsPanel vars={tracer.vars} />
-            <GaugeBar />
-            {roles.length > 0 ? (
-              <section aria-label="Key to the marks">
-                <h3 className="t-eyebrow mb-2">What the marks mean</h3>
-                <Legend roles={roles} />
-              </section>
-            ) : null}
-          </div>
-        )}
+        <Controls compact={hero} className={styles.controls} />
       </div>
 
       {!hero && code ? (

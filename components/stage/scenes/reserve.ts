@@ -2,20 +2,13 @@
  * Which frames set the height of a run's scene area?
  *
  * Scenes change size between frames (pointer tags stack, notes appear, a tree
- * grows). To keep the page steady while stepping, the stage keeps invisible
- * copies of the tallest frames in the same grid cell as the live scene, so the
- * cell is always as tall as the run's tallest frame at the current width.
- *
- * This file only chooses those frames. It estimates each frame's rendered
- * height with the pure layout functions (no DOM) at a handful of container
- * widths and keeps the winner at each width. Pure and cheap: layouts are
- * computed once per frame.
+ * grows). To keep the page steady while stepping, the scene box has a fixed
+ * height: the run's tallest frame at the stage's width. This file estimates it
+ * with the pure layout functions (no DOM, no hidden copies of the svg) for a
+ * handful of stage widths; the stage hands the numbers to CSS.
  */
 import type { Annotation, Frame, Scene } from "@/lib/engine/types";
 import { layoutScene, planNotes, type Density } from "./layout";
-
-/** Container widths (px) the estimate is taken at: a phone up to the wide column. */
-const PROBE_WIDTHS = [250, 320, 400, 500, 620, 760, 940];
 
 /** Row layout: a part keeps at least this width before it wraps (see CompositeScene). */
 const PART_MIN = 280;
@@ -78,31 +71,49 @@ function estimate(m: Measured, cw: number): number {
 }
 
 /**
- * Indices of the frames whose scene, rendered invisibly, keeps the scene area
- * at the run's tallest height. Usually one to three frames.
+ * Stage widths (px, upper bound of each bucket) the scene box is sized for. The
+ * first six are the single-column layout, the last three the two-column one
+ * (stage >= 900px). The stage turns each into a CSS container-query rule, so
+ * the right height is already on the first paint at any width.
  */
-export function tallestSceneFrames(frames: readonly Frame[], density: Density, minNoteRows: number): number[] {
-  if (frames.length <= 1) return [];
-  const measured: Array<Measured | null> = frames.map((f) => {
+export const STAGE_BUCKETS = [359, 439, 539, 659, 759, 839, 959, 1099, 1280] as const;
+/** First bucket index that uses the two-column layout. */
+export const SPLIT_FROM = 5;
+
+/** Stage card padding (both sides) and the scene box padding (both sides), px. Keep in step with stage.module.css. */
+const CARD_PAD = 32;
+const BOX_PAD = 32;
+const SPLIT_GAP = 24;
+const SPLIT_SHARE = 0.6;
+
+/** Width the scene gets inside the box for a stage `w` wide. */
+function sceneWidth(w: number, split: boolean): number {
+  const inner = w - CARD_PAD;
+  return (split ? (inner - SPLIT_GAP) * SPLIT_SHARE : inner) - BOX_PAD;
+}
+
+/**
+ * Height (px, numbers only, no DOM) of the tallest frame's scene for each stage
+ * width bucket. Computed from the pure layout functions, once per run.
+ */
+export function sceneHeightBuckets(
+  frames: readonly Frame[],
+  density: Density,
+  minNoteRows: number,
+  allowSplit: boolean,
+): number[] {
+  const measured: Measured[] = [];
+  for (const f of frames) {
     try {
-      return measure(f.scene, density, minNoteRows);
+      measured.push(measure(f.scene, density, minNoteRows));
     } catch {
-      return null;
+      /* a frame that cannot be measured does not reserve anything */
     }
-  });
-  const chosen = new Set<number>();
-  for (const cw of PROBE_WIDTHS) {
-    let best = -1;
-    let bestH = -1;
-    measured.forEach((m, i) => {
-      if (!m) return;
-      const h = estimate(m, cw);
-      if (h > bestH + 0.5) {
-        best = i;
-        bestH = h;
-      }
-    });
-    if (best >= 0) chosen.add(best);
   }
-  return Array.from(chosen).sort((a, b) => a - b);
+  return STAGE_BUCKETS.map((w, i) => {
+    const cw = Math.max(160, sceneWidth(w, allowSplit && i >= SPLIT_FROM));
+    let tallest = 0;
+    for (const m of measured) tallest = Math.max(tallest, estimate(m, cw));
+    return Math.ceil(tallest) + BOX_PAD;
+  });
 }
