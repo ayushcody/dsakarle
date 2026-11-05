@@ -9,7 +9,7 @@ import { useModalBehavior } from '@/components/layout/useModalBehavior';
 import { Chip } from '@/components/ui/Chip';
 import { Kbd } from '@/components/ui/Kbd';
 import { cn } from '@/components/ui/cn';
-import { LESSONS, getGroup, getLessonMeta } from '@/lib/curriculum';
+import { LESSONS, getLessonMeta, placeOf } from '@/lib/curriculum';
 import { usePaletteStore } from '@/lib/palette-store';
 import { getSearchIndex } from '@/lib/search';
 import type { CurriculumLesson } from '@/types/learning';
@@ -67,16 +67,40 @@ const ACTIONS: QuickAction[] = [
     run: () => toggleTheme(),
   },
   {
-    id: 'learn',
-    label: 'Go to all lessons',
-    hint: 'The full list, by data structure and pattern',
-    keywords: 'learn lessons curriculum catalog',
+    id: 'paths',
+    label: 'Go to Paths',
+    hint: 'Four paths, every lesson in order',
+    keywords: 'learn lessons curriculum catalog paths courses',
     icon: (
       <svg {...iconProps}>
         <path d="M4 5.5h16M4 12h16M4 18.5h10" />
       </svg>
     ),
-    run: (router) => router.push('/learn'),
+    run: (router) => router.push('/paths'),
+  },
+  {
+    id: 'dashboard',
+    label: 'Go to Dashboard',
+    hint: 'Your progress, saved in this browser',
+    keywords: 'progress dashboard stats completed continue reset',
+    icon: (
+      <svg {...iconProps}>
+        <path d="M5 20V11M12 20V4M19 20v-6" />
+      </svg>
+    ),
+    run: (router) => router.push('/dashboard'),
+  },
+  {
+    id: 'gym',
+    label: 'Open Pattern Gym',
+    hint: 'Drill spotting the right pattern',
+    keywords: 'gym pattern drill quiz train recognition',
+    icon: (
+      <svg {...iconProps}>
+        <path d="M3.5 9.5v5M7 7v10M17 7v10M20.5 9.5v5M7 12h10" />
+      </svg>
+    ),
+    run: (router) => router.push('/gym'),
   },
   {
     id: 'map',
@@ -353,7 +377,7 @@ export function CommandPalette() {
                           <span className={cn('block truncate text-[13px]', selected ? 'text-ink-2' : 'text-ink-3')}>{entry.lesson.oneLiner}</span>
                         </span>
                         <span className={cn('hidden shrink-0 text-[12px] sm:inline', selected ? 'text-ink-2' : 'text-ink-3')}>
-                          {getGroup(entry.lesson.group)?.title}
+                          {placeOf(entry.lesson.slug)?.path.title}
                         </span>
                         <Chip variant={entry.lesson.status === 'live' ? 'coral' : 'neutral'} className="shrink-0">
                           {entry.lesson.status === 'live' ? 'Live' : 'Draft'}

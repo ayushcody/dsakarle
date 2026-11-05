@@ -57,27 +57,6 @@ function MenuIcon() {
   );
 }
 
-/** A hand-drawn wavy underline for the active nav item. */
-function Sketch() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 60 6"
-      preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[6px] w-[calc(100%-1.5rem)] text-coral"
-      fill="none"
-    >
-      <path
-        d="M1 3.6C8 1 14 5.4 21 3 28 .8 33 5 40 3.2 47 1.4 52 4.6 59 2.6"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
-  );
-}
-
 /** Small progress ring + percentage. Hidden (but space-reserved) until localStorage has been read. */
 export function ProgressRing({ className, onNavigate }: { className?: string; onNavigate?: () => void }) {
   const { progress, mounted } = useProgress();
@@ -89,11 +68,11 @@ export function ProgressRing({ className, onNavigate }: { className?: string; on
   const label = `${done} of ${total} lessons done`;
 
   return (
-    <Tooltip content={label} side="bottom">
+    <Tooltip content={`${label} · View progress`} side="bottom">
       <Link
-        href="/learn"
+        href="/dashboard"
         onClick={onNavigate}
-        aria-label={`${percent}% complete. ${label}`}
+        aria-label={`${percent}% complete. ${label}. View progress`}
         className={cn(
           'inline-flex h-10 items-center gap-2 rounded-card px-2 text-ink-2 hover:bg-coral-wash hover:text-ink',
           focusRing,
@@ -199,7 +178,7 @@ export function SiteHeader() {
     <>
       <header
         data-testid="site-header"
-        className="fixed inset-x-0 top-0 z-50 h-16 border-b border-rule bg-[color-mix(in_srgb,var(--paper)_85%,transparent)] backdrop-blur-md supports-[backdrop-filter]:bg-[color-mix(in_srgb,var(--paper)_80%,transparent)]"
+        className="fixed inset-x-0 top-0 z-50 h-16 border-b border-rule bg-paper-raised"
       >
         <a
           href="#main-content"
@@ -220,13 +199,12 @@ export function SiteHeader() {
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'relative inline-flex min-h-[40px] items-center rounded-cell px-3 pb-0.5 font-sans text-[15px] transition-colors duration-150',
+                    'relative inline-flex h-16 items-center border-b-2 px-3 font-sans text-[15px] font-medium transition-colors duration-150',
                     focusRing,
-                    active ? 'font-semibold text-coral-ink' : 'font-medium text-ink-2 hover:bg-coral-wash hover:text-ink',
+                    active ? 'border-coral-ink text-ink' : 'border-transparent text-ink-2 hover:text-ink',
                   )}
                 >
                   {item.label}
-                  {active ? <Sketch /> : null}
                 </Link>
               );
             })}

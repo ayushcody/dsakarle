@@ -13,6 +13,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/learn',
+        destination: '/paths',
+        permanent: true,
+      },
+      {
         source: '/learn/stacks-queues',
         destination: '/learn/stacks',
         permanent: true,
