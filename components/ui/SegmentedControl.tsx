@@ -80,7 +80,7 @@ export function SegmentedControl<T extends string>({
   return (
     <div
       role="radiogroup"
-      className={cn('inline-flex items-center gap-1 rounded-card border border-rule bg-paper-sunken p-1', className)}
+      className={cn('inline-flex items-center gap-1 rounded-control border border-rule bg-paper-sunken p-1', className)}
       {...aria}
     >
       {options.map((opt, i) => {
@@ -99,7 +99,7 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(opt.value)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              'relative inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-cell px-3.5 font-sans text-[14px] font-medium',
+              'relative inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-[4px] px-3.5 font-sans text-[14px] font-medium',
               'transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50',
               focusRing,
               selected ? 'text-ink' : 'text-ink-2 hover:text-ink',
@@ -110,7 +110,7 @@ export function SegmentedControl<T extends string>({
                 layoutId={`${id}-pill`}
                 transition={spring}
                 aria-hidden="true"
-                className="absolute inset-0 rounded-cell border border-rule bg-paper-raised shadow-1"
+                className="absolute inset-0 rounded-[4px] border border-rule-strong bg-paper-raised shadow-1"
               />
             ) : null}
             {opt.icon ? (

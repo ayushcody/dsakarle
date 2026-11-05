@@ -1,6 +1,6 @@
 # DSA Karle — Design System Contract
 
-**Identity: the warm notebook.** Cream paper, ink, a coral pen, and graph paper only where thinking happens (the Stage). Calm, precise and a little handmade. Every colour means something.
+**Identity: calm and elegant, in the spirit of The Odin Project.** Warm stone neutrals, Inter throughout, one coral accent, flat bordered cards, and graph paper only where thinking happens (the Stage). Every colour means something.
 
 This file is the contract for token names. Agents implement against these names exactly. Change a name here first, and nowhere else.
 
@@ -15,25 +15,25 @@ This file is the contract for token names. Agents implement against these names 
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--paper` | `#FBF5EF` | `#1A1714` | page background |
-| `--paper-raised` | `#FFFDF9` | `#23201C` | cards, header, stage |
-| `--paper-sunken` | `#F4ECE3` | `#141210` | code blocks, inputs, wells |
-| `--ink` | `#1D1B19` | `#EDE6DC` | primary text |
-| `--ink-2` | `#4A4540` | `#B8AFA3` | secondary text |
-| `--ink-3` | `#6F6861` | `#9C9387` | muted text (must stay ≥ 4.5:1 on paper, raised and sunken; on coral or teal washes use `--ink-2`) |
-| `--rule` | `rgba(29,27,25,0.12)` | `rgba(237,230,220,0.14)` | borders, dividers |
-| `--rule-strong` | `rgba(29,27,25,0.24)` | `rgba(237,230,220,0.28)` | focused or hovered borders |
+| `--paper` | `#FAFAF9` | `#121110` | page background |
+| `--paper-raised` | `#FFFFFF` | `#1B1A18` | cards, header, stage |
+| `--paper-sunken` | `#F5F5F4` | `#0D0C0B` | code blocks, inputs, wells |
+| `--ink` | `#1C1917` | `#F5F5F4` | primary text |
+| `--ink-2` | `#44403C` | `#D6D3D1` | secondary text |
+| `--ink-3` | `#6B6560` | `#A8A29E` | muted text (must stay ≥ 4.5:1 on paper, raised and sunken; on coral or teal washes use `--ink-2`) |
+| `--rule` | `rgba(28,25,23,0.10)` | `rgba(245,245,244,0.10)` | borders, dividers |
+| `--rule-strong` | `rgba(28,25,23,0.18)` | `rgba(245,245,244,0.18)` | focused or hovered borders |
 | `--control-border` | `#8A8279` | `#7D7569` | border of text fields and search triggers (≥ 3:1 against every surface, WCAG 1.4.11). Tailwind: `border-control` |
-| `--grid` | `rgba(29,27,25,0.045)` | `rgba(237,230,220,0.05)` | graph-paper lines (Stage only) |
+| `--grid` | `rgba(28,25,23,0.03)` | `rgba(245,245,244,0.035)` | graph-paper lines (Stage only) |
 
 **Brand**
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
 | `--coral` | `#CC5A37` | `#F08A64` | brand accent for strokes, icons, rings and large text only. Not a text colour and not a fill behind small text (3.82:1 with paper) |
-| `--coral-ink` | `#A83A1D` | `#F5A584` | coral text on paper (AA), and the **primary button fill** (paper text on it is 5.9:1 light, 9.0:1 dark) |
+| `--coral-ink` | `#A83A1D` | `#F5A584` | coral text on paper (AA), and the **primary button fill** (paper text on it is >= 6:1 light, 9:1 dark). **The single accent**: links, primary CTA, progress, active nav |
 | `--coral-ink-2` | `#8C2F16` | `#F9BDA2` | primary button hover and active fill |
-| `--coral-wash` | `rgba(204,90,55,0.10)` | `rgba(240,138,100,0.14)` | active nav and selected backgrounds |
+| `--coral-wash` | `rgba(204,90,55,0.08)` | `rgba(240,138,100,0.12)` | active nav and selected backgrounds |
 | `--amber` | `#D99B26` | `#F2C14E` | secondary accent (strokes, fills) |
 | `--amber-ink` | `#855A05` | `#F2C14E` | amber as **text** (chips, callout titles); 5.6:1 on paper. `--role-compare` is for strokes only |
 | `--teal` | `#1E7B6C` | `#4FB7A5` | tertiary accent (strokes, icons) |
@@ -52,7 +52,7 @@ This file is the contract for token names. Agents implement against these names 
 | `--role-compare` | `#B57D12` | `#F2C14E` | being compared | dashed outline |
 | `--role-window` | `#CC5A37` | `#F08A64` | active range stroke | sketched bracket |
 | `--role-window-wash` | `rgba(204,90,55,0.08)` | `rgba(240,138,100,0.14)` | range fill | |
-| `--role-visited` | `rgba(29,27,25,0.35)` | `rgba(237,230,220,0.35)` | hatching stroke for processed items | pencil hatching |
+| `--role-visited` | `rgba(28,25,23,0.35)` | `rgba(245,245,244,0.35)` | hatching stroke for processed items | pencil hatching |
 | `--role-discarded-opacity` | `0.35` | `0.35` | out of play | strike-through |
 | `--role-changed` | `#F6D36B` | `#8A6D1F` | value just changed | 300ms highlighter flash |
 | `--role-found` | `#2F8F4E` | `#5CC77E` | answer, success | ✓ glyph |
@@ -91,8 +91,8 @@ Load all fonts with `next/font/google` in `app/fonts.ts`: latin subset, `display
 
 | Variable | Font | Weights | Use |
 |---|---|---|---|
-| `--font-serif` | Fraunces (variable, `opsz` axis) | 400–700 | headings, display, the click sentence |
-| `--font-sans` | DM Sans | 400, 500, 600, 700 | body and UI |
+| `--font-serif` | Fraunces (variable, `opsz` axis) | 400–700 | `.t-display` only (home hero) |
+| `--font-sans` | Inter (variable) | 100–900 | headings, body and UI |
 | `--font-mono` | JetBrains Mono | 400, 500, 600 | code, values in cells, variables |
 | `--font-hand` | Caveat | 500 | handwritten callouts only, never body text |
 
@@ -103,32 +103,33 @@ Legacy font variables are aliases: `--font-dmsans` maps to `--font-sans` and `--
 | Class | Spec |
 |---|---|
 | `.t-display` | `clamp(40px,6vw,72px)` / 1.05, serif 600, `font-variation-settings: "opsz" 144`, letter-spacing -0.02em |
-| `.t-h1` | `clamp(34px,4vw,46px)` / 1.1, serif 600, opsz 96 |
-| `.t-h2` | 28/36, serif 600 |
-| `.t-h3` | 20/28, serif 600 |
-| `.t-body` | 17/28, sans 400 |
-| `.prose-notebook` | 68ch max width; sets the body size and paragraph spacing |
+| `.t-h1` | `clamp(28px,3.2vw,34px)` / 1.2, Inter 600, letter-spacing -0.015em, `--ink` |
+| `.t-h2` | 24/32, Inter 600, `--ink` |
+| `.t-h3` | 20/30, Inter 600, `--ink` |
+| `.t-body` | 16/28 (17/28 from md), Inter 400, `--ink-2` |
+| `.prose-notebook` | 68ch max width; 16/28 (17 from md), `--ink-2`; h2/h3 Inter 600 `--ink`; paragraph gap 1.1em, list gap 0.5em |
+| `.anchor-heading` | `<h2 id class="anchor-heading"><a href="#id">Title</a></h2>`: link looks like plain heading text; a `#` fades in to its left on hover/focus-visible (>= md). `scroll-margin-top: 96px` |
 | `.t-small` | 14/20 |
 | `.t-caption` | 13/18, sans 500, letter-spacing 0.01em |
-| `.t-eyebrow` | 12/16, sans 600, uppercase, letter-spacing 0.12em, `--ink-3` |
+| `.t-eyebrow` | 12/16, sans 600, uppercase, letter-spacing 0.08em, `--ink-3` |
 
 ## 4. Space, shape, elevation
 - **Spacing:** 4px base. Use Tailwind's default scale: 1=4, 2=8, 3=12, 4=16, 6=24, 8=32, 12=48, 16=64, 24=96. Lesson sections are separated by 64px (`gap-16`) on desktop and 48px on mobile.
-- **Radii:** `--r-cell: 6px`, `--r-card: 10px`, `--r-pill: 999px`. Legacy `--radius` maps to `--r-card` and `--radius-sm` to `--r-cell`.
+- **Radii:** `--r-cell: 6px`, `--r-card: 8px`, `--r-control: 6px` (buttons, inputs, chips), `--r-pill: 999px`. Legacy `--radius` maps to `--r-card` and `--radius-sm` to `--r-cell`.
 - **Shadows** are ink-tinted, never coral:
 
 | Token | Light | Dark |
 |---|---|---|
-| `--shadow-1` | `0 1px 2px rgba(29,27,25,.06), 0 1px 1px rgba(29,27,25,.04)` | `0 1px 2px rgba(0,0,0,.4)` |
-| `--shadow-2` | `0 8px 24px rgba(29,27,25,.08)` | `0 8px 24px rgba(0,0,0,.5)` |
+| `--shadow-1` | `0 1px 2px rgba(0,0,0,.04)` (almost none; cards are flat) | `0 1px 2px rgba(0,0,0,.3)` |
+| `--shadow-2` | `0 4px 12px rgba(0,0,0,.06)` (hover only) | `0 4px 12px rgba(0,0,0,.4)` |
 
   Legacy `--shadow-card` maps to `--shadow-1` and `--shadow-card-hover` to `--shadow-2`.
 - **Graph paper:** the `.graph-paper` utility draws a 24px grid in `--grid` on `--paper-raised`. It is used only on the Stage surface.
 
 ## 5. Tailwind mapping (`tailwind.config.ts`)
 - **Colours:** `paper`, `paper-raised`, `paper-sunken`, `ink`, `ink-2`, `ink-3`, `rule`, `rule-strong`, `coral`, `coral-ink`, `coral-ink-2`, `coral-wash`, `amber`, `amber-ink`, `teal`, `teal-ink`, `found-ink`, `error-ink`, `control` (the `--control-border` token). Also `role-ptr-a`, `role-ptr-b`, `role-focus`, `role-compare`, `role-found`, `role-error`, each as `var(--…)`.
-- **Font families:** `serif`, `sans`, `mono`, `hand`. Keep `dmsans` and `dmmono` as aliases, and add `lora` → serif as a temporary alias until the sweep.
-- **Border radius:** `cell`, `card`, `pill`.
+- **Font families:** `serif`, `sans`, `mono`, `hand`. Keep `dmsans` (now Inter) and `dmmono` as aliases, and add `lora` → serif as a temporary alias until the sweep.
+- **Border radius:** `cell`, `card`, `control`, `pill`.
 - **Shadows:** `1` and `2`.
 
 ## 6. Motion (`lib/motion.ts`)
@@ -161,3 +162,12 @@ Legacy font variables are aliases: `--font-dmsans` maps to `--font-sans` and `--
 - **Short and warm.** Buttons are verbs: "Watch it run", "Try your own", "Check my answer".
 - **No fake data.** No invented stats, testimonials or streaks.
 - **Honest status.** Lessons are labelled **Live** or **Draft**, never "coming soon".
+
+## 9. Refinement (Odin-inspired)
+Direction: `docs/REFINE_BRIEF.md`. Summary of what changed, with token names untouched:
+- **Type.** Inter replaces DM Sans, and headings are now sans (Inter 600). Fraunces survives only as `.t-display`. Headings use `--ink`, body copy `--ink-2` (set on `<body>`). Body is 16/28, 17/28 from `md`. `.anchor-heading` adds `#` permalinks.
+- **Palette.** Warm stone neutrals (near-white paper, white cards), a quieter `--rule`, a much fainter `--grid`, subtler washes. Coral values are unchanged; `--coral-ink` is the one accent. Role colours appear only in diagrams and quiz feedback.
+- **Shape.** Cards 8px, controls 6px (`rounded-control`). Cards are flat with a 1px rule; shadow appears only on hover (`Card interactive`, 1px lift). `.button-primary` no longer lifts.
+- **Components.** Button: 6px radius, medium weight, 40px (`md`) / 44px (`lg`); secondary = raised fill, `--rule-strong` border, `--ink-2` text; ghost hovers to sunken. Chip: 6px radius, 12-13px, neutral by default. Callout: sunken fill, 3px left rule (coral-ink / teal / amber / rule-strong), small-caps label, no serif italic. Disclosure, SegmentedControl, Tooltip, Kbd, Prose: matching radii and weights.
+- **Smoothness.** `scroll-padding-top: 96px` on `html`, `text-rendering: optimizeLegibility`, antialiased font smoothing.
+- **Contrast.** All text pairs are >= 4.5:1 and UI boundaries >= 3:1 on paper, raised and sunken, in both themes (checked with a WCAG script over every text/surface pair, including washes).

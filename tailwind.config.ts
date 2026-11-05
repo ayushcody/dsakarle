@@ -54,6 +54,7 @@ const config: Config = {
       },
       borderRadius: {
         cell: 'var(--r-cell)',
+        control: 'var(--r-control)',
         card: 'var(--r-card)',
         pill: 'var(--r-pill)',
       },

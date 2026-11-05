@@ -42,7 +42,7 @@ export function Disclosure({ title, children, defaultOpen = false, onOpenChange,
         aria-controls={panelId}
         onClick={toggle}
         className={cn(
-          'flex min-h-[44px] w-full items-center justify-between gap-3 rounded-card px-4 py-2 text-left font-sans text-[15px] font-semibold text-ink',
+          'flex min-h-[44px] w-full items-center justify-between gap-3 rounded-card px-4 py-2 text-left font-sans text-[15px] font-medium text-ink',
           'transition-colors duration-150 hover:bg-paper-sunken',
           focusRing,
         )}

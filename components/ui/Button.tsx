@@ -32,22 +32,22 @@ export type ButtonProps = CommonProps &
   };
 
 const base =
-  'relative inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-card font-sans font-semibold ' +
+  'relative inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-control font-sans font-medium ' +
   'transition-colors duration-150 ' +
   'aria-disabled:cursor-not-allowed aria-disabled:opacity-50 disabled:cursor-not-allowed disabled:opacity-50';
 
 const variants: Record<ButtonVariant, string> = {
   primary: 'bg-coral-ink text-paper hover:bg-coral-ink-2 active:bg-coral-ink-2',
   secondary:
-    'border border-rule bg-paper-raised text-ink hover:border-rule-strong hover:bg-paper-sunken',
-  ghost: 'bg-transparent text-ink-2 hover:bg-coral-wash hover:text-ink',
-  link: 'rounded-cell bg-transparent px-1 text-coral-ink underline underline-offset-4 decoration-1 hover:decoration-2',
+    'border border-rule-strong bg-paper-raised text-ink-2 hover:bg-paper-sunken hover:text-ink active:bg-paper-sunken',
+  ghost: 'bg-transparent text-ink-2 hover:bg-paper-sunken hover:text-ink',
+  link: 'rounded-control bg-transparent px-1 text-coral-ink underline underline-offset-4 decoration-1 hover:decoration-2',
 };
 
 const sizes: Record<ButtonSize, string> = {
   sm: 'min-h-[40px] px-3 text-[14px] leading-5',
-  md: 'min-h-[44px] px-4 text-[15px] leading-6',
-  lg: 'min-h-[52px] px-6 text-[17px] leading-7',
+  md: 'min-h-[40px] px-4 text-[14px] leading-6',
+  lg: 'min-h-[44px] px-5 text-[16px] leading-6',
 };
 
 function Spinner() {

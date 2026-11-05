@@ -79,7 +79,7 @@ export function Tooltip({ content, children, side = 'top', delay = 300, classNam
           id={id}
           role="tooltip"
           className={cn(
-            'block w-max max-w-[240px] rounded-cell bg-ink px-2.5 py-1.5 font-sans text-[13px] font-medium leading-[18px] text-paper shadow-2',
+            'block w-max max-w-[240px] rounded-control bg-ink px-2.5 py-1.5 font-sans text-[13px] font-medium leading-[18px] text-paper shadow-2',
             'transition-opacity duration-150',
             open ? 'opacity-100' : 'invisible opacity-0',
             className,

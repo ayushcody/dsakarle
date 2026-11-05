@@ -33,7 +33,7 @@ const tones: Record<ChipVariant, string> = {
 };
 
 const shell =
-  'inline-flex items-center gap-1.5 rounded-pill border font-sans font-medium leading-none whitespace-nowrap';
+  'inline-flex items-center gap-1.5 rounded-control border font-sans font-medium leading-none whitespace-nowrap';
 
 /**
  * Small pill for metadata (static) or for choices and filters (`selectable`,
@@ -51,9 +51,9 @@ export const Chip = forwardRef<HTMLElement, ChipProps>(function Chip(props, ref)
         className={cn(
           shell,
           focusRing,
-          'min-h-[40px] px-4 text-[14px] transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50',
+          'min-h-[40px] px-3.5 text-[13px] transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50',
           selected
-            ? 'border-coral bg-coral-wash font-semibold text-coral-ink'
+            ? 'border-coral-ink bg-coral-wash font-medium text-coral-ink'
             : cn(tones[variant], 'border-rule hover:border-rule-strong'),
           className,
         )}
@@ -76,7 +76,7 @@ export const Chip = forwardRef<HTMLElement, ChipProps>(function Chip(props, ref)
   return (
     <span
       ref={ref as React.Ref<HTMLSpanElement>}
-      className={cn(shell, 'min-h-[24px] px-2.5 py-1 text-[12px]', tones[variant], className)}
+      className={cn(shell, 'min-h-[22px] px-2 py-1 text-[12px]', tones[variant], className)}
       {...rest}
     >
       {icon ? <span aria-hidden="true" className="inline-flex">{icon}</span> : null}
