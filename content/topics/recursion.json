@@ -421,5 +421,30 @@
       "difficulty": "hard",
       "insight": "Place one queen per row. Try each column, skip the ones that are attacked, and unchoose when a row has no safe spot."
     }
+  ],
+  "overview": [
+    "Explain how a base case stops a recursive call from running forever.",
+    "Trace the call stack for factorial as calls go down and return.",
+    "Implement a recursive function that solves a smaller copy of the problem.",
+    "Trace backtracking through subsets, choosing then unchoosing each element.",
+    "Prune a branch as soon as it cannot lead to a valid answer.",
+    "Spot why naive recursive Fibonacci repeats work and runs slowly."
+  ],
+  "resources": [
+    {
+      "title": "Recursion in computer science (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Recursion_(computer_science)",
+      "note": "A concise overview of base cases, recursive cases and common recursion patterns."
+    },
+    {
+      "title": "Backtracking (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Backtracking",
+      "note": "Explains building candidates one step at a time and abandoning those that fail."
+    },
+    {
+      "title": "Call stack (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Call_stack",
+      "note": "Shows how each pending call is stored, and what a stack overflow really means."
+    }
   ]
 }

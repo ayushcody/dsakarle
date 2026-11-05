@@ -484,5 +484,29 @@
       "difficulty": "hard",
       "insight": "Words are nodes and one-letter changes are edges. Fewest changes is shortest path; generate neighbours by swapping each letter."
     }
+  ],
+  "overview": [
+    "Explain why BFS finds the fewest steps when every step costs the same.",
+    "Trace BFS on a grid, recording the distance to each cell as it spreads.",
+    "Trace DFS on a graph, backtracking when a branch has nothing new.",
+    "Implement one visit loop that switches between a queue and a stack.",
+    "Choose BFS for shortest hops, and reach for Dijkstra when steps have costs."
+  ],
+  "resources": [
+    {
+      "title": "Breadth-first search (cp-algorithms)",
+      "url": "https://cp-algorithms.com/graph/breadth-first-search.html",
+      "note": "Shortest paths in unweighted graphs, with code and a clear explanation of the queue."
+    },
+    {
+      "title": "Depth-first search (cp-algorithms)",
+      "url": "https://cp-algorithms.com/graph/depth-first-search.html",
+      "note": "Recursive and iterative DFS with code, and why each node is visited only once."
+    },
+    {
+      "title": "BFS visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/BFS.html",
+      "note": "Step-through animation of breadth-first search on a small graph."
+    }
   ]
 }

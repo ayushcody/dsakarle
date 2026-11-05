@@ -402,5 +402,29 @@
       "difficulty": "hard",
       "insight": "Work on prefix sums, with negatives allowed. A deque of indexes with increasing prefix sums lets you pop the front when it is long enough and the back when it can't help."
     }
+  ],
+  "overview": [
+    "Explain why a queue serves items in first-in, first-out order.",
+    "Trace enqueue and dequeue on a circular buffer with wrap-around.",
+    "Explain why moving only front and back keeps each step O(1).",
+    "Use a monotonic deque to track a sliding window's maximum.",
+    "Choose a stack instead when the newest item must come out first."
+  ],
+  "resources": [
+    {
+      "title": "Queue (abstract data type)",
+      "url": "https://en.wikipedia.org/wiki/Queue_(abstract_data_type)",
+      "note": "Defines enqueue, dequeue and the first-in, first-out rule, plus common variants."
+    },
+    {
+      "title": "Circular buffer",
+      "url": "https://en.wikipedia.org/wiki/Circular_buffer",
+      "note": "Explains the wrap-around indexing that lets a fixed buffer act as an endless queue."
+    },
+    {
+      "title": "Queue array visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/QueueArray.html",
+      "note": "Animated enqueue and dequeue on an array queue, showing front and back move."
+    }
   ]
 }

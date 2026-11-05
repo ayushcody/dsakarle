@@ -403,5 +403,29 @@
       "difficulty": "hard",
       "insight": "Use the array as its own lookup: a number v between 1 and n belongs at index v - 1, so swap each one home and look for the first slot that is wrong."
     }
+  ],
+  "overview": [
+    "Explain why an array reaches any index in constant time.",
+    "Trace how inserting in the middle shifts later elements right.",
+    "Trace how deleting from the middle shifts later elements left.",
+    "Choose an array when you read by position and the length barely changes.",
+    "Spot when a prefix sum or hash map beats scanning the array."
+  ],
+  "resources": [
+    {
+      "title": "Array data structure",
+      "url": "https://en.wikipedia.org/wiki/Array_data_structure",
+      "note": "Covers contiguous memory, index arithmetic, and why inserts and deletes cost O(n)."
+    },
+    {
+      "title": "Data Structures (Python tutorial)",
+      "url": "https://docs.python.org/3/tutorial/datastructures.html",
+      "note": "A short tour of Python lists, the array-like type you will use most day to day."
+    },
+    {
+      "title": "std::array",
+      "url": "https://en.cppreference.com/cpp/container/array",
+      "note": "The fixed-size C++ array, showing contiguous, fixed-capacity storage in a precise reference."
+    }
   ]
 }

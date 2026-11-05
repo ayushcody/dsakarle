@@ -519,5 +519,35 @@
       "difficulty": "hard",
       "insight": "Sort projects by the capital they need. Each round, move every project you can now afford into a max-heap of profits and take the best."
     }
+  ],
+  "overview": [
+    "Explain why a heap always keeps its smallest item at the root.",
+    "Find a node's children in a min-heap stored as a flat array.",
+    "Trace push by sifting a new value up until its parent is smaller.",
+    "Trace pop by moving the last item to the root and sifting it down.",
+    "Use a size-k min-heap to track the k-th largest value in a stream.",
+    "Explain why heapifying n unordered numbers costs O(n), not O(n log n)."
+  ],
+  "resources": [
+    {
+      "title": "Heap (data structure) (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Heap_(data_structure)",
+      "note": "Explains the heap property, array indexing and the costs of each heap operation."
+    },
+    {
+      "title": "heapq module (Python docs)",
+      "url": "https://docs.python.org/3/library/heapq.html",
+      "note": "The standard library heap functions, including heapify and nlargest for top-k problems."
+    },
+    {
+      "title": "Heap visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/Heap.html",
+      "note": "Push and pop values into a heap and watch the sift-up and sift-down swaps happen."
+    },
+    {
+      "title": "Heapsort (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Heapsort",
+      "note": "Shows how the heap property turns into an in-place O(n log n) sorting algorithm."
+    }
   ]
 }

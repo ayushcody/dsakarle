@@ -427,5 +427,24 @@
       "difficulty": "medium",
       "insight": "Two runners that don't need different speeds, only a gap. If one starts n nodes ahead, where is the other when the leader runs out of list?"
     }
+  ],
+  "overview": [
+    "Explain why a fast and slow pointer can only meet on a loop.",
+    "Trace Floyd's cycle check on a linked list that loops back.",
+    "Find the middle node of a list in one pass, without its length.",
+    "Locate where a cycle begins by resetting one pointer to the head.",
+    "Spot repeated sequences, like Happy Number, that hide a linked list."
+  ],
+  "resources": [
+    {
+      "title": "Cycle detection",
+      "url": "https://en.wikipedia.org/wiki/Cycle_detection",
+      "note": "Tortoise-and-hare explained, with the meeting point and cycle-start reasoning."
+    },
+    {
+      "title": "Floyd's cycle-finding algorithm",
+      "url": "https://en.wikipedia.org/wiki/Floyd%27s_cycle-finding_algorithm",
+      "note": "The original two-pointer method, with its constant-memory advantage over hash sets."
+    }
   ]
 }

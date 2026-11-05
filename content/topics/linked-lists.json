@@ -416,5 +416,29 @@
       "difficulty": "hard",
       "insight": "Reverse one group of k with the same prev/curr/nxt loop, then reconnect it to the groups before and after."
     }
+  ],
+  "overview": [
+    "Explain why each node stores a value and a pointer to the next node.",
+    "Trace an insert in the middle by rewiring two next pointers.",
+    "Trace a delete by bypassing the node that should go.",
+    "Reverse a list in place by turning each arrow around.",
+    "Choose a linked list when you already hold the spot to change."
+  ],
+  "resources": [
+    {
+      "title": "Linked list",
+      "url": "https://en.wikipedia.org/wiki/Linked_list",
+      "note": "Surveys singly, doubly and circular lists, with their trade-offs against arrays."
+    },
+    {
+      "title": "Doubly linked list",
+      "url": "https://en.wikipedia.org/wiki/Doubly_linked_list",
+      "note": "Shows how back-links make removal easier, at the cost of extra pointers."
+    },
+    {
+      "title": "VisuAlgo: List",
+      "url": "https://visualgo.net/en/list",
+      "note": "Animated list operations you can pause, so each pointer change is easy to follow."
+    }
   ]
 }

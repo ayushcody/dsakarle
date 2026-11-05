@@ -419,5 +419,29 @@
       "difficulty": "hard",
       "insight": "Count what the window still needs. Grow it until nothing is missing, then shrink from the left for as long as it stays valid."
     }
+  ],
+  "overview": [
+    "Explain why a string behaves like an array of characters.",
+    "Trace a two-pointer palindrome check that skips punctuation and case.",
+    "Compare two words by counting letters to spot anagrams.",
+    "Build a changed string once, instead of editing it character by character.",
+    "Choose a sliding window instead when the question asks for a longest stretch."
+  ],
+  "resources": [
+    {
+      "title": "String (computer science)",
+      "url": "https://en.wikipedia.org/wiki/String_(computer_science)",
+      "note": "How strings are stored as character sequences, and why many languages make them immutable."
+    },
+    {
+      "title": "Anagram",
+      "url": "https://en.wikipedia.org/wiki/Anagram",
+      "note": "Defines anagrams, the basis for comparing letter counts between two words."
+    },
+    {
+      "title": "java.lang.String",
+      "url": "https://docs.oracle.com/javase/8/docs/api/java/lang/String.html",
+      "note": "The Java String API, with immutability notes and methods like toCharArray."
+    }
   ]
 }

@@ -546,5 +546,34 @@
       "difficulty": "hard",
       "insight": "Two topological sorts in one: order the groups, then order the items inside each group."
     }
+  ],
+  "overview": [
+    "Explain how a graph is stored as one neighbour list per node.",
+    "Trace the indegree queue that orders the courses one free course at a time.",
+    "Spot a cycle when the ordering finishes with courses still left over.",
+    "Choose a graph, not a tree, when an item can have several parents.",
+    "Implement adjacency lists and the topological sort template from scratch."
+  ],
+  "resources": [
+    {
+      "title": "Graph theory (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Graph_theory",
+      "note": "Vertices, edges, directed and undirected graphs, and the vocabulary used throughout this lesson."
+    },
+    {
+      "title": "Topological sorting (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Topological_sorting",
+      "note": "Defines topological orderings and explains why they exist for directed acyclic graphs."
+    },
+    {
+      "title": "Topological sort (cp-algorithms)",
+      "url": "https://cp-algorithms.com/graph/topological-sort.html",
+      "note": "Practical write-up of topological sorting, with code and notes on detecting cycles."
+    },
+    {
+      "title": "Graph data structures (VisuAlgo)",
+      "url": "https://visualgo.net/en/graphds",
+      "note": "Interactive animations of graph representations and traversals you can step through yourself."
+    }
   ]
 }

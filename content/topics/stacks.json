@@ -403,5 +403,29 @@
       "difficulty": "hard",
       "insight": "Keep bars on a stack in rising height. When a shorter bar arrives, each taller bar it pops has just found its right edge."
     }
+  ],
+  "overview": [
+    "Explain why a stack only lets you touch the newest item.",
+    "Trace push and pop as a last-in, first-out sequence.",
+    "Match brackets by pushing openers and popping on each closer.",
+    "Use a monotonic stack to find each item's next greater element.",
+    "Choose a queue instead when items must leave in arrival order."
+  ],
+  "resources": [
+    {
+      "title": "Stack (abstract data type)",
+      "url": "https://en.wikipedia.org/wiki/Stack_(abstract_data_type)",
+      "note": "Defines push, pop and peek, and the last-in, first-out rule behind them."
+    },
+    {
+      "title": "Stack array visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/StackArray.html",
+      "note": "Animated push and pop on an array-backed stack, so you can watch the top move."
+    },
+    {
+      "title": "Reverse Polish notation",
+      "url": "https://en.wikipedia.org/wiki/Reverse_Polish_notation",
+      "note": "Shows why a stack evaluates postfix expressions cleanly, one operator at a time."
+    }
   ]
 }

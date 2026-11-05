@@ -392,5 +392,24 @@
       "difficulty": "hard",
       "insight": "A running sum won't give you a maximum. Keep only the indices that could still become the maximum, in order, and drop the rest."
     }
+  ],
+  "overview": [
+    "Explain why sliding a window beats re-adding overlapping stretches.",
+    "Trace a fixed-size window across an array and update its sum.",
+    "Grow and shrink a variable window until its condition holds again.",
+    "Spot \"contiguous\", \"subarray\" or \"substring\" wording in a problem.",
+    "Compare the fixed-size and variable-size window templates."
+  ],
+  "resources": [
+    {
+      "title": "Sliding Window (USACO Guide)",
+      "url": "https://usaco.guide/gold/sliding-window",
+      "note": "Fixed and variable windows, plus the monotonic deque for window maximums."
+    },
+    {
+      "title": "collections: deque",
+      "url": "https://docs.python.org/3/library/collections.html",
+      "note": "Reference for the double-ended queue used in monotonic-window problems like Sliding Window Maximum."
+    }
   ]
 }

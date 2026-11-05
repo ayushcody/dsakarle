@@ -404,5 +404,24 @@
       "difficulty": "hard",
       "insight": "The water over a bar is limited by the shorter of the tallest bars on its two sides, so always move the pointer on the lower side."
     }
+  ],
+  "overview": [
+    "Explain why sorted order lets you safely discard one end.",
+    "Trace converging pointers through Two Sum II, one move at a time.",
+    "Spot sorted input or a pair that must hit a target sum.",
+    "Use in-place pointer moves to check palindromes with O(1) extra space.",
+    "Compare converging pointers with same-direction pointers."
+  ],
+  "resources": [
+    {
+      "title": "Two Pointers (USACO Guide)",
+      "url": "https://usaco.guide/silver/two-pointers",
+      "note": "Worked problems and a clear explanation of when moving one pointer is always safe."
+    },
+    {
+      "title": "Merge algorithm",
+      "url": "https://en.wikipedia.org/wiki/Merge_algorithm",
+      "note": "Merging two sorted lists with a pointer in each is the pattern this lesson builds on."
+    }
   ]
 }

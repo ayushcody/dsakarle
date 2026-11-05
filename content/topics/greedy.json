@@ -404,5 +404,24 @@
       "difficulty": "hard",
       "insight": "Satisfy the left-neighbour rule in one pass and the right-neighbour rule in another, then keep the larger requirement for each child."
     }
+  ],
+  "overview": [
+    "Explain why finishing earliest leaves the most room for later picks.",
+    "Trace the earliest-end rule through a list of meetings, keeping or dropping each.",
+    "Trace the farthest-reach rule through the jump game, one index at a time.",
+    "Spot when a locally best pick is unsafe and dynamic programming is needed.",
+    "Implement the sort-then-scan template for interval scheduling in O(n log n)."
+  ],
+  "resources": [
+    {
+      "title": "Greedy algorithm (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Greedy_algorithm",
+      "note": "Defines greedy algorithms, when they are optimal, and where they fail."
+    },
+    {
+      "title": "Interval scheduling (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Interval_scheduling",
+      "note": "Covers the earliest-finish-time rule for picking the most non-overlapping intervals."
+    }
   ]
 }

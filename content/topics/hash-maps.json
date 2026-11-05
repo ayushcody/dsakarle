@@ -410,5 +410,29 @@
       "difficulty": "medium",
       "insight": "A map finds an entry in O(1). You also need to move entries to \"most recent\" in O(1), so ask what structure reorders cheaply."
     }
+  ],
+  "overview": [
+    "Explain why a hash function turns lookups into near one-step jumps.",
+    "Trace how Two Sum stores each number and checks for its partner.",
+    "Spot problems asking \"have I seen this before?\" or needing counts.",
+    "Compare a nested-loop search with a single-pass map lookup.",
+    "Avoid inserting by accident when you only mean to check a key."
+  ],
+  "resources": [
+    {
+      "title": "Hash table",
+      "url": "https://en.wikipedia.org/wiki/Hash_table",
+      "note": "Buckets, collisions and load factor explained, with the average-case cost you'll rely on."
+    },
+    {
+      "title": "Mapping types: dict",
+      "url": "https://docs.python.org/3/builtins/stdtypes.html",
+      "note": "Official reference for dict and set operations, including the membership and get checks used here."
+    },
+    {
+      "title": "Open hashing visualization",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/OpenHash.html",
+      "note": "Step through inserts and lookups and watch collisions grow into chains."
+    }
   ]
 }

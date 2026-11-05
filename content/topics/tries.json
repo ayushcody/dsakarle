@@ -485,5 +485,29 @@
       "difficulty": "hard",
       "insight": "The query is a suffix of what has arrived so far. What changes if you store the words backward and walk the stream backward?"
     }
+  ],
+  "overview": [
+    "Explain why a trie finds prefix matches in time proportional to the prefix length.",
+    "Trace how inserting words creates shared paths and end-of-word markers.",
+    "Implement insert and search on a trie, using one child slot per letter.",
+    "Spot when a hash set beats a trie for exact-word lookups.",
+    "Compare the memory cost of a trie with the raw text it stores."
+  ],
+  "resources": [
+    {
+      "title": "Trie (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Trie",
+      "note": "Overview of the trie structure, its common operations, and typical uses such as autocomplete."
+    },
+    {
+      "title": "Trie visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/Trie.html",
+      "note": "Step through inserts and searches to watch shared prefix paths form."
+    },
+    {
+      "title": "Aho-Corasick (cp-algorithms)",
+      "url": "https://cp-algorithms.com/string/aho_corasick.html",
+      "note": "A natural next step: matching many patterns at once using a trie with failure links."
+    }
   ]
 }

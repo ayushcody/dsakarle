@@ -445,5 +445,35 @@
       "difficulty": "hard",
       "insight": "The merge step already compares the left half with the right half. Sort indices instead of values, and count the right-half numbers that jump ahead of each left-half number."
     }
+  ],
+  "overview": [
+    "Explain why insertion sort slows to about n squared moves on large inputs.",
+    "Trace merge sort as it halves the range, then merges sorted piles.",
+    "Trace quick sort's partition, placing the pivot in its final slot.",
+    "Compare insertion, merge and quick sort costs on a million items.",
+    "Explain why a stable sort keeps equal items in their original order.",
+    "Choose insertion sort for small or nearly sorted inputs."
+  ],
+  "resources": [
+    {
+      "title": "Comparison sort visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/ComparisonSort.html",
+      "note": "Animates several comparison sorts on the same data, so you can compare how each one works."
+    },
+    {
+      "title": "Quicksort (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Quicksort",
+      "note": "Explains partitioning, pivot choice and why worst-case behaviour differs from the average."
+    },
+    {
+      "title": "Sorting HOWTO (Python docs)",
+      "url": "https://docs.python.org/3/howto/sorting.html",
+      "note": "Shows stability in practice and how to sort by keys, with multi-level sorts."
+    },
+    {
+      "title": "Merge sort (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Merge_sort",
+      "note": "Describes the divide-and-merge process and why it needs extra space for its merges."
+    }
   ]
 }

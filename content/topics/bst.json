@@ -437,5 +437,35 @@
       "difficulty": "medium",
       "insight": "Read the values out in order, then rebuild the tree from the middle of that sorted list, as when converting a sorted array."
     }
+  ],
+  "overview": [
+    "Explain the BST invariant: left values are smaller, right values larger.",
+    "Trace a search that goes left or right at each node.",
+    "Trace insertion of a new value down to its empty leaf spot.",
+    "Delete a node with zero, one or two children, using its in-order successor.",
+    "Explain why an in-order walk of a BST gives values in sorted order.",
+    "Spot when inserting sorted values leaves a BST lopsided and slow."
+  ],
+  "resources": [
+    {
+      "title": "Binary search tree (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Binary_search_tree",
+      "note": "Covers the ordering rule, the three operations and how balance affects their cost."
+    },
+    {
+      "title": "Binary search tree visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/BST.html",
+      "note": "Insert and delete values yourself and watch the tree restructure at each step."
+    },
+    {
+      "title": "VisuAlgo BST (visualgo.net)",
+      "url": "https://visualgo.net/en/bst",
+      "note": "Animated BST searches, insertions and deletions with step controls you can pause and replay."
+    },
+    {
+      "title": "MIT OCW Introduction to Algorithms (6.006)",
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/",
+      "note": "Free lecture notes and videos that cover binary search trees and how they stay balanced."
+    }
   ]
 }

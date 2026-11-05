@@ -388,5 +388,29 @@
       "difficulty": "hard",
       "insight": "It is the swap-with-last and pop_back trick from the example, but a value can now appear several times, so each value maps to a set of indices instead of one."
     }
+  ],
+  "overview": [
+    "Explain why most pushes cost one write, not a copy.",
+    "Trace a resize: the capacity doubles and every item moves across.",
+    "Explain why doubling makes pushes amortised O(1) overall.",
+    "Use a vector as a stack, pushing and popping at the back.",
+    "Recognise when a reserve call or fixed array avoids growing entirely."
+  ],
+  "resources": [
+    {
+      "title": "Dynamic array",
+      "url": "https://en.wikipedia.org/wiki/Dynamic_array",
+      "note": "Explains capacity, resizing by doubling, and the trade-off against wasted space."
+    },
+    {
+      "title": "Amortized analysis",
+      "url": "https://en.wikipedia.org/wiki/Amortized_analysis",
+      "note": "The averaging argument that explains why occasional expensive pushes still cost O(1) on average."
+    },
+    {
+      "title": "std::vector",
+      "url": "https://en.cppreference.com/cpp/container/vector",
+      "note": "The C++ vector reference, covering capacity, reserve and when reallocation invalidates references."
+    }
   ]
 }

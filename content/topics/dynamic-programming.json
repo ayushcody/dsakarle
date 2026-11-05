@@ -472,5 +472,29 @@
       "difficulty": "hard",
       "insight": "Think about the last balloon to burst in a range, not the first: then the two sides are independent subproblems."
     }
+  ],
+  "overview": [
+    "Explain why a subproblem answer can be reused instead of recomputed.",
+    "Trace the stair-climbing table from 1 to 10 and read off 89.",
+    "Trace the grid-paths table, filling each cell from the cell above and left.",
+    "Choose the state to store, such as position or remaining amount.",
+    "Compare DP with greedy, which commits to one local choice."
+  ],
+  "resources": [
+    {
+      "title": "Dynamic programming (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Dynamic_programming",
+      "note": "Overlapping subproblems and optimal substructure, with classic examples."
+    },
+    {
+      "title": "Longest common subsequence (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Longest_common_subsequence",
+      "note": "A classic two-dimensional table problem and a good next step after grid paths."
+    },
+    {
+      "title": "Knapsack problem (cp-algorithms)",
+      "url": "https://cp-algorithms.com/dynamic_programming/knapsack.html",
+      "note": "Table-based DP for choosing items under a limit, close in spirit to coin change."
+    }
   ]
 }

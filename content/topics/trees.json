@@ -451,5 +451,30 @@
       "difficulty": "hard",
       "insight": "Like the diameter, but with values: return the best one-sided path to the parent, and record the best bent path through a node. Ignore a side that sums below 0."
     }
+  ],
+  "overview": [
+    "Explain why a tree function usually starts with a null-node base case.",
+    "Trace pre-order, in-order and post-order traversals of a binary tree.",
+    "Use a queue to walk a tree level by level.",
+    "Compute maximum depth by combining the answers from both subtrees.",
+    "Spot a chain-shaped tree, where every node has only one child.",
+    "Invert a binary tree by swapping children at every node."
+  ],
+  "resources": [
+    {
+      "title": "Tree traversal (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Tree_traversal",
+      "note": "Compares depth-first and breadth-first orders with clear diagrams for each traversal."
+    },
+    {
+      "title": "Binary tree (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Binary_tree",
+      "note": "Defines binary tree shapes such as full and complete trees, with node-count and height facts."
+    },
+    {
+      "title": "Binary search tree visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/BST.html",
+      "note": "Insert, find and delete values in a search tree and watch the shape update at each step."
+    }
   ]
 }

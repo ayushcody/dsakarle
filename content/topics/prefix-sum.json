@@ -420,5 +420,29 @@
       "difficulty": "hard",
       "insight": "Prefix sums give every window of length k in O(1). Then, for each middle window, you need the best window to its left and the best to its right."
     }
+  ],
+  "overview": [
+    "Explain why subtracting two running totals gives any stretch's sum.",
+    "Build a prefix array with a leading zero for inclusive ranges.",
+    "Trace sum(l..r) as prefix[r + 1] minus prefix[l] on an example.",
+    "Spot repeated range-sum questions over an array that never changes.",
+    "Choose prefix sums only for operations you can undo, like sums and counts."
+  ],
+  "resources": [
+    {
+      "title": "Prefix Sums (USACO Guide)",
+      "url": "https://usaco.guide/silver/prefix-sums",
+      "note": "Step-by-step prefix sums, 2D sums and difference arrays with practice problems."
+    },
+    {
+      "title": "Prefix sum",
+      "url": "https://en.wikipedia.org/wiki/Prefix_sum",
+      "note": "Definition of prefix sums and how the same idea generalises to other operations."
+    },
+    {
+      "title": "Summed-area table",
+      "url": "https://en.wikipedia.org/wiki/Summed-area_table",
+      "note": "The two-dimensional version of prefix sums, the natural next step after Range Sum Query 2D."
+    }
   ]
 }

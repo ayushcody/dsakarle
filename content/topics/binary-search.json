@@ -443,5 +443,29 @@
       "difficulty": "hard",
       "insight": "Don't merge. Binary search how many elements the shorter array gives to the left half, until both left-side maxima are at most both right-side minima."
     }
+  ],
+  "overview": [
+    "Explain why halving the range takes only about log₂ n steps.",
+    "Trace lo, hi and mid through a sorted array until you find the target.",
+    "Spot \"minimum value that works\" questions that can be binary searched.",
+    "Choose between closed [lo, hi] and half-open [lo, hi) boundary loops.",
+    "Avoid the midpoint overflow bug by writing lo + (hi - lo) / 2."
+  ],
+  "resources": [
+    {
+      "title": "Binary search algorithm",
+      "url": "https://en.wikipedia.org/wiki/Binary_search_algorithm",
+      "note": "The search loop, its common variants, and why it costs logarithmic time."
+    },
+    {
+      "title": "Binary search (cp-algorithms)",
+      "url": "https://cp-algorithms.com/num_methods/binary_search.html",
+      "note": "Covers searching on the answer and boundary variants, which the Koko and capacity problems need."
+    },
+    {
+      "title": "bisect: array bisection",
+      "url": "https://docs.python.org/3/library/bisect.html",
+      "note": "Python's built-in bisect_left finds the first position at or above a target."
+    }
   ]
 }

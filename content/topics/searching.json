@@ -469,5 +469,35 @@
       "difficulty": "hard",
       "insight": "Compare nums[mid] with nums[hi] as before, but add the tie case: when they are equal you can't tell a side, so safely drop just the last cell."
     }
+  ],
+  "overview": [
+    "Explain why the storage method, not the question, decides the search cost.",
+    "Trace binary search on a sorted array, halving the range each step.",
+    "Find a target in a rotated sorted array by checking which half is sorted.",
+    "Find the minimum of a rotated array by comparing mid with the right edge.",
+    "Choose scan, binary search or hashing from how the data is stored.",
+    "Spot when a hash lookup slows to O(n) because keys collide."
+  ],
+  "resources": [
+    {
+      "title": "Binary search algorithm (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Binary_search_algorithm",
+      "note": "Covers the halving idea, edge cases and the usual off-by-one traps in clear detail."
+    },
+    {
+      "title": "Binary search (cp-algorithms)",
+      "url": "https://cp-algorithms.com/num_methods/binary_search.html",
+      "note": "A practical guide to writing correct binary search loops and searching on answers."
+    },
+    {
+      "title": "bisect module (Python docs)",
+      "url": "https://docs.python.org/3/library/bisect.html",
+      "note": "The standard library's sorted-search helpers, with the exact semantics of insert positions."
+    },
+    {
+      "title": "Linear and binary search visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/Search.html",
+      "note": "Step through linear and binary search on a sample array and watch the range shrink."
+    }
   ]
 }
