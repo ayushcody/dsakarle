@@ -34,14 +34,14 @@ export default function Footer() {
   ];
 
   const linkClass =
-    'inline-flex min-h-[32px] items-center rounded-cell font-sans text-[15px] text-ink-2 hover:text-coral-ink hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]';
+    'inline-flex min-h-10 items-center rounded-cell font-sans text-[15px] text-ink-2 hover:text-coral-ink hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]';
 
   return (
     <footer data-testid="site-footer" className="mt-auto border-t border-rule bg-paper-sunken">
       <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 md:py-16 xl:px-12">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.5fr)_repeat(4,minmax(0,1fr))]">
           <div className="sm:col-span-2 lg:col-span-1">
-            <Logo href="/" size="md" className="-ml-1 px-1 py-1" />
+            <Logo href="/" size="md" className="-ml-1 min-h-11 px-1" />
             <p className="mt-3 font-sans text-[16px] font-semibold leading-6 text-ink">
               <span className="text-coral-ink">Karle</span> means &ldquo;do it.&rdquo; Don&rsquo;t just read it.
             </p>
@@ -53,7 +53,7 @@ export default function Footer() {
           {columns.map((column) => (
             <nav key={column.title} aria-label={column.title}>
               <h2 className="t-eyebrow mb-3">{column.title}</h2>
-              <ul className="flex flex-col gap-1">
+              <ul className="flex flex-col">
                 {column.links.map((link) => (
                   <li key={link.href}>
                     {link.external ? (

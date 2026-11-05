@@ -36,7 +36,7 @@ export default function PathPage({ params }: PageProps) {
       <nav aria-label="Breadcrumb" className="text-[14px] text-ink-3">
         <ol className="flex flex-wrap items-center gap-2">
           <li>
-            <Link href="/paths" className="rounded-cell hover:text-coral-ink hover:underline underline-offset-4">
+            <Link href="/paths" className="-my-3 inline-flex min-h-10 min-w-10 items-center rounded-cell hover:text-coral-ink hover:underline underline-offset-4">
               Paths
             </Link>
           </li>

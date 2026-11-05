@@ -117,11 +117,14 @@ const OWNS_ARROWS = '[role="radiogroup"], [role="tablist"], [role="slider"], [ro
 
 /**
  * Keyboard control for a stage element: ArrowRight/Left = next/prev,
- * Space = play/pause, Home/End = first/last. Active when focus is on or inside
+ * Space = play/pause, Home/End = first/last, S = skip an open question. Active when focus is on or inside
  * `ref`. Ignores typing fields, modified keys, and widgets that own the key.
  */
+export const PROMPT_NUDGE_EVENT = 'stage:prompt-nudge'
+
 export function useStageKeyboard(ref: RefObject<HTMLElement>): void {
   const api = useStageApi()
+  const store = useStageStore()
   useEffect(() => {
     const el = ref.current
     if (!el) return
@@ -133,8 +136,24 @@ export function useStageKeyboard(ref: RefObject<HTMLElement>): void {
         if (e.key === ' ' && t.closest(INTERACTIVE)) return
         if (e.key !== ' ' && t.closest(OWNS_ARROWS)) return
       }
+      const prompt = store.getState().prompt
+      const asking = prompt !== null && (prompt.status === 'asking' || prompt.status === 'hint')
       switch (e.key) {
-        case 'ArrowRight': api.next(); break
+        case 'ArrowRight':
+          if (asking) {
+            // A question is open: guide the learner to it instead of silently doing nothing.
+            const target =
+              el.querySelector<HTMLElement>('[aria-label="Choose one"] button:not([disabled])') ??
+              el.querySelector<HTMLElement>('[role="group"][tabindex="-1"]')
+            target?.focus({ preventScroll: true })
+            el.dispatchEvent(new CustomEvent(PROMPT_NUDGE_EVENT))
+          } else api.next()
+          break
+        case 's': case 'S':
+          if (!asking) return
+          api.skipPrompt()
+          el.focus({ preventScroll: true })
+          break
         case 'ArrowLeft': api.prev(); break
         case ' ': case 'Spacebar': api.toggle(); break
         case 'Home': api.first(); break
@@ -145,5 +164,5 @@ export function useStageKeyboard(ref: RefObject<HTMLElement>): void {
     }
     el.addEventListener('keydown', onKeyDown)
     return () => el.removeEventListener('keydown', onKeyDown)
-  }, [ref, api])
+  }, [ref, api, store])
 }

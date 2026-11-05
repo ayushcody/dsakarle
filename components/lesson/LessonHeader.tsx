@@ -11,7 +11,7 @@ const DIFFICULTY: Record<TopicDifficulty, string> = {
   advanced: 'Advanced',
 }
 
-const crumb = `rounded-cell hover:text-ink hover:underline hover:underline-offset-4 ${focusRing}`
+const crumb = `-my-3 inline-flex min-h-10 min-w-10 items-center rounded-cell hover:text-ink hover:underline hover:underline-offset-4 ${focusRing}`
 
 /** Breadcrumb, title, one meta line and the lead sentence. */
 export function LessonHeader({ meta }: { meta: CurriculumLesson }) {

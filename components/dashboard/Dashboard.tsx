@@ -126,7 +126,7 @@ export function Dashboard() {
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/paths/${path.id}`}
-                      className={cn('rounded-cell text-[16px] font-semibold text-ink hover:text-coral-ink hover:underline underline-offset-4', focusRing)}
+                      className={cn('-my-2.5 inline-flex min-h-10 items-center rounded-cell text-[16px] font-semibold text-ink hover:text-coral-ink hover:underline underline-offset-4', focusRing)}
                     >
                       {path.title}
                     </Link>

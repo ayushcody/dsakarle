@@ -208,7 +208,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
                             data-lesson-row
                             aria-current={isActive ? 'page' : undefined}
                             className={cn(
-                              'flex min-h-[40px] items-center gap-2.5 border-l-2 py-1.5 pl-3 pr-2 font-sans text-[14px] leading-5 transition-colors duration-150 md:min-h-[36px]',
+                              'flex min-h-[40px] items-center gap-2.5 border-l-2 py-1.5 pl-3 pr-2 font-sans text-[14px] leading-5 transition-colors duration-150 md:min-h-10',
                               focusRing,
                               isActive
                                 ? 'border-coral-ink font-semibold text-ink'
@@ -236,7 +236,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
                     <Link
                       href={`/paths/${other.id}`}
                       onClick={closeMobileNav}
-                      className={cn('flex min-h-[36px] items-center rounded-cell py-1 font-sans text-[13px] text-ink-3 hover:text-ink', focusRing)}
+                      className={cn('flex min-h-10 items-center rounded-cell py-1 font-sans text-[13px] text-ink-3 hover:text-ink', focusRing)}
                     >
                       {other.title}
                     </Link>

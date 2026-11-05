@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import type { RefObject } from 'react'
 
 import { Button, Chip, Kbd, cn, focusRing } from '@/components/ui'
@@ -9,7 +9,7 @@ import type { PromptStatus } from '@/lib/engine/store'
 import type { PredictCandidate } from '@/lib/engine/types'
 import { fade, spring } from '@/lib/motion'
 
-import { useStage, useStageApi } from './StageProvider'
+import { PROMPT_NUDGE_EVENT, useStage, useStageApi } from './StageProvider'
 
 /** An ink stamp that thumps down: ring, then the tick draws itself. */
 function Stamp({ tone }: { tone: 'found' | 'note' }) {
@@ -52,6 +52,8 @@ function Stamp({ tone }: { tone: 'found' | 'note' }) {
 export interface PredictCardProps {
   predict: PredictCandidate
   status: PromptStatus
+  /** Show the quiet "pick an answer or skip" hint (after ArrowRight while asking). */
+  nudge?: boolean
   /** The learner's last (wrong) answer, shown struck out on the chip. */
   wrong?: string | number
   onAnswer?: (choice: string) => void
@@ -67,6 +69,7 @@ export interface PredictCardProps {
 export function PredictCard({
   predict,
   status,
+  nudge,
   wrong,
   onAnswer,
   onSkip,
@@ -143,6 +146,11 @@ export function PredictCard({
       ) : null}
 
       <div aria-live="polite" role="status">
+        {isOpen && nudge ? (
+          <p className="text-[14px] leading-6 text-ink-3">
+            Pick an answer, or press <Kbd>S</Kbd> to skip.
+          </p>
+        ) : null}
         {status === 'hint' ? (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade} className="text-[15px] leading-6 text-ink-2">
             <span className="font-semibold text-[var(--role-compare)]">Not quite. </span>
@@ -209,6 +217,15 @@ export function PredictPrompt({ scopeRef, className }: PredictPromptProps) {
   const predict = useStage((s) => (s.prompt ? s.frames[s.prompt.frameIndex]?.predict : undefined))
   const rootRef = useRef<HTMLDivElement>(null)
   const continueRef = useRef<HTMLButtonElement>(null)
+  const [nudge, setNudge] = useState(false)
+
+  useEffect(() => {
+    const el = scopeRef.current
+    if (!el) return
+    const on = () => setNudge(true)
+    el.addEventListener(PROMPT_NUDGE_EVENT, on)
+    return () => el.removeEventListener(PROMPT_NUDGE_EVENT, on)
+  }, [scopeRef])
 
   const status = prompt?.status
   const isOpen = status === 'asking' || status === 'hint'
@@ -263,6 +280,7 @@ export function PredictPrompt({ scopeRef, className }: PredictPromptProps) {
     <PredictCard
       predict={predict}
       status={status}
+      nudge={nudge}
       wrong={status === 'hint' ? prompt.chosen : undefined}
       onAnswer={(opt) => api.answer(opt)}
       onSkip={() => api.skipPrompt()}

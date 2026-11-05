@@ -101,7 +101,7 @@ export function GymApp({ items }: { items: GymItem[] }) {
     syncUrl(null, mode)
   }
 
-  if (!mounted) return <div className="mt-8 h-64 rounded-card border border-rule bg-paper-raised" aria-hidden="true" />
+  if (!mounted) return <div className="mt-8 h-[535px] rounded-card border border-rule bg-paper-raised sm:h-[446px] md:h-[412px]" aria-hidden="true" />
 
   const finished = questions !== null && answers.length === questions.length && questions.length > 0
 

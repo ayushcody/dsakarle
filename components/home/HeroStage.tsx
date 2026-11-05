@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 
 import type { StageTrack } from '@/types/learning';
 
-/** Measured height of the paused hero Stage (370px at 375w, 384px at 768w and up). The skeleton and the wrapper reserve it so nothing jumps. */
-const STAGE_BOX = 'min-h-[370px] sm:min-h-[384px]';
+/** Measured height of the paused hero Stage (about 640px on phones, 572px from 640w, 594px from 1024w). The skeleton and the wrapper reserve it so nothing jumps. */
+const STAGE_BOX = 'min-h-[640px] sm:min-h-[572px] lg:min-h-[594px]';
 
 function Skeleton() {
   return (

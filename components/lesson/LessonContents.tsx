@@ -28,7 +28,7 @@ export function LessonContents({ variant }: { variant: 'rail' | 'inline' }) {
               href={`#${item.id}`}
               aria-current={active ? 'location' : undefined}
               className={cn(
-                'block min-h-[32px] border-l-2 py-1 pl-3 text-[14px] leading-5 transition-colors',
+                'flex min-h-10 items-center border-l-2 py-1 pl-3 text-[14px] leading-5 transition-colors',
                 focusRing,
                 active
                   ? 'border-coral-ink font-semibold text-ink'

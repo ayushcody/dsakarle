@@ -183,7 +183,7 @@ export function SiteHeader() {
         <a
           href="#main-content"
           onClick={onSkip}
-          className="sr-only rounded-card bg-paper-raised px-4 py-2 text-[14px] font-semibold text-ink shadow-2 focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[90]"
+          className="sr-only rounded-card bg-paper-raised text-[14px] font-semibold text-ink shadow-2 focus:not-sr-only focus:px-4 focus:py-2 focus:fixed focus:left-4 focus:top-3 focus:z-[90]"
         >
           Skip to content
         </a>

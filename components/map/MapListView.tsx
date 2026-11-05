@@ -19,7 +19,7 @@ function LinkList({ label, ids }: { label: string; ids: string[] }) {
             {i > 0 ? <span aria-hidden="true">, </span> : null}
             <Link
               href={`/learn/${id}`}
-              className="-my-2 inline-flex min-h-[44px] items-center rounded-cell px-1 text-ink-2 underline decoration-rule-strong underline-offset-2 hover:text-coral-ink hover:decoration-coral focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+              className="-my-2 inline-flex min-h-[44px] min-w-10 items-center rounded-cell px-1 text-ink-2 underline decoration-rule-strong underline-offset-2 hover:text-coral-ink hover:decoration-coral focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
             >
               {n.title}
             </Link>
@@ -37,7 +37,7 @@ function Item({ node }: { node: MapNode }) {
         <Glyph id={node.glyph} size={24} decorative className="text-ink-2" />
         <Link
           href={`/learn/${node.id}`}
-          className="inline-flex min-h-[44px] items-center rounded-cell text-[16px] font-semibold text-ink hover:text-coral-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          className="inline-flex min-h-[44px] min-w-10 items-center rounded-cell text-[16px] font-semibold text-ink hover:text-coral-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
         >
           {node.title}
         </Link>

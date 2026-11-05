@@ -112,7 +112,7 @@ function ProblemRow({
                 <Link
                   href={`/learn/${lesson.slug}`}
                   aria-label={`Open the ${lesson.title} lesson`}
-                  className={cn('inline-flex items-center gap-1 rounded-cell py-1.5 text-ink-2 underline decoration-rule-strong underline-offset-2 hover:text-coral-ink', focusRing)}
+                  className={cn('-my-[5px] inline-flex min-h-10 items-center gap-1 rounded-cell py-1.5 text-ink-2 underline decoration-rule-strong underline-offset-2 hover:text-coral-ink', focusRing)}
                 >
                   <Glyph id={lesson.glyph} size={16} decorative />
                   {lesson.title}

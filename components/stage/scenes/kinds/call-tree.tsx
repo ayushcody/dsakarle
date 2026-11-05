@@ -60,7 +60,7 @@ function Connector({ edge, enter }: { edge: CallEdgeGeom; enter: boolean }) {
         : SURFACE.ink3;
   return (
     <motion.path
-      initial={enter ? { opacity: 0 } : false}
+      initial={enter ? { d, opacity: 0 } : false}
       animate={{ d, opacity: edge.tone === "pending" ? 0.7 : 1 }}
       transition={transition}
       fill="none"
