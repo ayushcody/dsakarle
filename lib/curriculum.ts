@@ -1,5 +1,12 @@
 import curriculumJson from '@/content/curriculum.json';
-import type { Curriculum, CurriculumGroup, CurriculumGroupId, CurriculumLesson } from '@/types/learning';
+import type {
+  Curriculum,
+  CurriculumGroup,
+  CurriculumGroupId,
+  CurriculumLesson,
+  CurriculumPath,
+  CurriculumSection,
+} from '@/types/learning';
 
 /**
  * The single source of truth for which lessons exist, their order, titles,
@@ -44,4 +51,42 @@ export function getNeighbours(slug: string): { prev?: CurriculumLesson; next?: C
 
 export function liveLessons(): CurriculumLesson[] {
   return LESSONS.filter((lesson) => lesson.status === 'live');
+}
+
+// ---------------------------------------------------------------------------
+// Paths (paths → sections → lessons). Path order equals LESSONS order (validated).
+// ---------------------------------------------------------------------------
+
+export const PATHS: readonly CurriculumPath[] = CURRICULUM.paths;
+
+export function getPath(id: string): CurriculumPath | undefined {
+  return PATHS.find((path) => path.id === id);
+}
+
+/** Lessons of a path, in order, as curriculum entries. */
+export function pathLessons(id: string): CurriculumLesson[] {
+  const path = getPath(id);
+  if (!path) return [];
+  return path.sections.flatMap((section) => section.lessons).map((slug) => bySlug.get(slug)!.lesson);
+}
+
+export interface LessonPlace {
+  path: CurriculumPath
+  section: CurriculumSection
+  /** 1-based position inside the path, e.g. 3 for "Lesson 3 of 7". */
+  number: number
+  total: number
+}
+
+/** Where a lesson sits: its path, section and position within the path. */
+export function placeOf(slug: string): LessonPlace | undefined {
+  for (const path of PATHS) {
+    const flat = path.sections.flatMap((section) => section.lessons);
+    const index = flat.indexOf(slug);
+    if (index >= 0) {
+      const section = path.sections.find((s) => s.lessons.includes(slug))!;
+      return { path, section, number: index + 1, total: flat.length };
+    }
+  }
+  return undefined;
 }

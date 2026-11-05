@@ -127,6 +127,21 @@ export interface LessonV2 {
   examples: WorkedExampleV2[]
   conceptQuiz: ConceptQuestionV2[]
   practice: PracticeProblemV2[]
+  /**
+   * "Lesson overview": 4–6 short, verb-led outcomes ("Explain why…", "Trace…").
+   * Shown near the top of the lesson, like a syllabus for the page.
+   */
+  overview?: string[]
+  /** "Additional resources": 2–5 reputable external links, each verified to load. */
+  resources?: LessonResource[]
+}
+
+export interface LessonResource {
+  title: string
+  /** https only. */
+  url: string
+  /** One sentence: why it's worth opening. */
+  note: string
 }
 
 // ===========================================================================
@@ -167,8 +182,30 @@ export interface CurriculumGroup {
   blurb: string
 }
 
+/** A titled run of lessons inside a path, like a chapter. */
+export interface CurriculumSection {
+  title: string
+  /** Lesson slugs in order. */
+  lessons: string[]
+}
+
+/**
+ * A path is the top of the information architecture (paths → sections → lessons).
+ * Every lesson belongs to exactly one path; path order × section order × lesson
+ * order must equal the order of `Curriculum.lessons`.
+ */
+export interface CurriculumPath {
+  id: string
+  title: string
+  /** One or two sentences: who it's for and what you'll be able to do. */
+  blurb: string
+  glyph: GlyphId
+  sections: CurriculumSection[]
+}
+
 export interface Curriculum {
   groups: CurriculumGroup[]
+  paths: CurriculumPath[]
   /** In learning order. */
   lessons: CurriculumLesson[]
 }

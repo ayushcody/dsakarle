@@ -268,6 +268,12 @@ export const lessonV2Schema = z.object({
   examples: z.array(workedExampleV2Schema).min(1),
   conceptQuiz: z.array(conceptQuestionV2Schema).min(1),
   practice: z.array(practiceProblemV2Schema).min(1),
+  overview: textList.min(3).max(7).optional(),
+  resources: z.array(z.object({
+    title: text,
+    url: z.string().regex(/^https:\/\/[^\s]+$/, 'Resource URLs must be https'),
+    note: text,
+  }).strict()).max(6).optional(),
 }).strict();
 
 // ---------------------------------------------------------------------------
@@ -286,6 +292,13 @@ const glyphIdSchema = z.enum([
 
 export const curriculumSchema = z.object({
   groups: z.array(z.object({ id: groupIdSchema, title: text, blurb: text }).strict()),
+  paths: z.array(z.object({
+    id: text,
+    title: text,
+    blurb: text,
+    glyph: glyphIdSchema,
+    sections: z.array(z.object({ title: text, lessons: z.array(z.string()).min(1) }).strict()).min(1),
+  }).strict()).min(1),
   lessons: z.array(z.object({
     slug: text,
     title: text,
@@ -456,6 +469,30 @@ export function checkCurriculum(curriculum: Curriculum, topicSlugs: readonly str
 
   const groupIds = new Set(curriculum.groups.map((group) => group.id));
   const topics = new Set(topicSlugs);
+
+  // Paths: every lesson exactly once, and path reading order equals lessons[] order.
+  const pathOrder: string[] = [];
+  const pathIds = new Set<string>();
+  curriculum.paths.forEach((path, p) => {
+    if (pathIds.has(path.id)) push(`paths[${p}].id`, 'curriculum-path-duplicate', `Duplicate path id "${path.id}".`);
+    pathIds.add(path.id);
+    path.sections.forEach((section, s) => {
+      section.lessons.forEach((slug, l) => {
+        const at = `paths[${p}].sections[${s}].lessons[${l}]`;
+        if (!seen.has(slug)) push(at, 'curriculum-path-unknown', `Path "${path.id}" lists "${slug}", which is not a curriculum slug.`);
+        else if (pathOrder.includes(slug)) push(at, 'curriculum-path-duplicate', `"${slug}" appears in more than one place in paths.`);
+        else pathOrder.push(slug);
+      });
+    });
+  });
+  curriculum.lessons.forEach((lesson, i) => {
+    if (!pathOrder.includes(lesson.slug)) push(`lessons[${i}].slug`, 'curriculum-path-missing', `${lesson.slug} is not in any path.`);
+  });
+  const lessonOrder = curriculum.lessons.map((lesson) => lesson.slug).filter((slug) => pathOrder.includes(slug));
+  if (lessonOrder.join('|') !== pathOrder.join('|')) {
+    push('paths', 'curriculum-path-order', 'Lessons must appear in lessons[] in the same order as paths → sections → lessons.');
+  }
+
 
   curriculum.lessons.forEach((lesson, i) => {
     if (!groupIds.has(lesson.group)) {

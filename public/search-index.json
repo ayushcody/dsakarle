@@ -105,81 +105,6 @@
     }
   },
   {
-    "id": "trees",
-    "slug": "trees",
-    "title": "Binary Trees",
-    "category": "data-structure",
-    "difficulty": "intermediate",
-    "trigger": "Hierarchies, or the problem hands you a TreeNode.",
-    "tags": [
-      "data-structure",
-      "Hierarchies, or the problem hands you a TreeNode."
-    ],
-    "overview": {
-      "summary": "Each node has up to two children; problems split in half."
-    }
-  },
-  {
-    "id": "bst",
-    "slug": "bst",
-    "title": "Binary Search Trees",
-    "category": "data-structure",
-    "difficulty": "intermediate",
-    "trigger": "Sorted order that must stay sorted while you insert and delete.",
-    "tags": [
-      "data-structure",
-      "Sorted order that must stay sorted while you insert and delete."
-    ],
-    "overview": {
-      "summary": "A tree where left is smaller and right is bigger, all the way down."
-    }
-  },
-  {
-    "id": "heaps",
-    "slug": "heaps",
-    "title": "Heaps & Priority Queues",
-    "category": "data-structure",
-    "difficulty": "intermediate",
-    "trigger": "'Top K', 'K-th largest', or repeatedly take the best option.",
-    "tags": [
-      "data-structure",
-      "'Top K', 'K-th largest', or repeatedly take the best option."
-    ],
-    "overview": {
-      "summary": "Always hand me the smallest (or largest) next."
-    }
-  },
-  {
-    "id": "graphs",
-    "slug": "graphs",
-    "title": "Graphs",
-    "category": "data-structure",
-    "difficulty": "intermediate",
-    "trigger": "Networks, maps, dependencies, or a grid you can walk.",
-    "tags": [
-      "data-structure",
-      "Networks, maps, dependencies, or a grid you can walk."
-    ],
-    "overview": {
-      "summary": "Dots and lines: anything connected to anything."
-    }
-  },
-  {
-    "id": "tries",
-    "slug": "tries",
-    "title": "Tries",
-    "category": "data-structure",
-    "difficulty": "advanced",
-    "trigger": "Autocomplete, prefix search, or many words checked at once.",
-    "tags": [
-      "data-structure",
-      "Autocomplete, prefix search, or many words checked at once."
-    ],
-    "overview": {
-      "summary": "A tree of letters where shared prefixes share a path."
-    }
-  },
-  {
     "id": "two-pointers",
     "slug": "two-pointers",
     "title": "Two Pointers",
@@ -255,21 +180,6 @@
     }
   },
   {
-    "id": "sorting",
-    "slug": "sorting",
-    "title": "Sorting",
-    "category": "algorithm",
-    "difficulty": "intermediate",
-    "trigger": "Order would make pairs, duplicates or intervals obvious.",
-    "tags": [
-      "algorithm",
-      "Order would make pairs, duplicates or intervals obvious."
-    ],
-    "overview": {
-      "summary": "Put things in order, then problems get easier."
-    }
-  },
-  {
     "id": "searching",
     "slug": "searching",
     "title": "Searching",
@@ -285,6 +195,21 @@
     }
   },
   {
+    "id": "sorting",
+    "slug": "sorting",
+    "title": "Sorting",
+    "category": "algorithm",
+    "difficulty": "intermediate",
+    "trigger": "Order would make pairs, duplicates or intervals obvious.",
+    "tags": [
+      "algorithm",
+      "Order would make pairs, duplicates or intervals obvious."
+    ],
+    "overview": {
+      "summary": "Put things in order, then problems get easier."
+    }
+  },
+  {
     "id": "recursion",
     "slug": "recursion",
     "title": "Recursion & Backtracking",
@@ -297,6 +222,81 @@
     ],
     "overview": {
       "summary": "Solve a smaller copy of the problem; undo choices that fail."
+    }
+  },
+  {
+    "id": "trees",
+    "slug": "trees",
+    "title": "Binary Trees",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "trigger": "Hierarchies, or the problem hands you a TreeNode.",
+    "tags": [
+      "data-structure",
+      "Hierarchies, or the problem hands you a TreeNode."
+    ],
+    "overview": {
+      "summary": "Each node has up to two children; problems split in half."
+    }
+  },
+  {
+    "id": "bst",
+    "slug": "bst",
+    "title": "Binary Search Trees",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "trigger": "Sorted order that must stay sorted while you insert and delete.",
+    "tags": [
+      "data-structure",
+      "Sorted order that must stay sorted while you insert and delete."
+    ],
+    "overview": {
+      "summary": "A tree where left is smaller and right is bigger, all the way down."
+    }
+  },
+  {
+    "id": "heaps",
+    "slug": "heaps",
+    "title": "Heaps & Priority Queues",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "trigger": "'Top K', 'K-th largest', or repeatedly take the best option.",
+    "tags": [
+      "data-structure",
+      "'Top K', 'K-th largest', or repeatedly take the best option."
+    ],
+    "overview": {
+      "summary": "Always hand me the smallest (or largest) next."
+    }
+  },
+  {
+    "id": "tries",
+    "slug": "tries",
+    "title": "Tries",
+    "category": "data-structure",
+    "difficulty": "advanced",
+    "trigger": "Autocomplete, prefix search, or many words checked at once.",
+    "tags": [
+      "data-structure",
+      "Autocomplete, prefix search, or many words checked at once."
+    ],
+    "overview": {
+      "summary": "A tree of letters where shared prefixes share a path."
+    }
+  },
+  {
+    "id": "graphs",
+    "slug": "graphs",
+    "title": "Graphs",
+    "category": "data-structure",
+    "difficulty": "intermediate",
+    "trigger": "Networks, maps, dependencies, or a grid you can walk.",
+    "tags": [
+      "data-structure",
+      "Networks, maps, dependencies, or a grid you can walk."
+    ],
+    "overview": {
+      "summary": "Dots and lines: anything connected to anything."
     }
   },
   {

@@ -47,6 +47,9 @@ function curriculum(...lessons: CurriculumLesson[]): Curriculum {
       { id: 'data-structures', title: 'Data Structures', blurb: 'Layouts.' },
       { id: 'algorithms', title: 'Algorithms', blurb: 'Moves.' },
     ],
+    paths: [
+      { id: 'all', title: 'All', blurb: 'Everything.', glyph: 'arrays', sections: [{ title: 'All', lessons: lessons.map((l) => l.slug) }] },
+    ],
     lessons,
   };
 }
@@ -545,5 +548,21 @@ describe('rule 10: recognise quiz slugs', () => {
 
   it('does not apply to v1', () => {
     expect(checkRecogniseQuiz('arrays', parsedV1(), slugs)).toEqual([]);
+  });
+});
+
+describe('curriculum paths', () => {
+  it('passes when paths cover every lesson once, in lesson order', () => {
+    const c = curriculum(meta('a'), meta('b'));
+    expect(checkCurriculum(c, ['a', 'b']).filter((i) => i.rule.startsWith('curriculum-path'))).toEqual([]);
+  });
+  it('flags a lesson missing from paths, a duplicate, an unknown slug and an order mismatch', () => {
+    const c = curriculum(meta('a'), meta('b'), meta('c'));
+    c.paths = [{ id: 'p', title: 'P', blurb: 'P.', glyph: 'arrays', sections: [{ title: 'S', lessons: ['b', 'a', 'a', 'zzz'] }] }];
+    const rules = checkCurriculum(c, ['a', 'b', 'c']).map((i) => i.rule);
+    expect(rules).toContain('curriculum-path-missing');
+    expect(rules).toContain('curriculum-path-duplicate');
+    expect(rules).toContain('curriculum-path-unknown');
+    expect(rules).toContain('curriculum-path-order');
   });
 });

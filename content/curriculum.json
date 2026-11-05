@@ -11,6 +11,113 @@
       "blurb": "Reusable moves for turning a slow idea into a fast one."
     }
   ],
+  "paths": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "glyph": "arrays",
+      "blurb": "Start here. How data sits in memory, and why that makes some operations instant and others slow.",
+      "sections": [
+        {
+          "title": "Data in a row",
+          "lessons": [
+            "arrays",
+            "vectors",
+            "strings"
+          ]
+        },
+        {
+          "title": "Chains, piles and lines",
+          "lessons": [
+            "linked-lists",
+            "stacks",
+            "queues"
+          ]
+        },
+        {
+          "title": "Instant lookups",
+          "lessons": [
+            "hash-maps"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "patterns",
+      "title": "Core Patterns",
+      "glyph": "sliding-window",
+      "blurb": "The handful of moves behind most array and string problems. Learn to spot which one a problem wants.",
+      "sections": [
+        {
+          "title": "Pointers and windows",
+          "lessons": [
+            "two-pointers",
+            "sliding-window",
+            "fast-and-slow-pointers",
+            "prefix-sum"
+          ]
+        },
+        {
+          "title": "Searching and sorting",
+          "lessons": [
+            "binary-search",
+            "searching",
+            "sorting"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trees-graphs",
+      "title": "Recursion, Trees & Graphs",
+      "glyph": "trees",
+      "blurb": "Think recursively, then walk branching structures: trees, heaps, tries and graphs.",
+      "sections": [
+        {
+          "title": "Thinking recursively",
+          "lessons": [
+            "recursion"
+          ]
+        },
+        {
+          "title": "Trees",
+          "lessons": [
+            "trees",
+            "bst",
+            "heaps",
+            "tries"
+          ]
+        },
+        {
+          "title": "Graphs",
+          "lessons": [
+            "graphs",
+            "bfs-dfs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "optimization",
+      "title": "Optimization",
+      "glyph": "dynamic-programming",
+      "blurb": "When brute force is too slow: make the safe greedy choice, or remember answers to smaller problems.",
+      "sections": [
+        {
+          "title": "Choosing well",
+          "lessons": [
+            "greedy"
+          ]
+        },
+        {
+          "title": "Remembering answers",
+          "lessons": [
+            "dynamic-programming"
+          ]
+        }
+      ]
+    }
+  ],
   "lessons": [
     {
       "slug": "arrays",
@@ -149,103 +256,6 @@
       ]
     },
     {
-      "slug": "trees",
-      "title": "Binary Trees",
-      "group": "data-structures",
-      "glyph": "trees",
-      "difficulty": "intermediate",
-      "status": "live",
-      "minutes": 40,
-      "oneLiner": "Each node has up to two children; problems split in half.",
-      "trigger": "Hierarchies, or the problem hands you a TreeNode.",
-      "prereqs": [
-        "recursion"
-      ],
-      "related": [
-        "bst",
-        "heaps",
-        "bfs-dfs",
-        "recursion"
-      ]
-    },
-    {
-      "slug": "bst",
-      "title": "Binary Search Trees",
-      "group": "data-structures",
-      "glyph": "bst",
-      "difficulty": "intermediate",
-      "status": "live",
-      "minutes": 35,
-      "oneLiner": "A tree where left is smaller and right is bigger, all the way down.",
-      "trigger": "Sorted order that must stay sorted while you insert and delete.",
-      "prereqs": [
-        "trees",
-        "binary-search"
-      ],
-      "related": [
-        "trees",
-        "binary-search"
-      ]
-    },
-    {
-      "slug": "heaps",
-      "title": "Heaps & Priority Queues",
-      "group": "data-structures",
-      "glyph": "heaps",
-      "difficulty": "intermediate",
-      "status": "live",
-      "minutes": 35,
-      "oneLiner": "Always hand me the smallest (or largest) next.",
-      "trigger": "'Top K', 'K-th largest', or repeatedly take the best option.",
-      "prereqs": [
-        "trees",
-        "arrays"
-      ],
-      "related": [
-        "queues",
-        "greedy",
-        "sorting"
-      ]
-    },
-    {
-      "slug": "graphs",
-      "title": "Graphs",
-      "group": "data-structures",
-      "glyph": "graphs",
-      "difficulty": "intermediate",
-      "status": "live",
-      "minutes": 45,
-      "oneLiner": "Dots and lines: anything connected to anything.",
-      "trigger": "Networks, maps, dependencies, or a grid you can walk.",
-      "prereqs": [
-        "hash-maps",
-        "queues"
-      ],
-      "related": [
-        "bfs-dfs",
-        "trees"
-      ]
-    },
-    {
-      "slug": "tries",
-      "title": "Tries",
-      "group": "data-structures",
-      "glyph": "tries",
-      "difficulty": "advanced",
-      "status": "live",
-      "minutes": 30,
-      "oneLiner": "A tree of letters where shared prefixes share a path.",
-      "trigger": "Autocomplete, prefix search, or many words checked at once.",
-      "prereqs": [
-        "trees",
-        "strings"
-      ],
-      "related": [
-        "strings",
-        "trees"
-      ]
-    },
-    {
       "slug": "two-pointers",
       "title": "Two Pointers",
       "group": "algorithms",
@@ -344,6 +354,24 @@
       ]
     },
     {
+      "slug": "searching",
+      "title": "Searching",
+      "group": "algorithms",
+      "glyph": "searching",
+      "difficulty": "beginner",
+      "status": "live",
+      "minutes": 20,
+      "oneLiner": "Choosing how to find something based on how it's stored.",
+      "trigger": "'Find X' — the right method depends on sorted, hashed or raw.",
+      "prereqs": [
+        "arrays"
+      ],
+      "related": [
+        "binary-search",
+        "hash-maps"
+      ]
+    },
+    {
       "slug": "sorting",
       "title": "Sorting",
       "group": "algorithms",
@@ -364,24 +392,6 @@
       ]
     },
     {
-      "slug": "searching",
-      "title": "Searching",
-      "group": "algorithms",
-      "glyph": "searching",
-      "difficulty": "beginner",
-      "status": "live",
-      "minutes": 20,
-      "oneLiner": "Choosing how to find something based on how it's stored.",
-      "trigger": "'Find X' — the right method depends on sorted, hashed or raw.",
-      "prereqs": [
-        "arrays"
-      ],
-      "related": [
-        "binary-search",
-        "hash-maps"
-      ]
-    },
-    {
       "slug": "recursion",
       "title": "Recursion & Backtracking",
       "group": "algorithms",
@@ -398,6 +408,103 @@
         "trees",
         "dynamic-programming",
         "bfs-dfs"
+      ]
+    },
+    {
+      "slug": "trees",
+      "title": "Binary Trees",
+      "group": "data-structures",
+      "glyph": "trees",
+      "difficulty": "intermediate",
+      "status": "live",
+      "minutes": 40,
+      "oneLiner": "Each node has up to two children; problems split in half.",
+      "trigger": "Hierarchies, or the problem hands you a TreeNode.",
+      "prereqs": [
+        "recursion"
+      ],
+      "related": [
+        "bst",
+        "heaps",
+        "bfs-dfs",
+        "recursion"
+      ]
+    },
+    {
+      "slug": "bst",
+      "title": "Binary Search Trees",
+      "group": "data-structures",
+      "glyph": "bst",
+      "difficulty": "intermediate",
+      "status": "live",
+      "minutes": 35,
+      "oneLiner": "A tree where left is smaller and right is bigger, all the way down.",
+      "trigger": "Sorted order that must stay sorted while you insert and delete.",
+      "prereqs": [
+        "trees",
+        "binary-search"
+      ],
+      "related": [
+        "trees",
+        "binary-search"
+      ]
+    },
+    {
+      "slug": "heaps",
+      "title": "Heaps & Priority Queues",
+      "group": "data-structures",
+      "glyph": "heaps",
+      "difficulty": "intermediate",
+      "status": "live",
+      "minutes": 35,
+      "oneLiner": "Always hand me the smallest (or largest) next.",
+      "trigger": "'Top K', 'K-th largest', or repeatedly take the best option.",
+      "prereqs": [
+        "trees",
+        "arrays"
+      ],
+      "related": [
+        "queues",
+        "greedy",
+        "sorting"
+      ]
+    },
+    {
+      "slug": "tries",
+      "title": "Tries",
+      "group": "data-structures",
+      "glyph": "tries",
+      "difficulty": "advanced",
+      "status": "live",
+      "minutes": 30,
+      "oneLiner": "A tree of letters where shared prefixes share a path.",
+      "trigger": "Autocomplete, prefix search, or many words checked at once.",
+      "prereqs": [
+        "trees",
+        "strings"
+      ],
+      "related": [
+        "strings",
+        "trees"
+      ]
+    },
+    {
+      "slug": "graphs",
+      "title": "Graphs",
+      "group": "data-structures",
+      "glyph": "graphs",
+      "difficulty": "intermediate",
+      "status": "live",
+      "minutes": 45,
+      "oneLiner": "Dots and lines: anything connected to anything.",
+      "trigger": "Networks, maps, dependencies, or a grid you can walk.",
+      "prereqs": [
+        "hash-maps",
+        "queues"
+      ],
+      "related": [
+        "bfs-dfs",
+        "trees"
       ]
     },
     {
