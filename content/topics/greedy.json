@@ -1,164 +1,427 @@
 {
-  "id": "greedy",
+  "schemaVersion": 2,
   "slug": "greedy",
-  "title": "Greedy Algorithms",
-  "category": "algorithm",
-  "difficulty": "medium",
-  "estimatedMinutes": 45,
-  "prerequisites": ["sorting"],
-  "tags": ["algorithm", "optimization"],
-  "overview": {
-    "summary": "Greedy algorithms build up a solution piece by piece, always choosing the next piece that offers the most immediate benefit.",
-    "learningObjectives": [
-      "Understand the Greedy Choice Property.",
-      "Recognize when a locally optimal choice leads to a globally optimal solution.",
-      "Understand why Greedy algorithms often require sorting the input first."
-    ],
-    "interviewRelevance": "Greedy algorithms are often the O(N log N) 'trick' solutions to optimization problems that would otherwise require O(N^2) Dynamic Programming."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "You have one meeting room and a pile of meeting requests for today. Which request do you say yes to first, if you want to fit in as many as you can?",
     "paragraphs": [
-      "Imagine you are a cashier making change for $0.85. You want to use the fewest coins possible. You don't calculate all possible combinations of coins.",
-      "You just act 'Greedy'. You grab the biggest coin you can (a Quarter). Then another Quarter. Then another. Then a Dime. By always taking the biggest chunk possible right now, you arrive at the perfect answer."
+      "Say the day has four requests: 8–12, 9–10, 10–11 and 11–12. The one that starts first (8–12) sounds natural to grab, but it fills the whole morning and leaves room for nothing else. You attend one meeting.",
+      "Now try one rule instead: always say yes to the request that ends soonest, as long as it doesn't clash with what you've already booked. That books 9–10, then 10–11, then 11–12. Three meetings, from a rule you can say in one breath."
     ],
-    "ahaMoment": "A Greedy algorithm never looks back. Once a choice is made, it is permanent. It never backtracks."
+    "aha": "Finishing early leaves the most room for everything after it. You can even prove that no other first pick does better: swap the first meeting of any plan for the earliest-ending one and nothing later gets bumped. That proof is what makes a greedy rule safe. Without it, a rule that sounds sensible can quietly fail."
   },
-  "definition": {
-    "technicalDefinition": "A greedy algorithm is any algorithm that follows the problem-solving heuristic of making the locally optimal choice at each stage with the intent of finding a global optimum.",
-    "vocabulary": [
-      { "term": "Locally Optimal", "definition": "The best possible choice you can make right now, based ONLY on the current step, ignoring future consequences." },
-      { "term": "Globally Optimal", "definition": "The absolute best possible final answer for the entire problem." },
-      { "term": "Counter-example", "definition": "A specific scenario that proves a greedy approach fails to find the global optimum." }
-    ],
-    "keyProperties": [
-      "Very fast (usually O(N) or O(N log N) if sorting is required).",
-      "Easy to code, incredibly hard to prove mathematically correct.",
-      "Fails if making a good choice now forces you into a terrible choice later."
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "intervals",
+      "cells": [
+        "1–2",
+        "2–3",
+        "1–3",
+        "3–4"
+      ],
+      "pointers": [
+        {
+          "name": "i",
+          "index": 2,
+          "role": "focus"
+        }
+      ],
+      "marks": [
+        {
+          "index": 0,
+          "role": "found"
+        },
+        {
+          "index": 1,
+          "role": "found"
+        },
+        {
+          "index": 2,
+          "role": "compare"
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "cell:0",
+        "text": "ends first, so keep it"
+      },
+      {
+        "target": "cell:2",
+        "text": "starts before 3: overlap"
+      },
+      {
+        "target": "ptr:i",
+        "text": "next one to judge"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A mountain climber trying to reach the highest peak in the fog. A greedy algorithm just says 'Always step uphill'. (This works for a single mountain, but fails if there are multiple peaks)."
+      "Packing your day, you keep asking one question: of the things left, which one frees me up soonest? You say yes to that one, and you never reopen the decision.",
+      "Each yes leaves as much of the day as possible for whatever is still to come."
     ],
-    "clickSentence": "Sort the data to reveal the most 'valuable' pieces, then gobble them up one by one until you can't.",
-    "diagramType": "ArrayDiagram",
-    "cells": [],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "Greedy algorithms usually operate in O(1) space (excluding the sort).",
-      "They simply maintain a running total or a pointer to the current state."
-    ],
-    "definitionCode": {
-      "python": "def make_change(amount, coins):\n    coins.sort(reverse=True)\n    count = 0\n    for coin in coins:\n        while amount >= coin:\n            amount -= coin\n            count += 1\n    return count"
-    },
-    "memoryLayout": [
-      { "label": "Greedy Choice", "value": "Pick the highest value available at the current moment." }
-    ]
-  },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [],
-    "steps": [
+    "click": "Take the pick that leaves the most room, never look back, and be able to argue that no other pick could have done better.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Greedy visualization coming soon.",
-        "activeLine": 1
+        "term": "greedy choice",
+        "definition": "The pick that looks best right now, made without looking ahead and never undone. In scheduling it is the interval that ends earliest."
+      },
+      {
+        "term": "local optimum",
+        "definition": "The best option at a single step, judged only by what you can see right now."
+      },
+      {
+        "term": "global optimum",
+        "definition": "The best answer for the whole problem. Greedy is only correct when a string of local optima adds up to this."
+      },
+      {
+        "term": "exchange argument",
+        "definition": "The proof that makes greedy safe: take any best answer, swap its first pick for the greedy pick, and show it is still best."
+      },
+      {
+        "term": "counterexample",
+        "definition": "A small input where the greedy rule gives a worse answer than the best one. A single counterexample is enough to throw the rule out."
+      },
+      {
+        "term": "sort key",
+        "definition": "The field you sort by so the best pick comes first. For meetings it is the end time, not the start time or the length."
+      },
+      {
+        "term": "overlap",
+        "definition": "Two intervals share some time. Touching at one moment (one ends at 3, the next starts at 3) does not count."
+      },
+      {
+        "term": "reach",
+        "definition": "In Jump Game, the farthest index any jump so far can land on. It only ever grows."
+      }
+    ],
+    "definition": "A greedy algorithm builds an answer one step at a time, always taking the choice that looks best right now and never revisiting it. It is correct only when two things hold: some best answer begins with that choice (the greedy-choice property, usually shown with an exchange argument), and what remains after the choice is a smaller copy of the same problem. When a choice can block a better combination later, greedy fails. With coins 1, 3 and 4 and an amount of 6, taking the biggest coin first gives 4 + 1 + 1 = 3 coins, but 3 + 3 needs only 2. Those problems need dynamic programming."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "intervals",
+        "label": "Meetings: earliest end first",
+        "tracer": "greedy/interval-scheduling",
+        "predict": {
+          "tags": [
+            "keep-or-drop"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "jump",
+        "label": "Jump game: how far can you reach?",
+        "tracer": "greedy/jump-game",
+        "predict": {
+          "tags": [
+            "reach",
+            "stuck-or-not"
+          ],
+          "max": 4
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The data is intervals or tasks with start and end times, and you have to pick or schedule as many as possible.",
+      "The statement asks for a minimum or maximum count, like the most meetings, the fewest arrows or the fewest removals, and sorting by one field makes the best pick obvious.",
+      "You can say why taking the best-looking option now can never hurt later, for example because you could swap it into any other plan.",
+      "You scan once, keeping a single running number such as the farthest reach or the last end, and each step needs only that number."
+    ],
+    "notWhen": [
+      "A choice now can block a better combination later, like coins 1, 3, 4 for amount 6. Greedy gives 3 coins where 2 is possible, so use dynamic-programming.",
+      "You must count the number of ways or list every solution. One confident pass can't do that; reach for recursion or dynamic-programming.",
+      "You can't explain why the pick is safe, and a small counterexample breaks it. Don't trust the rule until you have the argument."
+    ],
+    "quiz": [
+      {
+        "problem": "You have a list of meetings [start, end] and one room. Find the largest number of meetings you can attend with no overlap.",
+        "answer": "greedy",
+        "options": [
+          "dynamic-programming",
+          "greedy",
+          "sorting",
+          "heaps"
+        ],
+        "explanation": "Sort by end time and keep every meeting that starts at or after the last kept one ends. Finishing earliest leaves the most room, and an exchange argument proves no other first pick is better."
+      },
+      {
+        "problem": "Given coins [1, 3, 4] and an amount of 6, find the fewest coins that add up to it.",
+        "answer": "dynamic-programming",
+        "options": [
+          "greedy",
+          "binary-search",
+          "dynamic-programming",
+          "recursion"
+        ],
+        "explanation": "Taking the biggest coin first gives 4 + 1 + 1 = 3 coins, but 3 + 3 uses only 2. The big pick blocks a better combination, so greedy fails. Build the best answer for every amount from 1 up: that is dynamic programming."
+      },
+      {
+        "problem": "Numbers keep arriving in a stream. After each one, report the 3rd largest number seen so far.",
+        "answer": "heaps",
+        "options": [
+          "heaps",
+          "greedy",
+          "sorting",
+          "binary-search"
+        ],
+        "explanation": "You repeatedly need the smallest of the current top 3 and must swap numbers in and out. A min-heap of size 3 does that in O(log k) per number, where k = 3."
+      },
+      {
+        "problem": "nums[i] is how far you can jump from index i. Starting at index 0, decide whether you can reach the last index.",
+        "answer": "greedy",
+        "options": [
+          "recursion",
+          "dynamic-programming",
+          "graphs",
+          "greedy"
+        ],
+        "explanation": "Track the farthest index you can reach so far. If the next index is past it you are stuck; otherwise stretch the reach. One pass, no search, and you can show the reach never needs to shrink."
+      },
+      {
+        "problem": "Given a string, find the length of the longest substring that has no repeating characters.",
+        "answer": "sliding-window",
+        "options": [
+          "hash-maps",
+          "two-pointers",
+          "sliding-window"
+        ],
+        "explanation": "The answer is a contiguous stretch whose condition (no repeats) can break and be repaired at its left edge. That is a window growing on the right and shrinking on the left, with no pick to defend."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Sort",
-      "description": "Most greedy problems require organizing the data first so the 'best' choices are presented first.",
-      "timeComplexity": "O(N log N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "data.sort()"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "sort intervals by end, earliest first",
+        "anchor": "sort"
       },
-      "visualNote": "Items are rearranged by value or weight."
-    },
-    {
-      "name": "Consume",
-      "description": "Iterate through the sorted data, taking whatever fits the constraints.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "for item in data:\n    if fits(item):\n        take(item)"
+      {
+        "text": "removed = 0, last_end = −∞",
+        "anchor": "init"
       },
-      "visualNote": "A pointer moves left to right, collecting items."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "items.sort(key=custom_greedy_criteria)\nresult = 0\nfor item in items:\n  if is_valid(item, current_state):\n    result += item.value\n    update_state()\nreturn result",
-    "whenToUse": "Optimization problems (maximize profit, minimize cost) where local maximums perfectly align with the global maximum.",
-    "timeComplexity": "O(N log N) dominated by sorting.",
-    "spaceComplexity": "O(1) usually."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You have a list of meeting times `[start, end]`. Find the maximum number of meetings you can attend without overlapping.",
-    "correctPatternId": "greedy",
-    "distractors": [
-      "dynamic-programming",
-      "binary-search",
-      "backtracking"
+      {
+        "text": "for each (start, end) in the sorted list:"
+      },
+      {
+        "text": "if start >= last_end:",
+        "anchor": "check",
+        "indent": 1
+      },
+      {
+        "text": "keep it: last_end = end",
+        "anchor": "keep",
+        "indent": 2
+      },
+      {
+        "text": "else:",
+        "indent": 1
+      },
+      {
+        "text": "drop it: removed += 1",
+        "anchor": "drop",
+        "indent": 2
+      },
+      {
+        "text": "return removed",
+        "anchor": "done"
+      }
     ],
-    "explanation": "By acting 'Greedy' and always choosing the meeting that ENDS the earliest, you leave the maximum amount of free time available for future meetings. This guarantees the optimal answer."
+    "tracer": "greedy/interval-scheduling",
+    "time": "O(n log n)",
+    "space": "O(1) beyond the sort",
+    "notes": [
+      "Why sort by end? Sort by start and one long meeting like 0–10 blocks three short ones. Sort by shortest first and a short 3–5 sitting between 1–4 and 4–8 blocks both, though those two fit together. Only the earliest end always leaves the most room.",
+      "Touching is fine: if one interval ends at 3 and the next starts at 3, they don't overlap. That is why the test is start >= last_end, not start > last_end.",
+      "The exchange argument in four lines: take any best schedule, swap its first interval for the earliest-ending one, and note that it ends no later, so everything after it still fits. The schedule is no worse, so some best schedule starts with the greedy pick. Repeat for what remains.",
+      "Sorting costs O(n log n) and the sweep is a single O(n) pass, so the sort dominates. Beyond the sort you keep only two numbers: last_end and removed.",
+      "Greedy is not a default; it is a claim you have to defend. Always-take-the-biggest-coin works for coins like 1, 5, 10, 25, but with coins [1, 3, 4] and amount 6 it picks 4 + 1 + 1 = 3 coins while 3 + 3 = 2 is best. When a choice can block a better combination later, use dynamic-programming."
+    ]
   },
   "examples": [
     {
       "title": "Jump Game",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/jump-game/",
-      "problemStatement": "You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return true if you can reach the last index.",
-      "inputExample": "nums = [2,3,1,1,4]",
-      "outputExample": "true",
-      "steps": [
-        "Maintain a variable `max_reach` initialized to 0.",
-        "Iterate through the array.",
-        "If your current index `i` is greater than `max_reach`, it means you are stuck. Return false.",
-        "Otherwise, update `max_reach = max(max_reach, i + nums[i])`.",
-        "If `max_reach` >= last index, return true."
+      "url": "https://leetcode.com/problems/jump-game/",
+      "problem": "Each number in nums is the farthest you can jump from that index. Starting at index 0, return true if you can reach the last index, otherwise false.",
+      "input": "nums = [3,2,1,0,4]",
+      "output": "false",
+      "approach": [
+        "Track reach, the farthest index any jump so far can land on. It starts at 0.",
+        "Index 0 lets you jump 3, so reach = 3. Indexes 1 and 2 also land on 3 (1 + 2 and 2 + 1), and index 3 jumps 0, so reach stays 3.",
+        "Index 4 is past reach: no jump can land there. You are stuck before the end, so the answer is false.",
+        "If reach ever covers the last index you can stop early, because the answer is then true."
       ],
-      "code": {
-        "python": "def canJump(nums):\n    max_reach = 0\n    for i in range(len(nums)):\n        if i > max_reach:\n            return False\n        max_reach = max(max_reach, i + nums[i])\n    return True",
-        "javascript": "function canJump(nums) {\n    let maxReach = 0;\n    for (let i = 0; i < nums.length; i++) {\n        if (i > maxReach) return false;\n        maxReach = Math.max(maxReach, i + nums[i]);\n    }\n    return true;\n}"
-      },
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)",
-      "rationale": "Instead of checking every possible combination of jumps (which would be O(2^N)), we greedily track the furthest possible rightward boundary we can reach."
+      "code": "greedy/jump-game",
+      "tracer": "greedy/jump-game",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Non-overlapping Intervals",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/non-overlapping-intervals/",
+      "problem": "Given intervals where intervals[i] = [start, end], return the minimum number of intervals to remove so that the rest do not overlap. Intervals that only touch at an endpoint do not overlap.",
+      "input": "intervals = [[1,2],[2,3],[3,4],[1,3]]",
+      "output": "1",
+      "approach": [
+        "Removing the fewest means keeping the most, so always keep the interval that ends earliest.",
+        "Sort by end: [1,2], [2,3], [1,3], [3,4]. Keep [1,2] (last end = 2). [2,3] starts at 2, which only touches, so keep it (last end = 3).",
+        "[1,3] starts at 1, before 3, so it overlaps: drop it. [3,4] starts at 3, so keep it.",
+        "Kept 3 of 4, so remove 1."
+      ],
+      "code": "greedy/interval-scheduling",
+      "tracer": "greedy/interval-scheduling",
+      "time": "O(n log n)",
+      "space": "O(1) beyond the sort"
+    },
+    {
+      "title": "Jump Game II",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/jump-game-ii/",
+      "problem": "Same jumps as Jump Game, but you can always reach the last index. Return the minimum number of jumps needed to get there.",
+      "input": "nums = [2,3,1,1,4]",
+      "output": "2",
+      "approach": [
+        "Think in rounds. cur_end is the farthest index the jumps used so far can reach, and farthest is how far one more jump could take you.",
+        "Index 0: farthest = 2. You are at cur_end (0), so you must jump: jumps = 1 and cur_end = 2.",
+        "Index 1 stretches farthest to 4 (1 + 3). Index 2 is the end of this round (cur_end = 2), so jump again: jumps = 2 and cur_end = 4, the last index.",
+        "Stop before the last index, since there is nothing to jump from there. The answer is 2."
+      ],
+      "code": "greedy/jump-game-ii",
+      "time": "O(n)",
+      "space": "O(1)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Why does making change with coins (US currency) work with a Greedy algorithm, but some custom coin sets fail?",
+      "question": "You want the most non-overlapping meetings. Which sort order makes the greedy pick safe?",
       "options": [
-        "Because US coins (25, 10, 5, 1) are mathematically structured so that the greedy choice never 'traps' you into using more coins.",
-        "Because you sort them first.",
-        "Because there are only 4 coins.",
-        "It doesn't work with US currency."
+        "By start time, earliest first",
+        "By end time, earliest first",
+        "By length, shortest first",
+        "By start time, latest first"
       ],
-      "correctIndex": 0,
-      "explanation": "If your coins were [4, 3, 1] and you wanted to make 6. Greedy takes 4, then 1, then 1 (3 coins). But the optimal answer is 3 + 3 (2 coins). Greedy fails if the coin values don't follow specific mathematical gaps."
+      "answer": 1,
+      "explanation": "Earliest end leaves the most room for what follows. Start-first fails on 0–10 in front of three short meetings, and shortest-first fails on 3–5 sitting between 1–4 and 4–8."
     },
     {
-      "question": "If a problem can be solved by both Greedy and Dynamic Programming, which should you choose?",
+      "question": "Coins are [1, 3, 4] and the amount is 6. What does \"always take the biggest coin that fits\" give, and what is the best possible?",
       "options": [
-        "Greedy, because it is usually O(N) or O(N log N) space/time, whereas DP is often O(N^2) time/space.",
-        "Dynamic Programming, because it is safer.",
-        "They are the exact same thing.",
-        "Neither, use Recursion."
+        "Greedy gives 2 coins and the best is 3.",
+        "Greedy and the best both give 3 coins.",
+        "Greedy gives 2 coins, which is also the best.",
+        "Greedy gives 3 coins (4 + 1 + 1), but 2 coins (3 + 3) is the best."
       ],
-      "correctIndex": 0,
-      "explanation": "If the Greedy Choice Property holds true, the Greedy approach will be significantly faster and use less memory than DP."
+      "answer": 3,
+      "explanation": "Taking the 4 first leaves 2, which costs two 1s. One counterexample is enough to show greedy fails for this coin set, so you would use dynamic programming."
+    },
+    {
+      "question": "What does an exchange argument show?",
+      "options": [
+        "Swapping the greedy pick into the first spot of any best answer never makes it worse, so some best answer uses it.",
+        "That the algorithm runs in O(n log n).",
+        "That the input must be sorted first.",
+        "That every other pick is wrong."
+      ],
+      "answer": 0,
+      "explanation": "It is a proof, not a speed claim. If you can swap your pick into any best answer without losing anything, committing to that pick can't cost you the best answer."
+    },
+    {
+      "question": "You find a small input where your greedy rule gives a worse answer than the best. What should you do?",
+      "options": [
+        "Keep the rule: real tests are usually friendlier.",
+        "Change the rule or switch approach, for example to dynamic programming.",
+        "Sort the input twice.",
+        "Add a special case for that one input."
+      ],
+      "answer": 1,
+      "explanation": "A single counterexample disproves the rule. Patching one input leaves the same flaw on the next, so look for a different pick or let dynamic programming try every option."
+    },
+    {
+      "question": "For nums = [1, 0, 2] in Jump Game, what does the reach scan conclude?",
+      "options": [
+        "True: index 2 can jump 2, which is plenty.",
+        "True: reach grows to 3 at index 2.",
+        "False: reach stays at 1, so index 2 is out of reach before its jump counts.",
+        "False: index 0 can't jump at all."
+      ],
+      "answer": 2,
+      "explanation": "Index 0 lets you jump 1, so reach = 1. Index 1 jumps 0, so reach stays 1. Index 2 is past reach, so you never get to stand on it."
     }
   ],
   "practice": [
-    { "title": "Jump Game", "url": "https://leetcode.com/problems/jump-game/", "difficulty": "medium", "keyInsight": "Greedily track the furthest index you can reach." },
-    { "title": "Assign Cookies", "url": "https://leetcode.com/problems/assign-cookies/", "difficulty": "easy", "keyInsight": "Sort both arrays. Give the smallest cookie to the least greedy child." },
-    { "title": "Task Scheduler", "url": "https://leetcode.com/problems/task-scheduler/", "difficulty": "medium", "keyInsight": "Always schedule the most frequent task first." }
+    {
+      "title": "Assign Cookies",
+      "url": "https://leetcode.com/problems/assign-cookies/",
+      "difficulty": "easy",
+      "insight": "Sort children by greed and cookies by size, then give each child the smallest cookie that still satisfies them."
+    },
+    {
+      "title": "Best Time to Buy and Sell Stock II",
+      "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/",
+      "difficulty": "medium",
+      "insight": "You may trade every day. Think about each rise from one day to the next on its own, rather than hunting for one big buy and sell."
+    },
+    {
+      "title": "Gas Station",
+      "url": "https://leetcode.com/problems/gas-station/",
+      "difficulty": "medium",
+      "insight": "If total gas is less than total cost, no start works. Otherwise, when your tank first goes negative, every station up to there is a bad start."
+    },
+    {
+      "title": "Partition Labels",
+      "url": "https://leetcode.com/problems/partition-labels/",
+      "difficulty": "medium",
+      "insight": "Record the last position of every letter. Keep stretching the current part to cover those last positions, and cut when i catches up."
+    },
+    {
+      "title": "Task Scheduler",
+      "url": "https://leetcode.com/problems/task-scheduler/",
+      "difficulty": "medium",
+      "insight": "The most frequent task forces the gaps. Lay it out first, then check whether the other tasks can fill the gaps or leave idle slots."
+    },
+    {
+      "title": "Two City Scheduling",
+      "url": "https://leetcode.com/problems/two-city-scheduling/",
+      "difficulty": "medium",
+      "insight": "Look at costA − costB for each person: it says how much more they prefer one city. Sort by that gap."
+    },
+    {
+      "title": "Queue Reconstruction by Height",
+      "url": "https://leetcode.com/problems/queue-reconstruction-by-height/",
+      "difficulty": "medium",
+      "insight": "Place people from tallest to shortest, so a shorter person never changes the count of someone already placed."
+    },
+    {
+      "title": "Candy",
+      "url": "https://leetcode.com/problems/candy/",
+      "difficulty": "hard",
+      "insight": "Satisfy the left-neighbour rule in one pass and the right-neighbour rule in another, then keep the larger requirement for each child."
+    }
+  ],
+  "overview": [
+    "Explain why finishing earliest leaves the most room for later picks.",
+    "Trace the earliest-end rule through a list of meetings, keeping or dropping each.",
+    "Trace the farthest-reach rule through the jump game, one index at a time.",
+    "Spot when a locally best pick is unsafe and dynamic programming is needed.",
+    "Implement the sort-then-scan template for interval scheduling in O(n log n)."
+  ],
+  "resources": [
+    {
+      "title": "Greedy algorithm (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Greedy_algorithm",
+      "note": "Defines greedy algorithms, when they are optimal, and where they fail."
+    },
+    {
+      "title": "Interval scheduling (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Interval_scheduling",
+      "note": "Covers the earliest-finish-time rule for picking the most non-overlapping intervals."
+    }
   ]
 }

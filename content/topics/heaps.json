@@ -1,177 +1,553 @@
 {
-  "id": "heaps",
+  "schemaVersion": 2,
   "slug": "heaps",
-  "title": "Heaps & Priority Queues",
-  "category": "data-structure",
-  "difficulty": "medium",
-  "estimatedMinutes": 50,
-  "prerequisites": ["trees", "arrays"],
-  "tags": ["tree", "priority-queue", "sorting"],
-  "overview": {
-    "summary": "A Heap is a specialized tree-based data structure that satisfies the heap property: the parent node is always larger (or smaller) than its children.",
-    "learningObjectives": [
-      "Understand the difference between Min-Heaps and Max-Heaps.",
-      "Explain how a Heap is usually implemented under the hood using a flat Array.",
-      "Recognize 'Top K' problems as immediate Heap indicators."
-    ],
-    "interviewRelevance": "Heaps are the silver bullet for any question containing the phrases 'Kth largest', 'Top K frequent', or 'Merge K sorted'."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "An emergency room has 40 people waiting, and new patients keep arriving. How can the nurse always call the most urgent one next, without re-sorting the whole waiting room every time?",
     "paragraphs": [
-      "Imagine an emergency room. Patients don't get treated First-Come, First-Served like a normal Queue. They get treated based on the severity of their injury.",
-      "A Heap (or Priority Queue) automatically bubbles the highest priority item to the front of the line, no matter what order it arrived in."
+      "First come, first served is the wrong rule here: a sprained ankle can't go ahead of a heart attack just because it arrived earlier. Sorting the whole list after every arrival works, but it redoes almost all of its work each time. (Give every patient a number, with 1 the most urgent, so the nurse wants the smallest number.)",
+      "Look at what the nurse really needs. Not a fully ordered list, just the most urgent patient right now, and then again after that patient leaves."
     ],
-    "ahaMoment": "A Heap doesn't sort the whole array. It just guarantees that the absolute largest (or smallest) element is ALWAYS sitting at the very top."
+    "aha": "Keep the waiting room only partly sorted, just enough that the most urgent patient is always on top. A heap does exactly that. An arrival or a departure fixes one short path through the tree, about log₂ n spots, instead of re-sorting everyone."
   },
-  "definition": {
-    "technicalDefinition": "A Heap is a complete binary tree that satisfies the Heap Property. In a Max Heap, every parent node is greater than or equal to its children. In a Min Heap, every parent is less than or equal to its children.",
-    "vocabulary": [
-      { "term": "Heapify", "definition": "The process of moving an element up or down the tree to restore the Heap Property." },
-      { "term": "Priority Queue", "definition": "An abstract data type often implemented using a Heap, where elements are dequeued by priority." },
-      { "term": "Complete Tree", "definition": "A tree where every level is completely filled, except possibly the last level, which is filled left-to-right." }
-    ],
-    "keyProperties": [
-      "O(1) access to the Max/Min element.",
-      "O(log N) insertion and deletion.",
-      "Because it is a 'Complete Tree', it can be efficiently represented as a flat Array without any pointer gaps."
+  "shape": {
+    "scene": {
+      "kind": "composite",
+      "layout": "column",
+      "parts": [
+        {
+          "title": "Min-heap as a tree",
+          "scene": {
+            "kind": "tree",
+            "root": "h0",
+            "nodes": [
+              {
+                "id": "h0",
+                "value": 2,
+                "children": [
+                  "h1",
+                  "h2"
+                ]
+              },
+              {
+                "id": "h1",
+                "value": 4,
+                "children": [
+                  "h3",
+                  "h4"
+                ]
+              },
+              {
+                "id": "h2",
+                "value": 3,
+                "children": [
+                  "h5",
+                  "h6"
+                ]
+              },
+              {
+                "id": "h3",
+                "value": 9,
+                "children": [
+                  null,
+                  null
+                ]
+              },
+              {
+                "id": "h4",
+                "value": 5,
+                "children": [
+                  null,
+                  null
+                ]
+              },
+              {
+                "id": "h5",
+                "value": 8,
+                "children": [
+                  null,
+                  null
+                ]
+              },
+              {
+                "id": "h6",
+                "value": 6,
+                "children": [
+                  null,
+                  null
+                ]
+              }
+            ],
+            "marks": [
+              {
+                "id": "h0",
+                "role": "found"
+              }
+            ]
+          }
+        },
+        {
+          "title": "The same heap as an array: children of i are 2i+1 and 2i+2",
+          "scene": {
+            "kind": "array",
+            "label": "heap",
+            "cells": [
+              2,
+              4,
+              3,
+              9,
+              5,
+              8,
+              6
+            ],
+            "marks": [
+              {
+                "index": 0,
+                "role": "found"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "node:h0",
+        "text": "smallest is always the root"
+      },
+      {
+        "target": "node:h2",
+        "text": "parent ≤ both children"
+      },
+      {
+        "target": "cell:1",
+        "text": "its children: cells 3 and 4"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A corporate ladder where any employee who performs better than their boss instantly swaps jobs with them."
+      "Picture a company where every boss is better than their direct reports, and \"better\" means a smaller number. The CEO is therefore the best of everyone, and you find them at the top without looking. A new hire starts at the bottom and swaps upward past any boss they beat; when the CEO leaves, the newest hire takes the empty seat and sinks until the order is right again."
     ],
-    "clickSentence": "By only partially sorting the data (just enough to keep the best at the top), Heaps save massive amounts of CPU time.",
-    "diagramType": "tree",
-    "cells": [10, 8, 7, 4, 5, 2, 1],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "Heaps are visually drawn as Trees, but physically stored in memory as Arrays.",
-      "Because the tree is 'Complete', we can use simple math to find children: Left Child is at (2 * index) + 1. Right Child is at (2 * index) + 2."
-    ],
-    "definitionCode": {
-      "python": "import heapq\nheap = []\nheapq.heappush(heap, 5) # Min Heap by default\nmin_val = heapq.heappop(heap)",
-      "javascript": "// JS doesn't have a built-in Heap! You must implement it or use a library.\nconst pq = new MinPriorityQueue(); // from @datastructures-js",
-      "java": "PriorityQueue<Integer> pq = new PriorityQueue<>(); // Min Heap\npq.offer(5);\nint minVal = pq.poll();",
-      "cpp": "std::priority_queue<int> max_pq; // Max Heap by default\nstd::priority_queue<int, vector<int>, greater<int>> min_pq;"
-    },
-    "memoryLayout": [
-      { "label": "Index 0 (Root)", "value": "100" },
-      { "label": "Index 1 (Left)", "value": "50" },
-      { "label": "Index 2 (Right)", "value": "75" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "tree",
-    "array": [10, 8, 7, 4, 5, 2, 1],
-    "steps": [
+    "click": "A heap is only partly sorted: every parent is no bigger than its children, so the smallest sits at the root, and repairing one change costs a walk along one path, about log₂ n steps.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Heap push/pop visualization coming soon.",
-        "activeLine": 1
+        "term": "min-heap",
+        "definition": "A heap whose root is the smallest value: every parent is less than or equal to its children. Python's heapq and Java's PriorityQueue are min-heaps by default."
+      },
+      {
+        "term": "max-heap",
+        "definition": "The mirror image: every parent is greater than or equal to its children, so the largest value is the root. C++'s priority_queue is a max-heap by default; pass std::greater to get a min-heap."
+      },
+      {
+        "term": "heap property",
+        "definition": "The one rule: no parent is bigger than its children (in a min-heap). It says nothing about siblings, so a heap is not sorted."
+      },
+      {
+        "term": "complete tree",
+        "definition": "A binary tree with every level full except maybe the last, which fills from the left. That is why a heap fits in an array with no gaps: the parent of index i is (i − 1) / 2 rounded down, and its children are 2i + 1 and 2i + 2."
+      },
+      {
+        "term": "sift up",
+        "definition": "Repair a too-small value at the bottom by swapping it with its parent until the parent is not bigger. Push does this."
+      },
+      {
+        "term": "sift down",
+        "definition": "Repair a too-big value near the top by swapping it with its smaller child until neither child is smaller. Pop does this."
+      },
+      {
+        "term": "heapify",
+        "definition": "Turn a whole unordered array into a heap in place, by sifting down every parent from the last one back to the root. It costs O(n), cheaper than n pushes at O(n log n). Some books also use the word for a single sift; here those are sift up and sift down."
+      },
+      {
+        "term": "priority queue",
+        "definition": "The idea: add items, and always remove the one with the best priority. A binary heap is the usual way to build one. Python has heapq, Java has PriorityQueue and C++ has priority_queue."
+      }
+    ],
+    "definition": "A binary heap is a complete binary tree, stored in an array, in which every parent is less than or equal to its children (min-heap) or greater than or equal to them (max-heap). Reading the best element, heap[0], takes O(1). Push and pop take O(log n), because a complete tree of n nodes has about log₂ n levels and each repair walks one path. A heap is not sorted: only the root is guaranteed to be the smallest, so looking for an arbitrary value takes O(n). A priority queue is the abstract \"remove the best\" interface; a binary heap is its usual implementation."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "push",
+        "label": "Push (sift up)",
+        "tracer": "heaps/push",
+        "predict": {
+          "tags": [
+            "swap-or-stop"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "pop",
+        "label": "Pop (sift down)",
+        "tracer": "heaps/pop",
+        "predict": {
+          "tags": [
+            "which-child",
+            "swap-or-stop"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "kth-largest",
+        "label": "K-th largest",
+        "tracer": "heaps/kth-largest",
+        "predict": {
+          "tags": [
+            "push-then-pop"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "You keep needing the smallest or largest item of a collection that keeps changing.",
+      "The statement says \"top K\", \"k-th largest\" or \"k-th smallest\", \"k closest\" or \"k most frequent\".",
+      "Items arrive over time and you must answer after each arrival, like a running k-th largest or a running median.",
+      "You must always process the most urgent, cheapest or earliest item next: a scheduler, or merging k sorted lists."
+    ],
+    "notWhen": [
+      "You need everything in sorted order once. Just sort: O(n log n), and simpler.",
+      "You need to search for a particular value, the next larger value or a range. A heap only knows its root, so use a binary search tree or a hash map.",
+      "Items must leave in the order they arrived (first in, first out). That is a plain queue, with no priorities."
+    ],
+    "quiz": [
+      {
+        "problem": "Numbers arrive one at a time. After each arrival, report the 3rd largest number seen so far.",
+        "answer": "heaps",
+        "options": [
+          "sorting",
+          "heaps",
+          "bst",
+          "queues"
+        ],
+        "explanation": "Keep a min-heap of the 3 largest. Its root is the 3rd largest, and each arrival costs only O(log 3). Re-sorting after every arrival would redo far more work."
+      },
+      {
+        "problem": "Given an array of n numbers, print all of them in ascending order, once.",
+        "answer": "sorting",
+        "options": [
+          "heaps",
+          "sorting",
+          "greedy",
+          "binary-search"
+        ],
+        "explanation": "A heap could do it (pop n times is heap sort), but you want the whole order once, so a plain sort is the right tool and the simplest code."
+      },
+      {
+        "problem": "Numbers are added to a set over time. For each query x, report the smallest number in the set that is larger than x.",
+        "answer": "bst",
+        "options": [
+          "heaps",
+          "bst",
+          "hash-maps",
+          "sorting"
+        ],
+        "explanation": "\"Next larger than x\" needs the numbers kept in order so you can search them. A heap only knows its smallest value, and a hash map scatters the order on purpose."
+      },
+      {
+        "problem": "A shop serves customers strictly in the order they arrive: new people join the back, the next person is served from the front.",
+        "answer": "queues",
+        "options": [
+          "queues",
+          "heaps",
+          "stacks",
+          "greedy"
+        ],
+        "explanation": "No priorities are involved, just arrival order. That is a plain queue, first in first out. A heap would serve the wrong person whenever priorities differ."
+      },
+      {
+        "problem": "You are given k sorted linked lists. Merge them into one sorted list.",
+        "answer": "heaps",
+        "options": [
+          "heaps",
+          "sorting",
+          "linked-lists",
+          "two-pointers"
+        ],
+        "explanation": "The next number to output is the smallest of the k current fronts. Keep those k fronts in a min-heap, pop the smallest, and push the next node from the same list."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Push (Insert)",
-      "description": "Add the element to the bottom (end of array), then 'Bubble Up' (swap with parent) until the heap property is restored.",
-      "timeComplexity": "O(log N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "heapq.heappush(heap, val)",
-        "javascript": "pq.enqueue(val);",
-        "java": "pq.offer(val);",
-        "cpp": "pq.push(val);"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "push(x):"
       },
-      "visualNote": "A node attaches to the bottom left and floats up the tree."
-    },
-    {
-      "name": "Pop (Extract Min/Max)",
-      "description": "Remove the root, move the very last element to the root, then 'Bubble Down' (swap with largest child).",
-      "timeComplexity": "O(log N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "val = heapq.heappop(heap)",
-        "javascript": "const val = pq.dequeue();",
-        "java": "int val = pq.poll();",
-        "cpp": "int val = pq.top(); pq.pop();"
+      {
+        "text": "append x at the end of the array",
+        "indent": 1
       },
-      "visualNote": "The root disappears, the bottom-right leaf jumps to the top, then sinks down."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "heap = new MinHeap()\nfor item in stream:\n  heap.push(item)\n  if heap.size() > K:\n    heap.pop() # Discard the smallest\nreturn heap.peek() # The Kth largest!",
-    "whenToUse": "Whenever a problem asks for the 'Top K', 'Kth Largest/Smallest', or asks you to repeatedly find the minimum/maximum of a changing dataset.",
-    "timeComplexity": "O(N log K) for finding Top K.",
-    "spaceComplexity": "O(K) to store the heap."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are given a stream of 1 million incoming integers. You need to always be able to return the 5th largest integer seen so far instantly.",
-    "correctPatternId": "heaps",
-    "distractors": [
-      "arrays",
-      "binary-search",
-      "sorting"
+      {
+        "text": "while x has a parent that is bigger than x:",
+        "indent": 1
+      },
+      {
+        "text": "swap x with its parent",
+        "indent": 2
+      },
+      {
+        "text": "pop_many(heap, pops):"
+      },
+      {
+        "text": "popped = an empty list",
+        "anchor": "init",
+        "indent": 1
+      },
+      {
+        "text": "repeat pops times:",
+        "indent": 1
+      },
+      {
+        "text": "smallest = heap[0]",
+        "anchor": "take",
+        "indent": 2
+      },
+      {
+        "text": "move the last element to heap[0] and shrink the heap",
+        "anchor": "move",
+        "indent": 2
+      },
+      {
+        "text": "i = 0; while i has a child:",
+        "indent": 2
+      },
+      {
+        "text": "c = the smaller child of i",
+        "anchor": "children",
+        "indent": 3
+      },
+      {
+        "text": "if heap[c] >= heap[i]: stop",
+        "anchor": "compare",
+        "indent": 3
+      },
+      {
+        "text": "swap heap[i] and heap[c]; i = c",
+        "anchor": "swap",
+        "indent": 3
+      },
+      {
+        "text": "the moving value is in its place",
+        "anchor": "settle",
+        "indent": 2
+      },
+      {
+        "text": "add smallest to popped",
+        "indent": 2
+      },
+      {
+        "text": "return popped",
+        "anchor": "done",
+        "indent": 1
+      }
     ],
-    "explanation": "Sorting 1 million items repeatedly takes O(N log N) which is too slow. A Min-Heap of size 5 tracks the top 5 largest elements in just O(N log 5) time."
+    "tracer": "heaps/pop",
+    "time": "O(log n) per push or pop, O(1) to peek at the best",
+    "space": "O(n) for the heap, O(1) extra for each repair",
+    "notes": [
+      "Push and pop each walk one path between a leaf and the root. A complete tree of n nodes has about log₂ n levels, so each costs O(log n). Peeking is O(1): the best value is always heap[0].",
+      "Pop moves the LAST element to the root, not a child. That keeps the tree complete, so the array never has a hole. It then sinks, always swapping with the SMALLER child in a min-heap. The larger child could not sit above the smaller one. In a max-heap it is the larger child.",
+      "Building a heap from n numbers (heapify, or build-heap) takes O(n), not O(n log n): sift down every parent from the last one back to the root. Half the nodes are leaves and need no work, a quarter sink at most one level, and so on, and that sum stays proportional to n. Pushing n numbers one by one is O(n log n). Python: heapq.heapify. Java: new PriorityQueue<>(collection). C++: the priority_queue constructor that takes a range, or std::make_heap.",
+      "Library defaults differ. Python's heapq and Java's PriorityQueue are MIN-heaps. C++'s priority_queue is a MAX-heap: write priority_queue<int, vector<int>, greater<int>> for a min-heap, as the code does. For a max-heap in Python, store negated values.",
+      "Top K needs the opposite heap to what you might guess: for the K largest, keep a MIN-heap of size K, so the weakest of the group is on top, ready to be evicted. For the K smallest, keep a max-heap of size K. The k-th largest example below uses the library; its picture is drawn with the push and pop shown above, so a real heapq can order equal-level nodes a little differently while the root is always the same.",
+      "A heap is not sorted and not stable. Do not loop over a heap's array and expect order; pop to get order. Equal priorities can come out in any order. Finding or removing an arbitrary item is O(n), and heapq in Python compares tuples element by element, so store (priority, item) pairs."
+    ]
   },
   "examples": [
     {
       "title": "Kth Largest Element in an Array",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
-      "problemStatement": "Given an integer array nums and an integer k, return the kth largest element in the array.",
-      "inputExample": "nums = [3,2,1,5,6,4], k = 2",
-      "outputExample": "5",
-      "steps": [
-        "Initialize a Min Heap.",
-        "Push elements into the heap one by one.",
-        "If the heap size exceeds k, pop the smallest element.",
-        "At the end, the heap contains the k largest elements, and the root is the kth largest."
+      "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+      "problem": "Given an integer array nums and an integer k, return the kth largest element in the array. It is the kth largest in sorted order, not the kth distinct value.",
+      "input": "nums = [3,2,3,1,2,4,5,5,6], k = 4",
+      "output": "4",
+      "approach": [
+        "Sorting works in O(n log n), but you only want one number. Keep just the k largest values seen so far.",
+        "Use a MIN-heap that holds at most k numbers. Its root is the smallest of the k largest, which is exactly the kth largest.",
+        "Push every number. The moment the heap holds k + 1, pop the smallest: it cannot be one of the k largest.",
+        "Here the heap ends holding 4, 5, 5 and 6, so its root, 4, is the answer."
       ],
-      "code": {
-        "python": "import heapq\ndef findKthLargest(nums, k):\n    heap = []\n    for num in nums:\n        heapq.heappush(heap, num)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return heap[0]",
-        "javascript": "// Using a MinPriorityQueue class\nfunction findKthLargest(nums, k) {\n    const pq = new MinPriorityQueue();\n    for (let num of nums) {\n        pq.enqueue(num);\n        if (pq.size() > k) pq.dequeue();\n    }\n    return pq.front().element;\n}",
-        "java": "public int findKthLargest(int[] nums, int k) {\n    PriorityQueue<Integer> pq = new PriorityQueue<>();\n    for (int num : nums) {\n        pq.offer(num);\n        if (pq.size() > k) {\n            pq.poll();\n        }\n    }\n    return pq.peek();\n}",
-        "cpp": "int findKthLargest(vector<int>& nums, int k) {\n    priority_queue<int, vector<int>, greater<int>> pq;\n    for (int num : nums) {\n        pq.push(num);\n        if (pq.size() > k) {\n            pq.pop();\n        }\n    }\n    return pq.top();\n}"
-      },
-      "timeComplexity": "O(N log K)",
-      "spaceComplexity": "O(K)",
-      "rationale": "By capping the heap size at K, we dramatically reduce memory usage and insertion time compared to a full sort."
+      "code": "heaps/kth-largest",
+      "tracer": "heaps/kth-largest",
+      "time": "O(n log k)",
+      "space": "O(k)"
+    },
+    {
+      "title": "Kth Largest Element in a Stream",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/kth-largest-element-in-a-stream/",
+      "problem": "Design a class KthLargest(k, nums) with a method add(val) that adds val to the stream and returns the kth largest element so far.",
+      "input": "k = 3, nums = [4,5,8,2], then add(3), add(5), add(10), add(9), add(4)",
+      "output": "4, 5, 5, 8, 8",
+      "approach": [
+        "It is the same idea as before, but the heap lives between calls. Keep a min-heap with at most k numbers inside the object.",
+        "The constructor adds every starting number through add. The heap [4, 5, 8] holds the three largest of 4, 5, 8, 2 (the 2 was popped).",
+        "add(3): push 3, the heap has 4 numbers, pop the smallest (3). The root is 4. add(5) keeps 5, 5 and 8 after popping 4, so the answer is 5.",
+        "Each add costs O(log k), because the heap never grows past k + 1."
+      ],
+      "code": "heaps/kth-largest-stream",
+      "time": "O(log k) per add",
+      "space": "O(k)"
+    },
+    {
+      "title": "Last Stone Weight",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/last-stone-weight/",
+      "problem": "Each turn, smash the two heaviest stones. If they weigh the same, both vanish; otherwise the lighter vanishes and the heavier loses that much weight. Return the weight of the last stone, or 0 if none is left.",
+      "input": "stones = [2,7,4,1,8,1]",
+      "output": "1",
+      "approach": [
+        "Each turn needs the two heaviest stones, and the pile changes every turn. That is a max-heap.",
+        "Smash 8 and 7: a stone of 1 comes back. The pile is 4, 2, 1, 1, 1. Smash 4 and 2: a stone of 2 comes back, so the pile is 2, 1, 1, 1.",
+        "Smash 2 and 1: 1 comes back, leaving 1, 1, 1. Smash 1 and 1: both vanish and one stone of weight 1 remains.",
+        "Python's heapq is a min-heap, so the code stores negated weights. Java uses reverseOrder, and C++'s default priority_queue is already a max-heap."
+      ],
+      "code": "heaps/last-stone-weight",
+      "time": "O(n log n)",
+      "space": "O(n)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "If you want to find the Top K LARGEST elements, what kind of heap should you use?",
+      "question": "In a min-heap stored in an array, where are the children of the value at index 3?",
       "options": [
-        "A Min-Heap of size K",
-        "A Max-Heap of size K",
-        "A Max-Heap of size N",
-        "A Binary Search Tree"
+        "Indexes 4 and 5",
+        "Indexes 6 and 7",
+        "Indexes 7 and 8",
+        "Index 1 only"
       ],
-      "correctIndex": 0,
-      "explanation": "Counter-intuitively, you use a MIN-Heap. You want the 'smallest of the largest' sitting at the root so you can easily pop it out when you find a bigger number."
+      "answer": 2,
+      "explanation": "The children of index i are 2i + 1 and 2i + 2, so for 3 they are 7 and 8. Going the other way, the parent of index 3 is (3 − 1) / 2 = 1."
     },
     {
-      "question": "How are the Left and Right children of an element at index 'i' found in a Heap array?",
+      "question": "Why does pop move the last element to the root, instead of promoting one of the root's children?",
       "options": [
-        "Left: 2i + 1, Right: 2i + 2",
-        "Left: i + 1, Right: i + 2",
-        "Left: i / 2, Right: (i / 2) + 1",
-        "By traversing pointers."
+        "It keeps the tree complete, so the array has no hole. Sifting down then repairs the order.",
+        "The last element is always the smallest, so it belongs on top.",
+        "It means nothing needs to be compared afterwards.",
+        "It sorts the rest of the heap."
       ],
-      "correctIndex": 0,
-      "explanation": "Because a heap is a Complete Tree, array math mathematically guarantees no empty gaps, saving memory overhead."
+      "answer": 0,
+      "explanation": "Removing the last slot is the only change that keeps the tree complete. The moved value is usually too big for the top (it was a leaf), so it sinks until the heap property holds again."
+    },
+    {
+      "question": "In a min-heap, the moving value 6 sits above children 4 and 9. What happens during sift down?",
+      "options": [
+        "It stays, because 6 is between its children.",
+        "It swaps with 9, the larger child.",
+        "It swaps with 4, then compares itself again with 9.",
+        "It swaps with 4, the smaller child, and keeps sinking from there."
+      ],
+      "answer": 3,
+      "explanation": "Swapping with 9 would put 9 above 4, breaking the rule. Swapping with the smaller child 4 lets 4 sit above both 6 and 9. Then 6 is compared with its new children."
+    },
+    {
+      "question": "You have n unordered numbers and want a min-heap. What does build-heap (heapify) cost, and why?",
+      "options": [
+        "O(n log n): n pushes, each costing log n.",
+        "O(n): most nodes are near the bottom and sink only a level or two.",
+        "O(log n): only the root has to move.",
+        "O(n²): every pair has to be compared."
+      ],
+      "answer": 1,
+      "explanation": "Sift down every parent from the last one back to the root. Half the nodes are leaves, a quarter can sink one level, and so on, so the total stays proportional to n. Pushing n values one at a time is O(n log n)."
+    },
+    {
+      "question": "You want the 10 smallest numbers of a stream of a million. Which heap do you keep?",
+      "options": [
+        "A min-heap holding all million numbers.",
+        "A min-heap of size 10, popping when it grows past 10.",
+        "A max-heap of size 10: when it holds 11, pop the largest.",
+        "A sorted list of size 10, checked from the front."
+      ],
+      "answer": 2,
+      "explanation": "The root should be the weakest member of the group, ready to be evicted. For the 10 smallest, the weakest is the largest of them, so you need a max-heap. It stays at size 10, so each number costs O(log 10)."
     }
   ],
   "practice": [
-    { "title": "Kth Largest Element in an Array", "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/", "difficulty": "medium", "keyInsight": "Maintain a Min-Heap of size K." },
-    { "title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/", "difficulty": "medium", "keyInsight": "Count frequencies with a Hash Map, then put the counts into a Min-Heap." },
-    { "title": "Merge K Sorted Lists", "url": "https://leetcode.com/problems/merge-k-sorted-lists/", "difficulty": "hard", "keyInsight": "Put the head of every list into a Min-Heap to find the absolute minimum at any given moment." },
-    { "title": "Find Median from Data Stream", "url": "https://leetcode.com/problems/find-median-from-data-stream/", "difficulty": "hard", "keyInsight": "Use two heaps. A Max-Heap for the bottom half, and a Min-Heap for the top half." }
+    {
+      "title": "Top K Frequent Elements",
+      "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+      "difficulty": "medium",
+      "insight": "Count with a map first. Then you need the k biggest counts, which is a min-heap of size k over (count, value) pairs."
+    },
+    {
+      "title": "K Closest Points to Origin",
+      "url": "https://leetcode.com/problems/k-closest-points-to-origin/",
+      "difficulty": "medium",
+      "insight": "Compare squared distances, so no square root is needed. Which kind of heap, and how big, keeps the k closest?"
+    },
+    {
+      "title": "Merge k Sorted Lists",
+      "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
+      "difficulty": "hard",
+      "insight": "Only the front of each list can be the next output. Keep those k fronts in a min-heap and refill from the list you just took from."
+    },
+    {
+      "title": "Find Median from Data Stream",
+      "url": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "difficulty": "hard",
+      "insight": "Split the numbers into a smaller half and a larger half using two heaps. Keep their sizes balanced and the median sits at the tops."
+    },
+    {
+      "title": "Task Scheduler",
+      "url": "https://leetcode.com/problems/task-scheduler/",
+      "difficulty": "medium",
+      "insight": "Always run the task with the most copies left. A max-heap finds it, but a task that just ran must wait out its cooldown before it can return."
+    },
+    {
+      "title": "Reorganize String",
+      "url": "https://leetcode.com/problems/reorganize-string/",
+      "difficulty": "medium",
+      "insight": "Place the most frequent remaining letter that is not the one you just placed. Hold the last letter aside for a turn."
+    },
+    {
+      "title": "Kth Smallest Element in a Sorted Matrix",
+      "url": "https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/",
+      "difficulty": "medium",
+      "insight": "Every row is already sorted, so it is like merging lists. Seed a min-heap with each row's first cell and pop k times."
+    },
+    {
+      "title": "IPO",
+      "url": "https://leetcode.com/problems/ipo/",
+      "difficulty": "hard",
+      "insight": "Sort projects by the capital they need. Each round, move every project you can now afford into a max-heap of profits and take the best."
+    }
+  ],
+  "overview": [
+    "Explain why a heap always keeps its smallest item at the root.",
+    "Find a node's children in a min-heap stored as a flat array.",
+    "Trace push by sifting a new value up until its parent is smaller.",
+    "Trace pop by moving the last item to the root and sifting it down.",
+    "Use a size-k min-heap to track the k-th largest value in a stream.",
+    "Explain why heapifying n unordered numbers costs O(n), not O(n log n)."
+  ],
+  "resources": [
+    {
+      "title": "Heap (data structure) (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Heap_(data_structure)",
+      "note": "Explains the heap property, array indexing and the costs of each heap operation."
+    },
+    {
+      "title": "heapq module (Python docs)",
+      "url": "https://docs.python.org/3/library/heapq.html",
+      "note": "The standard library heap functions, including heapify and nlargest for top-k problems."
+    },
+    {
+      "title": "Heap visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/Heap.html",
+      "note": "Push and pop values into a heap and watch the sift-up and sift-down swaps happen."
+    },
+    {
+      "title": "Heapsort (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Heapsort",
+      "note": "Shows how the heap property turns into an in-place O(n log n) sorting algorithm."
+    }
   ]
 }

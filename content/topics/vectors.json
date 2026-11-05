@@ -1,165 +1,416 @@
 {
-  "id": "vectors",
+  "schemaVersion": 2,
   "slug": "vectors",
-  "title": "Vectors (Dynamic Arrays)",
-  "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 30,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "dynamic", "memory"],
-  "overview": {
-    "summary": "Vectors (or Dynamic Arrays) are arrays that automatically resize themselves when they run out of space.",
-    "learningObjectives": [
-      "Understand the difference between Logical Size and Physical Capacity.",
-      "Explain the O(N) cost of resizing.",
-      "Understand why append operations are 'Amortized O(1)'."
-    ],
-    "interviewRelevance": "Dynamic arrays are the default 'list' structure in Python, JS, and C++. Knowing how they resize is a classic conceptual interview question."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "Python's list.append feels instant, yet an array can't count on growing in place. So where does the new item go?",
     "paragraphs": [
-      "Imagine hosting a party in a small room. More guests arrive until the room is completely full. You can't just 'expand' the walls.",
-      "Instead, you rent a room twice as big next door, ask everyone to walk over to the new room, and then resume the party. This is exactly how dynamic arrays handle running out of memory."
+      "An array is a block of memory bought in one piece, and whatever sits right after it may already belong to something else. So when 4 items fill a block of 4 and you call append, there is no room next door.",
+      "Yet you can append a million items in a loop without waiting. Something must happen when the block is full. What, and why doesn't it slow everything down?"
     ],
-    "ahaMoment": "A dynamic array is just a regular static array under the hood. It fakes being 'dynamic' by secretly creating larger static arrays and copying data over when needed."
+    "aha": "The list moves to a new block twice as big and copies everything across once. That copy costs as much as the list is long, but it buys that many free slots, so the next pushes are a single write each. Added up, the copying comes to less than 2 extra steps per push: amortised O(1)."
   },
-  "definition": {
-    "technicalDefinition": "A Dynamic Array (Vector in C++, ArrayList in Java, List in Python) is a random access, variable-size list data structure that allows elements to be added or removed.",
-    "vocabulary": [
-      { "term": "Size", "definition": "The number of elements currently stored in the vector." },
-      { "term": "Capacity", "definition": "The actual size of the underlying memory block." },
-      { "term": "Amortized Time", "definition": "An average time complexity that accounts for occasional expensive operations spread out over many fast operations." }
-    ],
-    "keyProperties": [
-      "O(1) random access by index.",
-      "O(1) amortized insertion at the end.",
-      "O(N) insertion/deletion in the middle (due to shifting elements)."
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "data",
+      "cells": [
+        7,
+        3,
+        9,
+        4,
+        null,
+        null,
+        null,
+        null
+      ],
+      "pointers": [
+        {
+          "name": "size",
+          "index": 4,
+          "role": "ptrA"
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "cell:1",
+        "text": "used: size = 4"
+      },
+      {
+        "target": "cell:6",
+        "text": "spare: capacity = 8"
+      },
+      {
+        "target": "ptr:size",
+        "text": "next push lands here"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A hermit crab finding a new shell. When it outgrows its current shell, it leaves it behind and moves into a shell twice as large."
+      "Picture a family in a flat where you can't knock through the walls. When the family grows and every room is taken, they don't squeeze in. They rent a flat twice as big, carry everything across in one trip, and hand back the old keys.",
+      "The move is a hassle, but it buys a lot of spare rooms. The next several arrivals each just take a free room, so the family doesn't move again for a long time."
     ],
-    "clickSentence": "By doubling the capacity every time we run out of space, the heavy O(N) cost of copying elements happens so rarely that the average cost per insert drops to O(1).",
-    "diagramType": "ArrayDiagram",
-    "cells": [1, 2, 3, 4],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "In memory, a Vector keeps track of a pointer to the start of the array, the current 'Size', and the current 'Capacity'.",
-      "When Size == Capacity, the Vector allocates a new chunk of memory of size Capacity * 2, copies the old elements over, and frees the old chunk."
-    ],
-    "definitionCode": {
-      "python": "arr = [] # Python lists are dynamic arrays\narr.append(1)",
-      "javascript": "const arr = []; // JS arrays are dynamic\narr.push(1);",
-      "java": "ArrayList<Integer> arr = new ArrayList<>();\narr.add(1);",
-      "cpp": "std::vector<int> arr;\narr.push_back(1);"
-    },
-    "memoryLayout": [
-      { "label": "Size", "value": "4" },
-      { "label": "Capacity", "value": "8 (It doubled when the 4th item was added)" },
-      { "label": "Memory", "value": "[1, 2, 3, 4, null, null, null, null]" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [],
-    "steps": [
+    "click": "Moving everyone costs as much as the family is big, but it buys that many spare rooms, so the next pushes cost nothing extra.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Vector resizing visualization coming soon.",
-        "activeLine": 1
+        "term": "size",
+        "definition": "How many slots hold a real value right now. The next push writes at index size."
+      },
+      {
+        "term": "capacity",
+        "definition": "How many slots the block has in total. Size can never be bigger than capacity."
+      },
+      {
+        "term": "growth factor",
+        "definition": "How much bigger the new block is. Doubling is a factor of 2. Real libraries use values like 1.5 or 2, and any constant above 1 keeps pushes amortised O(1)."
+      },
+      {
+        "term": "reallocation",
+        "definition": "Moving to a new block: allocate it, copy every element across, free the old one. It costs O(size)."
+      },
+      {
+        "term": "amortised",
+        "definition": "Cost averaged over a whole run of operations. One push might copy everything, but n pushes together cost O(n), so the average push is O(1)."
+      },
+      {
+        "term": "iterator invalidation",
+        "definition": "After a reallocation the elements live at new addresses. A pointer, reference or iterator into the old block now dangles, and using it is a bug (undefined behaviour in C++)."
+      },
+      {
+        "term": "shrink rule",
+        "definition": "A policy for giving memory back, such as halving the block once size falls to a quarter of capacity. It is optional: std::vector and Java's ArrayList don't do it on their own."
+      }
+    ],
+    "definition": "A dynamic array (std::vector in C++, ArrayList in Java, list in Python) keeps its elements in one contiguous block and tracks two numbers: size, how many slots are in use, and capacity, how many slots the block has. push_back writes at index size. If size equals capacity it first allocates a larger block, usually a constant factor such as 2 times the capacity, copies the elements across and releases the old block. Access by index stays O(1) and push_back is amortised O(1). Inserting or erasing in the middle is still O(n), because the elements after it must shift."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "push",
+        "label": "Push back",
+        "tracer": "vectors/push-back",
+        "predict": {
+          "tags": [
+            "room-or-resize",
+            "copies"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "pop",
+        "label": "Pop back",
+        "tracer": "vectors/pop-back",
+        "predict": {
+          "tags": [
+            "shrink-or-keep",
+            "copies"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "You build a list as you go and don't know how long it will end up.",
+      "You read or change items by position, and mostly add or remove at the end.",
+      "The problem says to collect, build or return a list whose length is unknown until you finish.",
+      "You need a stack: push and pop at the back."
+    ],
+    "notWhen": [
+      "You insert or delete in the middle or at the front all the time. Every change shifts everything after it, so look at linked lists or queues.",
+      "You look things up by value, like a name or an id. A hash map finds them without scanning.",
+      "You know the exact size up front and it never changes. A plain array, or one reserve call, avoids all the growing."
+    ],
+    "quiz": [
+      {
+        "problem": "Read a log file line by line and keep every line that contains ERROR. You can't tell how many there will be, and afterwards you want to read them by position.",
+        "answer": "vectors",
+        "options": [
+          "arrays",
+          "vectors",
+          "linked-lists",
+          "queues"
+        ],
+        "explanation": "A plain array needs its size up front. A vector grows as you append and still reads any position in O(1)."
+      },
+      {
+        "problem": "A weather app stores exactly 365 daily temperatures, never more and never fewer, and reads day 200 again and again.",
+        "answer": "arrays",
+        "options": [
+          "vectors",
+          "arrays",
+          "hash-maps",
+          "prefix-sum"
+        ],
+        "explanation": "The size is fixed and known, so there is no growth to manage. A vector would work, but a plain array is the simpler tool."
+      },
+      {
+        "problem": "Count how many times each word appears in a document.",
+        "answer": "hash-maps",
+        "options": [
+          "vectors",
+          "sorting",
+          "hash-maps",
+          "arrays"
+        ],
+        "explanation": "You look things up by word, not by position. A hash map goes straight to the right bucket, while a vector would have to scan."
+      },
+      {
+        "problem": "A sensor appends a reading every second all day. Later you must jump straight to reading number 5,000.",
+        "answer": "vectors",
+        "options": [
+          "linked-lists",
+          "stacks",
+          "vectors",
+          "queues"
+        ],
+        "explanation": "Appending at the end is amortised O(1) and reading by position is O(1). A linked list would have to follow 5,000 links to get there."
+      },
+      {
+        "problem": "Splice a new item into the middle of a very long chain, at a spot you already hold, many thousands of times.",
+        "answer": "linked-lists",
+        "options": [
+          "vectors",
+          "linked-lists",
+          "arrays",
+          "heaps"
+        ],
+        "explanation": "In a vector every middle insert shifts all the later elements, which is O(n). A linked list only rewires two links."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Append (Push Back)",
-      "description": "Add an element to the end. If capacity is full, double the array size first.",
-      "timeComplexity": "O(1) Amortized",
-      "spaceComplexity": "O(1) (unless resizing, then O(N))",
-      "code": {
-        "python": "def push_back(self, val):\n    if self.size == self.capacity:\n        self.resize(self.capacity * 2)\n    self.arr[self.size] = val\n    self.size += 1"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "data = an empty array of the starting capacity; size = 0; copies = 0",
+        "anchor": "init"
       },
-      "visualNote": "A new cell is filled. Occasionally, the entire array gets copied to a larger block."
-    },
-    {
-      "name": "Insert Middle",
-      "description": "Insert at a specific index. Requires shifting all subsequent elements to the right.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "def insert(self, idx, val):\n    for i in range(self.size, idx, -1):\n        self.arr[i] = self.arr[i-1]\n    self.arr[idx] = val\n    self.size += 1"
+      {
+        "text": "for each value to push:"
       },
-      "visualNote": "Elements slide to the right to make room."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "result = []\nfor item in data:\n  if condition(item):\n    result.append(item)",
-    "whenToUse": "Whenever you need an array but you do not know how many elements you will need to store ahead of time.",
-    "timeComplexity": "O(1) amortized appending.",
-    "spaceComplexity": "O(N) memory."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are reading a file line by line and storing all lines that contain the word 'Error'. You don't know the file size.",
-    "correctPatternId": "vectors",
-    "distractors": [
-      "arrays",
-      "hash-maps",
-      "binary-search"
+      {
+        "text": "if size == capacity:",
+        "anchor": "room",
+        "indent": 1
+      },
+      {
+        "text": "allocate a new array, twice as big (at least 1)",
+        "anchor": "grow",
+        "indent": 2
+      },
+      {
+        "text": "copy data[0 .. size - 1] across, one by one",
+        "anchor": "copy",
+        "indent": 2
+      },
+      {
+        "text": "data = the new array; capacity doubles; the old one is freed",
+        "anchor": "swap",
+        "indent": 2
+      },
+      {
+        "text": "data[size] = value, then size = size + 1",
+        "anchor": "write",
+        "indent": 1
+      },
+      {
+        "text": "return copies",
+        "anchor": "done"
+      }
     ],
-    "explanation": "Because you don't know the final size, a static array will fail. A dynamic array (Vector) will automatically resize as you append."
+    "tracer": "vectors/push-back",
+    "time": "O(1) amortised per push (O(n) for the push that resizes)",
+    "space": "O(n)",
+    "notes": [
+      "A push into a vector with a free slot is one write. A push into a full one copies everything, O(n). Over n pushes the copies add up to less than 2n, so the average push is a small constant.",
+      "Why double instead of adding one slot? Growing by one would copy every element on every push, about n²/2 copies for n pushes. Any constant factor above 1 keeps pushes amortised O(1). A bigger factor wastes more memory, a smaller one copies more often.",
+      "Real libraries differ, and versions change. std::vector in libstdc++ and libc++ doubles, MSVC grows by about 1.5, Java's ArrayList by about 1.5, and CPython's list by only about 1.125 plus a few slots. Treat these as ballpark numbers.",
+      "Reading and writing by index is O(1), just like an array. Inserting or erasing in the middle is O(n) because later elements shift, and an insert needs the same room check first: if size equals capacity, grow, then shift.",
+      "pop_back is O(1): it lowers size and copies nothing, and the old value stays in its slot until something overwrites it. Shrinking is optional. std::vector and Java's ArrayList don't shrink on their own (shrink_to_fit and trimToSize are requests you make), while CPython's list gives memory back once it falls below half full. The quarter rule in the Pop track is a common textbook policy: right after shrinking, the vector is half full, far from both growing and shrinking again.",
+      "A reallocation invalidates every pointer, reference and iterator into the old block. If you hold one across a push_back, fetch it again afterwards. If you know roughly how many items are coming, reserve that capacity first and skip the resizes.",
+      "A vector can start at capacity 0. The first push has to grow it to 1, so the growth rule needs max(1, 2 × capacity), because 2 × 0 is still 0 and an unguarded vector would never grow."
+    ]
   },
   "examples": [
     {
-      "title": "Design Dynamic Array",
-      "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/design-an-array/",
-      "problemStatement": "Implement a Dynamic Array class.",
-      "inputExample": "DynamicArray(capacity=2); pushback(1); pushback(2); pushback(3);",
-      "outputExample": "Capacity becomes 4 when 3 is pushed.",
-      "steps": [
-        "Create variables for size, capacity, and the actual array.",
-        "Implement pushback: check if size == capacity. If so, create a new array double the size.",
-        "Copy old elements, reassign pointer.",
-        "Add new element."
+      "title": "Concatenation of Array",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/concatenation-of-array/",
+      "problem": "Given an integer array nums of length n, build an array ans of length 2n where ans[i] == nums[i] and ans[i + n] == nums[i] for every 0 <= i < n. Return ans.",
+      "input": "nums = [1,2,1]",
+      "output": "[1,2,1,1,2,1]",
+      "approach": [
+        "The answer has exactly 2n slots and you know n, so ask for all 2n slots once. The array never has to grow.",
+        "Copy nums[i] into ans[i] for the first half.",
+        "Copy the same nums[i] into ans[i + n] for the second half.",
+        "Pushing 2n values into an empty vector would also be O(n) in total, but sizing it up front skips every resize and every copy."
       ],
-      "code": {
-        "python": "class DynamicArray:\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.size = 0\n        self.arr = [0] * capacity\n\n    def pushback(self, n: int) -> None:\n        if self.size == self.capacity:\n            self.resize()\n        self.arr[self.size] = n\n        self.size += 1\n\n    def resize(self) -> None:\n        self.capacity *= 2\n        new_arr = [0] * self.capacity\n        for i in range(self.size):\n            new_arr[i] = self.arr[i]\n        self.arr = new_arr"
-      },
-      "timeComplexity": "O(1) Amortized",
-      "spaceComplexity": "O(N) for the new array during resize",
-      "rationale": "This explicitly shows the hidden O(N) copy operation that happens behind the scenes in languages like Python."
+      "code": "vectors/concatenation-of-array",
+      "time": "O(n)",
+      "space": "O(n)"
+    },
+    {
+      "title": "Min Stack",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/min-stack/",
+      "problem": "Design a stack that supports push, pop, top and retrieving the minimum element, each in constant time.",
+      "input": "[\"MinStack\",\"push\",\"push\",\"push\",\"getMin\",\"pop\",\"top\",\"getMin\"], [[],[-2],[0],[-3],[],[],[],[]]",
+      "output": "[null,null,null,null,-3,null,0,-2]",
+      "approach": [
+        "A stack is just push_back and pop_back on a vector: items.append(val) and items.pop(), amortised O(1) each.",
+        "To read the minimum in O(1), keep a second vector, mins, the same length. mins[k] is the smallest value among items[0..k].",
+        "On push, append min(val, mins[-1]) to mins, or val itself if mins is empty. On pop, pop both vectors so they stay in step.",
+        "top reads items[-1] and getMin reads mins[-1]. Each is a single read."
+      ],
+      "code": "vectors/min-stack",
+      "time": "O(1) amortised per operation",
+      "space": "O(n)"
+    },
+    {
+      "title": "Insert Delete GetRandom O(1)",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/insert-delete-getrandom-o1/",
+      "problem": "Implement a set that supports insert(val), remove(val) and getRandom(), each in average O(1). getRandom returns any current element with equal probability.",
+      "input": "[\"RandomizedSet\",\"insert\",\"remove\",\"insert\",\"getRandom\",\"remove\",\"insert\",\"getRandom\"], [[],[1],[2],[2],[],[1],[2],[]]",
+      "output": "[null,true,false,true,2,true,false,2] (the first getRandom may return 1 or 2)",
+      "approach": [
+        "Keep the values in a vector. getRandom is then a random index from 0 to size - 1. Keep a hash map from each value to its index in the vector, so insert and membership checks are O(1).",
+        "insert: if val is already in the map, return false. Otherwise record its index as the current length and append it.",
+        "Removing from the middle of a vector would shift everything, O(n). Instead copy the last value into the hole, update that value's index in the map, then pop_back.",
+        "A set has no order to preserve, so moving the last value is allowed. Removing from the back is the cheap operation of a vector."
+      ],
+      "code": "vectors/insert-delete-getrandom-o1",
+      "time": "O(1) average per operation",
+      "space": "O(n)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What does 'Amortized O(1)' mean?",
+      "question": "A vector has size 4 and capacity 4. You push a fifth number. What happens?",
       "options": [
-        "The average time per operation is O(1) when spread out over many operations, even if one operation takes O(N).",
-        "It means O(1) in the worst case.",
-        "It means O(N).",
-        "It means the operation is instantly fast."
+        "It writes at index 4 and hopes the memory next door is free",
+        "It allocates a bigger array, copies the 4 numbers across, then writes the fifth",
+        "It overwrites the first number to make room",
+        "It refuses, because a vector can't go past its capacity"
       ],
-      "correctIndex": 0,
-      "explanation": "Because you double the capacity, you do an O(N) copy, but then you get N free O(1) operations. So the average cost is exactly O(1)."
+      "answer": 1,
+      "explanation": "There is no free slot, and the block can't be stretched, so the vector moves. After the copy there is room for the fifth number and for several more."
     },
     {
-      "question": "Why not just increase the capacity by 1 each time instead of doubling it?",
+      "question": "Why does a vector double its capacity instead of adding one slot at a time?",
       "options": [
-        "Because adding 1 would require copying the entire array every single time you append, making appending O(N).",
-        "Because computers only understand powers of 2.",
-        "To save memory.",
-        "To prevent buffer overflows."
+        "Computers can only allocate blocks whose size is a power of two",
+        "Doubling uses less memory than adding one slot",
+        "Adding one slot would still be O(1) amortised, but doubling is easier to code",
+        "Adding one slot would copy everything on every push, about n²/2 copies for n pushes, while doubling keeps the total under 2n"
       ],
-      "correctIndex": 0,
-      "explanation": "If you increased capacity by 1, you would do an O(N) copy for every single insert, resulting in an O(N^2) total time for N inserts. Doubling guarantees O(N) total time for N inserts."
+      "answer": 3,
+      "explanation": "With +1 growth every push is a full block, so every push copies every element. Doubling makes full blocks rare: each resize buys as many free slots as it copied elements."
+    },
+    {
+      "question": "Start with capacity 1 and push 8 numbers, doubling whenever the vector is full. How many copies happen in total?",
+      "options": [
+        "7",
+        "8",
+        "4",
+        "15"
+      ],
+      "answer": 0,
+      "explanation": "Growing 1 to 2 copies 1 number, 2 to 4 copies 2, and 4 to 8 copies 4. That is 1 + 2 + 4 = 7, still under 2 × 8 = 16. The ninth push would grow 8 to 16 and copy 8 more."
+    },
+    {
+      "question": "A vector with capacity 16 shrinks to capacity 8 as soon as its size falls to 8. What can go wrong?",
+      "options": [
+        "Nothing: half full is the best moment to shrink",
+        "Every pop becomes O(n), even when nothing shrinks",
+        "Right after shrinking it is completely full, so the next push grows it again and the next pop shrinks it again, copying everything each time",
+        "The numbers end up in a different order"
+      ],
+      "answer": 2,
+      "explanation": "Push and pop at the boundary would each trigger a full copy. Shrinking at a quarter leaves the new array half full, far from both limits, so a resize can't repeat straight away."
+    },
+    {
+      "question": "You hold a pointer to the first element of a vector, then a push_back triggers a reallocation. What is true about the pointer?",
+      "options": [
+        "It still points at the first element, because elements keep their addresses",
+        "It points into the old block, which has been freed, so using it is a bug",
+        "It automatically follows the elements to the new block",
+        "It now points at the last element"
+      ],
+      "answer": 1,
+      "explanation": "The elements were copied to a new block, so the old address is stale. This is iterator invalidation: after anything that can reallocate, fetch your pointers and iterators again."
     }
   ],
   "practice": [
-    { "title": "Design Dynamic Array (Concept)", "url": "#", "difficulty": "medium", "keyInsight": "Understand the internal copy mechanisms of your language's array." }
+    {
+      "title": "Plus One",
+      "url": "https://leetcode.com/problems/plus-one/",
+      "difficulty": "easy",
+      "insight": "Adding one can carry all the way and turn 999 into 1000, one digit longer than the input. Think about the only case where the answer needs an extra slot."
+    },
+    {
+      "title": "Duplicate Zeros",
+      "url": "https://leetcode.com/problems/duplicate-zeros/",
+      "difficulty": "easy",
+      "insight": "The array can't grow, so values pushed along fall off the end. Work out where each value lands, and fill from the back so you don't overwrite what you still need."
+    },
+    {
+      "title": "Pascal's Triangle",
+      "url": "https://leetcode.com/problems/pascals-triangle/",
+      "difficulty": "easy",
+      "insight": "Build each row by appending to a new vector, using neighbouring numbers of the row above. Row i has exactly i + 1 numbers."
+    },
+    {
+      "title": "Implement Queue using Stacks",
+      "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
+      "difficulty": "easy",
+      "insight": "Use two vectors as stacks. Moving everything from one to the other costs O(n), but each element moves at most once, so the average cost per operation is O(1): amortised again."
+    },
+    {
+      "title": "Design Browser History",
+      "url": "https://leetcode.com/problems/design-browser-history/",
+      "difficulty": "medium",
+      "insight": "Keep the pages in a vector plus an index for the current page. Visiting a new page throws away everything ahead of the index, which is a run of pop_back calls."
+    },
+    {
+      "title": "Design Circular Queue",
+      "url": "https://leetcode.com/problems/design-circular-queue/",
+      "difficulty": "medium",
+      "insight": "This is the opposite of a vector: a fixed capacity that never grows. Indices wrap around with a modulo, so both ends move without shifting anything."
+    },
+    {
+      "title": "Insert Delete GetRandom O(1) - Duplicates allowed",
+      "url": "https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/",
+      "difficulty": "hard",
+      "insight": "It is the swap-with-last and pop_back trick from the example, but a value can now appear several times, so each value maps to a set of indices instead of one."
+    }
+  ],
+  "overview": [
+    "Explain why most pushes cost one write, not a copy.",
+    "Trace a resize: the capacity doubles and every item moves across.",
+    "Explain why doubling makes pushes amortised O(1) overall.",
+    "Use a vector as a stack, pushing and popping at the back.",
+    "Recognise when a reserve call or fixed array avoids growing entirely."
+  ],
+  "resources": [
+    {
+      "title": "Dynamic array",
+      "url": "https://en.wikipedia.org/wiki/Dynamic_array",
+      "note": "Explains capacity, resizing by doubling, and the trade-off against wasted space."
+    },
+    {
+      "title": "Amortized analysis",
+      "url": "https://en.wikipedia.org/wiki/Amortized_analysis",
+      "note": "The averaging argument that explains why occasional expensive pushes still cost O(1) on average."
+    },
+    {
+      "title": "std::vector",
+      "url": "https://en.cppreference.com/cpp/container/vector",
+      "note": "The C++ vector reference, covering capacity, reserve and when reallocation invalidates references."
+    }
   ]
 }

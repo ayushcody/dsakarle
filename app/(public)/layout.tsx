@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '@/components/layout/Navbar';
+import { SiteHeader } from '@/components/layout/SiteHeader';
 import Footer from '@/components/layout/Footer';
 
 export default function PublicLayout({
@@ -9,8 +9,8 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      <Navbar />
-      <main className="flex-grow pt-[64px] flex flex-col">
+      <SiteHeader />
+      <main id="main-content" className="flex flex-grow flex-col pt-16 focus:outline-none">
         {children}
       </main>
       <Footer />

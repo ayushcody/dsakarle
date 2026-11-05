@@ -1,168 +1,513 @@
 {
-  "id": "tries",
+  "schemaVersion": 2,
   "slug": "tries",
-  "title": "Tries (Prefix Trees)",
-  "category": "data-structure",
-  "difficulty": "hard",
-  "estimatedMinutes": 45,
-  "prerequisites": ["trees", "hash-maps"],
-  "tags": ["tree", "strings", "prefix"],
-  "overview": {
-    "summary": "A Trie (pronounced 'try') is a specialized tree used to store associative data structures, specifically strings. It excels at fast prefix matching.",
-    "learningObjectives": [
-      "Understand how edges represent characters.",
-      "Implement Trie insertion and search.",
-      "Recognize autocomplete and spell-check as Trie use cases."
-    ],
-    "interviewRelevance": "Tries appear whenever an interview asks you to build 'Autocomplete', 'Search History', or 'Dictionary Spell Check'. It's the ultimate string-search data structure."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "Your phone's keyboard suggests \"cardigan\" the moment you type \"car\". How can it find every word that starts with \"car\" without scanning the whole dictionary?",
     "paragraphs": [
-      "When you type 'algo' into Google, how does it instantly suggest 'algorithm', 'algorand', and 'algodones'?",
-      "It doesn't scan millions of words starting with A, then L, then G. It follows a path down a Trie: A -> L -> G -> O, and simply returns all the leaves below that exact node."
+      "A dictionary can hold hundreds of thousands of words. Testing each one to see if it starts with \"car\" would be a long scan, and it would start over with every letter you type. A hash map doesn't help much either: it can tell you whether \"car\" is a word, but it files \"car\", \"card\" and \"cardigan\" in unrelated buckets.",
+      "So give each word a route instead. The first letter picks one road, the second letter picks the next, and so on. Where would the words that start with \"car\" be?"
     ],
-    "ahaMoment": "In a Trie, the data is not stored IN the nodes. The data is defined by the PATH you take to get there."
+    "aha": "Words that start the same share a path. Follow c, a, r once and you are standing at the one place every \"car...\" word hangs from, without looking at any other word. Finding that place takes as many steps as the prefix has letters, however many words are stored."
   },
-  "definition": {
-    "technicalDefinition": "A Trie is a tree-like data structure whose nodes store the letters of an alphabet. By structuring the nodes in a particular way, words and strings can be retrieved by traversing down a branch path of the tree.",
-    "vocabulary": [
-      { "term": "Prefix", "definition": "The beginning characters of a word." },
-      { "term": "IsWord Flag", "definition": "A boolean stored on a node to indicate that the path ending at this node forms a complete valid word." },
-      { "term": "Children Map", "definition": "Instead of just Left/Right, a Trie node has a Hash Map (or Array of size 26) pointing to its children." }
-    ],
-    "keyProperties": [
-      "O(L) search time, where L is the length of the word (independent of how many words are in the dictionary).",
-      "Extremely memory efficient for storing words with shared prefixes.",
-      "Root node is usually empty."
+  "shape": {
+    "scene": {
+      "kind": "tree",
+      "root": "t-",
+      "nodes": [
+        {
+          "id": "t-",
+          "value": "•",
+          "children": [
+            "t-c",
+            "t-d"
+          ],
+          "edgeLabels": [
+            "c",
+            "d"
+          ],
+          "terminal": false
+        },
+        {
+          "id": "t-c",
+          "value": "",
+          "children": [
+            "t-ca"
+          ],
+          "edgeLabels": [
+            "a"
+          ],
+          "terminal": false
+        },
+        {
+          "id": "t-ca",
+          "value": "",
+          "children": [
+            "t-car",
+            "t-cat"
+          ],
+          "edgeLabels": [
+            "r",
+            "t"
+          ],
+          "terminal": false
+        },
+        {
+          "id": "t-car",
+          "value": "",
+          "children": [
+            "t-card"
+          ],
+          "edgeLabels": [
+            "d"
+          ],
+          "terminal": true
+        },
+        {
+          "id": "t-card",
+          "value": "",
+          "children": [],
+          "edgeLabels": [],
+          "terminal": true
+        },
+        {
+          "id": "t-cat",
+          "value": "",
+          "children": [],
+          "edgeLabels": [],
+          "terminal": true
+        },
+        {
+          "id": "t-d",
+          "value": "",
+          "children": [
+            "t-do"
+          ],
+          "edgeLabels": [
+            "o"
+          ],
+          "terminal": false
+        },
+        {
+          "id": "t-do",
+          "value": "",
+          "children": [
+            "t-dog"
+          ],
+          "edgeLabels": [
+            "g"
+          ],
+          "terminal": false
+        },
+        {
+          "id": "t-dog",
+          "value": "",
+          "children": [],
+          "edgeLabels": [],
+          "terminal": true
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "node:t-",
+        "text": "root: no letters yet"
+      },
+      {
+        "target": "node:t-ca",
+        "text": "shared by cat, car, card"
+      },
+      {
+        "target": "node:t-car",
+        "text": "ring: a word ends here"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A file cabinet with folders inside of folders. The top drawer is 'A', inside is 'P', inside is 'P', inside is 'L', inside is 'E'."
+      "Picture a hiking trail with a signpost at every fork. Each sign shows a few letters, and to reach \"cat\" you take the c road, then the a road, then the t road. Words that begin the same way walk the same road for a while before it splits, and a small ring on a post means \"a word ends right here\"."
     ],
-    "clickSentence": "By sharing common prefixes, the words 'cat', 'car', and 'cap' all share the exact same 'c -> a' nodes in memory.",
-    "diagramType": "tree",
-    "cells": [],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "A TrieNode has two things: A Hash Map (or Array[26]) of children, and a boolean flag `is_word`.",
-      "The letter itself isn't technically stored in the node; it is the KEY in the parent's Hash Map that points to the child."
-    ],
-    "definitionCode": {
-      "python": "class TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False",
-      "javascript": "class TrieNode {\n    constructor() {\n        this.children = new Map();\n        this.isWord = false;\n    }\n}",
-      "java": "class TrieNode {\n    TrieNode[] children = new TrieNode[26];\n    boolean isWord = false;\n}",
-      "cpp": "struct TrieNode {\n    unordered_map<char, TrieNode*> children;\n    bool isWord = false;\n};"
-    },
-    "memoryLayout": [
-      { "label": "Root", "value": "{ 'c': Node1, 'd': Node2 }" },
-      { "label": "Node1", "value": "{ 'a': Node3 }, isWord: false" },
-      { "label": "Node3", "value": "{ 't': Node4 }, isWord: false" },
-      { "label": "Node4", "value": "{}, isWord: true" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "tree",
-    "array": [],
-    "steps": [
+    "click": "A trie is a tree of letters: each word is a path from the root, and words that start the same share the same first stretch of path.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Trie visualization coming soon.",
-        "activeLine": 1
+        "term": "trie",
+        "definition": "A tree that stores words, one letter per edge. The path from the root to a node spells a prefix. Said \"try\", from the word retrieval."
+      },
+      {
+        "term": "prefix",
+        "definition": "The first few letters of a word: \"c\", \"ca\" and \"car\" are all prefixes of \"card\". Every node in a trie stands for one prefix."
+      },
+      {
+        "term": "edge (character)",
+        "definition": "The link from a node to one of its children. The letter lives on the edge, as the key in the parent's children map, not inside the node."
+      },
+      {
+        "term": "end-of-word marker",
+        "definition": "A flag on a node (drawn as a double ring) that says the path to here is a stored word, not just the start of one. \"car\" and \"card\" both carry one."
+      },
+      {
+        "term": "children map",
+        "definition": "How a node keeps its children: a map from letter to child node. It only holds the letters that actually occur, and it works for any alphabet."
+      },
+      {
+        "term": "array of 26",
+        "definition": "A faster, fixed alternative for lowercase a to z: slot 0 is a, slot 25 is z. Lookup is a single index, but every node pays for 26 slots, even when it has one child."
+      },
+      {
+        "term": "autocomplete",
+        "definition": "Finding the prefix's node, then listing every stored word below it. Reaching the node costs one step per letter; listing costs one visit per node below it."
+      }
+    ],
+    "definition": "A trie (prefix tree) stores a set of strings in a rooted tree. Every edge carries one character, so the path from the root to a node spells a prefix, and a node is flagged when that prefix is itself a stored word. A node keeps its children either in a map from character to child or, for a fixed alphabet such as lowercase a to z, in an array of 26 slots. Inserting, searching or checking a prefix touches one node per character, so it takes O(L) steps for a string of length L, however many words are stored (O(1) per step for an array, O(1) on average for a hash map). To list every word under a prefix, you first spend O(L) reaching its node, then visit every node below it. The price is memory: each node carries its own children container, and an array of 26 uses space even when almost every slot is empty. Sharing prefixes only saves space when the words really do share them."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "insert",
+        "label": "Insert words",
+        "tracer": "tries/insert",
+        "predict": {
+          "tags": [
+            "reuse-or-create"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "autocomplete",
+        "label": "Autocomplete",
+        "tracer": "tries/prefix-search",
+        "preset": 0,
+        "predict": {
+          "tags": [
+            "edge-exists",
+            "is-word"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "word-or-prefix",
+        "label": "Word or just a prefix?",
+        "tracer": "tries/prefix-search",
+        "preset": 1,
+        "predict": {
+          "tags": [
+            "is-word",
+            "edge-exists"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The problem asks \"does any stored word start with this?\", or wants every word that does.",
+      "Autocomplete, type-ahead, search suggestions or a dictionary that is searched letter by letter.",
+      "Many words share beginnings, and you query by prefix about as often as by whole word.",
+      "A pattern such as \"b.d\" has to match many words, or you walk a board and a word list together."
+    ],
+    "notWhen": [
+      "You only ask \"is this exact word stored?\". A hash set answers in one step and uses far less memory.",
+      "You have only a handful of words, or one long text to search inside. Building a trie costs more than it saves.",
+      "The words share almost nothing and memory is tight. Every node carries a children container, so a trie can be much bigger than the raw text."
+    ],
+    "quiz": [
+      {
+        "problem": "As the user types, show every stored word that starts with the letters typed so far.",
+        "answer": "tries",
+        "options": [
+          "hash-maps",
+          "tries",
+          "strings",
+          "binary-search"
+        ],
+        "explanation": "The prefix leads to one node, and everything below it is a suggestion. A hash map can't answer \"starts with\" without checking every key."
+      },
+      {
+        "problem": "A list of 10,000 words is fixed. Many queries each ask whether one exact word is in the list.",
+        "answer": "hash-maps",
+        "options": [
+          "tries",
+          "arrays",
+          "hash-maps",
+          "binary-search"
+        ],
+        "explanation": "Exact membership is what a hash set is for: one step on average, and much less memory than a trie. A trie would work, but it is more than this job needs."
+      },
+      {
+        "problem": "Words are given in sorted order. Find the first word that starts with a given prefix, using almost no extra memory.",
+        "answer": "binary-search",
+        "options": [
+          "tries",
+          "hash-maps",
+          "binary-search",
+          "sorting"
+        ],
+        "explanation": "Sorted data is the clue. Binary search finds the first word that is not smaller than the prefix, with no extra structure at all."
+      },
+      {
+        "problem": "Words are added over time. A query like \"b.d\" must match \"bad\" and \"bid\", where the dot stands for any one letter.",
+        "answer": "tries",
+        "options": [
+          "hash-maps",
+          "strings",
+          "tries",
+          "recursion"
+        ],
+        "explanation": "Follow the letters you know down the trie. At a dot, try every child there. A hash map has no way to say \"any letter here\" without checking every word."
+      },
+      {
+        "problem": "Each person in a family tree has any number of children. Find how many generations the tree has.",
+        "answer": "trees",
+        "options": [
+          "tries",
+          "trees",
+          "graphs",
+          "hash-maps"
+        ],
+        "explanation": "There are no letters or prefixes here, just parents and children. That is an ordinary tree, and its height comes from a depth-first walk."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Insert",
-      "description": "Walk down the tree creating new nodes for characters that don't exist yet. Mark the final node with is_word = True.",
-      "timeComplexity": "O(L)",
-      "spaceComplexity": "O(L)",
-      "code": {
-        "python": "curr = root\nfor char in word:\n    if char not in curr.children:\n        curr.children[char] = TrieNode()\n    curr = curr.children[char]\ncurr.is_word = True"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "root = an empty node"
       },
-      "visualNote": "A path lights up, spawning new nodes when needed."
-    },
-    {
-      "name": "Search / StartsWith",
-      "description": "Walk down the tree following the characters. If a character is missing, return false.",
-      "timeComplexity": "O(L)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "curr = root\nfor char in word:\n    if char not in curr.children:\n        return False\n    curr = curr.children[char]\nreturn curr.is_word # Search requires this to be True, StartsWith doesn't."
+      {
+        "text": "for each word in words:"
       },
-      "visualNote": "A pointer traces down the existing letters."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "trie = new Trie()\nfor word in dictionary:\n  trie.insert(word)\nfor word in queries:\n  if trie.search(word):\n    process()",
-    "whenToUse": "Whenever a problem asks you to search for words, prefixes, or do autocomplete across a massive dictionary of strings.",
-    "timeComplexity": "O(L) where L is string length.",
-    "spaceComplexity": "O(N * L) for N strings."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "Design a data structure that supports adding new words and finding if a string matches any previously added string, where the string can contain the '.' wildcard character.",
-    "correctPatternId": "tries",
-    "distractors": [
-      "hash-maps",
-      "arrays",
-      "binary-search"
+      {
+        "text": "node = root",
+        "anchor": "start",
+        "indent": 1
+      },
+      {
+        "text": "for each letter ch in word:",
+        "indent": 1
+      },
+      {
+        "text": "if node has no edge for ch:",
+        "anchor": "check",
+        "indent": 2
+      },
+      {
+        "text": "give node a new child for ch",
+        "anchor": "create",
+        "indent": 3
+      },
+      {
+        "text": "node = the child for ch",
+        "anchor": "step",
+        "indent": 2
+      },
+      {
+        "text": "mark node as the end of a word",
+        "anchor": "mark",
+        "indent": 1
+      },
+      {
+        "text": "return root",
+        "anchor": "done"
+      }
     ],
-    "explanation": "Because of the '.' wildcard (which can match ANY letter), a Hash Map fails. A Trie allows you to run a DFS down every child branch when you hit a wildcard."
+    "tracer": "tries/insert",
+    "time": "O(L) per word, O(total letters) for all of them",
+    "space": "O(total letters) in the worst case, less when words share starts",
+    "notes": [
+      "Every letter costs one check and at most one new node, so a word of L letters costs O(L) no matter how many words are already stored. Searching and checking a prefix cost O(L) too.",
+      "The end-of-word marker is not optional. After inserting only \"card\", the path c, a, r exists, but \"car\" was never stored. Search must test the marker; startsWith only needs the path.",
+      "Words need not be leaves. \"cat\" and \"cats\" share a path, and the node after t is both a word and a parent. Do not assume the words sit at the bottom.",
+      "Memory is the honest cost. A node with a map holds only the letters it uses but pays for the map; an array of 26 is fast but uses 26 slots per node, even for a single child. A trie saves space only when words really share prefixes, and for plain exact lookups a hash set is smaller.",
+      "These pictures and files assume lowercase a to z. For other characters, use a map for the children (or map each character to an index first).",
+      "Autocomplete is two phases: O(L) to reach the prefix's node, then a depth-first walk over everything below it. That walk costs time proportional to the part of the trie under the node, so a short prefix with many matches takes longer than a long one."
+    ]
   },
   "examples": [
     {
       "title": "Implement Trie (Prefix Tree)",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/implement-trie-prefix-tree/",
-      "problemStatement": "Implement the Trie class with insert, search, and startsWith methods.",
-      "inputExample": "Trie trie = new Trie(); trie.insert(\"apple\"); trie.search(\"apple\");",
-      "outputExample": "true",
-      "steps": [
-        "Create a TrieNode structure.",
-        "Implement Insert by iterating chars and building nodes.",
-        "Implement Search by iterating chars and returning the final isWord flag.",
-        "Implement StartsWith the same way, but return true immediately if you reach the end of the prefix."
+      "url": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+      "problem": "Implement a Trie class with insert(word), search(word) and startsWith(prefix). search is true only for a word that was inserted; startsWith is true for any prefix of an inserted word.",
+      "input": "insert(\"apple\"), search(\"apple\"), search(\"app\"), startsWith(\"app\"), insert(\"app\"), search(\"app\")",
+      "output": "true, false, true, true",
+      "approach": [
+        "Each node has a children map and an is_word flag. The root stands for the empty prefix.",
+        "insert walks the word, creating a child wherever the letter has no edge yet, then sets is_word on the last node.",
+        "search and startsWith share one walk that returns the node reached for the text, or nothing if an edge is missing.",
+        "After insert(\"apple\"), the walk for \"app\" succeeds but its node has no flag, so search(\"app\") is false and startsWith(\"app\") is true. Inserting \"app\" only sets the flag, so search(\"app\") becomes true."
       ],
-      "code": {
-        "python": "class Trie:\n    def __init__(self):\n        self.root = TrieNode()\n    def insert(self, word):\n        curr = self.root\n        for c in word:\n            if c not in curr.children:\n                curr.children[c] = TrieNode()\n            curr = curr.children[c]\n        curr.is_word = True\n    def search(self, word):\n        curr = self.root\n        for c in word:\n            if c not in curr.children: return False\n            curr = curr.children[c]\n        return curr.is_word\n    def startsWith(self, prefix):\n        curr = self.root\n        for c in prefix:\n            if c not in curr.children: return False\n            curr = curr.children[c]\n        return True"
-      },
-      "timeComplexity": "O(L)",
-      "spaceComplexity": "O(L) per insert",
-      "rationale": "This perfectly encapsulates the core operations of the data structure without external logic."
+      "code": "tries/implement-trie",
+      "tracer": "tries/insert",
+      "time": "O(L) per call",
+      "space": "O(total letters stored)"
+    },
+    {
+      "title": "Longest Common Prefix",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/longest-common-prefix/",
+      "problem": "Given an array of strings, return the longest prefix that every string starts with. If there is none, return an empty string.",
+      "input": "strs = [\"flower\",\"flow\",\"flight\"]",
+      "output": "\"fl\"",
+      "approach": [
+        "Insert every string into a trie. Shared starts share a path.",
+        "Walk down from the root while the current node has exactly one child and no word ends here. Each step adds one letter to the answer.",
+        "For flower, flow and flight the path is f, l, and then it splits into o and i, so we stop with \"fl\".",
+        "A word ending here (like \"a\" among \"ab\" and \"a\") also stops the walk, because a shorter string can't share any more letters. This is a fine way to see the idea; comparing letter columns directly uses no extra memory."
+      ],
+      "code": "tries/longest-common-prefix",
+      "time": "O(total letters)",
+      "space": "O(total letters)"
+    },
+    {
+      "title": "Design Add and Search Words Data Structure",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+      "problem": "Design WordDictionary with addWord(word) and search(word). In search, a dot \".\" can stand for any single letter.",
+      "input": "addWord(\"bad\"), addWord(\"dad\"), addWord(\"mad\"), search(\"pad\"), search(\"bad\"), search(\".ad\"), search(\"b..\")",
+      "output": "false, true, true, true",
+      "approach": [
+        "Store the words in a trie, exactly as in Implement Trie.",
+        "Search with a recursive walk over the letters. For a normal letter, follow that one edge, or fail if it is missing.",
+        "For a dot, try every child and succeed if any branch matches the rest of the word.",
+        "At the end of the word, the answer is the node's end-of-word flag. \"pad\" fails at p, \".ad\" tries b, d and m and finds a match, and \"b..\" follows b then fans out twice."
+      ],
+      "code": "tries/add-search-word",
+      "time": "O(L) to add; search is O(L) without dots, and can visit many nodes when dots fan out",
+      "space": "O(total letters stored)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "If you insert 'cat' and 'car' into an empty Trie, how many nodes (including root) exist?",
+      "question": "You insert \"cat\" and then \"car\" into an empty trie. How many nodes does it have, counting the root?",
       "options": [
-        "5 nodes (Root, c, a, t, r)",
-        "6 nodes (Root, c, a, t, c, a, r)",
+        "4 nodes",
+        "5 nodes",
         "7 nodes",
-        "2 nodes"
+        "6 nodes"
       ],
-      "correctIndex": 0,
-      "explanation": "Root (1) -> 'c' (1) -> 'a' (1). Then 'a' branches to 't' (1) and 'r' (1). 1 + 1 + 1 + 1 + 1 = 5."
+      "answer": 1,
+      "explanation": "The root, then c and a shared by both words, then one node for t and one for r. That is 1 + 1 + 1 + 1 + 1 = 5, not 7, because the c and a nodes are stored once."
     },
     {
-      "question": "Why use a Trie over a Hash Map for dictionary lookups?",
+      "question": "Only \"cart\" has been inserted. What does search(\"car\") return?",
       "options": [
-        "A Trie can instantly find all words that START WITH a specific prefix, which a Hash Map cannot do.",
-        "A Trie uses less CPU cycles.",
-        "A Trie doesn't use pointers.",
-        "Hash Maps cannot store strings."
+        "true, because the path c, a, r exists",
+        "An error, because \"car\" was never inserted",
+        "true, because every prefix counts as a word",
+        "false, because the node for \"car\" has no end-of-word marker"
       ],
-      "correctIndex": 0,
-      "explanation": "A Hash Map only supports exact matches. To find prefixes in a Hash Map, you would have to iterate over every single key in the map (O(N))."
+      "answer": 3,
+      "explanation": "The path exists only because \"cart\" passes through it. Without a marker on that node, \"car\" is just a prefix. startsWith(\"car\") would be true, but search(\"car\") is false."
+    },
+    {
+      "question": "A trie holds many words. What does autocomplete for the prefix \"car\" cost?",
+      "options": [
+        "O(3) steps to reach the node, then one visit for every node below it",
+        "O(1), since the node is found instantly",
+        "O(N) steps, checking every stored word",
+        "O(3) in total, however many words match"
+      ],
+      "answer": 0,
+      "explanation": "Finding the node takes one step per letter of the prefix. Listing the matches then visits every node beneath it, so the cost grows with how much is listed."
+    },
+    {
+      "question": "Why can a trie take more memory than a hash set holding the same words?",
+      "options": [
+        "It stores every word twice, once forward and once backward.",
+        "It cannot share anything unless the words arrive in sorted order.",
+        "Every node carries its own children container, such as an array of 26 slots, and sharing prefixes only helps when words actually share them.",
+        "It keeps a hash of every word as well as the tree."
+      ],
+      "answer": 2,
+      "explanation": "Nodes are many and each one has a container, even one with a single child. If the words share little, a hash set of the raw words is usually smaller."
+    },
+    {
+      "question": "A trie holds \"cat\" and \"cats\". Which statement is true?",
+      "options": [
+        "Only the bottom nodes can end a word, so \"cat\" cannot be stored.",
+        "The node after c, a, t ends a word and also has a child for s.",
+        "\"cats\" replaces \"cat\", because it is longer.",
+        "Each word needs its own separate path from the root."
+      ],
+      "answer": 1,
+      "explanation": "Words need not be leaves. The node after t carries the end-of-word marker for \"cat\" and is also the parent of the s node, which ends \"cats\"."
     }
   ],
   "practice": [
-    { "title": "Implement Trie (Prefix Tree)", "url": "https://leetcode.com/problems/implement-trie-prefix-tree/", "difficulty": "medium", "keyInsight": "Standard implementation." },
-    { "title": "Design Add and Search Words Data Structure", "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/", "difficulty": "medium", "keyInsight": "When you hit a '.' wildcard, run a DFS on all children of the current node." },
-    { "title": "Word Search II", "url": "https://leetcode.com/problems/word-search-ii/", "difficulty": "hard", "keyInsight": "Put the dictionary into a Trie, then run DFS from every cell on the board, walking down the Trie concurrently." }
+    {
+      "title": "Longest Word in Dictionary",
+      "url": "https://leetcode.com/problems/longest-word-in-dictionary/",
+      "difficulty": "medium",
+      "insight": "A word counts only if every shorter prefix of it is also a word. Which nodes on its path carry a marker?"
+    },
+    {
+      "title": "Replace Words",
+      "url": "https://leetcode.com/problems/replace-words/",
+      "difficulty": "medium",
+      "insight": "Put the roots in a trie, then walk each word and stop at the first end-of-word marker you meet."
+    },
+    {
+      "title": "Map Sum Pairs",
+      "url": "https://leetcode.com/problems/map-sum-pairs/",
+      "difficulty": "medium",
+      "insight": "A node can hold more than a flag. What could every node on a key's path remember so that a prefix sum is a single lookup?"
+    },
+    {
+      "title": "Search Suggestions System",
+      "url": "https://leetcode.com/problems/search-suggestions-system/",
+      "difficulty": "medium",
+      "insight": "After each typed letter you are at one node. The suggestions are the first few words below it in alphabetical order."
+    },
+    {
+      "title": "Maximum XOR of Two Numbers in an Array",
+      "url": "https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/",
+      "difficulty": "medium",
+      "insight": "A trie does not need letters. Store each number's bits, and at each bit try to walk the branch that differs."
+    },
+    {
+      "title": "Word Search II",
+      "url": "https://leetcode.com/problems/word-search-ii/",
+      "difficulty": "hard",
+      "insight": "Search the board and the word list together: walk the trie as the path grows, and drop a path the moment its prefix is not in the trie."
+    },
+    {
+      "title": "Prefix and Suffix Search",
+      "url": "https://leetcode.com/problems/prefix-and-suffix-search/",
+      "difficulty": "hard",
+      "insight": "One trie can answer both ends at once if each word is stored in several rotated forms. What would you put in front of the word?"
+    },
+    {
+      "title": "Stream of Characters",
+      "url": "https://leetcode.com/problems/stream-of-characters/",
+      "difficulty": "hard",
+      "insight": "The query is a suffix of what has arrived so far. What changes if you store the words backward and walk the stream backward?"
+    }
+  ],
+  "overview": [
+    "Explain why a trie finds prefix matches in time proportional to the prefix length.",
+    "Trace how inserting words creates shared paths and end-of-word markers.",
+    "Implement insert and search on a trie, using one child slot per letter.",
+    "Spot when a hash set beats a trie for exact-word lookups.",
+    "Compare the memory cost of a trie with the raw text it stores."
+  ],
+  "resources": [
+    {
+      "title": "Trie (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Trie",
+      "note": "Overview of the trie structure, its common operations, and typical uses such as autocomplete."
+    },
+    {
+      "title": "Trie visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/Trie.html",
+      "note": "Step through inserts and searches to watch shared prefix paths form."
+    },
+    {
+      "title": "Aho-Corasick (cp-algorithms)",
+      "url": "https://cp-algorithms.com/string/aho_corasick.html",
+      "note": "A natural next step: matching many patterns at once using a trie with failure links."
+    }
   ]
 }

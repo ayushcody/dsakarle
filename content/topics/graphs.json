@@ -1,170 +1,579 @@
 {
-  "id": "graphs",
+  "schemaVersion": 2,
   "slug": "graphs",
-  "title": "Graphs",
-  "category": "data-structure",
-  "difficulty": "hard",
-  "estimatedMinutes": 90,
-  "prerequisites": ["trees", "hash-maps"],
-  "tags": ["graph", "bfs", "dfs", "networks"],
-  "overview": {
-    "summary": "Graphs model relationships between objects. Unlike trees, graphs can have cycles, multiple parents, and disjoint sections.",
-    "learningObjectives": [
-      "Distinguish between directed/undirected and weighted/unweighted graphs.",
-      "Represent graphs using Adjacency Lists and Adjacency Matrices.",
-      "Traverse graphs using BFS and DFS while tracking visited nodes."
-    ],
-    "interviewRelevance": "Graphs are the pinnacle of interview data structures. Problems often disguise themselves as matrices, grids, or social networks."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "Your college lists six courses, and some say \"take this one first\". In what order can you take every course, and what if two of them each demand the other?",
     "paragraphs": [
-      "The internet is a graph of web pages connected by hyperlinks. Facebook is a graph of people connected by friendships. Google Maps is a graph of intersections connected by roads.",
-      "Anytime you need to find the shortest path, detect a cycle (like a deadlock), or see if two things are connected, you are using a graph algorithm."
+      "Trying orders by hand gets messy fast. Course 4 needs courses 1 and 2, course 5 needs 3 and 4, and soon you lose track of which courses are unlocked.",
+      "Now draw each course as a dot and each \"first\" rule as an arrow. Which dots could you take right now?"
     ],
-    "ahaMoment": "A Tree is just a restricted Graph. If you remove the rules 'must have a root' and 'cannot have cycles', a Tree becomes a Graph."
+    "aha": "Dots and arrows are a graph. A course with no arrows pointing into it has nothing left to wait for, so take it, erase its arrows, and see who is free next. If you run out of free courses before you run out of courses, the rest are waiting on each other in a loop: a cycle."
   },
-  "definition": {
-    "technicalDefinition": "A Graph is a non-linear data structure consisting of nodes (vertices) and edges that connect pairs of nodes.",
-    "vocabulary": [
-      { "term": "Vertex / Node", "definition": "An entity in the graph." },
-      { "term": "Edge", "definition": "A connection between two vertices." },
-      { "term": "Directed Edge", "definition": "A one-way street (A -> B)." },
-      { "term": "Undirected Edge", "definition": "A two-way street (A <-> B)." },
-      { "term": "Cycle", "definition": "A path that starts and ends at the exact same vertex." }
-    ],
-    "keyProperties": [
-      "Can be dense (many edges) or sparse (few edges).",
-      "May contain isolated nodes with no edges.",
-      "Requires a 'visited' set during traversal to prevent infinite loops."
+  "shape": {
+    "scene": {
+      "kind": "composite",
+      "layout": "column",
+      "parts": [
+        {
+          "title": "A graph",
+          "scene": {
+            "kind": "graph",
+            "directed": false,
+            "nodes": [
+              {
+                "id": "n0",
+                "label": "0",
+                "at": {
+                  "col": 0,
+                  "row": 1
+                }
+              },
+              {
+                "id": "n1",
+                "label": "1",
+                "at": {
+                  "col": 2,
+                  "row": 0
+                }
+              },
+              {
+                "id": "n2",
+                "label": "2",
+                "at": {
+                  "col": 2,
+                  "row": 2
+                }
+              },
+              {
+                "id": "n3",
+                "label": "3",
+                "at": {
+                  "col": 4,
+                  "row": 0
+                }
+              },
+              {
+                "id": "n4",
+                "label": "4",
+                "at": {
+                  "col": 4,
+                  "row": 2
+                }
+              }
+            ],
+            "edges": [
+              {
+                "from": "n0",
+                "to": "n1"
+              },
+              {
+                "from": "n0",
+                "to": "n2"
+              },
+              {
+                "from": "n1",
+                "to": "n3"
+              },
+              {
+                "from": "n2",
+                "to": "n3"
+              },
+              {
+                "from": "n3",
+                "to": "n4"
+              }
+            ],
+            "badges": [
+              {
+                "id": "n0",
+                "text": "deg 2"
+              },
+              {
+                "id": "n1",
+                "text": "deg 2"
+              },
+              {
+                "id": "n2",
+                "text": "deg 2"
+              },
+              {
+                "id": "n3",
+                "text": "deg 3"
+              },
+              {
+                "id": "n4",
+                "text": "deg 1"
+              }
+            ],
+            "marks": [
+              {
+                "id": "n3",
+                "role": "focus"
+              }
+            ]
+          }
+        },
+        {
+          "title": "The same graph as lists: row i holds the neighbours of node i",
+          "scene": {
+            "kind": "hash-map",
+            "buckets": [
+              [
+                {
+                  "key": 1
+                },
+                {
+                  "key": 2
+                }
+              ],
+              [
+                {
+                  "key": 0
+                },
+                {
+                  "key": 3
+                }
+              ],
+              [
+                {
+                  "key": 0
+                },
+                {
+                  "key": 3
+                }
+              ],
+              [
+                {
+                  "key": 1
+                },
+                {
+                  "key": 2
+                },
+                {
+                  "key": 4
+                }
+              ],
+              [
+                {
+                  "key": 3
+                }
+              ]
+            ],
+            "marks": [
+              {
+                "bucket": 3,
+                "role": "focus"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "node:n3",
+        "text": "degree 3: three neighbours"
+      },
+      {
+        "target": "edge:n0-n1",
+        "text": "an edge: one road"
+      },
+      {
+        "target": "bucket:3",
+        "text": "3's list: 1, 2, 4"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A map of flight routes between cities. Some flights go both ways (Undirected), some only go one way (Directed), and some cost more money (Weighted)."
+      "Think of cities joined by roads. Some roads go both ways, some are one-way streets, and a few cost more to drive. Unlike a tree there is no top city: roads can loop back, and you can start anywhere."
     ],
-    "clickSentence": "Graphs don't have a clear 'starting point' like a Tree's Root. You can enter a Graph from any node.",
-    "diagramType": "GraphDiagramInner",
-    "cells": [1, 2, 3, 4],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "Because nodes can connect to anywhere from 0 to N other nodes, storing a Graph is harder than a Tree.",
-      "We usually use an Adjacency List: A Hash Map where the Key is a node, and the Value is an Array of its neighbors."
-    ],
-    "definitionCode": {
-      "python": "adj_list = {\n  'A': ['B', 'C'],\n  'B': ['A', 'D'],\n  'C': ['A'],\n  'D': ['B']\n}",
-      "javascript": "const adjList = new Map();\nadjList.set('A', ['B', 'C']);\nadjList.set('B', ['A', 'D']);",
-      "java": "Map<String, List<String>> adjList = new HashMap<>();\nadjList.put(\"A\", Arrays.asList(\"B\", \"C\"));",
-      "cpp": "unordered_map<string, vector<string>> adjList;\nadjList[\"A\"] = {\"B\", \"C\"};"
-    },
-    "memoryLayout": [
-      { "label": "Key 'A'", "value": "Array['B', 'C']" },
-      { "label": "Key 'B'", "value": "Array['A', 'D']" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "GraphDiagramInner",
-    "array": [],
-    "steps": [
+    "click": "A graph is things plus the links between them, and the usual way to store it is one list per node of the nodes it links to.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Graph visualization coming soon.",
-        "activeLine": 1
+        "term": "node",
+        "definition": "One thing in the graph: a course, a city, a person. Also called a vertex. With n nodes we number them 0 to n - 1."
+      },
+      {
+        "term": "edge",
+        "definition": "A link between two nodes. In an undirected graph it works both ways. In a directed graph it is an arrow that goes one way only. Some graphs give each edge a weight, like minutes of driving."
+      },
+      {
+        "term": "degree",
+        "definition": "How many edges touch a node. In a directed graph, indegree counts the arrows pointing in and outdegree counts the arrows pointing out."
+      },
+      {
+        "term": "adjacency list",
+        "definition": "For each node, a list of its neighbours. It uses space for the nodes plus the edges, so it suits most problems. This is what we build in the first track."
+      },
+      {
+        "term": "adjacency matrix",
+        "definition": "An n by n table where cell [a][b] says whether an edge joins a and b. Checking one edge is instant, but the table always has n × n cells, even when there are only a few edges."
+      },
+      {
+        "term": "cycle",
+        "definition": "A path that leads from a node back to itself. Two courses that each need the other make a cycle."
+      },
+      {
+        "term": "DAG",
+        "definition": "A directed graph with no cycles (a directed acyclic graph). A \"who goes first\" order exists only for a DAG."
+      },
+      {
+        "term": "topological order",
+        "definition": "A line-up of a DAG's nodes where every arrow points forward: each node comes after everything it depends on."
+      }
+    ],
+    "definition": "A graph is a set of nodes (vertices) V and a set of edges E, where each edge joins two nodes. Edges can be undirected (a pair {a, b}) or directed (an ordered pair a to b), and may carry weights. With V nodes and E edges, an adjacency list takes O(V + E) space and lists a node's neighbours in time proportional to how many it has; an adjacency matrix takes O(V²) space, tests \"is there an edge a-b?\" in O(1) and lists a node's neighbours in O(V). A directed graph has a topological order if and only if it has no cycle, and Kahn's algorithm finds one (or proves there is none) in O(V + E)."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "lists",
+        "label": "Build the lists",
+        "tracer": "graphs/build-adjacency",
+        "predict": {
+          "tags": [
+            "neighbours",
+            "both-ways"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "order",
+        "label": "Course order",
+        "tracer": "graphs/topo-sort",
+        "predict": {
+          "tags": [
+            "next-ready",
+            "joins-queue"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "cycle",
+        "label": "Spot the cycle",
+        "tracer": "graphs/topo-sort",
+        "preset": 1,
+        "predict": {
+          "tags": [
+            "cycle-or-not"
+          ],
+          "max": 1
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The problem is about things and the links between them: roads, friends, web pages, dependencies.",
+      "You get rules like \"A must come before B\" and need an order, or need to know whether one exists.",
+      "The input is a list of pairs [a, b]. Each pair is an edge.",
+      "You must say whether things are connected, or count separate groups of them."
+    ],
+    "notWhen": [
+      "There is one top item and every other item has exactly one parent. That is a tree, which is simpler.",
+      "You only look things up by key. A hash map does that directly, with no links in sight.",
+      "Walking through the graph is the whole job, like fewest hops or counting islands. This lesson is about storing a graph and ordering it; the bfs-dfs lesson covers walking it."
+    ],
+    "quiz": [
+      {
+        "problem": "There are 4 courses. A pair [1, 0] means take course 0 before course 1. Given a list of such pairs, return an order in which you can take every course, or report that it is impossible.",
+        "answer": "graphs",
+        "options": [
+          "hash-maps",
+          "graphs",
+          "trees",
+          "bfs-dfs"
+        ],
+        "explanation": "Courses are nodes and \"first\" rules are arrows. Repeatedly taking a course with nothing left to wait for is the topological order this lesson builds."
+      },
+      {
+        "problem": "Given a grid of 1s (land) and 0s (water), count the islands.",
+        "answer": "bfs-dfs",
+        "options": [
+          "graphs",
+          "dynamic-programming",
+          "hash-maps",
+          "bfs-dfs"
+        ],
+        "explanation": "A grid is a graph in disguise, because each cell links to its four neighbours. But the job is to walk across connected land and mark it, which is traversal: bfs-dfs."
+      },
+      {
+        "problem": "Given a binary tree, return its maximum depth.",
+        "answer": "trees",
+        "options": [
+          "trees",
+          "graphs",
+          "bfs-dfs"
+        ],
+        "explanation": "A tree has one root and no cycles, so there is nothing to track. Ask each child for its depth and add one. Use the tree tools."
+      },
+      {
+        "problem": "In a town of n people, the judge is trusted by everybody else and trusts nobody. Given pairs [a, b] meaning a trusts b, find the judge or return -1.",
+        "answer": "graphs",
+        "options": [
+          "bfs-dfs",
+          "hash-maps",
+          "graphs",
+          "trees"
+        ],
+        "explanation": "Each pair is a directed edge. The judge is the node with indegree n - 1 and outdegree 0, so counting degrees is enough. No walking is needed."
+      },
+      {
+        "problem": "Count the ways to climb n stairs if you can take 1 or 2 steps at a time.",
+        "answer": "dynamic-programming",
+        "options": [
+          "graphs",
+          "dynamic-programming",
+          "trees",
+          "hash-maps"
+        ],
+        "explanation": "Each answer builds on two smaller answers: ways(n) = ways(n - 1) + ways(n - 2). There is no network of links, so this is not a graph problem."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Breadth-First Search (BFS)",
-      "description": "Explores neighbors in expanding concentric circles using a Queue. Guarantees the shortest path in unweighted graphs.",
-      "timeComplexity": "O(V + E)",
-      "spaceComplexity": "O(V)",
-      "code": {
-        "python": "q = deque([start])\nvisited = set([start])\nwhile q:\n    curr = q.popleft()\n    for neighbor in adj[curr]:\n        if neighbor not in visited:\n            visited.add(neighbor)\n            q.append(neighbor)"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "indegree[v] = number of edges pointing into v, for every node v",
+        "anchor": "indegree"
       },
-      "visualNote": "Like dropping a pebble in water, the search ripples outward layer by layer."
-    },
-    {
-      "name": "Depth-First Search (DFS)",
-      "description": "Explores as far as possible down a single path before backtracking. Great for cycle detection and topological sorting.",
-      "timeComplexity": "O(V + E)",
-      "spaceComplexity": "O(V)",
-      "code": {
-        "python": "visited = set()\ndef dfs(node):\n    if node in visited: return\n    visited.add(node)\n    for neighbor in adj[node]:\n        dfs(neighbor)"
+      {
+        "text": "queue = every node with indegree 0, order = empty",
+        "anchor": "seed"
       },
-      "visualNote": "Like navigating a maze by keeping your hand on the right wall until you hit a dead end."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "def traverse(graph, start):\n  visited = set()\n  q = [start]\n  while q:\n    node = q.pop()\n    if node in visited: continue\n    visited.add(node)\n    for neighbor in graph[node]:\n      q.push(neighbor)",
-    "whenToUse": "Whenever the problem talks about networks, connected components, shortest paths, maps, or dependencies (prerequisites).",
-    "timeComplexity": "O(V + E) where V is vertices and E is edges.",
-    "spaceComplexity": "O(V) to track visited nodes."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are given an M x N grid representing a map of land ('1') and water ('0'). Return the number of islands (connected groups of '1's).",
-    "correctPatternId": "graphs",
-    "distractors": [
-      "binary-search",
-      "dynamic-programming",
-      "sorting"
+      {
+        "text": "while the queue is not empty:"
+      },
+      {
+        "text": "u = take the front of the queue, add u to order",
+        "anchor": "pop",
+        "indent": 1
+      },
+      {
+        "text": "for each neighbour v of u:",
+        "indent": 1
+      },
+      {
+        "text": "indegree[v] = indegree[v] - 1",
+        "anchor": "drop",
+        "indent": 2
+      },
+      {
+        "text": "if indegree[v] is 0: add v to the back of the queue",
+        "anchor": "ready",
+        "indent": 2
+      },
+      {
+        "text": "if order holds all n nodes: return it, otherwise a cycle blocks the rest",
+        "anchor": "finish"
+      }
     ],
-    "explanation": "A 2D Grid is implicitly a Graph! Every cell is a vertex, and its neighbors (up/down/left/right) are its edges. Counting islands is just counting connected components."
+    "tracer": "graphs/topo-sort",
+    "time": "O(V + E)",
+    "space": "O(V + E)",
+    "notes": [
+      "Every node enters the queue at most once and every edge is removed once, so the work is O(V + E), where V is the number of nodes and E the number of edges.",
+      "The O(V + E) space is the adjacency list. The indegree counts, the queue and the order add O(V) more.",
+      "A queue is the usual choice and gives the order in waves: first everything with no prerequisites, then what they unlocked. A stack would also give a valid order, only a different one.",
+      "The same check detects cycles: if fewer than n nodes come out, the rest are stuck behind a cycle. A depth-first search can do both jobs as well, and the bfs-dfs lesson covers walking a graph.",
+      "List or matrix? The adjacency list costs O(V + E) space and is the default. An adjacency matrix costs O(V²) cells but answers \"is there an edge a-b?\" in O(1), so it only pays off when the graph is small or packed with edges.",
+      "LeetCode writes a prerequisite as [a, b] meaning \"take b first\". That is the edge b to a, so flip the pair when you build the lists.",
+      "Weighted graphs store a cost on each edge. Counting hops no longer finds the cheapest route there; that needs Dijkstra's algorithm, which this course has not covered yet."
+    ]
   },
   "examples": [
     {
-      "title": "Number of Islands",
+      "title": "Course Schedule",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/number-of-islands/",
-      "problemStatement": "Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.",
-      "inputExample": "grid = [\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"1\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"1\",\"1\"]\n]",
-      "outputExample": "3",
-      "steps": [
-        "Iterate over every cell in the grid.",
-        "When you find a '1', increment the island count.",
-        "Launch a DFS or BFS from that '1' to visit all connected land.",
-        "Mark visited cells as '0' (or keep a visited set) so you don't count them again."
+      "url": "https://leetcode.com/problems/course-schedule/",
+      "problem": "There are numCourses courses labelled 0 to numCourses - 1. A pair [a, b] in prerequisites means you must take course b before course a. Return true if you can finish all courses.",
+      "input": "numCourses = 2, prerequisites = [[1,0],[0,1]]",
+      "output": "false",
+      "approach": [
+        "Each pair [a, b] is the arrow b to a. Build the adjacency lists and count each course's indegree.",
+        "Queue every course with indegree 0, take one, lower the indegree of the courses it unlocks, and queue any that reach 0.",
+        "Here both courses have indegree 1, so the queue starts empty and nothing can be taken.",
+        "Count the courses taken. If it is fewer than numCourses, a cycle blocks the rest, so return false."
       ],
-      "code": {
-        "python": "def numIslands(grid):\n    if not grid: return 0\n    count = 0\n    def dfs(r, c):\n        if r<0 or c<0 or r>=len(grid) or c>=len(grid[0]) or grid[r][c] == '0':\n            return\n        grid[r][c] = '0' # Mark visited\n        dfs(r+1, c)\n        dfs(r-1, c)\n        dfs(r, c+1)\n        dfs(r, c-1)\n\n    for r in range(len(grid)):\n        for c in range(len(grid[0])):\n            if grid[r][c] == '1':\n                count += 1\n                dfs(r, c)\n    return count",
-        "javascript": "// Using a similar DFS approach\nfunction numIslands(grid) {\n    let count = 0;\n    const dfs = (r, c) => {\n        if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] === '0') return;\n        grid[r][c] = '0';\n        dfs(r+1, c); dfs(r-1, c); dfs(r, c+1); dfs(r, c-1);\n    };\n    for (let r = 0; r < grid.length; r++) {\n        for (let c = 0; c < grid[0].length; c++) {\n            if (grid[r][c] === '1') {\n                count++;\n                dfs(r, c);\n            }\n        }\n    }\n    return count;\n}"
-      },
-      "timeComplexity": "O(M * N)",
-      "spaceComplexity": "O(M * N)",
-      "rationale": "By aggressively sinking (visiting) the entire island the moment we spot it, we guarantee that we only count each contiguous landmass exactly once."
+      "code": "graphs/course-schedule",
+      "tracer": "graphs/topo-sort",
+      "time": "O(V + E)",
+      "space": "O(V + E)"
+    },
+    {
+      "title": "Course Schedule II",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/course-schedule-ii/",
+      "problem": "The same setup as Course Schedule, but return an order in which to take all courses. If there are several valid orders return any; if it is impossible return an empty array.",
+      "input": "numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]",
+      "output": "[0, 1, 2, 3] (or [0, 2, 1, 3])",
+      "approach": [
+        "Build the lists the same way. The indegrees are [0, 1, 1, 2], so only course 0 can go first.",
+        "Take 0. That frees courses 1 and 2, which join the queue in that order.",
+        "Take 1, which lowers course 3 from 2 to 1. Take 2, which lowers it to 0, so 3 joins the queue.",
+        "Take 3. Instead of only counting the courses taken, record them as you go. That list is the answer, and an incomplete list means return an empty array."
+      ],
+      "code": "graphs/course-schedule-ii",
+      "tracer": "graphs/topo-sort",
+      "time": "O(V + E)",
+      "space": "O(V + E)"
+    },
+    {
+      "title": "Find the Town Judge",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/find-the-town-judge/",
+      "problem": "In a town of n people labelled 1 to n, a judge trusts nobody and is trusted by everybody else. Given pairs [a, b] meaning a trusts b, return the judge's label, or -1 if there is no judge.",
+      "input": "n = 3, trust = [[1,3],[2,3]]",
+      "output": "3",
+      "approach": [
+        "Each pair is an arrow from the person who trusts to the person who is trusted.",
+        "The judge has indegree n - 1 (everyone else trusts them) and outdegree 0 (they trust nobody).",
+        "Keep one counter per person: add 1 when they are trusted, subtract 1 when they trust someone. No graph needs to be stored.",
+        "Only the judge can reach n - 1, because anyone who trusts someone loses a point. Return that person, or -1 if nobody reaches it."
+      ],
+      "code": "graphs/town-judge",
+      "time": "O(n + t) for t trust pairs",
+      "space": "O(n)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What is the primary difference between a Tree traversal and a Graph traversal?",
+      "question": "An undirected edge joins nodes 2 and 5. How do you store it in adjacency lists?",
       "options": [
-        "Graphs require a 'visited' set to avoid infinite loops, Trees do not.",
-        "Graphs can only be traversed using BFS.",
-        "Trees do not use recursion.",
-        "Graphs do not have time complexity."
+        "Add 5 to the list of node 2 only.",
+        "Add 2 to the list of node 5 only.",
+        "Add 5 to the list of node 2 and 2 to the list of node 5.",
+        "Keep it in a separate list of edges and leave the node lists alone."
       ],
-      "correctIndex": 0,
-      "explanation": "Because graphs can have cycles (A points to B, B points to A), you must track what you have already seen or you will bounce back and forth forever."
+      "answer": 2,
+      "explanation": "An undirected edge works both ways, so each end must be able to find the other. A directed edge would be stored once, in the list of the node it leaves."
     },
     {
-      "question": "If you want to find the SHORTEST path between two nodes in an unweighted graph, which algorithm should you use?",
+      "question": "A graph has 1,000 nodes but only 1,500 edges. How do an adjacency list and an adjacency matrix compare?",
       "options": [
-        "BFS (Breadth-First Search)",
-        "DFS (Depth-First Search)",
-        "Pre-Order Traversal",
-        "A sorting algorithm"
+        "The list holds about 1,000 lists and 3,000 entries, while the matrix always has 1,000 × 1,000 = 1,000,000 cells.",
+        "They need exactly the same space.",
+        "The matrix is smaller, because it stores no lists.",
+        "The list needs a million cells to be safe."
       ],
-      "correctIndex": 0,
-      "explanation": "BFS explores expanding layers. The moment it hits the target, it is mathematically guaranteed to be the shortest path because it didn't look at any paths that were longer yet."
+      "answer": 0,
+      "explanation": "With few edges the list is far smaller. The matrix's advantage is speed on one question: \"is there an edge a-b?\" is a single lookup there. It suits small or very dense graphs."
+    },
+    {
+      "question": "In Kahn's algorithm, what does a node's indegree reaching 0 mean?",
+      "options": [
+        "The node has no edges at all.",
+        "The node is part of a cycle.",
+        "The node is already in the order.",
+        "Everything it was waiting on is done, so it can be taken now."
+      ],
+      "answer": 3,
+      "explanation": "Indegree counts the unfinished things pointing into a node. At 0 nothing is holding it back, so it joins the queue. It may still have arrows going out."
+    },
+    {
+      "question": "The queue runs empty, but only 3 of 5 nodes are in the order. What does that tell you?",
+      "options": [
+        "The input was too small.",
+        "The remaining nodes are stuck behind a cycle, so no valid order exists.",
+        "The last two nodes can go anywhere.",
+        "You should start again with a stack."
+      ],
+      "answer": 1,
+      "explanation": "Every node that could be freed was freed. The ones left each still wait on something that is also waiting, which is what a cycle means."
+    },
+    {
+      "question": "Roads have different lengths (weights). Does the hop-counting walk of a queue find the quickest drive?",
+      "options": [
+        "Yes, fewer hops always means a shorter drive.",
+        "Yes, as long as you start from the longest road.",
+        "No. One long road can cost more than three short ones, so weighted shortest paths need another algorithm, Dijkstra's.",
+        "No, because graphs cannot have weights."
+      ],
+      "answer": 2,
+      "explanation": "Hops count roads, not their cost. Dijkstra's algorithm handles weights; this course has not covered it yet, so treat it as the next step for problems like Network Delay Time."
     }
   ],
   "practice": [
-    { "title": "Number of Islands", "url": "https://leetcode.com/problems/number-of-islands/", "difficulty": "medium", "keyInsight": "DFS sinks the island." },
-    { "title": "Clone Graph", "url": "https://leetcode.com/problems/clone-graph/", "difficulty": "medium", "keyInsight": "Use a Hash Map to map original nodes to their cloned counterparts." },
-    { "title": "Course Schedule", "url": "https://leetcode.com/problems/course-schedule/", "difficulty": "medium", "keyInsight": "Topological Sort / Cycle Detection in a Directed Graph." },
-    { "title": "Rotting Oranges", "url": "https://leetcode.com/problems/rotting-oranges/", "difficulty": "medium", "keyInsight": "Multi-source BFS. Push all initial rotten oranges into the queue at step 0." }
+    {
+      "title": "Find if Path Exists in Graph",
+      "url": "https://leetcode.com/problems/find-if-path-exists-in-graph/",
+      "difficulty": "easy",
+      "insight": "Build the adjacency lists first. Then the question is whether you can walk from the source to the destination, which is what the bfs-dfs lesson teaches."
+    },
+    {
+      "title": "Find the Town Judge",
+      "url": "https://leetcode.com/problems/find-the-town-judge/",
+      "difficulty": "easy",
+      "insight": "The judge has indegree n - 1 and outdegree 0. Count both for every person, or keep one running balance."
+    },
+    {
+      "title": "Number of Provinces",
+      "url": "https://leetcode.com/problems/number-of-provinces/",
+      "difficulty": "medium",
+      "insight": "The input is an adjacency matrix. Count the separate groups, where a group is everyone you can reach from one person."
+    },
+    {
+      "title": "Is Graph Bipartite?",
+      "url": "https://leetcode.com/problems/is-graph-bipartite/",
+      "difficulty": "medium",
+      "insight": "Try to give every node one of two colours so that each edge joins different colours. An edge whose ends must share a colour breaks it."
+    },
+    {
+      "title": "Find Eventual Safe States",
+      "url": "https://leetcode.com/problems/find-eventual-safe-states/",
+      "difficulty": "medium",
+      "insight": "A node is safe when every path from it ends at a dead end. Reverse the edges and run Kahn-style from the nodes that have no outgoing edges."
+    },
+    {
+      "title": "Course Schedule IV",
+      "url": "https://leetcode.com/problems/course-schedule-iv/",
+      "difficulty": "medium",
+      "insight": "Each query asks whether one course leads to another, even through a chain. Think reachability, and let a topological order tell you what is known when."
+    },
+    {
+      "title": "Network Delay Time",
+      "url": "https://leetcode.com/problems/network-delay-time/",
+      "difficulty": "medium",
+      "insight": "Edges have weights, so counting hops is not enough. This needs Dijkstra's algorithm, which is not taught here yet, so come back to it later."
+    },
+    {
+      "title": "Sort Items by Groups Respecting Dependencies",
+      "url": "https://leetcode.com/problems/sort-items-by-groups-respecting-dependencies/",
+      "difficulty": "hard",
+      "insight": "Two topological sorts in one: order the groups, then order the items inside each group."
+    }
+  ],
+  "overview": [
+    "Explain how a graph is stored as one neighbour list per node.",
+    "Trace the indegree queue that orders the courses one free course at a time.",
+    "Spot a cycle when the ordering finishes with courses still left over.",
+    "Choose a graph, not a tree, when an item can have several parents.",
+    "Implement adjacency lists and the topological sort template from scratch."
+  ],
+  "resources": [
+    {
+      "title": "Graph theory (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Graph_theory",
+      "note": "Vertices, edges, directed and undirected graphs, and the vocabulary used throughout this lesson."
+    },
+    {
+      "title": "Topological sorting (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Topological_sorting",
+      "note": "Defines topological orderings and explains why they exist for directed acyclic graphs."
+    },
+    {
+      "title": "Topological sort (cp-algorithms)",
+      "url": "https://cp-algorithms.com/graph/topological-sort.html",
+      "note": "Practical write-up of topological sorting, with code and notes on detecting cycles."
+    },
+    {
+      "title": "Graph data structures (VisuAlgo)",
+      "url": "https://visualgo.net/en/graphds",
+      "note": "Interactive animations of graph representations and traversals you can step through yourself."
+    }
   ]
 }

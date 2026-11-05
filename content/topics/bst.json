@@ -1,177 +1,471 @@
 {
-  "id": "bst",
+  "schemaVersion": 2,
   "slug": "bst",
-  "title": "Binary Search Trees",
-  "category": "data-structure",
-  "difficulty": "medium",
-  "estimatedMinutes": 50,
-  "prerequisites": ["trees"],
-  "tags": ["tree", "search", "sorted"],
-  "overview": {
-    "summary": "A Binary Search Tree (BST) is a tree where every left child is smaller than its parent, and every right child is greater.",
-    "learningObjectives": [
-      "Understand the BST invariant.",
-      "Implement BST search, insertion, and deletion.",
-      "Recognize that an in-order traversal of a BST yields sorted elements."
-    ],
-    "interviewRelevance": "BSTs combine the fast O(1) pointer updates of Linked Lists with the O(log N) fast search of Binary Search. They are extremely common."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A phone book has to stay sorted while new names are added and old ones are crossed out all day. How do you keep it quick to search without re-sorting the whole thing every time?",
     "paragraphs": [
-      "Imagine looking for a word in a dictionary. You open to the middle. If your word is alphabetically earlier, you tear the book in half and throw away the back half. You repeat this until you find your word.",
-      "A BST enforces this 'dictionary' structure physically in memory, allowing you to discard half the tree with every step."
+      "Keep the names in a sorted list and finding one is quick: open in the middle, drop half, repeat. But adding a name in the middle means sliding every name after it down one slot, and removing one means sliding them all back.",
+      "Keep the names in a chain of cards instead, and adding or removing is a link or two. But now finding a name means starting at the first card and flipping through them one by one. Is there a layout that is quick at both jobs?"
     ],
-    "ahaMoment": "In a BST, every single node acts as a traffic cop pointing you left (smaller) or right (larger)."
+    "aha": "Give every name a card with two arrows: one to the names that come before it, one to the names that come after. Finding a name becomes a game of \"before or after?\", and each answer drops everything on the other side. Adding or removing a name changes only a link or two. That is a binary search tree. It stays quick while it stays reasonably balanced, and a tree built from names that arrive already sorted does not."
   },
-  "definition": {
-    "technicalDefinition": "A Binary Search Tree is a rooted binary tree data structure whose internal nodes each store a key greater than all the keys in the node's left subtree and less than those in its right subtree.",
-    "vocabulary": [
-      { "term": "BST Invariant", "definition": "Left Subtree < Node < Right Subtree for EVERY node." },
-      { "term": "In-Order Traversal", "definition": "Visiting Left, then Node, then Right. In a BST, this prints values in perfectly sorted order." },
-      { "term": "Balanced", "definition": "When the left and right subtrees have roughly the same height, ensuring O(log N) depth." }
-    ],
-    "keyProperties": [
-      "Average case O(log N) for Search, Insert, and Delete.",
-      "Worst case O(N) if the tree becomes unbalanced (like a straight line).",
-      "No duplicate values (usually)."
+  "shape": {
+    "scene": {
+      "kind": "tree",
+      "root": "n0",
+      "nodes": [
+        {
+          "id": "n0",
+          "value": 8,
+          "children": [
+            "n1",
+            "n2"
+          ]
+        },
+        {
+          "id": "n1",
+          "value": 3,
+          "children": [
+            "n3",
+            "n4"
+          ]
+        },
+        {
+          "id": "n2",
+          "value": 10,
+          "children": [
+            null,
+            "n5"
+          ]
+        },
+        {
+          "id": "n3",
+          "value": 1,
+          "children": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "n4",
+          "value": 6,
+          "children": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "n5",
+          "value": 14,
+          "children": [
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "node:n0",
+        "text": "the root splits the tree"
+      },
+      {
+        "target": "node:n1",
+        "text": "left subtree: all below 8"
+      },
+      {
+        "target": "node:n2",
+        "text": "right subtree: all above 8"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A decision tree in a 'Guess Who' game. Each question eliminates a massive portion of the remaining candidates."
+      "Think of a game of \"higher or lower\". At every node you hold one guess: if your number is lower you go through the left door, and if it is higher you go through the right door.",
+      "Each answer closes off a whole side of the tree, so you never look at most of it."
     ],
-    "clickSentence": "By strictly enforcing the rule 'Smaller to the left, Larger to the right', searching becomes a game of elimination.",
-    "diagramType": "tree",
-    "cells": [10, 5, 15, 2, 7, 12, 20],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "A BST uses the exact same TreeNode struct/class as a normal Binary Tree.",
-      "The magic is not in the memory structure, but in the strict rules applied when inserting data."
-    ],
-    "definitionCode": {
-      "python": "class TreeNode:\n    def __init__(self, val=0):\n        self.val = val\n        self.left = None\n        self.right = None",
-      "javascript": "class TreeNode {\n    constructor(val = 0) {\n        this.val = val;\n        this.left = null;\n        this.right = null;\n    }\n}",
-      "java": "public class TreeNode {\n    int val;\n    TreeNode left;\n    TreeNode right;\n    TreeNode(int val) { this.val = val; }\n}",
-      "cpp": "struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n    TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n};"
-    },
-    "memoryLayout": [
-      { "label": "Root", "value": "10" },
-      { "label": "Root.left", "value": "5 (Must be < 10)" },
-      { "label": "Root.right", "value": "15 (Must be > 10)" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "tree",
-    "array": [10, 5, 15, 2, 7, 12, 20],
-    "steps": [
+    "click": "Every node asks \"smaller or bigger?\", and the answer rules out an entire subtree.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive BST traversal visualization coming soon.",
-        "activeLine": 1
+        "term": "BST invariant",
+        "definition": "For every node, all values in its left subtree are smaller and all values in its right subtree are bigger. It is about whole subtrees, not just the two children."
+      },
+      {
+        "term": "subtree",
+        "definition": "A node together with everything below it. Every node is the root of its own subtree."
+      },
+      {
+        "term": "in-order",
+        "definition": "Visit the left subtree, then the node, then the right subtree. On a BST this lists the values in sorted order."
+      },
+      {
+        "term": "in-order successor",
+        "definition": "The next bigger value after a node. When the node has a right subtree, it is the leftmost node in that subtree."
+      },
+      {
+        "term": "height",
+        "definition": "The number of links on the longest path from the root down to a leaf. Search, insert and delete take about this many steps."
+      },
+      {
+        "term": "balanced",
+        "definition": "Both sides of every node are about equally tall, so the height stays close to log n."
+      },
+      {
+        "term": "skewed",
+        "definition": "Leaning almost all one way, like a chain. Inserting values that are already sorted does this, and the height becomes n."
+      }
+    ],
+    "definition": "A binary search tree is a binary tree in which, for every node, every value in its left subtree is smaller than the node's value and every value in its right subtree is larger. Reading it in order (left, node, right) lists the values sorted. Search, insert and delete each follow a single path from the root, so they take O(h) time, where h is the height of the tree: about log n when the tree is balanced, and up to n when it is skewed."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "search",
+        "label": "Search",
+        "tracer": "bst/search",
+        "predict": {
+          "tags": [
+            "left-or-right"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "insert",
+        "label": "Insert",
+        "tracer": "bst/insert",
+        "predict": {
+          "tags": [
+            "left-or-right",
+            "where-it-lands"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "delete",
+        "label": "Delete",
+        "tracer": "bst/delete",
+        "predict": {
+          "tags": [
+            "which-case",
+            "successor"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "You keep a collection of numbers sorted while values are added and removed, and you also look things up in it.",
+      "The problem hands you a TreeNode and says \"binary search tree\", or says the left side is smaller and the right side is bigger.",
+      "You need answers in order from a changing set: the next bigger value, the k-th smallest, everything in a range.",
+      "A sorted array would be perfect for lookups, but you would have to shift most of it on every insert or delete."
+    ],
+    "notWhen": [
+      "The data never changes after you sort it: a sorted array with binary search is simpler and just as fast.",
+      "You only ask \"is it in there?\" and never need the order: a hash map answers in O(1) on average.",
+      "You only ever take the smallest or the largest item: a heap does that with less bookkeeping."
+    ],
+    "quiz": [
+      {
+        "problem": "Numbers arrive one at a time and some are removed. At any moment you must be able to say which stored value is the smallest one bigger than x.",
+        "answer": "bst",
+        "options": [
+          "heaps",
+          "hash-maps",
+          "bst",
+          "arrays"
+        ],
+        "explanation": "You need both updates and order. A BST keeps the values ordered, and the next bigger value is a short walk from the root. A heap only knows its minimum, a hash map has no order, and an array shifts on every insert."
+      },
+      {
+        "problem": "A pool of tasks keeps changing. All you ever need is to remove the task with the smallest deadline, again and again.",
+        "answer": "heaps",
+        "options": [
+          "queues",
+          "bst",
+          "heaps",
+          "sorting"
+        ],
+        "explanation": "Only the extreme is ever needed. A heap does exactly that with less structure than a BST, which keeps the whole order that you would never use."
+      },
+      {
+        "problem": "A sorted array of 100,000 ids never changes. Answer, as fast as possible, whether a given id is in it.",
+        "answer": "binary-search",
+        "options": [
+          "binary-search",
+          "bst",
+          "hash-maps",
+          "linked-lists"
+        ],
+        "explanation": "Nothing is being inserted or deleted, so there is nothing for a tree to maintain. Halving the sorted array in place gets the same O(log n) with no extra pointers."
+      },
+      {
+        "problem": "Given the root of a binary tree, return its maximum depth, the number of nodes on the longest path from the root down to a leaf.",
+        "answer": "trees",
+        "options": [
+          "bst",
+          "trees",
+          "graphs",
+          "recursion"
+        ],
+        "explanation": "The values are never compared with each other, so no ordering is used. It is plain tree recursion: the depth is one more than the deeper of the two children."
+      },
+      {
+        "problem": "Given the root of a binary search tree and an integer k, return the k-th smallest value in the tree.",
+        "answer": "bst",
+        "options": [
+          "trees",
+          "heaps",
+          "sorting",
+          "bst"
+        ],
+        "explanation": "Reading a BST in order gives its values sorted, so the k-th smallest is the k-th node of an in-order walk. You don't need to build a heap or sort anything."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Search",
-      "description": "Compare target with node. Go left if smaller, go right if larger.",
-      "timeComplexity": "O(log N)",
-      "spaceComplexity": "O(1) iteratively",
-      "code": {
-        "python": "curr = root\nwhile curr:\n    if target == curr.val: return True\n    elif target < curr.val: curr = curr.left\n    else: curr = curr.right\nreturn False",
-        "javascript": "let curr = root;\nwhile (curr) {\n  if (target === curr.val) return true;\n  if (target < curr.val) curr = curr.left;\n  else curr = curr.right;\n}\nreturn false;",
-        "java": "TreeNode curr = root;\nwhile (curr != null) {\n  if (target == curr.val) return true;\n  if (target < curr.val) curr = curr.left;\n  else curr = curr.right;\n}\nreturn false;",
-        "cpp": "TreeNode* curr = root;\nwhile (curr) {\n  if (target == curr->val) return true;\n  if (target < curr->val) curr = curr->left;\n  else curr = curr->right;\n}\nreturn false;"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "node = a new node holding val",
+        "anchor": "init"
       },
-      "visualNote": "A pointer starts at root and slides down the correct path."
-    },
-    {
-      "name": "Insertion",
-      "description": "Perform a search until you hit Null, then attach the new node there.",
-      "timeComplexity": "O(log N)",
-      "spaceComplexity": "O(H)",
-      "code": {
-        "python": "def insert(node, val):\n    if not node: return TreeNode(val)\n    if val < node.val:\n        node.left = insert(node.left, val)\n    else:\n        node.right = insert(node.right, val)\n    return node",
-        "javascript": "function insert(node, val) {\n  if (!node) return new TreeNode(val);\n  if (val < node.val) node.left = insert(node.left, val);\n  else node.right = insert(node.right, val);\n  return node;\n}",
-        "java": "TreeNode insert(TreeNode node, int val) {\n  if (node == null) return new TreeNode(val);\n  if (val < node.val) node.left = insert(node.left, val);\n  else node.right = insert(node.right, val);\n  return node;\n}",
-        "cpp": "TreeNode* insert(TreeNode* node, int val) {\n  if (!node) return new TreeNode(val);\n  if (val < node->val) node->left = insert(node->left, val);\n  else node->right = insert(node->right, val);\n  return node;\n}"
+      {
+        "text": "curr = root, parent = null",
+        "anchor": "init"
       },
-      "visualNote": "Traverse to an empty spot and spawn a new leaf."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "def inorder(node):\n  if not node: return\n  inorder(node.left)\n  process(node.val)\n  inorder(node.right)",
-    "whenToUse": "When you need to maintain a dynamically changing dataset that requires fast lookups, insertions, and ordered iterations.",
-    "timeComplexity": "O(log N) for balanced trees, O(N) worst case.",
-    "spaceComplexity": "O(N) total memory."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You need to store a stream of incoming numbers and frequently find the 'kth smallest' number seen so far.",
-    "correctPatternId": "bst",
-    "distractors": [
-      "arrays",
-      "hash-maps",
-      "linked-lists"
+      {
+        "text": "while curr is not null:"
+      },
+      {
+        "text": "if val < curr.val:",
+        "anchor": "compare",
+        "indent": 1
+      },
+      {
+        "text": "parent = curr, curr = curr.left",
+        "anchor": "left",
+        "indent": 2
+      },
+      {
+        "text": "otherwise: parent = curr, curr = curr.right",
+        "anchor": "right",
+        "indent": 2
+      },
+      {
+        "text": "hang node under parent, on the side val belongs",
+        "anchor": "link"
+      },
+      {
+        "text": "return root",
+        "anchor": "done"
+      }
     ],
-    "explanation": "An array would require O(N) shifting to insert. A hash map doesn't maintain order. A BST (or Heap) inserts in O(log N) and an In-Order traversal easily finds the Kth smallest element."
+    "tracer": "bst/insert",
+    "time": "O(h): about O(log n) if balanced, O(n) in the worst case",
+    "space": "O(1)",
+    "notes": [
+      "Search, insert and delete each walk one path from the root down, so they cost O(h), where h is the height.",
+      "h is about log n only while the tree stays balanced. Insert 1, 2, 3, 4, 5 in order and every value goes to the right of the last, so the tree is a chain and h is n. The Sorted input presets show it. Self-balancing trees (AVL, red-black) prevent this, and this lesson's plain BST does not.",
+      "Insert always ends in a new leaf and moves nothing else. This version sends a value equal to a node to the right; LeetCode's BST problems promise distinct values.",
+      "Delete has three cases: a leaf is cut off, a node with one child is replaced by that child, and a node with two children takes the value of its in-order successor, which is then removed as a leaf or a one-child node.",
+      "An in-order walk (left, node, right) of a BST visits the values in sorted order. That one fact solves k-th smallest, validate, and minimum difference.",
+      "To check a BST, compare each node with the whole range its ancestors allow, not just with its parent. Carry (lo, hi) down, and use null for \"no bound yet\" so INT_MIN and INT_MAX values still work."
+    ]
   },
   "examples": [
     {
+      "title": "Search in a Binary Search Tree",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/search-in-a-binary-search-tree/",
+      "problem": "Given the root of a binary search tree and an integer val, find the node whose value equals val and return the subtree rooted at that node. If there is no such node, return null.",
+      "input": "root = [4,2,7,1,3], val = 2",
+      "output": "[2,1,3]",
+      "approach": [
+        "Start at the root, 4, and ask the BST question: is 2 equal to, smaller than, or bigger than this node? (The code calls the value key.)",
+        "2 < 4, so everything in the right subtree (7) is bigger than 4 and cannot hold 2. Go left to 2.",
+        "2 == 2, so return this node. Its subtree, 2 with children 1 and 3, prints as [2,1,3].",
+        "If curr ever becomes null, the value isn't in the tree, so return null. Each step drops a whole subtree, so the work is at most the height of the tree."
+      ],
+      "code": "bst/search",
+      "tracer": "bst/search",
+      "time": "O(h)",
+      "space": "O(1)"
+    },
+    {
+      "title": "Delete Node in a BST",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/delete-node-in-a-bst/",
+      "problem": "Given the root of a binary search tree and a key, delete the node with that key, keeping the tree a valid binary search tree, and return the root of the updated tree.",
+      "input": "root = [5,3,6,2,4,null,7], key = 3",
+      "output": "[5,4,6,2,null,null,7]",
+      "approach": [
+        "Search for 3 with parent trailing one step behind curr: from 5, go left to 3. Then count the children of 3.",
+        "3 has two children, 2 and 4, so you can't just cut it out. Take its in-order successor instead: go right once, then left as far as possible. The right subtree is just 4, so the successor is 4.",
+        "Copy 4 into the node that held 3, then remove the old 4. It is a leaf, so its parent's right link becomes null.",
+        "A leaf or a node with one child skips the copy: point the parent's link at the node's only child, or at null. The tree reads [5,4,6,2,null,null,7]."
+      ],
+      "code": "bst/delete",
+      "tracer": "bst/delete",
+      "time": "O(h)",
+      "space": "O(1)"
+    },
+    {
       "title": "Validate Binary Search Tree",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/validate-binary-search-tree/",
-      "problemStatement": "Given the root of a binary tree, determine if it is a valid binary search tree (BST).",
-      "inputExample": "root = [2,1,3]",
-      "outputExample": "true",
-      "steps": [
-        "A node's value must not only be greater than its left child, but greater than EVERYTHING in its left subtree.",
-        "Pass a valid range (min, max) down the recursion.",
-        "For left children, update the max bound.",
-        "For right children, update the min bound."
+      "url": "https://leetcode.com/problems/validate-binary-search-tree/",
+      "problem": "Given the root of a binary tree, determine whether it is a valid binary search tree: every value in a node's left subtree is smaller than the node, and every value in its right subtree is larger.",
+      "input": "root = [5,4,6,null,null,3,7]",
+      "output": "false",
+      "approach": [
+        "Comparing each node with only its children is not enough. In [5,4,6,null,null,3,7] every parent and child look right (4 < 5, 6 > 5, 3 < 6, 7 > 6), yet 3 sits in the right subtree of 5.",
+        "So carry an allowed range down: every node must be strictly between lo and hi. The root starts with no bounds.",
+        "Going left tightens hi to the node's value, and going right tightens lo. 3 is under 6, which is under 5, so its range is (5, 6), and 3 <= 5 fails.",
+        "Use \"no bound yet\" (None, null or nullptr) instead of a huge number as the starting bound, so nodes holding INT_MIN or INT_MAX still work."
       ],
-      "code": {
-        "python": "def isValidBST(root, min_val=float('-inf'), max_val=float('inf')):\n    if not root: return True\n    if not (min_val < root.val < max_val): return False\n    return (isValidBST(root.left, min_val, root.val) and\n            isValidBST(root.right, root.val, max_val))",
-        "javascript": "function isValidBST(root, min = -Infinity, max = Infinity) {\n    if (!root) return true;\n    if (root.val <= min || root.val >= max) return false;\n    return isValidBST(root.left, min, root.val) &&\n           isValidBST(root.right, root.val, max);\n}",
-        "java": "public boolean isValidBST(TreeNode root) {\n    return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);\n}\nprivate boolean isValidBST(TreeNode node, long min, long max) {\n    if (node == null) return true;\n    if (node.val <= min || node.val >= max) return false;\n    return isValidBST(node.left, min, node.val) && isValidBST(node.right, node.val, max);\n}",
-        "cpp": "bool isValidBST(TreeNode* root, long min = LONG_MIN, long max = LONG_MAX) {\n    if (!root) return true;\n    if (root->val <= min || root->val >= max) return false;\n    return isValidBST(root->left, min, root->val) &&\n           isValidBST(root->right, root->val, max);\n}"
-      },
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(H)",
-      "rationale": "By carrying constraints downward, we ensure the strict BST invariant holds globally, not just locally."
+      "code": "bst/validate",
+      "time": "O(n)",
+      "space": "O(h)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What happens if you insert sorted data (e.g., 1, 2, 3, 4, 5) into a basic BST?",
+      "question": "Which statement is the BST invariant?",
       "options": [
-        "It degrades into a Linked List (O(N) search).",
-        "It stays perfectly balanced (O(log N) search).",
-        "The compiler throws an error.",
-        "It automatically rebalances itself."
+        "Each node's left child is smaller than it, and its right child is bigger.",
+        "Every value in a node's left subtree is smaller than the node, and every value in its right subtree is bigger.",
+        "The left subtree always has fewer nodes than the right subtree.",
+        "The tree is as short as it can possibly be."
       ],
-      "correctIndex": 0,
-      "explanation": "Because every new number is larger, it always goes to the right, forming a straight line. (Advanced trees like AVL or Red-Black fix this by auto-balancing)."
+      "answer": 1,
+      "explanation": "The rule covers whole subtrees, not just the two children. Checking only children misses a value that sits on the wrong side of a node higher up."
     },
     {
-      "question": "Which traversal prints a BST in perfectly sorted order?",
+      "question": "You insert 1, 2, 3, 4, 5 in that order into an empty BST with no rebalancing. What does searching for 5 cost?",
       "options": [
-        "In-Order",
-        "Pre-Order",
-        "Post-Order",
-        "Level-Order"
+        "About 2 comparisons, because a BST balances itself.",
+        "1 comparison, because 5 is the biggest value.",
+        "5 comparisons: each value goes to the right of the last, so the tree is a chain and its height is n.",
+        "It can't be found: sorted input breaks a BST."
       ],
-      "correctIndex": 0,
-      "explanation": "In-Order visits the Left Subtree (smaller), then the Node (middle), then the Right Subtree (larger)."
+      "answer": 2,
+      "explanation": "Every new value is bigger than everything so far, so it always goes right and the tree is a chain. O(log n) only holds while the tree is balanced; here the cost is O(n)."
+    },
+    {
+      "question": "Why is the in-order successor a safe replacement when you delete a node with two children?",
+      "options": [
+        "It is the smallest value on the right, so it is bigger than everything on the left and no bigger than anything else on the right.",
+        "It is always a leaf, so removing it changes nothing else.",
+        "It is the node closest to the root, so the tree gets shorter.",
+        "Any node from the right subtree would do. The successor is just the first one found."
+      ],
+      "answer": 0,
+      "explanation": "Placing the smallest right-hand value in the gap keeps the left side smaller and the right side bigger. It may have a right child, which is lifted into its place, but it never has a left child."
+    },
+    {
+      "question": "What do you get by visiting a BST in order: left subtree, then the node, then the right subtree?",
+      "options": [
+        "The values in the order they were inserted.",
+        "The values level by level, from the top down.",
+        "The values along a single path from the root.",
+        "The values in sorted order, smallest first."
+      ],
+      "answer": 3,
+      "explanation": "Everything in the left subtree is smaller than the node and everything in the right subtree is bigger, so left, node, right comes out sorted. That is why in-order solves k-th smallest."
+    },
+    {
+      "question": "A tree has root 10 and left child 5, and 5's right child is 12. Every child is on the correct side of its own parent (5 < 10, and 12 > 5). Is it a valid BST?",
+      "options": [
+        "Yes, every parent and child pair is in the right order.",
+        "No: 12 is in the left subtree of 10, so it would have to be smaller than 10.",
+        "Yes, as long as 5 has no left child.",
+        "No: a BST node may not have just one child."
+      ],
+      "answer": 1,
+      "explanation": "The invariant is about whole subtrees. 12 is below 10 on the left side, so it must be less than 10, and it isn't. Checking only parent and child pairs would wrongly accept this tree."
     }
   ],
   "practice": [
-    { "title": "Validate Binary Search Tree", "url": "https://leetcode.com/problems/validate-binary-search-tree/", "difficulty": "medium", "keyInsight": "Pass a valid [min, max] range down to every node." },
-    { "title": "Lowest Common Ancestor of a BST", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/", "difficulty": "medium", "keyInsight": "If both targets are smaller, go left. If both are larger, go right. Otherwise, you are at the LCA." },
-    { "title": "Kth Smallest Element in a BST", "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/", "difficulty": "medium", "keyInsight": "An in-order traversal yields the k-th element naturally." },
-    { "title": "Convert Sorted Array to Binary Search Tree", "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/", "difficulty": "easy", "keyInsight": "The middle of the array is the root." }
+    {
+      "title": "Insert into a Binary Search Tree",
+      "url": "https://leetcode.com/problems/insert-into-a-binary-search-tree/",
+      "difficulty": "medium",
+      "insight": "Walk down like a search. The first empty spot you reach is where the new leaf goes."
+    },
+    {
+      "title": "Kth Smallest Element in a BST",
+      "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+      "difficulty": "medium",
+      "insight": "An in-order walk visits the values from smallest to largest, so stop at the k-th node you visit."
+    },
+    {
+      "title": "Lowest Common Ancestor of a Binary Search Tree",
+      "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
+      "difficulty": "medium",
+      "insight": "If both values are smaller than the node, go left, and if both are bigger, go right. Where they split is the answer."
+    },
+    {
+      "title": "Convert Sorted Array to Binary Search Tree",
+      "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",
+      "difficulty": "easy",
+      "insight": "Pick the middle value as the root, and build each half of the array into a subtree the same way."
+    },
+    {
+      "title": "Binary Search Tree Iterator",
+      "url": "https://leetcode.com/problems/binary-search-tree-iterator/",
+      "difficulty": "medium",
+      "insight": "It is an in-order walk you can pause. A stack that holds the path of left children is all the state you need."
+    },
+    {
+      "title": "Minimum Absolute Difference in BST",
+      "url": "https://leetcode.com/problems/minimum-absolute-difference-in-bst/",
+      "difficulty": "easy",
+      "insight": "The closest pair of values are neighbours in sorted order, and an in-order walk hands you sorted order for free."
+    },
+    {
+      "title": "Trim a Binary Search Tree",
+      "url": "https://leetcode.com/problems/trim-a-binary-search-tree/",
+      "difficulty": "medium",
+      "insight": "If a node is below the range, its whole left subtree is too, so the answer can only come from its right side. Mirror that for a node above the range."
+    },
+    {
+      "title": "Balance a Binary Search Tree",
+      "url": "https://leetcode.com/problems/balance-a-binary-search-tree/",
+      "difficulty": "medium",
+      "insight": "Read the values out in order, then rebuild the tree from the middle of that sorted list, as when converting a sorted array."
+    }
+  ],
+  "overview": [
+    "Explain the BST invariant: left values are smaller, right values larger.",
+    "Trace a search that goes left or right at each node.",
+    "Trace insertion of a new value down to its empty leaf spot.",
+    "Delete a node with zero, one or two children, using its in-order successor.",
+    "Explain why an in-order walk of a BST gives values in sorted order.",
+    "Spot when inserting sorted values leaves a BST lopsided and slow."
+  ],
+  "resources": [
+    {
+      "title": "Binary search tree (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Binary_search_tree",
+      "note": "Covers the ordering rule, the three operations and how balance affects their cost."
+    },
+    {
+      "title": "Binary search tree visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/BST.html",
+      "note": "Insert and delete values yourself and watch the tree restructure at each step."
+    },
+    {
+      "title": "VisuAlgo BST (visualgo.net)",
+      "url": "https://visualgo.net/en/bst",
+      "note": "Animated BST searches, insertions and deletions with step controls you can pause and replay."
+    },
+    {
+      "title": "MIT OCW Introduction to Algorithms (6.006)",
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/",
+      "note": "Free lecture notes and videos that cover binary search trees and how they stay balanced."
+    }
   ]
 }

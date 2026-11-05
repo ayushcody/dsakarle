@@ -1,122 +1,253 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { getProgress } from '@/lib/progress';
-import type { CourseStructure, ProgressData } from '@/types/learning';
 
-const EMPTY_PROGRESS: ProgressData = {
-  completedSections: [],
-  quizScores: {},
-  lastVisited: '',
-};
+import { SearchIcon } from '@/components/layout/SiteHeader';
+import { NAV_ITEMS, isNavActive } from '@/components/layout/nav-items';
+import { useModalBehavior } from '@/components/layout/useModalBehavior';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { cn, focusRing } from '@/components/ui/cn';
+import { useProgress } from '@/hooks/useProgress';
+import { PATHS, getLessonMeta, placeOf } from '@/lib/curriculum';
+import { useNavStore } from '@/lib/nav-store';
+import { usePaletteStore } from '@/lib/palette-store';
+import { usePathname } from 'next/navigation';
 
-export function Sidebar({
-  currentSlug,
-  courseStructure,
-}: {
-  currentSlug: string
-  courseStructure: CourseStructure
-}) {
-  const [mounted, setMounted] = useState(false);
-  const [progress, setProgress] = useState<ProgressData>(EMPTY_PROGRESS);
+/** Empty circle, or a filled ✓ circle when done. Always paired with sr-only text. */
+function ProgressCircle({ done }: { done: boolean }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border',
+        done ? 'border-coral-ink bg-coral-ink text-paper' : 'border-rule-strong',
+      )}
+    >
+      {done ? (
+        <svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3.5 8.5l3 3L12.5 5" />
+        </svg>
+      ) : null}
+      <span className="sr-only">{done ? 'Completed' : 'Not completed'}</span>
+    </span>
+  );
+}
 
+/**
+ * The path-contents sidebar. On md+ it sits under the header (top-16) as a rail;
+ * below md it is a drawer opened from the header's menu button (nav-store),
+ * with the site nav, search and theme at its top.
+ */
+export function Sidebar({ currentSlug }: { currentSlug: string }) {
+  const { progress, mounted } = useProgress();
+  const pathname = usePathname();
+  const mobileNavOpen = useNavStore((state) => state.mobileNavOpen);
+  const setMobileNavOpen = useNavStore((state) => state.setMobileNavOpen);
+  const openPalette = usePaletteStore((state) => state.openPalette);
+  const asideRef = useRef<HTMLElement>(null);
+  const [isDrawer, setIsDrawer] = useState(false);
+
+  const closeMobileNav = () => setMobileNavOpen(false);
+
+  // Below md the aside is a modal drawer; track that so the rail on desktop is never "modal".
   useEffect(() => {
-    setMounted(true);
-    setProgress(getProgress());
-  }, []);
+    const mq = window.matchMedia('(max-width: 767px)');
+    const sync = () => {
+      setIsDrawer(mq.matches);
+      if (!mq.matches) setMobileNavOpen(false);
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, [setMobileNavOpen]);
 
-  // Calculate overall progress
-  const totalTopics = courseStructure.groups.reduce((acc, group) => acc + group.topics.length, 0);
-  const completedTopics = mounted ? progress.completedSections.length : 0;
-  const overallProgress = totalTopics === 0 ? 0 : Math.round((completedTopics / totalTopics) * 100);
+  const drawerOpen = isDrawer && mobileNavOpen;
+  useModalBehavior(drawerOpen, asideRef, closeMobileNav);
+
+  // Close the drawer when the route changes (e.g. after picking a lesson).
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [pathname, setMobileNavOpen]);
+
+  // Bring the current lesson into view inside the rail (never scrolls the page).
+  useEffect(() => {
+    const aside = asideRef.current;
+    const current = aside?.querySelector<HTMLElement>('[aria-current="page"][data-lesson-row]');
+    // In the drawer (below md) keep the menu and nav at the top visible instead.
+    if (!aside || !current || aside.getClientRects().length === 0 || window.matchMedia('(max-width: 767px)').matches) return;
+    const top = current.offsetTop - aside.clientHeight / 2 + current.clientHeight / 2;
+    aside.scrollTop = Math.max(0, top);
+  }, [currentSlug]);
+
+  const place = placeOf(currentSlug);
+  const path = place?.path;
+  const pathSlugs = path ? path.sections.flatMap((section) => section.lessons) : [];
+  const done = mounted ? pathSlugs.filter((slug) => progress.completedSections.includes(slug)).length : 0;
+  const percent = pathSlugs.length > 0 ? Math.round((done / pathSlugs.length) * 100) : 0;
+  const otherPaths = PATHS.filter((p) => p.id !== path?.id);
 
   return (
-    <aside className="fixed left-0 top-0 w-[280px] h-screen bg-[var(--bg-secondary)] border-r border-[var(--border)] z-50 overflow-y-auto flex flex-col custom-scrollbar pb-10">
-      
-      {/* Brand Header */}
-      <div className="p-6 pb-4">
-        <div className="flex items-center gap-3 mb-1">
-          <Image src="/DSAKarle_Logo.png" alt="DSA Karle Logo" width={36} height={36} className="object-contain" />
-          <div>
-            <h2 className="font-dmsans font-bold text-xl text-[var(--text-primary)] leading-none tracking-tight">DSA Karle</h2>
-            <p className="font-dmsans text-[11px] font-bold uppercase tracking-widest text-[var(--accent-coral)] mt-1">Technical Mastery</p>
+    <>
+      {mobileNavOpen ? (
+        <div className="fixed inset-0 z-[55] bg-black/40 md:hidden" onClick={closeMobileNav} aria-hidden="true" />
+      ) : null}
+      <aside
+        ref={asideRef}
+        id="lesson-sidebar"
+        aria-label="Course sidebar"
+        role={drawerOpen ? 'dialog' : undefined}
+        aria-modal={drawerOpen ? true : undefined}
+        tabIndex={drawerOpen ? -1 : undefined}
+        className={cn(
+          'custom-scrollbar fixed left-0 z-[60] w-[300px] max-w-[88vw] flex-col overflow-y-auto border-r border-rule bg-paper-raised',
+          'top-0 h-[100dvh] md:top-16 md:z-30 md:h-[calc(100vh-4rem)] md:w-[280px]',
+          mobileNavOpen ? 'flex' : 'hidden md:flex',
+        )}
+      >
+        {/* Drawer-only top: site nav, search and theme (the header's menu is replaced by this drawer on lessons). */}
+        <div className="md:hidden">
+          <div className="flex h-14 items-center justify-between border-b border-rule px-4">
+            <span className="t-eyebrow">Menu</span>
+            <button
+              type="button"
+              onClick={closeMobileNav}
+              aria-label="Close menu"
+              className={cn('-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-card text-ink-2 hover:bg-coral-wash hover:text-ink', focusRing)}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+          <nav aria-label="Main" className="grid grid-cols-2 gap-1 p-3">
+            {NAV_ITEMS.map((item) => {
+              const active = isNavActive(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMobileNav}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'flex min-h-[44px] items-center rounded-card px-3 font-sans text-[15px] font-medium',
+                    focusRing,
+                    active ? 'bg-coral-wash font-semibold text-coral-ink' : 'text-ink-2 hover:bg-paper-sunken hover:text-ink',
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="flex items-center gap-2 border-b border-rule px-3 pb-3">
+            <button
+              type="button"
+              onClick={() => {
+                closeMobileNav();
+                openPalette();
+              }}
+              className={cn(
+                'flex min-h-[44px] flex-1 items-center gap-2 rounded-card border border-control bg-paper-sunken px-3 text-left text-[14px] text-ink-3 hover:border-ink-3',
+                focusRing,
+              )}
+            >
+              <SearchIcon className="shrink-0" />
+              Search lessons…
+            </button>
+            <ThemeToggle />
           </div>
         </div>
-      </div>
 
-      {/* Progress Card */}
-      <div className="px-5 mb-6">
-        <div className="bg-[var(--white)] border border-[var(--border)] rounded-lg p-4 shadow-sm">
-          <div className="flex justify-between items-center mb-3">
-            <span className="font-dmsans text-sm font-bold text-[var(--text-primary)]">Overall Progress</span>
-            <span className="font-dmsans text-sm font-bold text-[var(--text-primary)]">{overallProgress}%</span>
-          </div>
-          <div className="h-2 w-full bg-[var(--bg-secondary)] rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-[var(--accent-coral)] rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${overallProgress}%` }}
-            ></div>
-          </div>
-        </div>
-      </div>
+        <nav aria-label="Path contents" className="flex-1 px-4 pb-6 pt-5">
+          <Link
+            href="/paths"
+            onClick={closeMobileNav}
+            className={cn('inline-flex min-h-[40px] items-center gap-1 rounded-cell font-sans text-[13px] text-ink-3 hover:text-ink', focusRing)}
+          >
+            <span aria-hidden="true">←</span> All paths
+          </Link>
 
-      {/* Navigation Groups */}
-      <nav className="flex-1 px-3">
-        {courseStructure.groups.map((group, groupIndex) => (
-          <div key={group.title} className={groupIndex > 0 ? "mt-6" : ""}>
-            {/* Group Header */}
-            <div className="px-3 mb-2 flex items-center justify-between">
-              <h3 className="font-dmsans font-bold text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
-                {group.title}
-              </h3>
-            </div>
+          {path ? (
+            <>
+              <Link
+                href={`/paths/${path.id}`}
+                onClick={closeMobileNav}
+                className={cn('mt-1 block rounded-cell font-sans text-[16px] font-semibold leading-6 text-ink hover:text-coral-ink', focusRing)}
+              >
+                {path.title}
+              </Link>
+              <div
+                className="mt-3 h-1.5 w-full overflow-hidden rounded-pill bg-paper-sunken"
+                role="progressbar"
+                aria-label={`${path.title} progress`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={percent}
+                aria-valuetext={`${done} of ${pathSlugs.length} lessons done`}
+              >
+                <div className="h-full rounded-pill bg-coral-ink transition-[width] duration-500 ease-out" style={{ width: `${percent}%` }} />
+              </div>
+              <p className="mt-1.5 text-[12px] text-ink-3">
+                {done} of {pathSlugs.length} done
+              </p>
 
-            {/* Topics */}
-            <ul className="space-y-1">
-              {group.topics.map(topic => {
-                const isActive = topic.slug === currentSlug;
-                const isComplete = mounted && progress.completedSections.includes(topic.slug);
+              {path.sections.map((section) => (
+                <div key={section.title} className="mt-6">
+                  <h3 className="t-eyebrow pb-1.5">{section.title}</h3>
+                  <ul className="m-0 flex list-none flex-col p-0">
+                    {section.lessons.map((slug) => {
+                      const lesson = getLessonMeta(slug);
+                      if (!lesson) return null;
+                      const isActive = slug === currentSlug;
+                      const isDone = mounted && progress.completedSections.includes(slug);
+                      return (
+                        <li key={slug}>
+                          <Link
+                            href={`/learn/${slug}`}
+                            onClick={closeMobileNav}
+                            data-lesson-row
+                            aria-current={isActive ? 'page' : undefined}
+                            className={cn(
+                              'flex min-h-[40px] items-center gap-2.5 border-l-2 py-1.5 pl-3 pr-2 font-sans text-[14px] leading-5 transition-colors duration-150 md:min-h-10',
+                              focusRing,
+                              isActive
+                                ? 'border-coral-ink font-semibold text-ink'
+                                : 'border-transparent text-ink-2 hover:border-rule-strong hover:text-ink',
+                            )}
+                          >
+                            <ProgressCircle done={isDone} />
+                            <span className="min-w-0 flex-1">{lesson.title}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </>
+          ) : null}
 
-                return (
-                  <li key={topic.slug}>
-                    <Link 
-                      href={`/learn/${topic.slug}`} 
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-dmsans text-[14px] transition-all group ${
-                        isActive 
-                          ? 'bg-[var(--accent-coral)] bg-opacity-10 text-[var(--accent-coral)] font-semibold' 
-                          : 'text-[var(--text-secondary)] hover:bg-[var(--white)] hover:text-[var(--text-primary)]'
-                      }`}
+          {otherPaths.length > 0 ? (
+            <div className="mt-8 border-t border-rule pt-4">
+              <h3 className="t-eyebrow pb-1.5">Other paths</h3>
+              <ul className="m-0 flex list-none flex-col p-0">
+                {otherPaths.map((other) => (
+                  <li key={other.id}>
+                    <Link
+                      href={`/paths/${other.id}`}
+                      onClick={closeMobileNav}
+                      className={cn('flex min-h-10 items-center rounded-cell py-1 font-sans text-[13px] text-ink-3 hover:text-ink', focusRing)}
                     >
-                      {/* Status Indicator */}
-                      <span className={`w-2 h-2 rounded-full flex-shrink-0 transition-colors ${
-                        isComplete 
-                          ? 'bg-[var(--state-success)]' 
-                          : isActive 
-                            ? 'bg-[var(--accent-coral)]'
-                            : 'bg-[var(--border-strong)] group-hover:bg-[var(--text-muted)]'
-                      }`} />
-                      <span className="truncate">{topic.title}</span>
+                      {other.title}
                     </Link>
                   </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
-      </nav>
-
-      {/* Practice Button */}
-      <div className="px-5 mt-8">
-        <h3 className="font-dmsans font-bold text-sm text-[var(--text-primary)] mb-1">Practice & Reinforce</h3>
-        <p className="font-dmsans text-xs text-[var(--text-secondary)] mb-4">Solve curated problems related to this topic.</p>
-        <Link href="/practice" className="block w-full py-2.5 px-4 text-center border border-[var(--accent-coral)] text-[var(--accent-coral)] font-dmsans font-bold text-sm rounded-lg hover:bg-[var(--accent-coral)] hover:text-white transition-colors">
-          Start Practice &rarr;
-        </Link>
-      </div>
-
-    </aside>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </nav>
+      </aside>
+    </>
   );
 }
 

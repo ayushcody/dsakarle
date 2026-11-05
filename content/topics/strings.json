@@ -1,174 +1,447 @@
 {
-  "id": "strings",
+  "schemaVersion": 2,
   "slug": "strings",
-  "title": "Strings",
-  "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 35,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "text", "parsing"],
-  "overview": {
-    "summary": "A String is an array of characters. However, depending on the language, strings are often immutable.",
-    "learningObjectives": [
-      "Understand string immutability.",
-      "Recognize ASCII character math (e.g., char - 'a').",
-      "Apply array patterns (like Two Pointers) to Strings."
-    ],
-    "interviewRelevance": "Strings are incredibly common, specifically for parsing, palindrome checks, and anagrams."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A signup form must decide that \"Racecar!\" and \"race car\" are both the same word backwards. How can it check that without first building cleaned-up copies of the text?",
     "paragraphs": [
-      "Every text message, password, and URL you've ever typed is processed as a String.",
-      "To a computer, text isn't letters. It's an array of numbers (ASCII/Unicode) that happen to map to letters on a screen."
+      "Capital letters, spaces and punctuation don't count. The obvious plan is to filter out the junk, lower-case what is left, reverse it and compare. That works, but it allocates new strings just to answer yes or no.",
+      "Now put one finger on the first character and another on the last. What would you do each time a finger lands on a space or an exclamation mark?"
     ],
-    "ahaMoment": "A String is just an Array of Characters. Any algorithm that works on an array (Two Pointers, Sliding Window) also works on a String."
+    "aha": "A string is just an array of characters, so you can walk it with two pointers. Hop a pointer over anything that isn't a letter or digit, compare the two characters ignoring case, then step both inward. One pass, no copies: O(n) time and O(1) extra space."
   },
-  "definition": {
-    "technicalDefinition": "A string is traditionally a sequence of characters, either as a literal constant or as some kind of variable.",
-    "vocabulary": [
-      { "term": "Immutable", "definition": "Once created, the string cannot be changed. To modify it, you must create an entirely new string (Python, Java, JS)." },
-      { "term": "Mutable", "definition": "The string can be modified in-place (C++)." },
-      { "term": "Substring", "definition": "A contiguous sequence of characters within a string." },
-      { "term": "Subsequence", "definition": "A sequence derived by deleting some characters without changing the order." }
-    ],
-    "keyProperties": [
-      "O(1) character access by index.",
-      "O(N) to concatenate immutable strings (usually).",
-      "Character encoding (ASCII/Unicode) allows math on letters."
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "s",
+      "cells": [
+        "R",
+        "a",
+        "c",
+        "e",
+        "␣",
+        "c",
+        "a",
+        "r",
+        "!"
+      ],
+      "pointers": [
+        {
+          "name": "left",
+          "index": 0,
+          "role": "ptrA"
+        },
+        {
+          "name": "right",
+          "index": 7,
+          "role": "ptrB"
+        }
+      ],
+      "marks": [
+        {
+          "index": 0,
+          "role": "compare"
+        },
+        {
+          "index": 4,
+          "role": "discarded"
+        },
+        {
+          "index": 7,
+          "role": "compare"
+        },
+        {
+          "index": 8,
+          "role": "discarded"
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "cell:0",
+        "text": "R equals r, ignoring case"
+      },
+      {
+        "target": "cell:4",
+        "text": "spaces are skipped"
+      },
+      {
+        "target": "cell:8",
+        "text": "so is punctuation"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A scrabble board where the tiles are glued down. To 'change' a word, you have to buy a whole new board and glue down new tiles."
+      "Picture a row of letter tiles on a shelf, one per slot and numbered from 0, so you can reach any tile instantly or walk in from both ends. In Python and Java the tiles are glued down: to change one letter you lay out a whole new row. So you collect tiles on a tray and glue the finished row once."
     ],
-    "clickSentence": "Because strings are often immutable, building strings character-by-character in a loop is a massive performance trap.",
-    "diagramType": "ArrayDiagram",
-    "cells": ["a", "p", "p", "l", "e"],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "In memory, a string is an array of bytes. 'A' is 65, 'B' is 66, 'a' is 97.",
-      "Because of immutability in many languages, appending a single character requires copying the ENTIRE string to a new memory block."
-    ],
-    "definitionCode": {
-      "python": "s = \"hello\"\n# s[0] = 'H'  # ERROR: Immutable!\ns = \"H\" + s[1:] # Creates a new string",
-      "javascript": "let s = \"hello\";\n// s[0] = 'H'; // Fails silently!\ns = \"H\" + s.slice(1); // Creates a new string",
-      "java": "String s = \"hello\";\n// Must use StringBuilder for mutability\nStringBuilder sb = new StringBuilder(s);\nsb.setCharAt(0, 'H');",
-      "cpp": "std::string s = \"hello\";\ns[0] = 'H'; // Works! C++ strings are mutable."
-    },
-    "memoryLayout": [
-      { "label": "Index 0", "value": "'a' (ASCII 97)" },
-      { "label": "Index 1", "value": "'p' (ASCII 112)" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [],
-    "steps": [
+    "click": "A string is an array of characters, so every array trick works on text. The one twist is that you usually can't edit it in place.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive String visualization coming soon.",
-        "activeLine": 1
+        "term": "character",
+        "definition": "One symbol in the string: a letter, digit, space or punctuation mark. In the pictures each character gets its own cell, and a space is drawn as ␣."
+      },
+      {
+        "term": "immutable",
+        "definition": "Can't be changed after it is made. Python and Java strings are immutable, so \"editing\" one builds a new string. C++ std::string is mutable and can be changed in place."
+      },
+      {
+        "term": "code point",
+        "definition": "The number a character is stored as. In ASCII 'a' is 97, 'b' is 98 and 'A' is 65. Unicode extends the same idea to every alphabet. This lesson sticks to plain ASCII."
+      },
+      {
+        "term": "substring",
+        "definition": "A run of characters that sit side by side, like \"car\" inside \"race car\". A subsequence may skip characters but keeps their order, like \"rcr\"."
+      },
+      {
+        "term": "StringBuilder / join",
+        "definition": "The way to build a long string efficiently. Java's StringBuilder and Python's ''.join(list) gather the pieces first and make one string at the end."
+      },
+      {
+        "term": "frequency map",
+        "definition": "A table of how many times each character appears. It can be a hash map, or for lowercase letters a 26-slot array indexed by ch - 'a'."
+      },
+      {
+        "term": "anagram",
+        "definition": "A word made from the same letters as another, used the same number of times, in any order: \"listen\" and \"silent\"."
+      }
+    ],
+    "definition": "A string is a sequence of characters stored in order and indexed from 0, so reading s[i] or the length takes O(1). Each character is stored as a number (an ASCII code or a Unicode code point), which is why letters can be compared and used in arithmetic: 'c' - 'a' is 2. In Python and Java strings are immutable: every operation that looks like an edit, and every slice or substring, makes a new string and costs time proportional to its length. In C++ std::string is mutable and appends in place. Comparing two strings costs up to O(length). To build a long string, collect the pieces (a list and join, or a StringBuilder) and make the string once."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "palindrome",
+        "label": "Palindrome",
+        "tracer": "strings/palindrome",
+        "predict": {
+          "tags": [
+            "skip-or-compare",
+            "match"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "anagram",
+        "label": "Anagram",
+        "tracer": "strings/char-frequency",
+        "predict": {
+          "tags": [
+            "which-bucket",
+            "anagram-yet"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The input is text and the question is about its letters, their order or their symmetry.",
+      "Two words may be rearrangements of each other, so you need to compare how often each letter appears.",
+      "You must compare a string with itself backwards, or work from both ends toward the middle.",
+      "You are building or cleaning a string one character at a time and want to avoid copying it over and over."
+    ],
+    "notWhen": [
+      "You need the longest or shortest stretch of text that obeys a rule. The string is only the array there: use a sliding window.",
+      "You must look up many words by prefix, like autocomplete. A trie shares prefixes, which a plain string can't.",
+      "You are counting whole words or other keys, not letters. A hash map is the tool, and a string is only its key."
+    ],
+    "quiz": [
+      {
+        "problem": "Decide whether two words, like \"listen\" and \"silent\", use exactly the same letters the same number of times.",
+        "answer": "strings",
+        "options": [
+          "strings",
+          "trees",
+          "binary-search",
+          "greedy"
+        ],
+        "explanation": "Count the letters of one word, then spend those counts on the other. Character math (ch - 'a') makes the counting cheap, and that is string work."
+      },
+      {
+        "problem": "Given a string, find the length of the longest substring that has no repeating characters.",
+        "answer": "sliding-window",
+        "options": [
+          "strings",
+          "sliding-window",
+          "hash-maps",
+          "two-pointers"
+        ],
+        "explanation": "A substring is a contiguous stretch whose size depends on a rule you can check as it grows. Expand on the right, shrink from the left. The string is just the array."
+      },
+      {
+        "problem": "A dictionary holds 100,000 words. Quickly tell whether any word starts with the prefix \"pre\".",
+        "answer": "tries",
+        "options": [
+          "strings",
+          "hash-maps",
+          "tries",
+          "binary-search"
+        ],
+        "explanation": "A trie stores shared prefixes once, so walking \"p\", \"r\", \"e\" answers the question in as many steps as the prefix has letters. A hash map can't answer prefix questions."
+      },
+      {
+        "problem": "Count how many times each word appears in a long log file and report the most frequent one.",
+        "answer": "hash-maps",
+        "options": [
+          "strings",
+          "hash-maps",
+          "queues",
+          "prefix-sum"
+        ],
+        "explanation": "Every word is a key and its count is the value. You are tallying whole words, not examining letters, so a hash map is the right tool."
+      },
+      {
+        "problem": "Turn a spreadsheet column title like \"AB\" into its number, where A is 1, B is 2, ... Z is 26 and AA is 27.",
+        "answer": "strings",
+        "options": [
+          "binary-search",
+          "dynamic-programming",
+          "bst",
+          "strings"
+        ],
+        "explanation": "Each letter acts as a digit, and 'B' - 'A' + 1 gives its value. Reading a string one character at a time and doing arithmetic on letters is the core string skill."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "ASCII Math",
-      "description": "Convert a lowercase letter to an index 0-25 by subtracting the ASCII value of 'a'.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "index = ord('c') - ord('a') # 2",
-        "javascript": "const index = 'c'.charCodeAt(0) - 'a'.charCodeAt(0); // 2",
-        "java": "int index = 'c' - 'a'; // 2",
-        "cpp": "int index = 'c' - 'a'; // 2"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "left = 0, right = last index of s",
+        "anchor": "init"
       },
-      "visualNote": "Shows a letter converting to a number."
-    },
-    {
-      "name": "Efficient Concatenation",
-      "description": "Collect characters in an Array, then join them at the end.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(N)",
-      "code": {
-        "python": "chars = ['h', 'i']\ns = \"\".join(chars)",
-        "javascript": "const chars = ['h', 'i'];\nconst s = chars.join('');",
-        "java": "StringBuilder sb = new StringBuilder();\nsb.append('h').append('i');\nString s = sb.toString();",
-        "cpp": "string s = \"\"; s += 'h'; s += 'i'; // C++ is optimized"
+      {
+        "text": "while left < right:"
       },
-      "visualNote": "Array slots combine into a single block."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "def is_palindrome(s):\n  left = 0\n  right = len(s) - 1\n  while left < right:\n    if s[left] != s[right]: return False\n    left += 1\n    right -= 1\n  return True",
-    "whenToUse": "Whenever parsing words, checking symmetry, or searching for substrings.",
-    "timeComplexity": "O(N)",
-    "spaceComplexity": "O(1) if not building a new string."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are asked to reverse the vowels in a string.",
-    "correctPatternId": "strings",
-    "distractors": [
-      "hash-maps",
-      "trees",
-      "binary-search"
+      {
+        "text": "if s[left] is not a letter or digit: left += 1",
+        "anchor": "skip",
+        "indent": 1
+      },
+      {
+        "text": "else if s[right] is not a letter or digit: right -= 1",
+        "anchor": "skip",
+        "indent": 1
+      },
+      {
+        "text": "else if s[left] and s[right] differ, ignoring case:",
+        "anchor": "compare",
+        "indent": 1
+      },
+      {
+        "text": "return false",
+        "anchor": "done",
+        "indent": 2
+      },
+      {
+        "text": "else: left += 1 and right -= 1",
+        "anchor": "match",
+        "indent": 1
+      },
+      {
+        "text": "return true",
+        "anchor": "done"
+      }
     ],
-    "explanation": "This requires treating the String as an Array, running Two Pointers, and converting it to a mutable array (or StringBuilder) first."
+    "tracer": "strings/palindrome",
+    "time": "O(n)",
+    "space": "O(1) extra, just two indexes",
+    "notes": [
+      "Every loop step moves at least one pointer, and pointers only move toward each other, so there are at most n steps in total. Only left and right are stored.",
+      "The \"filter, lower-case, reverse, compare\" version is also correct and simpler to read, but it builds new strings, so it uses O(n) extra space. The pointer version makes no copy at all.",
+      "Letters are numbers. 'a' is 97, so ch - 'a' maps a to z onto 0 to 25. That is why lowercase letters can be counted in a plain 26-slot array. The anagram tracer draws a 5-bucket hash table (bucket = code % 5) so you can watch collisions, but a 26-slot array gives the same counts.",
+      "Building a string in a loop. Java: `s += ch` makes a new String and copies everything built so far each time, so n appends cost O(n²). Use a StringBuilder and append, which is O(n) overall. Python: collect the pieces in a list and call ''.join(pieces).",
+      "Python's `s += ch` is not always quadratic. CPython can sometimes grow the string in place when nothing else refers to it, so it may look fast. That is an implementation detail, not a promise, so ''.join is the safe habit. C++ std::string is mutable and `+=` appends in place, about O(1) per character on average, though inserting or erasing at the front still shifts everything.",
+      "Slicing copies. Python s[a:b], Java s.substring(a, b) and C++ s.substr(a, b) each copy their characters, so slicing inside a loop adds up. Pass indexes instead, as the pointer solution does.",
+      "In C++ cast to unsigned char before calling std::isalnum or std::tolower on a char, because a negative char value is undefined behaviour. Python and Java's checks also accept non-ASCII letters, which this lesson doesn't cover."
+    ]
   },
   "examples": [
     {
+      "title": "Valid Palindrome",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/valid-palindrome/",
+      "problem": "A phrase is a palindrome if, after making every letter lower case and removing everything that is not a letter or digit, it reads the same forwards and backwards. Given a string s, return true if it is a palindrome.",
+      "input": "s = \"Race car!\"",
+      "output": "true",
+      "approach": [
+        "The easy way builds a cleaned, lower-case copy, reverses it and compares. It works, but it makes new strings. Two pointers need no copy.",
+        "Put left on the first character and right on the last. If a pointer sits on something that isn't a letter or digit, move that pointer inward.",
+        "When both pointers are on real characters, compare them ignoring case. A difference means false. A match moves both pointers inward.",
+        "If the pointers meet or cross with no mismatch, return true. Here the '!' and the space are skipped, and R = r, a = a, c = c."
+      ],
+      "code": "strings/palindrome",
+      "tracer": "strings/palindrome",
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    {
       "title": "Valid Anagram",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/valid-anagram/",
-      "problemStatement": "Given two strings s and t, return true if t is an anagram of s.",
-      "inputExample": "s = \"anagram\", t = \"nagaram\"",
-      "outputExample": "true",
-      "steps": [
-        "If lengths differ, return false.",
-        "Create an array of size 26 to count letter frequencies.",
-        "Iterate through strings, increment count for s, decrement for t.",
-        "If any count is non-zero, they are not anagrams."
+      "url": "https://leetcode.com/problems/valid-anagram/",
+      "problem": "Given two strings s and t, return true if t is an anagram of s: the same letters, used the same number of times, in any order.",
+      "input": "s = \"anagram\", t = \"nagaram\"",
+      "output": "true",
+      "approach": [
+        "If the lengths differ, they can't be anagrams. Stop early and return false.",
+        "Count every letter of s in a table: a is 3, n is 1, g is 1, r is 1 and m is 1.",
+        "Go through t. Each letter must still have a count above zero. Spend one. A letter that is missing, or whose count is already 0, means false.",
+        "With equal lengths, spending every letter of t without a failure leaves all counts at 0, so the answer is true."
       ],
-      "code": {
-        "python": "def isAnagram(s, t):\n    if len(s) != len(t): return False\n    counts = [0] * 26\n    for i in range(len(s)):\n        counts[ord(s[i]) - ord('a')] += 1\n        counts[ord(t[i]) - ord('a')] -= 1\n    return all(c == 0 for c in counts)",
-        "javascript": "function isAnagram(s, t) {\n    if (s.length !== t.length) return false;\n    const counts = new Array(26).fill(0);\n    for (let i = 0; i < s.length; i++) {\n        counts[s.charCodeAt(i) - 97]++;\n        counts[t.charCodeAt(i) - 97]--;\n    }\n    return counts.every(c => c === 0);\n}"
-      },
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(1)",
-      "rationale": "Using a fixed size array of 26 integers is technically O(1) space, and perfectly demonstrates ASCII math."
+      "code": "strings/char-frequency",
+      "tracer": "strings/char-frequency",
+      "time": "O(n)",
+      "space": "O(k) for k different letters, which is O(1) for lowercase a to z"
+    },
+    {
+      "title": "Group Anagrams",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/group-anagrams/",
+      "problem": "Given an array of strings, group the anagrams together. You can return the groups in any order.",
+      "input": "strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]",
+      "output": "[[\"eat\",\"tea\",\"ate\"],[\"tan\",\"nat\"],[\"bat\"]]  (groups and their order can vary)",
+      "approach": [
+        "Anagrams are the same letters in a different order, so sorting a word's letters gives every anagram the same signature. \"eat\", \"tea\" and \"ate\" all become \"aet\".",
+        "Keep a map from signature to a list of words. For each word, sort its letters to get the signature and append the word to that list.",
+        "The lists in the map are the groups: aet holds eat, tea and ate; ant holds tan and nat; abt holds bat. Return them.",
+        "Sorting a word of k letters costs O(k log k), and it is done once per word."
+      ],
+      "code": "strings/group-anagrams",
+      "time": "O(n · k log k) for n words of length at most k",
+      "space": "O(n · k)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What happens in Java/Python if you do `s += char` in a loop 1000 times?",
+      "question": "In Java you build a 10,000-character result with `s += ch` inside a loop. What happens, and what should you use instead?",
       "options": [
-        "It copies the entire string 1000 times, causing O(N^2) time complexity.",
-        "It runs in O(N) time.",
-        "It crashes.",
-        "It modifies the string in place."
+        "Each += edits the string in place, so the loop is O(n) overall. Nothing needs to change.",
+        "Each += copies everything built so far, so n appends cost O(n²). Use a StringBuilder.",
+        "It throws an error, because Java strings are final.",
+        "It is O(n) but wastes memory, so switch to a char array only to save space."
       ],
-      "correctIndex": 0,
-      "explanation": "Because strings are immutable, adding a single character to a length-500 string requires copying 500 characters. Doing this repeatedly creates an O(N^2) trap."
+      "answer": 1,
+      "explanation": "A Java String can't change, so every += creates a new String and copies the old characters into it. Copying 1, 2, 3, ... n characters adds up to about n²/2. A StringBuilder appends into a growing buffer, which is O(n) overall."
     },
     {
-      "question": "What is the result of `ord('d') - ord('a')`?",
+      "question": "A friend says a Python `s += ch` loop ran fast on their machine. Why is ''.join(pieces) still the safe habit?",
       "options": [
-        "3",
-        "4",
-        "0",
-        "It throws an error."
+        "Because s += ch is always O(n²) in Python, with no exceptions.",
+        "Because join sorts the pieces before putting them together.",
+        "Because += raises an error on strings longer than 1,000 characters.",
+        "Because CPython only sometimes appends in place, as an optimisation rather than a promise, while join is O(n) everywhere."
       ],
-      "correctIndex": 0,
-      "explanation": "ASCII math! 'a' is 0, 'b' is 1, 'c' is 2, 'd' is 3."
+      "answer": 3,
+      "explanation": "CPython can grow a string in place when nothing else refers to it, so a simple loop can be quick. Nothing in the language guarantees that, and other implementations or slightly different code can fall back to copying. Collecting pieces and joining once is linear every time."
+    },
+    {
+      "question": "What does 'z' - 'a' give in Java or C++, and why does that make a 26-slot count array possible?",
+      "options": [
+        "25. Letter codes run in order, so ch - 'a' turns a to z into slots 0 to 25.",
+        "26, because there are 26 letters.",
+        "122, because that is the code of z.",
+        "Nothing. You can't subtract letters, so you need a hash map."
+      ],
+      "answer": 0,
+      "explanation": "Characters are stored as numbers, and a to z are consecutive (a = 97, z = 122), so the difference from 'a' is a tidy 0 to 25. In Python the same idea is ord(ch) - ord('a')."
+    },
+    {
+      "question": "While spending the letters of t against the counts of s (the two words have equal length), when does the anagram check return false?",
+      "options": [
+        "When a letter of t also appears in s.",
+        "When some count is still above zero after the loop.",
+        "When a letter of t has no count left, because it is missing or already spent.",
+        "When two letters of t land in the same bucket."
+      ],
+      "answer": 2,
+      "explanation": "Equal lengths mean the counts of s add up to exactly the number of letters in t. So the only way to fail is trying to spend a letter that has no count. Two letters sharing a bucket is just a normal collision."
+    },
+    {
+      "question": "How does the two-pointer palindrome check compare with \"filter, lower-case, reverse, compare\"?",
+      "options": [
+        "Both need O(n) extra space. The pointers are just faster.",
+        "The pointers need O(1) extra space, two indexes, while the copy version allocates new strings.",
+        "The pointers are O(n²) because skipping characters means starting over.",
+        "The copy version can't handle punctuation."
+      ],
+      "answer": 1,
+      "explanation": "The pointers only store left and right, and every step moves one of them inward, so the work is O(n). The copy version is also O(n) time but builds new strings, so it uses O(n) extra space."
     }
   ],
   "practice": [
-    { "title": "Valid Anagram", "url": "https://leetcode.com/problems/valid-anagram/", "difficulty": "easy", "keyInsight": "Use a 26-element array for frequency counting." },
-    { "title": "Valid Palindrome", "url": "https://leetcode.com/problems/valid-palindrome/", "difficulty": "easy", "keyInsight": "Two pointers starting from opposite ends." },
-    { "title": "Longest Substring Without Repeating Characters", "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/", "difficulty": "medium", "keyInsight": "Sliding Window with a Hash Set." }
+    {
+      "title": "Reverse String",
+      "url": "https://leetcode.com/problems/reverse-string/",
+      "difficulty": "easy",
+      "insight": "The input is an array of characters you may change in place, so ask which two positions should swap, and where the pointers stop."
+    },
+    {
+      "title": "Valid Palindrome II",
+      "url": "https://leetcode.com/problems/valid-palindrome-ii/",
+      "difficulty": "easy",
+      "insight": "Run the palindrome pointers as usual. At the first mismatch you may drop one character, so check both ways of dropping it."
+    },
+    {
+      "title": "First Unique Character in a String",
+      "url": "https://leetcode.com/problems/first-unique-character-in-a-string/",
+      "difficulty": "easy",
+      "insight": "Count every letter first, then walk the string again and stop at the first letter whose count is exactly 1."
+    },
+    {
+      "title": "Longest Common Prefix",
+      "url": "https://leetcode.com/problems/longest-common-prefix/",
+      "difficulty": "easy",
+      "insight": "A common prefix can't be longer than the shortest word. Compare column by column and stop at the first column where any word disagrees."
+    },
+    {
+      "title": "Remove All Adjacent Duplicates In String",
+      "url": "https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/",
+      "difficulty": "easy",
+      "insight": "Build the answer one character at a time in a StringBuilder or list, and look at its last character to decide whether the new one cancels it."
+    },
+    {
+      "title": "Longest Palindromic Substring",
+      "url": "https://leetcode.com/problems/longest-palindromic-substring/",
+      "difficulty": "medium",
+      "insight": "Every palindrome has a centre. Try each centre, widen outward while the ends match, and remember both odd and even lengths."
+    },
+    {
+      "title": "Find All Anagrams in a String",
+      "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/",
+      "difficulty": "medium",
+      "insight": "Slide a window as long as the pattern over the text, keeping letter counts that you update as one letter enters and one leaves."
+    },
+    {
+      "title": "Minimum Window Substring",
+      "url": "https://leetcode.com/problems/minimum-window-substring/",
+      "difficulty": "hard",
+      "insight": "Count what the window still needs. Grow it until nothing is missing, then shrink from the left for as long as it stays valid."
+    }
+  ],
+  "overview": [
+    "Explain why a string behaves like an array of characters.",
+    "Trace a two-pointer palindrome check that skips punctuation and case.",
+    "Compare two words by counting letters to spot anagrams.",
+    "Build a changed string once, instead of editing it character by character.",
+    "Choose a sliding window instead when the question asks for a longest stretch."
+  ],
+  "resources": [
+    {
+      "title": "String (computer science)",
+      "url": "https://en.wikipedia.org/wiki/String_(computer_science)",
+      "note": "How strings are stored as character sequences, and why many languages make them immutable."
+    },
+    {
+      "title": "Anagram",
+      "url": "https://en.wikipedia.org/wiki/Anagram",
+      "note": "Defines anagrams, the basis for comparing letter counts between two words."
+    },
+    {
+      "title": "java.lang.String",
+      "url": "https://docs.oracle.com/javase/8/docs/api/java/lang/String.html",
+      "note": "The Java String API, with immutability notes and methods like toCharArray."
+    }
   ]
 }

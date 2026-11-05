@@ -1,188 +1,480 @@
 {
-  "id": "trees",
+  "schemaVersion": 2,
   "slug": "trees",
-  "title": "Trees",
-  "category": "data-structure",
-  "difficulty": "medium",
-  "estimatedMinutes": 60,
-  "prerequisites": ["linked-lists"],
-  "tags": ["tree", "recursion", "hierarchical"],
-  "overview": {
-    "summary": "Trees are hierarchical data structures modeling relationships rather than flat lists.",
-    "learningObjectives": [
-      "Understand tree terminology (Root, Leaf, Height).",
-      "Master tree traversal algorithms (DFS, BFS).",
-      "Recognize recursive patterns in tree problems."
-    ],
-    "interviewRelevance": "The most common recursive interview questions heavily feature trees. If you understand trees, you understand recursion."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A company's org chart has the CEO on top, managers under her, and teams under them. How do you print everyone level by level (the CEO, then all her direct reports, then their reports) when each person only knows their own direct reports?",
     "paragraphs": [
-      "File system directories are trees. The HTML DOM of the website you are looking at right now is a tree. Every chess engine evaluates positions in a game tree.",
-      "The reason folder navigation is fast is that your OS stores directory metadata in a B-tree, allowing rapid search through millions of files."
+      "Nobody holds the whole chart. Each person knows one thing: who reports to them, at most two people in this chart. You can start at the CEO and ask her.",
+      "You could follow one manager all the way down to the newest hire, then come back up for the next branch. That visits everyone, but not level by level. What do you keep track of instead?"
     ],
-    "ahaMoment": "A tree is just a linked list that branches out. Instead of pointing to one 'next' node, it points to multiple 'children'."
+    "aha": "Keep a waiting line. Take the person at the front, print them, and put their reports at the back. The line is first in, first out, so a whole level is served before any of the next one. Walk the chart the other way, one branch to the bottom first, and you get depth-first order. That walk is just recursion: the same question asked of each person's two reports."
   },
-  "definition": {
-    "technicalDefinition": "A tree is an undirected, connected, acyclic graph consisting of a root node and children nodes, forming a hierarchy.",
-    "vocabulary": [
-      { "term": "Root", "definition": "The top-most node in the tree. You lose the tree if you lose the root." },
-      { "term": "Leaf", "definition": "A node with no children (bottom of the tree)." },
-      { "term": "Height", "definition": "The length of the longest path from the root to a leaf." },
-      { "term": "Depth", "definition": "The length of the path from the root to a specific node." }
-    ],
-    "keyProperties": [
-      "Every node has exactly one parent (except the root).",
-      "No cycles are allowed.",
-      "Recursive structure: every child node is the root of its own subtree."
+  "shape": {
+    "scene": {
+      "kind": "tree",
+      "root": "n0",
+      "nodes": [
+        {
+          "id": "n0",
+          "value": 3,
+          "children": [
+            "n1",
+            "n2"
+          ]
+        },
+        {
+          "id": "n1",
+          "value": 9,
+          "children": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "n2",
+          "value": 20,
+          "children": [
+            "n3",
+            "n4"
+          ]
+        },
+        {
+          "id": "n3",
+          "value": 15,
+          "children": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "n4",
+          "value": 7,
+          "children": [
+            null,
+            null
+          ]
+        }
+      ],
+      "pointers": [
+        {
+          "name": "root",
+          "target": "n0",
+          "role": "ptrA"
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "node:n0",
+        "text": "root: no parent"
+      },
+      {
+        "target": "node:n2",
+        "text": "parent of 15 and 7"
+      },
+      {
+        "target": "node:n3",
+        "text": "leaf: no children"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A corporate org chart. The CEO is the root, VPs are children of the CEO, Managers are children of VPs, and individual contributors are the leaves."
+      "Picture a family tree drawn upside down, or a tournament bracket. One winner sits at the top, and every match below it has exactly two feeder matches. That is a binary tree: the root at the top, each node with a left and a right child, and the leaves at the bottom.",
+      "You only hold the root. To reach anyone else you walk down from it, left or right, one step at a time."
     ],
-    "clickSentence": "Because a tree is naturally recursive, the easiest way to solve a tree problem is to ask: 'If I know the answer for my left and right children, how do I calculate the answer for myself?'",
-    "diagramType": "tree",
-    "cells": [1, 2, 3, 4, 5, 6, 7],
-    "diagramState": {}
+    "click": "Every node is the root of its own smaller tree, so a question about the whole tree is the same question asked of the left child and the right child.",
+    "glossary": [
+      {
+        "term": "root",
+        "definition": "The top node. It has no parent, and it is the only node you hold on to."
+      },
+      {
+        "term": "leaf",
+        "definition": "A node with no children: both its left and its right are null."
+      },
+      {
+        "term": "parent / child",
+        "definition": "A node points down to its children, and each child has exactly one parent. In a binary tree a node has at most two: left and right."
+      },
+      {
+        "term": "subtree",
+        "definition": "A node together with everything below it. Every subtree of a tree is itself a tree, which is why recursion fits."
+      },
+      {
+        "term": "depth vs height",
+        "definition": "Depth is how far a node is from the root (the root is 0). Height is how far the longest path goes down from a node. LeetCode's \"maximum depth\" counts nodes on the longest root-to-leaf path, so a single node has maximum depth 1."
+      },
+      {
+        "term": "pre-, in-, post-order",
+        "definition": "The three depth-first orders. They differ only in when a node is written: before its two subtrees (pre), between them (in) or after them (post)."
+      },
+      {
+        "term": "level-order",
+        "definition": "Visit the root, then its children, then their children, level by level. It uses a queue, not recursion."
+      },
+      {
+        "term": "null child",
+        "definition": "A missing left or right child (None in Python, nullptr in C++). Recursive tree code stops when it reaches one."
+      }
+    ],
+    "definition": "A binary tree is either empty or a node holding a value, with a left subtree and a right subtree that are themselves binary trees. Every node except the root has exactly one parent, so there is exactly one path from the root to any node, and no cycles. A tree with n nodes has n - 1 links. Its height h can be as small as about log2(n) when it is balanced, and as large as n when it is a single chain."
   },
-  "structure": {
-    "memoryDescription": [
-      "Like Linked Lists, tree nodes are scattered in memory.",
-      "A binary tree node contains data and two pointers: left and right."
+  "stage": {
+    "tracks": [
+      {
+        "id": "dfs",
+        "label": "Depth-first: pre / in / post",
+        "tracer": "trees/dfs-order",
+        "predict": {
+          "tags": [
+            "next-visit"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "level",
+        "label": "Level by level",
+        "tracer": "trees/level-order",
+        "predict": {
+          "tags": [
+            "next-in-queue"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "depth",
+        "label": "Maximum depth",
+        "tracer": "trees/max-depth",
+        "predict": {
+          "tags": [
+            "depth-here"
+          ],
+          "max": 3
+        }
+      }
     ],
-    "definitionCode": {
-      "python": "class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right",
-      "javascript": "class TreeNode {\n    constructor(val = 0, left = null, right = null) {\n        this.val = val;\n        this.left = left;\n        this.right = right;\n    }\n}",
-      "java": "public class TreeNode {\n    int val;\n    TreeNode left;\n    TreeNode right;\n    TreeNode(int val) { this.val = val; }\n}",
-      "cpp": "struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n    TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n};"
-    },
-    "memoryLayout": [
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The problem hands you the root of a binary tree (a TreeNode) and asks about the whole tree.",
+      "The data is a hierarchy: folders, an org chart, a family tree, a bracket.",
+      "You can write the answer for a node using the answers of its left and right child.",
+      "It says level by level, right side view or depth: a queue, or a depth-first walk."
+    ],
+    "notWhen": [
+      "Values must stay sorted so you can look them up fast: that is a binary search tree, a tree plus an ordering rule.",
+      "You always need the smallest or largest item next: that is a heap, which is also drawn as a tree.",
+      "Things can loop back, like a network or a grid: a node can be reached two ways, so you need a visited set. That is graph work. A tree has exactly one path between two nodes, so BFS on a tree gives levels, not shortest paths."
+    ],
+    "quiz": [
       {
-        "label": "Root Node",
-        "value": "{ val: 1, left: 0x4A, right: 0x9B }"
+        "problem": "Given the root of a binary tree, return the number of nodes on the longest path from the root down to a leaf.",
+        "answer": "trees",
+        "options": [
+          "bst",
+          "trees",
+          "graphs",
+          "heaps"
+        ],
+        "explanation": "You are handed a TreeNode and the answer for a node comes from its two children: 1 + max(left, right). That is plain binary-tree recursion."
       },
       {
-        "label": "Left Child",
-        "value": "{ val: 2, left: null, right: null }"
+        "problem": "Given the root of a binary search tree, return the k-th smallest value in it.",
+        "answer": "bst",
+        "options": [
+          "trees",
+          "heaps",
+          "bst",
+          "sorting"
+        ],
+        "explanation": "A BST keeps smaller values on the left and bigger on the right, so an in-order walk visits values in sorted order. The ordering rule is what makes it a BST problem."
       },
       {
-        "label": "Right Child",
-        "value": "{ val: 3, left: null, right: null }"
+        "problem": "List every string of n pairs of parentheses that is correctly matched.",
+        "answer": "recursion",
+        "options": [
+          "stacks",
+          "trees",
+          "recursion",
+          "dynamic-programming"
+        ],
+        "explanation": "No tree is given. You build answers by choosing ( or ) at each step and undoing the choice, which is recursion and backtracking. The choices form a tree, but you never hold one."
+      },
+      {
+        "problem": "Given the root of a binary tree, return its node values level by level, from left to right.",
+        "answer": "trees",
+        "options": [
+          "queues",
+          "heaps",
+          "bfs-dfs",
+          "trees"
+        ],
+        "explanation": "The input is a binary tree, and a queue with a size snapshot gives the levels. BFS shows up in graphs as shortest steps, but in a tree there is one path, so here it only gives levels."
+      },
+      {
+        "problem": "A grid of 1s (land) and 0s (water) is given. Count the islands.",
+        "answer": "bfs-dfs",
+        "options": [
+          "bfs-dfs",
+          "trees",
+          "binary-search",
+          "hash-maps"
+        ],
+        "explanation": "A grid cell can be reached from several neighbours, so a plain tree walk would loop. You need a visited set and BFS or DFS over a graph."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "tree",
-    "array": [1, 2, 3, 4, 5, 6, 7],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive tree traversal visualization coming soon.",
-        "activeLine": 1
+        "text": "out = []; dfs(root)",
+        "anchor": "init"
+      },
+      {
+        "text": "dfs(node):"
+      },
+      {
+        "text": "if node is null: return",
+        "anchor": "base",
+        "indent": 1
+      },
+      {
+        "text": "pre-order: write node.value here",
+        "anchor": "visit",
+        "indent": 1
+      },
+      {
+        "text": "dfs(node.left)",
+        "anchor": "left",
+        "indent": 1
+      },
+      {
+        "text": "in-order: write node.value here",
+        "anchor": "visit",
+        "indent": 1
+      },
+      {
+        "text": "dfs(node.right)",
+        "anchor": "right",
+        "indent": 1
+      },
+      {
+        "text": "post-order: write node.value here",
+        "anchor": "visit",
+        "indent": 1
+      },
+      {
+        "text": "return to the caller",
+        "anchor": "back",
+        "indent": 1
+      },
+      {
+        "text": "return out",
+        "anchor": "done"
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Depth-First Search (DFS)",
-      "description": "Traverse deeply into branches before backtracking. Can be Pre-order, In-order, or Post-order.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(H) recursion stack",
-      "code": {
-        "python": "def dfs(node):\n    if not node: return\n    dfs(node.left)\n    dfs(node.right)",
-        "javascript": "function dfs(node) {\n  if (!node) return;\n  dfs(node.left);\n  dfs(node.right);\n}",
-        "java": "void dfs(TreeNode node) {\n  if (node == null) return;\n  dfs(node.left);\n  dfs(node.right);\n}",
-        "cpp": "void dfs(TreeNode* node) {\n  if (!node) return;\n  dfs(node->left);\n  dfs(node->right);\n}"
-      },
-      "visualNote": "The search plunges to the deepest leaf before coming back up."
-    },
-    {
-      "name": "Breadth-First Search (BFS)",
-      "description": "Traverse level by level using a queue.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(W) max width",
-      "code": {
-        "python": "q = deque([root])\nwhile q:\n    node = q.popleft()\n    if node.left: q.append(node.left)\n    if node.right: q.append(node.right)",
-        "javascript": "const q = [root];\nwhile (q.length) {\n  const node = q.shift();\n  if (node.left) q.push(node.left);\n  if (node.right) q.push(node.right);\n}",
-        "java": "Queue<TreeNode> q = new LinkedList<>();\nq.offer(root);\nwhile (!q.isEmpty()) {\n  TreeNode node = q.poll();\n  if (node.left != null) q.offer(node.left);\n  if (node.right != null) q.offer(node.right);\n}",
-        "cpp": "queue<TreeNode*> q;\nq.push(root);\nwhile (!q.empty()) {\n  TreeNode* node = q.front(); q.pop();\n  if (node->left) q.push(node->left);\n  if (node->right) q.push(node->right);\n}"
-      },
-      "visualNote": "The search sweeps horizontally across each level."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "def solve(node):\n  if node is null:\n    return BaseCase\n  left_result = solve(node.left)\n  right_result = solve(node.right)\n  return merge(left_result, right_result, node.val)",
-    "whenToUse": "Whenever data is hierarchical or when a problem asks to find paths, depths, or relationships between ancestors and descendants.",
-    "timeComplexity": "O(N) since we visit every node exactly once.",
-    "spaceComplexity": "O(H) where H is the height of the tree (for the call stack)."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You need to find the shortest path from the top of an organization chart to a specific employee.",
-    "correctPatternId": "trees",
-    "distractors": [
-      "arrays",
-      "sorting",
-      "two-pointers"
     ],
-    "explanation": "An organization chart is a classic Tree structure, and finding a path requires tree traversal (BFS for shortest path)."
+    "tracer": "trees/dfs-order",
+    "time": "O(n)",
+    "space": "O(h)",
+    "notes": [
+      "Each node is entered once and written once, so every traversal, depth-first or level by level, is O(n) time.",
+      "The recursion uses a call stack as deep as the tree is tall: O(h). That is about log n for a balanced tree and n for a chain. Level-order instead holds up to one whole level in its queue, which is O(width).",
+      "Pick one of the three write lines. Where it sits is the whole difference between pre-order, in-order and post-order.",
+      "Start every tree function with the null check. It covers the empty tree and the bottom of every branch in one line.",
+      "A lot of tree answers are post-order: ask both children, then combine, like 1 + max(left, right) for depth.",
+      "Level-order: copy len(queue) into size before the inner loop, because the queue grows while you add children. Put the root in only if it is not null.",
+      "Python's default recursion limit is about 1000, so a very tall tree may need an iterative version."
+    ]
   },
   "examples": [
     {
       "title": "Maximum Depth of Binary Tree",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
-      "problemStatement": "Given the root of a binary tree, return its maximum depth.",
-      "inputExample": "root = [3,9,20,null,null,15,7]",
-      "outputExample": "3",
-      "steps": [
-        "Base Case: If the node is null, the depth is 0.",
-        "Recursively find the max depth of the left subtree.",
-        "Recursively find the max depth of the right subtree.",
-        "The depth of the current node is max(left, right) + 1."
+      "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
+      "problem": "Given the root of a binary tree, return its maximum depth: the number of nodes along the longest path from the root down to the farthest leaf.",
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "3",
+      "approach": [
+        "An empty tree has depth 0. That is the base case.",
+        "Ask the left child how deep its side is, then ask the right child.",
+        "This node adds itself: return 1 + max(left, right).",
+        "A leaf asks two null sides, gets 0 and 0, and returns 1."
       ],
-      "code": {
-        "python": "def maxDepth(root):\n    if not root:\n        return 0\n    return max(maxDepth(root.left), maxDepth(root.right)) + 1",
-        "javascript": "function maxDepth(root) {\n    if (!root) return 0;\n    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;\n}",
-        "java": "public int maxDepth(TreeNode root) {\n    if (root == null) return 0;\n    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;\n}",
-        "cpp": "int maxDepth(TreeNode* root) {\n    if (!root) return 0;\n    return max(maxDepth(root->left), maxDepth(root->right)) + 1;\n}"
-      },
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(H)",
-      "rationale": "This perfectly demonstrates the 'ask my children for their answer, then calculate mine' recursive pattern."
+      "code": "trees/max-depth",
+      "tracer": "trees/max-depth",
+      "time": "O(n)",
+      "space": "O(h)"
+    },
+    {
+      "title": "Binary Tree Level Order Traversal",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+      "problem": "Given the root of a binary tree, return the level order traversal of its nodes' values: left to right, level by level.",
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "[[3],[9,20],[15,7]]",
+      "approach": [
+        "Start a queue with the root, but only if the root is not null.",
+        "At the top of each lap, size = len(queue). Exactly that many nodes are on this level.",
+        "Take size nodes off the front, write their values into a level list, and add their children to the back.",
+        "Add the finished level to the result, and stop when the queue is empty."
+      ],
+      "code": "trees/level-order",
+      "tracer": "trees/level-order",
+      "time": "O(n)",
+      "space": "O(w)"
+    },
+    {
+      "title": "Invert Binary Tree",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/invert-binary-tree/",
+      "problem": "Given the root of a binary tree, invert the tree (swap the left and right child of every node) and return its root.",
+      "input": "root = [4,2,7,1,3,6,9]",
+      "output": "[4,7,2,9,6,3,1]",
+      "approach": [
+        "A null root has nothing to swap, so return null.",
+        "Swap this node's left and right children.",
+        "Invert the left subtree and the right subtree the same way.",
+        "Return the root. Every node is swapped once, so the work is O(n)."
+      ],
+      "code": "trees/invert-tree",
+      "time": "O(n)",
+      "space": "O(h)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What is the difference between DFS and BFS?",
+      "question": "Why does a recursive tree function usually begin with \"if node is null: return\"?",
       "options": [
-        "DFS goes deep into branches first using a Stack/Recursion, while BFS explores level-by-level using a Queue.",
-        "DFS uses a Queue, BFS uses a Stack.",
-        "DFS is faster than BFS.",
-        "BFS only works on Binary Search Trees."
+        "It makes the function faster on large trees.",
+        "A tree must always contain at least one node.",
+        "Leaves have null children, so every branch ends in a null call, and reading .left of null would crash.",
+        "Null nodes store the value 0 that has to be skipped."
       ],
-      "correctIndex": 0,
-      "explanation": "DFS plunges to the leaves before backtracking (LIFO), whereas BFS scans horizontally (FIFO)."
+      "answer": 2,
+      "explanation": "Every branch ends in null children. The check stops the recursion there, and it also handles an empty tree."
     },
     {
-      "question": "What is the worst-case space complexity for a recursive DFS on a completely unbalanced tree (like a linked list)?",
+      "question": "What is the in-order traversal of the tree [3, 9, 20, null, null, 15, 7]?",
       "options": [
-        "O(N)",
-        "O(1)",
-        "O(log N)",
-        "O(N^2)"
+        "9, 3, 15, 20, 7",
+        "3, 9, 20, 15, 7",
+        "9, 15, 7, 20, 3",
+        "9, 3, 20, 15, 7"
       ],
-      "correctIndex": 0,
-      "explanation": "If the tree is completely unbalanced, the height H is equal to N, meaning the recursion stack will hold N frames."
+      "answer": 0,
+      "explanation": "In-order writes left, node, right. 9 is the left of 3. Then 3. Then the right side, 20's subtree, as 15, 20, 7."
+    },
+    {
+      "question": "A tree of n nodes is one long chain, every node having only a left child. How deep does the recursive call stack get?",
+      "options": [
+        "O(1), because only one node is active at a time.",
+        "O(log n), because the tree is balanced.",
+        "O(sqrt n), because the chain is thin.",
+        "O(n), because every node's call is still waiting for the one below it."
+      ],
+      "answer": 3,
+      "explanation": "The stack holds one call per node on the path from the root to the current node. For a chain that is all n of them. For a balanced tree it is only about log n."
+    },
+    {
+      "question": "In level-order, why do you copy size = len(queue) before the inner loop?",
+      "options": [
+        "It saves memory in Python's deque.",
+        "The queue grows as you add children, so size freezes how many nodes belong to this level.",
+        "The loop needs a number, because a deque cannot be tested for empty.",
+        "It counts the nodes in the whole tree."
+      ],
+      "answer": 1,
+      "explanation": "While you pop this level you push the next one. Without the snapshot, the two levels would blur together."
+    },
+    {
+      "question": "The left subtree of a node has maximum depth 4 and the right subtree has maximum depth 2. What does max_depth return for that node?",
+      "options": [
+        "4",
+        "6",
+        "5",
+        "7"
+      ],
+      "answer": 2,
+      "explanation": "Take the deeper side, 4, and add 1 for the node itself: 5. Adding the two sides (6 or 7) would measure a path that goes down both branches, and a path can't."
     }
   ],
   "practice": [
-    { "title": "Maximum Depth of Binary Tree", "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/", "difficulty": "easy", "keyInsight": "Recursively take the max of left and right heights plus 1." },
-    { "title": "Invert Binary Tree", "url": "https://leetcode.com/problems/invert-binary-tree/", "difficulty": "easy", "keyInsight": "Swap the left and right pointers at every node." },
-    { "title": "Same Tree", "url": "https://leetcode.com/problems/same-tree/", "difficulty": "easy", "keyInsight": "Traverse both trees simultaneously." },
-    { "title": "Lowest Common Ancestor", "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/", "difficulty": "medium", "keyInsight": "Bubble up boolean values indicating if targets were found." },
-    { "title": "Binary Tree Level Order Traversal", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "medium", "keyInsight": "A standard BFS queue ensures level-by-level tracking." }
+    {
+      "title": "Same Tree",
+      "url": "https://leetcode.com/problems/same-tree/",
+      "difficulty": "easy",
+      "insight": "Walk both trees at the same time: two nulls match, one null doesn't, and the values and both sides must agree."
+    },
+    {
+      "title": "Symmetric Tree",
+      "url": "https://leetcode.com/problems/symmetric-tree/",
+      "difficulty": "easy",
+      "insight": "Compare the left subtree against the right one as a mirror: the outer children meet each other, and so do the inner ones."
+    },
+    {
+      "title": "Path Sum",
+      "url": "https://leetcode.com/problems/path-sum/",
+      "difficulty": "easy",
+      "insight": "Take this node's value off the target as you go down, and check what is left only when you stand on a leaf."
+    },
+    {
+      "title": "Diameter of Binary Tree",
+      "url": "https://leetcode.com/problems/diameter-of-binary-tree/",
+      "difficulty": "easy",
+      "insight": "The longest path through a node is its left height plus its right height. Return the height upward, and keep the best path in a separate variable."
+    },
+    {
+      "title": "Lowest Common Ancestor of a Binary Tree",
+      "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+      "difficulty": "medium",
+      "insight": "Ask each side whether it contains p or q. The first node that hears yes from both sides, or is p or q itself, is the answer."
+    },
+    {
+      "title": "Binary Tree Right Side View",
+      "url": "https://leetcode.com/problems/binary-tree-right-side-view/",
+      "difficulty": "medium",
+      "insight": "What you can see from the right is the last node of each level. A level-order walk already knows where each level ends."
+    },
+    {
+      "title": "Construct Binary Tree from Preorder and Inorder Traversal",
+      "url": "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/",
+      "difficulty": "medium",
+      "insight": "The first preorder value is the root. Find it in the inorder list to learn how many nodes go left, then build each side from its slice."
+    },
+    {
+      "title": "Binary Tree Maximum Path Sum",
+      "url": "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
+      "difficulty": "hard",
+      "insight": "Like the diameter, but with values: return the best one-sided path to the parent, and record the best bent path through a node. Ignore a side that sums below 0."
+    }
+  ],
+  "overview": [
+    "Explain why a tree function usually starts with a null-node base case.",
+    "Trace pre-order, in-order and post-order traversals of a binary tree.",
+    "Use a queue to walk a tree level by level.",
+    "Compute maximum depth by combining the answers from both subtrees.",
+    "Spot a chain-shaped tree, where every node has only one child.",
+    "Invert a binary tree by swapping children at every node."
+  ],
+  "resources": [
+    {
+      "title": "Tree traversal (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Tree_traversal",
+      "note": "Compares depth-first and breadth-first orders with clear diagrams for each traversal."
+    },
+    {
+      "title": "Binary tree (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Binary_tree",
+      "note": "Defines binary tree shapes such as full and complete trees, with node-count and height facts."
+    },
+    {
+      "title": "Binary search tree visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/BST.html",
+      "note": "Insert, find and delete values in a search tree and watch the shape update at each step."
+    }
   ]
 }
