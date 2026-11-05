@@ -188,7 +188,7 @@ export function Dashboard() {
             <div className={card}>
               {gym ? (
                 <>
-                  <p className="text-[28px] font-semibold leading-9 tabular-nums text-ink">{gym.bestScore}</p>
+                  <p className="text-[28px] font-semibold leading-9 tabular-nums text-ink">{gym.bestScore}%</p>
                   <p className="text-[14px] text-ink-3">
                     best score · {gym.attempts} {gym.attempts === 1 ? 'attempt' : 'attempts'}
                   </p>
