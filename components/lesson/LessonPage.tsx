@@ -3,20 +3,23 @@ import type { RenderedCodeProp } from '@/components/stage/contracts'
 import type { TracerId } from '@/lib/engine/types'
 import type { CurriculumLesson, LessonV2 } from '@/types/learning'
 
+import { AssignmentSection } from './AssignmentSection'
 import { CheckSection } from './CheckSection'
 import { CodeSection } from './CodeSection'
 import { ExamplesSection } from './ExamplesSection'
 import { HookSection } from './HookSection'
+import { LessonContents } from './LessonContents'
 import { LessonFooter } from './LessonFooter'
 import { LessonHeader } from './LessonHeader'
 import { LessonShell } from './LessonShell'
-import { LessonStrip } from './LessonStrip'
 import { MentalModelSection } from './MentalModelSection'
+import { OverviewSection } from './OverviewSection'
 import { PictureSection } from './PictureSection'
-import { PracticeSection } from './PracticeSection'
 import { RecognitionSection } from './RecognitionSection'
+import { ResourcesSection } from './ResourcesSection'
+import { ResumeBar } from './ResumeBar'
 import { WatchSection } from './WatchSection'
-import { eyebrow, numberSections, presentSteps } from './sections'
+import { presentSections } from './sections'
 import type { SectionId } from './sections'
 
 export interface LessonPageProps {
@@ -38,47 +41,48 @@ async function loadAnchorOrder(tracer: string): Promise<string[]> {
 }
 
 /**
- * The v2 lesson page. Server component: prose sections render on the server and
- * the interactive ones (Stage, quizzes, practice) are client islands inside LessonShell.
+ * The v2 lesson page, Odin-style: header, then anchored sections in a calm reading column,
+ * with the interactive Stage as the centrepiece. Server component: prose renders on the
+ * server; Stage, quizzes and assignment are client islands inside LessonShell.
  *
- * Order: header, step strip, Picture, Hook, Mental model, Watch, Recognise, Code,
- * Examples, Check, Practice, footer. Code comes last on purpose.
+ * Order: Introduction, Lesson overview, The picture, Mental model, Watch it run,
+ * Recognise it, The code, Worked examples, Knowledge check, Assignment, Additional resources.
  */
 export async function LessonPage({ lesson, meta, code }: LessonPageProps) {
-  const present = new Set<SectionId>(['picture', 'hook', 'mental-model', 'watch', 'recognise', 'code'])
+  const hasOverview = Boolean(lesson.overview && lesson.overview.length > 0)
+  const hasResources = Boolean(lesson.resources && lesson.resources.length > 0)
+  const present = new Set<SectionId>(['introduction', 'picture', 'mental-model', 'watch', 'recognise', 'code'])
+  if (hasOverview) present.add('overview')
   if (lesson.examples.length > 0) present.add('examples')
   if (lesson.conceptQuiz.length > 0) present.add('check')
-  if (lesson.practice.length > 0) present.add('practice')
+  if (lesson.practice.length > 0) present.add('assignment')
+  if (hasResources) present.add('resources')
 
-  const numbered = numberSections(present)
-  const steps = presentSteps(present)
-  const outline = numbered.map((section) => ({ id: section.id, label: section.label }))
-  const eb = (id: SectionId) => eyebrow(numbered, id)
+  const outline = presentSections(present).map((section) => ({ id: section.id, label: section.label }))
   const anchorOrder = await loadAnchorOrder(lesson.template.tracer)
 
   return (
-    <LessonShell slug={meta.slug} steps={steps} outline={outline}>
+    <LessonShell slug={meta.slug} outline={outline}>
       <LessonHeader meta={meta} />
-      {/* A direct child of <main> so the strip stays sticky for the whole page. */}
-      <LessonStrip />
+      <ResumeBar />
 
-      <div className="mt-10 flex flex-col gap-12 md:gap-16">
-        <PictureSection shape={lesson.shape} eyebrow={eb('picture')} />
-        <HookSection hook={lesson.hook} eyebrow={eb('hook')} />
-        <MentalModelSection model={lesson.mentalModel} eyebrow={eb('mental-model')} />
-        <WatchSection stage={lesson.stage} code={code} eyebrow={eb('watch')} />
-        <RecognitionSection slug={meta.slug} recognise={lesson.recognise} eyebrow={eb('recognise')} />
-        <CodeSection
-          template={lesson.template}
-          title={meta.title}
-          code={code}
-          anchorOrder={anchorOrder}
-          eyebrow={eb('code')}
-        />
-        {present.has('examples') ? <ExamplesSection examples={lesson.examples} code={code} eyebrow={eb('examples')} /> : null}
-        {present.has('check') ? <CheckSection slug={meta.slug} questions={lesson.conceptQuiz} eyebrow={eb('check')} /> : null}
-        {present.has('practice') ? <PracticeSection problems={lesson.practice} eyebrow={eb('practice')} /> : null}
-        <LessonFooter slug={meta.slug} />
+      <div className="mt-8 xl:mt-0">
+        <LessonContents variant="inline" />
+      </div>
+
+      <div className="mt-10 flex flex-col gap-14">
+        <HookSection hook={lesson.hook} />
+        {hasOverview ? <OverviewSection items={lesson.overview!} /> : null}
+        <PictureSection shape={lesson.shape} />
+        <MentalModelSection model={lesson.mentalModel} />
+        <WatchSection stage={lesson.stage} code={code} />
+        <RecognitionSection slug={meta.slug} recognise={lesson.recognise} />
+        <CodeSection template={lesson.template} title={meta.title} code={code} anchorOrder={anchorOrder} />
+        {present.has('examples') ? <ExamplesSection examples={lesson.examples} code={code} /> : null}
+        {present.has('check') ? <CheckSection slug={meta.slug} questions={lesson.conceptQuiz} /> : null}
+        {present.has('assignment') ? <AssignmentSection problems={lesson.practice} /> : null}
+        {hasResources ? <ResourcesSection resources={lesson.resources!} /> : null}
+        <LessonFooter slug={meta.slug} title={meta.title} />
       </div>
     </LessonShell>
   )

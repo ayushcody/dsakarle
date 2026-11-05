@@ -17,7 +17,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!meta) {
     return { title: 'Lesson not found — DSA Karle' };
   }
-  return { title: `${meta.title} — DSA Karle`, description: meta.oneLiner };
+  return {
+    title: `${meta.title} — DSA Karle`,
+    description: meta.oneLiner,
+    alternates: { canonical: `/learn/${params.slug}` },
+  };
 }
 
 /** Server-render every code ref a v2 lesson uses once. A missing file omits that code instead of crashing the page. */

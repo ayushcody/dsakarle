@@ -1,86 +1,65 @@
 import Link from 'next/link'
 
-import { Glyph, GlyphTile, glyphForSlug } from '@/components/glyph'
-import { Chip } from '@/components/ui/Chip'
-import type { ChipVariant } from '@/components/ui/Chip'
+import { Glyph, glyphForSlug } from '@/components/glyph'
 import { focusRing } from '@/components/ui/cn'
-import { getGroup, getLessonMeta, lessonNumber, LESSONS } from '@/lib/curriculum'
+import { placeOf } from '@/lib/curriculum'
 import type { CurriculumLesson, TopicDifficulty } from '@/types/learning'
 
-const DIFFICULTY: Record<TopicDifficulty, { label: string; variant: ChipVariant }> = {
-  beginner: { label: 'Beginner', variant: 'teal' },
-  intermediate: { label: 'Intermediate', variant: 'amber' },
-  advanced: { label: 'Advanced', variant: 'coral' },
+const DIFFICULTY: Record<TopicDifficulty, string> = {
+  beginner: 'Beginner',
+  intermediate: 'Intermediate',
+  advanced: 'Advanced',
 }
 
-function ClockIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-      <circle cx="8" cy="8" r="6" />
-      <path d="M8 4.5V8l2.2 1.4" />
-    </svg>
-  )
-}
+const crumb = `rounded-cell hover:text-ink hover:underline hover:underline-offset-4 ${focusRing}`
 
-/** Breadcrumb, glyph + title, the one-line shape sentence, and the quick facts. */
+/** Breadcrumb, title, one meta line and the lead sentence. */
 export function LessonHeader({ meta }: { meta: CurriculumLesson }) {
-  const group = getGroup(meta.group)
-  const difficulty = DIFFICULTY[meta.difficulty]
-  const prereqs = meta.prereqs
-    .map((slug) => getLessonMeta(slug))
-    .filter((lesson): lesson is CurriculumLesson => Boolean(lesson))
+  const place = placeOf(meta.slug)
+  const where = place ? `Lesson ${place.number} of ${place.total} in ${place.path.title}` : 'Lesson'
 
   return (
-    <header className="max-w-[760px]">
-      <nav aria-label="Breadcrumb" className="t-caption mb-4 text-ink-3">
-        <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-          <li>{group?.title ?? 'Lessons'}</li>
-          <li aria-hidden="true">›</li>
-          <li aria-current="page" className="text-ink-2">{meta.title}</li>
-          <li aria-hidden="true">·</li>
-          <li>
-            {lessonNumber(meta.slug)} of {LESSONS.length}
-          </li>
-        </ol>
-      </nav>
+    <header className="mx-auto max-w-[720px]">
+      {place ? (
+        <nav aria-label="Breadcrumb" className="t-caption mb-4 text-ink-3">
+          <ol className="m-0 flex list-none flex-wrap items-center gap-x-2 gap-y-1 p-0">
+            <li aria-hidden="true" className="inline-flex">
+              <Glyph id={glyphForSlug(meta.slug)} size={24} decorative />
+            </li>
+            <li>
+              <Link href={`/paths/${place.path.id}`} className={crumb}>
+                {place.path.title}
+              </Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li>
+              <Link href={`/paths/${place.path.id}#${slugify(place.section.title)}`} className={crumb}>
+                {place.section.title}
+              </Link>
+            </li>
+          </ol>
+        </nav>
+      ) : null}
 
-      <div className="flex items-center gap-4">
-        <GlyphTile id={glyphForSlug(meta.slug)} tileSize={48} glyphSize={48} decorative />
-        <h1 className="t-h1 min-w-0 text-balance text-ink">{meta.title}</h1>
-      </div>
+      <h1 className="t-h1 text-balance text-ink">{meta.title}</h1>
 
-      <p className="t-body mt-4 text-[19px] leading-8 text-ink-2">{meta.oneLiner}</p>
-
-      <ul className="mt-4 flex flex-wrap items-center gap-2" aria-label="Lesson facts">
-        <li>
-          <Chip icon={<ClockIcon />}>{meta.minutes} min</Chip>
-        </li>
-        <li>
-          <Chip variant={difficulty.variant}>{difficulty.label}</Chip>
-        </li>
+      <p className="mt-3 flex flex-wrap items-center gap-x-2 text-[14px] leading-6 text-ink-3">
+        <span>
+          {where} · {meta.minutes} min · {DIFFICULTY[meta.difficulty]}
+        </span>
         {meta.status === 'draft' ? (
-          <li>
-            <Chip variant="amber">Draft</Chip>
-          </li>
+          <span className="rounded-cell border border-rule px-1.5 text-[12px] text-ink-3">Draft</span>
         ) : null}
-        {prereqs.length > 0 ? (
-          <>
-            <li className="t-caption ml-1 text-ink-3">Builds on</li>
-            {prereqs.map((lesson) => (
-              <li key={lesson.slug}>
-                <Link
-                  href={`/learn/${lesson.slug}`}
-                  className={`inline-flex min-h-[40px] items-center rounded-pill ${focusRing}`}
-                >
-                  <Chip icon={<Glyph id={lesson.glyph} size={16} decorative />} className="hover:border-rule-strong">
-                    {lesson.title}
-                  </Chip>
-                </Link>
-              </li>
-            ))}
-          </>
-        ) : null}
-      </ul>
+      </p>
+
+      <p className="mt-5 text-[18px] leading-8 text-ink-2">{meta.oneLiner}</p>
     </header>
   )
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
 }

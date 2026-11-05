@@ -3,47 +3,38 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
-import { Glyph } from '@/components/glyph';
 import { SearchIcon } from '@/components/layout/SiteHeader';
 import { NAV_ITEMS, isNavActive } from '@/components/layout/nav-items';
 import { useModalBehavior } from '@/components/layout/useModalBehavior';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn, focusRing } from '@/components/ui/cn';
 import { useProgress } from '@/hooks/useProgress';
-import { COURSE_TOPICS, countCompletedLessons, getCourseProgressPercent } from '@/lib/course';
-import { CURRICULUM, lessonsInGroup } from '@/lib/curriculum';
+import { PATHS, getLessonMeta, placeOf } from '@/lib/curriculum';
 import { useNavStore } from '@/lib/nav-store';
 import { usePaletteStore } from '@/lib/palette-store';
 import { usePathname } from 'next/navigation';
 
-/** ✓ done, a coral dot for Live, a hollow ring for Draft. Always paired with sr-only text. */
-function StatusMark({ done, status }: { done: boolean; status: 'live' | 'draft' }) {
-  if (done) {
-    return (
-      <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center text-role-found" title="Done">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M3 8.5l3.2 3.2L13 4.8" />
-        </svg>
-        <span className="sr-only">Done</span>
-      </span>
-    );
-  }
+/** Empty circle, or a filled ✓ circle when done. Always paired with sr-only text. */
+function ProgressCircle({ done }: { done: boolean }) {
   return (
     <span
-      className="inline-flex h-4 w-4 shrink-0 items-center justify-center"
-      title={status === 'live' ? 'Live' : 'Draft'}
+      className={cn(
+        'inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border',
+        done ? 'border-coral-ink bg-coral-ink text-paper' : 'border-rule-strong',
+      )}
     >
-      <span
-        aria-hidden="true"
-        className={cn('h-2 w-2 rounded-full', status === 'live' ? 'bg-coral' : 'border border-ink-3')}
-      />
-      <span className="sr-only">{status === 'live' ? 'Live' : 'Draft'}</span>
+      {done ? (
+        <svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3.5 8.5l3 3L12.5 5" />
+        </svg>
+      ) : null}
+      <span className="sr-only">{done ? 'Completed' : 'Not completed'}</span>
     </span>
   );
 }
 
 /**
- * The lesson sidebar. On md+ it sits under the header (top-16) as a rail;
+ * The path-contents sidebar. On md+ it sits under the header (top-16) as a rail;
  * below md it is a drawer opened from the header's menu button (nav-store),
  * with the site nav, search and theme at its top.
  */
@@ -88,9 +79,12 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
     aside.scrollTop = Math.max(0, top);
   }, [currentSlug]);
 
-  const total = COURSE_TOPICS.length;
-  const done = mounted ? countCompletedLessons(progress.completedSections) : 0;
-  const overallProgress = mounted ? getCourseProgressPercent(progress.completedSections) : 0;
+  const place = placeOf(currentSlug);
+  const path = place?.path;
+  const pathSlugs = path ? path.sections.flatMap((section) => section.lessons) : [];
+  const done = mounted ? pathSlugs.filter((slug) => progress.completedSections.includes(slug)).length : 0;
+  const percent = pathSlugs.length > 0 ? Math.round((done / pathSlugs.length) * 100) : 0;
+  const otherPaths = PATHS.filter((p) => p.id !== path?.id);
 
   return (
     <>
@@ -100,7 +94,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
       <aside
         ref={asideRef}
         id="lesson-sidebar"
-        aria-label="Lesson navigation"
+        aria-label="Course sidebar"
         role={drawerOpen ? 'dialog' : undefined}
         aria-modal={drawerOpen ? true : undefined}
         tabIndex={drawerOpen ? -1 : undefined}
@@ -117,7 +111,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
             <button
               type="button"
               onClick={closeMobileNav}
-              aria-label="Close lesson menu"
+              aria-label="Close menu"
               className={cn('-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-card text-ink-2 hover:bg-coral-wash hover:text-ink', focusRing)}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -164,86 +158,94 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
           </div>
         </div>
 
-        {/* Overall progress, kept compact */}
-        <div className="px-4 pb-2 pt-4">
-          <div className="rounded-card border border-rule bg-paper p-3">
-            <div className="flex items-baseline justify-between">
-              <span className="t-eyebrow">Overall progress</span>
-              <span className="font-sans text-[13px] font-semibold tabular-nums text-ink">{overallProgress}%</span>
-            </div>
-            <div
-              className="mt-2 h-1.5 w-full overflow-hidden rounded-pill bg-paper-sunken"
-              role="progressbar"
-              aria-label="Overall progress"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={overallProgress}
-              aria-valuetext={`${done} of ${total} lessons done`}
-            >
-              <div className="h-full rounded-pill bg-coral transition-[width] duration-500 ease-out" style={{ width: `${overallProgress}%` }} />
-            </div>
-            <p className="mt-1.5 text-[12px] text-ink-3">
-              {done} of {total} lessons done
-            </p>
-          </div>
-        </div>
+        <nav aria-label="Path contents" className="flex-1 px-4 pb-6 pt-5">
+          <Link
+            href="/paths"
+            onClick={closeMobileNav}
+            className={cn('inline-flex min-h-[40px] items-center gap-1 rounded-cell font-sans text-[13px] text-ink-3 hover:text-ink', focusRing)}
+          >
+            <span aria-hidden="true">←</span> All paths
+          </Link>
 
-        {/* Lessons, by group */}
-        <nav aria-label="Lessons" className="flex-1 px-2 pb-4">
-          {CURRICULUM.groups.map((group) => (
-            <div key={group.id} className="mt-4">
-              <h3 className="t-eyebrow px-3 pb-1.5">{group.title}</h3>
-              <ul className="flex flex-col gap-0.5">
-                {lessonsInGroup(group.id).map((lesson) => {
-                  const isActive = lesson.slug === currentSlug;
-                  const isDone = mounted && progress.completedSections.includes(lesson.slug);
-                  return (
-                    <li key={lesson.slug}>
-                      <Link
-                        href={`/learn/${lesson.slug}`}
-                        onClick={closeMobileNav}
-                        data-lesson-row
-                        aria-current={isActive ? 'page' : undefined}
-                        className={cn(
-                          'flex min-h-[40px] items-center gap-2.5 rounded-card px-3 py-1.5 font-sans text-[14px] transition-colors duration-150 md:min-h-[36px]',
-                          focusRing,
-                          isActive
-                            ? 'bg-coral-wash font-semibold text-coral-ink'
-                            : 'text-ink-2 hover:bg-paper-sunken hover:text-ink',
-                        )}
-                      >
-                        <Glyph id={lesson.glyph} size={16} decorative className={isActive ? 'text-coral-ink' : 'text-ink-3'} />
-                        <span className="min-w-0 flex-1 truncate">{lesson.title}</span>
-                        <StatusMark done={isDone} status={lesson.status} />
-                      </Link>
-                    </li>
-                  );
-                })}
+          {path ? (
+            <>
+              <Link
+                href={`/paths/${path.id}`}
+                onClick={closeMobileNav}
+                className={cn('mt-1 block rounded-cell font-sans text-[16px] font-semibold leading-6 text-ink hover:text-coral-ink', focusRing)}
+              >
+                {path.title}
+              </Link>
+              <div
+                className="mt-3 h-1.5 w-full overflow-hidden rounded-pill bg-paper-sunken"
+                role="progressbar"
+                aria-label={`${path.title} progress`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={percent}
+                aria-valuetext={`${done} of ${pathSlugs.length} lessons done`}
+              >
+                <div className="h-full rounded-pill bg-coral-ink transition-[width] duration-500 ease-out" style={{ width: `${percent}%` }} />
+              </div>
+              <p className="mt-1.5 text-[12px] text-ink-3">
+                {done} of {pathSlugs.length} done
+              </p>
+
+              {path.sections.map((section) => (
+                <div key={section.title} className="mt-6">
+                  <h3 className="t-eyebrow pb-1.5">{section.title}</h3>
+                  <ul className="m-0 flex list-none flex-col p-0">
+                    {section.lessons.map((slug) => {
+                      const lesson = getLessonMeta(slug);
+                      if (!lesson) return null;
+                      const isActive = slug === currentSlug;
+                      const isDone = mounted && progress.completedSections.includes(slug);
+                      return (
+                        <li key={slug}>
+                          <Link
+                            href={`/learn/${slug}`}
+                            onClick={closeMobileNav}
+                            data-lesson-row
+                            aria-current={isActive ? 'page' : undefined}
+                            className={cn(
+                              'flex min-h-[40px] items-center gap-2.5 border-l-2 py-1.5 pl-3 pr-2 font-sans text-[14px] leading-5 transition-colors duration-150 md:min-h-[36px]',
+                              focusRing,
+                              isActive
+                                ? 'border-coral-ink font-semibold text-ink'
+                                : 'border-transparent text-ink-2 hover:border-rule-strong hover:text-ink',
+                            )}
+                          >
+                            <ProgressCircle done={isDone} />
+                            <span className="min-w-0 flex-1">{lesson.title}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </>
+          ) : null}
+
+          {otherPaths.length > 0 ? (
+            <div className="mt-8 border-t border-rule pt-4">
+              <h3 className="t-eyebrow pb-1.5">Other paths</h3>
+              <ul className="m-0 flex list-none flex-col p-0">
+                {otherPaths.map((other) => (
+                  <li key={other.id}>
+                    <Link
+                      href={`/paths/${other.id}`}
+                      onClick={closeMobileNav}
+                      className={cn('flex min-h-[36px] items-center rounded-cell py-1 font-sans text-[13px] text-ink-3 hover:text-ink', focusRing)}
+                    >
+                      {other.title}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
-          ))}
-          <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 px-3 text-[12px] text-ink-3" aria-hidden="true">
-            <span className="inline-flex items-center gap-1">
-              <span className="text-found-ink">✓</span> done
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-coral" /> live
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full border border-ink-3" /> draft
-            </span>
-          </p>
+          ) : null}
         </nav>
-
-        <div className="border-t border-rule px-5 py-4">
-          <Link
-            href="/practice"
-            onClick={closeMobileNav}
-            className={cn('inline-flex min-h-[40px] items-center gap-1.5 rounded-cell font-sans text-[14px] font-semibold text-coral-ink hover:underline hover:underline-offset-4', focusRing)}
-          >
-            Practice problems <span aria-hidden="true">→</span>
-          </Link>
-        </div>
       </aside>
     </>
   );

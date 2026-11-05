@@ -28,11 +28,10 @@ interface CodeSectionProps {
   code: Partial<Record<TracerId, RenderedCodeProp>>
   /** Anchor ids in Rule Rail order (the tracer's `anchors`), when known. */
   anchorOrder: string[]
-  eyebrow: string
 }
 
 /** Pseudocode with faint rule numbers, then the real code, then what it costs. Code is shown last on purpose. */
-export function CodeSection({ template, title, code, anchorOrder, eyebrow }: CodeSectionProps) {
+export function CodeSection({ template, title, code, anchorOrder }: CodeSectionProps) {
   const { pseudocode, tracer, time, space, notes } = template
   const rendered = code[tracer]
 
@@ -46,12 +45,7 @@ export function CodeSection({ template, title, code, anchorOrder, eyebrow }: Cod
   const gaugeKey = toComplexityKey(time)
 
   return (
-    <SectionFrame
-      id="code"
-      eyebrow={eyebrow}
-      title="The recipe, then the code"
-      intro="First the idea in plain steps. Then the same idea as real code, line for line."
-    >
+    <SectionFrame id="code" intro="First the idea in plain steps. Then the same idea as real code, line for line.">
       <figure className="m-0">
         <figcaption className="t-eyebrow mb-2">Pseudocode</figcaption>
         <ScrollRegion label="Pseudocode, scrolls sideways" className="rounded-card border border-rule bg-paper-sunken py-3 font-mono text-[14px] leading-7 text-ink">

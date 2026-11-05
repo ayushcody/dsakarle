@@ -28,11 +28,9 @@ function buildQuestions(slug: string, questions: ConceptQuestionV2[]): ShuffledQ
 export function CheckSection({
   slug,
   questions,
-  eyebrow,
 }: {
   slug: string
   questions: ConceptQuestionV2[]
-  eyebrow: string
 }) {
   const shuffled = useMemo(() => buildQuestions(slug, questions), [slug, questions])
   const total = shuffled.length
@@ -93,8 +91,16 @@ export function CheckSection({
   if (total === 0) return null
 
   return (
-    <SectionFrame id="check" eyebrow={eyebrow} title="Check yourself" intro="Five questions. No timer. The point is the explanations.">
-      <div className="rounded-card border border-rule bg-paper-raised p-5 shadow-1 sm:p-6">
+    <SectionFrame id="check">
+      <p className="mb-3 text-[16px] leading-7 text-ink-2">
+        Test yourself first. Try to answer these in your own words, then take the quiz below to check.
+      </p>
+      <ol className="mb-8 list-decimal space-y-2 pl-6 text-[16px] leading-7 text-ink">
+        {questions.map((q, i) => (
+          <li key={i}>{q.question}</li>
+        ))}
+      </ol>
+      <div className="rounded-card border border-rule bg-paper-raised p-5 sm:p-6">
         {finished ? (
           <div role="status" aria-live="polite">
             <p className="t-eyebrow mb-2">Your score</p>

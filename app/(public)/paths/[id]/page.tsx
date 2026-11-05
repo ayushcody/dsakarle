@@ -58,15 +58,15 @@ export default function PathPage({ params }: PageProps) {
       </header>
 
       <div className="mt-12 flex flex-col gap-10">
-        {path.sections.map((section, i) => {
-          const id = `section-${i + 1}`;
+        {path.sections.map((section) => {
+          const id = section.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
           return (
             <section key={id} aria-labelledby={id}>
               <h2
                 id={id}
                 className="anchor-heading mb-4 scroll-mt-24 font-sans text-[20px] font-semibold leading-8 text-ink"
               >
-                {section.title}
+                <a href={`#${id}`}>{section.title}</a>
               </h2>
               <LessonRows
                 allSlugs={slugs}

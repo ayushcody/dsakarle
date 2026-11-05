@@ -7,11 +7,11 @@ import type { LessonV2 } from '@/types/learning'
 import { SectionFrame } from './SectionFrame'
 
 /** The static Picture with handwritten callouts, on a paper card. Sits above the fold with the header. */
-export function PictureSection({ shape, eyebrow }: { shape: LessonV2['shape']; eyebrow: string }) {
+export function PictureSection({ shape }: { shape: LessonV2['shape'] }) {
   return (
-    <SectionFrame id="picture" eyebrow={eyebrow} title="The shape of it">
+    <SectionFrame id="picture" width="wide">
       <figure className="m-0">
-        <ScrollRegion label="The picture, scrolls sideways" className="rounded-card border border-rule bg-paper-raised p-4 shadow-1 sm:p-6">
+        <ScrollRegion label="The picture, scrolls sideways" className="rounded-card border border-rule bg-paper-raised p-4 sm:p-6">
           <ScenePicture scene={shape.scene} callouts={shape.callouts} />
         </ScrollRegion>
       </figure>

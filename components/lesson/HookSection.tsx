@@ -4,16 +4,17 @@ import type { LessonV2 } from '@/types/learning'
 
 import { SectionFrame } from './SectionFrame'
 
-/** The puzzle: a question the learner can't answer quickly yet, then the aha that resolves it. */
-export function HookSection({ hook, eyebrow }: { hook: LessonV2['hook']; eyebrow: string }) {
+/** Introduction: the puzzle as a short bold lead, the story, then the aha as a callout. */
+export function HookSection({ hook }: { hook: LessonV2['hook'] }) {
   return (
-    <SectionFrame id="hook" eyebrow={eyebrow} title={hook.question}>
+    <SectionFrame id="introduction">
+      <p className="mb-4 text-[18px] font-semibold leading-8 text-ink">{hook.question}</p>
       <Prose>
         {hook.paragraphs.map((paragraph, index) => (
           <p key={index}>{paragraph}</p>
         ))}
       </Prose>
-      <Callout variant="aha" title="The aha" className="mt-6">
+      <Callout variant="aha" title="Aha" className="mt-6">
         <p>{hook.aha}</p>
       </Callout>
     </SectionFrame>

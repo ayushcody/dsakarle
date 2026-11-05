@@ -37,19 +37,12 @@ function IoBlock({ label, value }: { label: string; value: string }) {
 export function ExamplesSection({
   examples,
   code,
-  eyebrow,
 }: {
   examples: WorkedExampleV2[]
   code: Partial<Record<TracerId, RenderedCodeProp>>
-  eyebrow: string
 }) {
   return (
-    <SectionFrame
-      id="examples"
-      eyebrow={eyebrow}
-      title="Worked examples"
-      intro="Real interview problems, solved with the same recipe."
-    >
+    <SectionFrame id="examples" intro="Real interview problems, solved with the same recipe.">
       <div className="space-y-3">
         {examples.map((example, index) => {
           const difficulty = PROBLEM_DIFFICULTY[example.difficulty]
@@ -60,7 +53,7 @@ export function ExamplesSection({
               defaultOpen={index === 0}
               title={
                 <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="font-serif text-[18px] font-semibold">{example.title}</span>
+                  <span className="text-[16px] font-semibold">{example.title}</span>
                   <Chip variant={difficulty.variant}>{difficulty.label}</Chip>
                 </span>
               }

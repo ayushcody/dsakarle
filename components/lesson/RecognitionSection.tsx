@@ -15,8 +15,8 @@ import { seededShuffle } from './utils'
 
 function ClueList({ title, items, tone }: { title: string; items: string[]; tone: 'yes' | 'no' }) {
   return (
-    <div className="rounded-card border border-rule bg-paper-raised p-5 shadow-1">
-      <h3 className="t-h3 mb-3 text-ink">{title}</h3>
+    <div className="rounded-card border border-rule bg-paper-raised p-5">
+      <h3 className="t-eyebrow mb-3">{title}</h3>
       <ul className="space-y-2.5">
         {items.map((item, index) => (
           <li key={index} className="flex gap-3 text-[16px] leading-6 text-ink-2">
@@ -70,7 +70,7 @@ function RecognitionCard({
   const lastWrongMeta = lastWrong ? getLessonMeta(lastWrong) : undefined
 
   return (
-    <li className="rounded-card border border-rule bg-paper-raised p-5 shadow-1 sm:p-6">
+    <li className="rounded-card border border-rule bg-paper-raised p-5 sm:p-6">
       <p className="t-eyebrow mb-2">
         Which pattern? {index + 1} of {total}
       </p>
@@ -148,11 +148,9 @@ function RecognitionCard({
 export function RecognitionSection({
   slug,
   recognise,
-  eyebrow,
 }: {
   slug: string
   recognise: LessonV2['recognise']
-  eyebrow: string
 }) {
   const { useWhen, notWhen, quiz } = recognise
   const [states, setStates] = useState<ItemState[]>(() =>
@@ -175,12 +173,7 @@ export function RecognitionSection({
   }, [allResolved, firstTryCount, quiz.length, slug])
 
   return (
-    <SectionFrame
-      id="recognise"
-      eyebrow={eyebrow}
-      title="Spot it in the wild"
-      intro="Most of the skill is noticing the clue in the problem statement."
-    >
+    <SectionFrame id="recognise" intro="Most of the skill is noticing the clue in the problem statement.">
       <div className="grid gap-4 sm:grid-cols-2">
         <ClueList title="Reach for it when" items={useWhen} tone="yes" />
         {notWhen.length > 0 ? <ClueList title="Not this when" items={notWhen} tone="no" /> : null}

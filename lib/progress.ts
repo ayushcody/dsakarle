@@ -116,3 +116,53 @@ export function getChapterProgress(slugs: string[]): number {
   const completed = slugs.filter((slug) => progress.completedSections.includes(slug)).length;
   return Math.round((completed / slugs.length) * 100);
 }
+
+/** Undo `markComplete` for a lesson. */
+export function unmarkComplete(slug: string): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const progress = getProgress();
+  if (progress.completedSections.includes(slug)) {
+    progress.completedSections = progress.completedSections.filter((s) => s !== slug);
+    writeProgress(progress);
+  }
+}
+
+const SECTION_KEY = 'dsakarle-last-section';
+
+function readSectionMap(): Record<string, string> {
+  if (typeof window === 'undefined') {
+    return {};
+  }
+  try {
+    const parsed: unknown = JSON.parse(window.localStorage.getItem(SECTION_KEY) ?? '{}');
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as Record<string, string>) : {};
+  } catch {
+    return {};
+  }
+}
+
+/** The last section id the learner scrolled into for a lesson, or null. */
+export function getLastSection(slug: string): string | null {
+  const id = readSectionMap()[slug];
+  return typeof id === 'string' && id ? id : null;
+}
+
+/** Remember the section the learner is reading, so the lesson can offer to pick up there. */
+export function setLastSection(slug: string, id: string): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const map = readSectionMap();
+  if (map[slug] === id) {
+    return;
+  }
+  map[slug] = id;
+  try {
+    window.localStorage.setItem(SECTION_KEY, JSON.stringify(map));
+  } catch {
+    // Storage unavailable: resume just won't persist.
+  }
+}
