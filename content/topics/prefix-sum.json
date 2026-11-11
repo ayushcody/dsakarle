@@ -1,166 +1,448 @@
 {
-  "id": "prefix-sum",
+  "schemaVersion": 2,
   "slug": "prefix-sum",
-  "title": "Prefix Sum",
-  "category": "algorithm",
-  "difficulty": "beginner",
-  "estimatedMinutes": 35,
-  "prerequisites": ["arrays"],
-  "tags": ["array", "math", "optimization"],
-  "overview": {
-    "summary": "Prefix Sum is a technique that pre-calculates the cumulative sum of elements in an array to answer range sum queries in O(1) time.",
-    "learningObjectives": [
-      "Understand how to build a prefix sum array in O(N) time.",
-      "Calculate the sum of any sub-array in O(1) time using subtraction.",
-      "Recognize when continuous subarray problems require this pattern."
-    ],
-    "interviewRelevance": "Prefix Sum turns O(N^2) brute-force nested loops into elegant O(N) linear time solutions."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A fitness app keeps your step count for every day of the year. How can it answer “how many steps between day 3 and day 20?” thousands of times without re-adding every time?",
     "paragraphs": [
-      "Imagine you are tracking your total bank account balance every day. To find out exactly how much money you made between Day 3 and Day 10, you don't need to add up every single transaction in between.",
-      "You just take your total balance on Day 10 and subtract your total balance on Day 2. That single subtraction instantly gives you the sum of the range."
+      "The obvious way adds up days 3 to 20 on every question: 18 additions. A longer stretch means more additions, and the same days get added again and again, once per question.",
+      "Now suppose the app also writes down, once and in advance, a running total next to each day: all the steps from day 1 up to that day. Then a question only needs the totals around your stretch. Which two would you look at?"
     ],
-    "ahaMoment": "By doing O(N) work once upfront, you can answer millions of range sum questions instantly in O(1) time."
+    "aha": "Write the running totals down once. The total at the end of the stretch contains everything before it, and the total just before the stretch is exactly the part you don’t want. Subtract it: total through day 20 − total through day 2. Every question costs one subtraction, whether the stretch is 18 days or 18,000."
   },
-  "definition": {
-    "technicalDefinition": "A Prefix Sum array is an array where the value at index `i` is the sum of all elements from index `0` to index `i` in the original array.",
-    "vocabulary": [
-      { "term": "Prefix", "definition": "Everything that comes before a certain point." },
-      { "term": "Range Sum Query", "definition": "A request to find the sum of elements between two indices `[L, R]`." },
-      { "term": "Cumulative", "definition": "Increasing or growing by successive additions." }
-    ],
-    "keyProperties": [
-      "Precomputation takes O(N) time and O(N) space.",
-      "Queries take O(1) time.",
-      "Formula for Sum from index L to R: `Prefix[R] - Prefix[L-1]`"
+  "shape": {
+    "scene": {
+      "kind": "composite",
+      "layout": "column",
+      "parts": [
+        {
+          "title": "nums",
+          "scene": {
+            "kind": "array",
+            "label": "nums",
+            "cells": [
+              3,
+              -1,
+              4,
+              1,
+              5,
+              9
+            ],
+            "pointers": [
+              {
+                "name": "l",
+                "index": 2,
+                "role": "ptrA"
+              },
+              {
+                "name": "r",
+                "index": 4,
+                "role": "ptrB"
+              }
+            ],
+            "window": {
+              "start": 2,
+              "end": 4
+            }
+          }
+        },
+        {
+          "title": "prefix",
+          "scene": {
+            "kind": "array",
+            "label": "prefix",
+            "cells": [
+              0,
+              3,
+              2,
+              6,
+              7,
+              12,
+              21
+            ],
+            "marks": [
+              {
+                "index": 2,
+                "role": "compare"
+              },
+              {
+                "index": 5,
+                "role": "compare"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "p0:window",
+        "text": "12 − 2 = 10"
+      },
+      {
+        "target": "p1:cell:5",
+        "text": "total up to here"
+      },
+      {
+        "target": "p1:cell:2",
+        "text": "total before the stretch"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A car's odometer. To find out how far you drove on a specific trip, you don't track every mile individually. You just subtract the starting mileage from the ending mileage."
+      "A car’s odometer shows every kilometre the car has ever driven. To know how far one trip went, you don’t replay the trip: read the odometer when it ends, read it when it started, and subtract.",
+      "Each reading already contains everything that came before it, so the part you don’t want cancels out. A prefix array is an odometer reading written next to every number."
     ],
-    "clickSentence": "Sum(L to R) = Sum(0 to R) - Sum(0 to L-1). We cut off the part we don't want.",
-    "diagramType": "ArrayDiagram",
-    "cells": [1, 2, 3, 4],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "You create a new array `P` of the exact same length as the original array `A` (or length N+1 to cleanly handle edge cases).",
-      "`P[i] = P[i-1] + A[i]`"
-    ],
-    "definitionCode": {
-      "python": "prefix = [0] * (len(arr) + 1)\nfor i in range(len(arr)):\n    prefix[i+1] = prefix[i] + arr[i]",
-      "javascript": "const prefix = new Array(arr.length + 1).fill(0);\nfor (let i = 0; i < arr.length; i++) {\n    prefix[i+1] = prefix[i] + arr[i];\n}",
-      "java": "int[] prefix = new int[arr.length + 1];\nfor (int i = 0; i < arr.length; i++) {\n    prefix[i+1] = prefix[i] + arr[i];\n}",
-      "cpp": "vector<int> prefix(arr.size() + 1, 0);\nfor (int i = 0; i < arr.size(); i++) {\n    prefix[i+1] = prefix[i] + arr[i];\n}"
-    },
-    "memoryLayout": [
-      { "label": "Original", "value": "[ 2, 4, 6 ]" },
-      { "label": "Prefix Array", "value": "[ 0, 2, 6, 12 ]" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [],
-    "steps": [
+    "click": "Total up to the end, minus total up to just before the start: everything before the stretch cancels.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive Prefix Sum visualization coming soon.",
-        "activeLine": 1
+        "term": "prefix array",
+        "definition": "A second array, one cell longer than nums, holding running totals. prefix[i] is the sum of the first i numbers."
+      },
+      {
+        "term": "running sum",
+        "definition": "The total of everything added so far while you walk along the array. Each prefix cell is one running sum, frozen."
+      },
+      {
+        "term": "leading zero",
+        "definition": "prefix[0] = 0: the total of no numbers at all. It is the extra cell that makes a range starting at index 0 work like every other range."
+      },
+      {
+        "term": "range query",
+        "definition": "A question about a stretch of the array, like “what is the sum from index 2 to index 4?”. Written sum(l..r)."
+      },
+      {
+        "term": "inclusive range",
+        "definition": "l..r includes both nums[l] and nums[r]. That is why the formula reaches for prefix[r + 1], not prefix[r]."
+      },
+      {
+        "term": "build",
+        "definition": "Filling the prefix array once, left to right: prefix[i + 1] = prefix[i] + nums[i]. It costs one pass."
+      },
+      {
+        "term": "need",
+        "definition": "In Subarray Sum Equals K: the earlier running sum a stretch ending here would have to start from, which is running sum minus k."
+      }
+    ],
+    "definition": "A prefix-sum array of nums (length n) has n + 1 cells: prefix[0] = 0 and prefix[i + 1] = prefix[i] + nums[i], so prefix[i] is the sum of the first i numbers, nums[0..i−1]. For an inclusive range l..r, sum(nums[l..r]) = prefix[r + 1] − prefix[l]. Building it takes O(n) time and O(n) space; each query then takes O(1). The trick works for any operation you can undo, such as sums, counts and XOR, but not for a maximum or minimum. The same idea extends to two dimensions, and combined with a hash map of earlier running sums it counts the stretches that add up to k."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "range-sum",
+        "label": "Range sum queries",
+        "tracer": "prefix-sum/range-sum",
+        "predict": {
+          "tags": [
+            "next-prefix",
+            "which-cells"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "subarray-sum-k",
+        "label": "Subarrays that sum to k",
+        "tracer": "prefix-sum/subarray-sum-k",
+        "predict": {
+          "tags": [
+            "seen-it"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "You must answer many questions about the sum (or count, or XOR) of a stretch of the same array.",
+      "The array stays the same between questions, so the work done up front is never wasted.",
+      "The problem says “subarray sums to k”, “divisible by k” or “equal numbers of 0s and 1s”: a stretch’s total is the difference of two running totals.",
+      "A nested loop re-adds the same numbers again and again."
+    ],
+    "notWhen": [
+      "The array changes between questions. A prefix array goes stale after every update, so you would need a structure built for updates, such as a Fenwick tree.",
+      "You need the maximum or minimum of a stretch. Unlike a sum, a maximum can’t be subtracted out.",
+      "One window slides over the data once and you only want its best sum. A sliding window does that with O(1) extra space."
+    ],
+    "quiz": [
+      {
+        "problem": "An array of daily step counts never changes. You must answer 50,000 questions, each asking for the total between day l and day r.",
+        "answer": "prefix-sum",
+        "options": [
+          "two-pointers",
+          "prefix-sum",
+          "sliding-window",
+          "binary-search"
+        ],
+        "explanation": "Many questions on an unchanging array means paying once up front. Build running totals in one pass, then every question is one subtraction."
+      },
+      {
+        "problem": "Given an array of numbers and a size k, find the largest sum of any k neighbouring numbers. You are asked once.",
+        "answer": "sliding-window",
+        "options": [
+          "prefix-sum",
+          "hash-maps",
+          "dynamic-programming",
+          "sliding-window"
+        ],
+        "explanation": "A prefix array would work, but the size is fixed and you only ask once. Sliding a window of size k, adding the new number and dropping the old one, needs no extra array."
+      },
+      {
+        "problem": "Given an array that may contain negative numbers and a target k, count how many stretches of neighbouring numbers add up to exactly k.",
+        "answer": "prefix-sum",
+        "options": [
+          "sliding-window",
+          "hash-maps",
+          "prefix-sum",
+          "two-pointers"
+        ],
+        "explanation": "Negatives break a sliding window, because adding a number no longer reliably grows the sum. A stretch sums to k when two running sums differ by k, and a hash map counts the earlier ones."
+      },
+      {
+        "problem": "Given a sorted array, find two numbers that add up to a target.",
+        "answer": "two-pointers",
+        "options": [
+          "hash-maps",
+          "prefix-sum",
+          "binary-search",
+          "two-pointers"
+        ],
+        "explanation": "This is about a pair, not a stretch of neighbours. With a sorted array, one pointer at each end can close in on the target using no extra memory."
+      },
+      {
+        "problem": "In how many different ways can you climb n stairs if you may take 1 or 2 steps at a time?",
+        "answer": "dynamic-programming",
+        "options": [
+          "greedy",
+          "dynamic-programming",
+          "prefix-sum",
+          "recursion"
+        ],
+        "explanation": "There is no stretch of an array to total up. The ways to reach a stair are built from the ways to reach the two stairs below it, which is dynamic programming."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "Build Prefix Array",
-      "description": "Iterate through the array once, keeping a running total.",
-      "timeComplexity": "O(N)",
-      "spaceComplexity": "O(N)",
-      "code": {
-        "python": "for i in range(len(arr)):\n    prefix[i+1] = prefix[i] + arr[i]"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "prefix = n + 1 cells, with prefix[0] = 0",
+        "anchor": "init"
       },
-      "visualNote": "A second array fills up beneath the first array, cell by cell."
-    },
-    {
-      "name": "Range Query",
-      "description": "Subtract the prefix sum just BEFORE the start index from the prefix sum AT the end index.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "def query(L, R):\n    return prefix[R+1] - prefix[L]"
+      {
+        "text": "for each position i in nums:"
       },
-      "visualNote": "Instantly highlights two cells in the prefix array and subtracts them."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "prefix = [0]\nfor x in arr:\n  prefix.append(prefix.last + x)\n\ndef range_sum(left, right):\n  return prefix[right + 1] - prefix[left]",
-    "whenToUse": "Whenever you are asked to calculate the sum, product, or XOR of a contiguous subarray multiple times.",
-    "timeComplexity": "O(N) build, O(1) query.",
-    "spaceComplexity": "O(N) for the prefix array."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are given an array of daily temperatures. You need to answer 100,000 queries asking for the average temperature between day L and day R.",
-    "correctPatternId": "prefix-sum",
-    "distractors": [
-      "binary-search",
-      "sorting",
-      "two-pointers"
+      {
+        "text": "prefix[i + 1] = prefix[i] + nums[i]",
+        "anchor": "build",
+        "indent": 1
+      },
+      {
+        "text": "for each query (l, r), inclusive:"
+      },
+      {
+        "text": "answer = prefix[r + 1] − prefix[l]",
+        "anchor": "query",
+        "indent": 1
+      }
     ],
-    "explanation": "To answer 100,000 queries instantly, you need O(1) time per query. Prefix sum allows you to get the sum of any range instantly, which you can then divide by the number of days to get the average."
+    "tracer": "prefix-sum/range-sum",
+    "time": "O(n) to build, O(1) per query",
+    "space": "O(n)",
+    "notes": [
+      "Build once, then q queries cost O(n + q) in total. Re-adding for every query costs up to O(n · q).",
+      "Use n + 1 cells with prefix[0] = 0, so prefix[i] means “the sum of the first i numbers”. Then sum(l..r) = prefix[r + 1] − prefix[l] for every query, including l = 0. The shorter version, prefix[i] = sum(0..i), needs a special case for l = 0.",
+      "The range is inclusive, so the right-hand cell is prefix[r + 1]. Reaching for prefix[r] is the classic off-by-one.",
+      "It works for anything you can undo: sums, counts, XOR. It does not work for max or min, because you can’t subtract a maximum out.",
+      "The array must not change. If it does, rebuilding costs O(n) each time, so use a structure built for updates instead.",
+      "Sums can outgrow a 32-bit int on big inputs. Check the constraints, and use a 64-bit type (long in Java, long long in C++) when they are large."
+    ]
   },
   "examples": [
     {
       "title": "Range Sum Query - Immutable",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/range-sum-query-immutable/",
-      "problemStatement": "Given an integer array nums, handle multiple queries of the following type: Calculate the sum of the elements of nums between indices left and right inclusive.",
-      "inputExample": "NumArray([[-2, 0, 3, -5, 2, -1]]); sumRange(0, 2); sumRange(2, 5);",
-      "outputExample": "1 (sum of -2,0,3), -1 (sum of 3,-5,2,-1)",
-      "steps": [
-        "In the constructor, initialize a prefix array of size N + 1 with zeros.",
-        "Loop through the input array and populate the prefix array.",
-        "In the sumRange method, return `prefix[right + 1] - prefix[left]`."
+      "url": "https://leetcode.com/problems/range-sum-query-immutable/",
+      "problem": "Design a class that stores an integer array nums once, then answers many queries sumRange(left, right): the sum of nums[left..right], both ends included.",
+      "input": "NumArray([-2, 0, 3, -5, 2, -1]), then sumRange(0, 2), sumRange(2, 5), sumRange(0, 5)",
+      "output": "1, -1, -3",
+      "approach": [
+        "The array never changes and queries repeat, so do the adding once, in the constructor, and make each query cheap.",
+        "Build prefix with one extra cell: prefix[0] = 0 and prefix[i + 1] = prefix[i] + nums[i]. Here it is [0, -2, -2, 1, -4, -2, -3].",
+        "sumRange(left, right) = prefix[right + 1] − prefix[left]. So sumRange(0, 2) = prefix[3] − prefix[0] = 1 − 0 = 1.",
+        "sumRange(2, 5) = prefix[6] − prefix[2] = -3 − (-2) = -1, and sumRange(0, 5) = -3 − 0 = -3. The leading 0 means left = 0 needs no special case."
       ],
-      "code": {
-        "python": "class NumArray:\n    def __init__(self, nums):\n        self.prefix = [0] * (len(nums) + 1)\n        for i in range(len(nums)):\n            self.prefix[i+1] = self.prefix[i] + nums[i]\n\n    def sumRange(self, left, right):\n        return self.prefix[right + 1] - self.prefix[left]",
-        "javascript": "class NumArray {\n    constructor(nums) {\n        this.prefix = new Array(nums.length + 1).fill(0);\n        for (let i = 0; i < nums.length; i++) {\n            this.prefix[i+1] = this.prefix[i] + nums[i];\n        }\n    }\n    sumRange(left, right) {\n        return this.prefix[right + 1] - this.prefix[left];\n    }\n}"
-      },
-      "timeComplexity": "O(N) init, O(1) query",
-      "spaceComplexity": "O(N)",
-      "rationale": "The N+1 sizing elegantly avoids out-of-bounds errors when querying from index 0."
+      "code": "prefix-sum/range-sum",
+      "tracer": "prefix-sum/range-sum",
+      "time": "O(n) to build, O(1) per query",
+      "space": "O(n)"
+    },
+    {
+      "title": "Subarray Sum Equals K",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/subarray-sum-equals-k/",
+      "problem": "Given an integer array nums (it may contain negatives) and an integer k, return the number of contiguous subarrays whose sum equals k.",
+      "input": "nums = [1,1,1], k = 2",
+      "output": "2",
+      "approach": [
+        "A stretch ending at i sums to k when the running sum at i − the running sum before the stretch = k. So at each i, ask how many earlier running sums equal running − k.",
+        "Keep a map from running sum to how many times it has appeared. Start it with {0: 1}: the empty prefix, so stretches that begin at index 0 are counted.",
+        "Running sums are 1, 2, 3. At i = 1 we need 0, seen once, so +1. At i = 2 we need 1, seen once (after i = 0), so +1.",
+        "Look up before you store the current running sum, or with k = 0 a stretch could match itself. The answer is 2. Negatives are fine here, which a sliding window can’t promise."
+      ],
+      "code": "prefix-sum/subarray-sum-k",
+      "tracer": "prefix-sum/subarray-sum-k",
+      "time": "O(n) on average",
+      "space": "O(n)"
+    },
+    {
+      "title": "Find Pivot Index",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/find-pivot-index/",
+      "problem": "Return the leftmost index whose left-side sum equals its right-side sum (the number at the index is in neither side), or -1 if there is none.",
+      "input": "nums = [1,7,3,6,5,6]",
+      "output": "3",
+      "approach": [
+        "Index i is a pivot when the sum of everything to its left equals the sum of everything to its right.",
+        "The left sum is a prefix sum. The right sum is total − left − nums[i], so one running left sum is enough and no prefix array is needed.",
+        "The total is 28. At i = 3, left = 1 + 7 + 3 = 11 and right = 28 − 11 − 6 = 11. They match, so 3 is the pivot.",
+        "Scan from the left and return the first match, or -1. It is the same trick as a range query: a total minus a part gives the other part."
+      ],
+      "code": "prefix-sum/pivot-index",
+      "time": "O(n)",
+      "space": "O(1)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Why do we often make the Prefix Sum array size N+1 instead of N?",
+      "question": "With the n + 1 convention, what is prefix for nums = [4, 2, 7, 1]?",
       "options": [
-        "To easily handle queries that start at index 0 without needing an 'if left == 0' edge case.",
-        "Because arrays must be even lengths.",
-        "To store the total length of the array at the end.",
-        "It is a requirement of Python."
+        "[4, 6, 13, 14]",
+        "[0, 4, 6, 13, 14]",
+        "[0, 4, 2, 7, 1]",
+        "[4, 2, 7, 1, 0]"
       ],
-      "correctIndex": 0,
-      "explanation": "If we want `Sum(0 to 5)`, the formula `Prefix[5] - Prefix[-1]` would crash or behave unexpectedly. Putting a dummy `0` at `Prefix[0]` makes the math `Prefix[6] - Prefix[0]` work perfectly."
+      "answer": 1,
+      "explanation": "prefix[0] = 0, then each cell adds the next number: 0, 4, 4 + 2 = 6, 6 + 7 = 13, 13 + 1 = 14. prefix[i] is the sum of the first i numbers."
     },
     {
-      "question": "Can Prefix Sum be used for multiplication instead of addition?",
+      "question": "With prefix = [0, 4, 6, 13, 14], what is the sum of nums[1..2]?",
       "options": [
-        "Yes, by storing cumulative products and dividing instead of subtracting.",
-        "No, it only works for addition.",
-        "Yes, but you subtract the products.",
-        "No, because numbers get too large."
+        "7",
+        "11",
+        "2",
+        "9"
       ],
-      "correctIndex": 0,
-      "explanation": "Yes! You can do 'Prefix Product'. `Product(L to R) = Prefix[R] / Prefix[L-1]`. (Note: you have to handle zeros carefully!)."
+      "answer": 3,
+      "explanation": "sum(1..2) = prefix[3] − prefix[1] = 13 − 4 = 9, which is nums[1] + nums[2] = 2 + 7."
+    },
+    {
+      "question": "You build a prefix array once and then answer q range-sum queries on n numbers. What is the total time?",
+      "options": [
+        "O(q), because the build is free",
+        "O(n · q), because each query may add up to n numbers",
+        "O(n + q): O(n) to build, O(1) per query",
+        "O(n log q)"
+      ],
+      "answer": 2,
+      "explanation": "One pass builds the array (O(n)). After that each query is two lookups and a subtraction (O(1)), so q queries cost O(q) more."
+    },
+    {
+      "question": "What does the extra 0 at the front of the prefix array buy us?",
+      "options": [
+        "It keeps the array sorted.",
+        "A query that starts at index 0 needs no special case.",
+        "It lets the array hold negative numbers.",
+        "It makes the build pass faster."
+      ],
+      "answer": 1,
+      "explanation": "For l = 0 the formula reads prefix[r + 1] − prefix[0], and prefix[0] is 0. Without the extra cell you would have to write an if for l = 0."
+    },
+    {
+      "question": "In Subarray Sum Equals K, why do we put 0 in the map with a count of 1 before the loop starts?",
+      "options": [
+        "So stretches that begin at index 0 are counted: they need the empty prefix, whose sum is 0.",
+        "To avoid dividing by zero.",
+        "Because a hash map can’t start empty.",
+        "Because k is always positive."
+      ],
+      "answer": 0,
+      "explanation": "If the first i numbers add up to k, then running − k = 0, and the lookup has to find something. The empty prefix is that something."
     }
   ],
   "practice": [
-    { "title": "Range Sum Query - Immutable", "url": "https://leetcode.com/problems/range-sum-query-immutable/", "difficulty": "easy", "keyInsight": "The textbook definition of Prefix Sum." },
-    { "title": "Subarray Sum Equals K", "url": "https://leetcode.com/problems/subarray-sum-equals-k/", "difficulty": "medium", "keyInsight": "Use a Hash Map to store the frequencies of prefix sums seen so far." },
-    { "title": "Product of Array Except Self", "url": "https://leetcode.com/problems/product-of-array-except-self/", "difficulty": "medium", "keyInsight": "Use a Prefix Product array from the left, and a Suffix Product array from the right." }
+    {
+      "title": "Running Sum of 1d Array",
+      "url": "https://leetcode.com/problems/running-sum-of-1d-array/",
+      "difficulty": "easy",
+      "insight": "The answer is the prefix array, almost. Each output is the one before it plus the new number."
+    },
+    {
+      "title": "Product of Array Except Self",
+      "url": "https://leetcode.com/problems/product-of-array-except-self/",
+      "difficulty": "medium",
+      "insight": "Everything except nums[i] is the product on its left times the product on its right. Build prefix products instead of prefix sums."
+    },
+    {
+      "title": "Contiguous Array",
+      "url": "https://leetcode.com/problems/contiguous-array/",
+      "difficulty": "medium",
+      "insight": "Count each 0 as -1. Then equal numbers of 0s and 1s means a stretch totals 0, so look for two equal running sums."
+    },
+    {
+      "title": "Continuous Subarray Sum",
+      "url": "https://leetcode.com/problems/continuous-subarray-sum/",
+      "difficulty": "medium",
+      "insight": "Two running sums with the same remainder mod k bound a stretch that is a multiple of k. What should the map remember, and how far apart must the two be?"
+    },
+    {
+      "title": "Subarray Sums Divisible by K",
+      "url": "https://leetcode.com/problems/subarray-sums-divisible-by-k/",
+      "difficulty": "medium",
+      "insight": "Count how often each running-sum remainder has appeared. Careful: the remainder of a negative sum can come out negative."
+    },
+    {
+      "title": "Range Sum Query 2D - Immutable",
+      "url": "https://leetcode.com/problems/range-sum-query-2d-immutable/",
+      "difficulty": "medium",
+      "insight": "Prefix sums work in two directions. A rectangle is a big rectangle minus two strips, plus the corner you subtracted twice."
+    },
+    {
+      "title": "Matrix Block Sum",
+      "url": "https://leetcode.com/problems/matrix-block-sum/",
+      "difficulty": "medium",
+      "insight": "Build the 2D prefix once, then every answer cell is one rectangle query. Clamp the rectangle at the edges of the grid."
+    },
+    {
+      "title": "Maximum Sum of 3 Non-Overlapping Subarrays",
+      "url": "https://leetcode.com/problems/maximum-sum-of-3-non-overlapping-subarrays/",
+      "difficulty": "hard",
+      "insight": "Prefix sums give every window of length k in O(1). Then, for each middle window, you need the best window to its left and the best to its right."
+    }
+  ],
+  "overview": [
+    "Explain why subtracting two running totals gives any stretch's sum.",
+    "Build a prefix array with a leading zero for inclusive ranges.",
+    "Trace sum(l..r) as prefix[r + 1] minus prefix[l] on an example.",
+    "Spot repeated range-sum questions over an array that never changes.",
+    "Choose prefix sums only for operations you can undo, like sums and counts."
+  ],
+  "resources": [
+    {
+      "title": "Prefix Sums (USACO Guide)",
+      "url": "https://usaco.guide/silver/prefix-sums",
+      "note": "Step-by-step prefix sums, 2D sums and difference arrays with practice problems."
+    },
+    {
+      "title": "Prefix sum",
+      "url": "https://en.wikipedia.org/wiki/Prefix_sum",
+      "note": "Definition of prefix sums and how the same idea generalises to other operations."
+    },
+    {
+      "title": "Summed-area table",
+      "url": "https://en.wikipedia.org/wiki/Summed-area_table",
+      "note": "The two-dimensional version of prefix sums, the natural next step after Range Sum Query 2D."
+    }
   ]
 }

@@ -1,0 +1,74 @@
+/* Code panel: sunken block, CSS line numbers, active-rule highlight.
+   Shiki emits <pre><code><span data-line="n">…</span>\n…</code></pre>; the
+   code element is a flex column so the newline text nodes never add gaps. */
+.scroller {
+  position: relative;
+  overflow: auto;
+  max-height: 22rem;
+  padding: 12px 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-card);
+  background: var(--paper-sunken);
+}
+
+.compact {
+  max-height: 16rem;
+}
+
+.scroller :global(pre) {
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+  tab-size: 4;
+}
+
+.scroller :global(code) {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  min-width: 100%;
+  counter-reset: line;
+  font-family: inherit;
+}
+
+.scroller :global([data-line]) {
+  position: relative;
+  display: block;
+  min-height: 1.65em;
+  margin: 0;
+  padding: 0 16px 0 0;
+  border-left: 3px solid transparent;
+  border-radius: 0;
+  white-space: pre;
+  counter-increment: line;
+  transition: background-color 160ms ease-out, border-color 160ms ease-out;
+}
+
+.scroller :global([data-line])::before {
+  content: counter(line);
+  display: inline-block;
+  box-sizing: border-box;
+  width: 2.9rem;
+  padding-right: 1rem;
+  text-align: right;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.scroller :global([data-line].is-active) {
+  background: var(--coral-wash);
+  border-left-color: var(--coral);
+}
+
+.scroller :global([data-line].is-active)::before {
+  color: var(--coral-ink);
+}
+
+/* Slider thumb/track colours follow the brand accent. */
+.range {
+  accent-color: var(--coral);
+}

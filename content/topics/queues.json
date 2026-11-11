@@ -1,196 +1,356 @@
 {
-  "id": "queues",
+  "schemaVersion": 2,
   "slug": "queues",
-  "title": "Queues",
-  "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 35,
-  "prerequisites": ["arrays", "linked-lists"],
-  "tags": [
-    "data-structure",
-    "FIFO"
-  ],
-  "overview": {
-    "summary": "A Queue is a linear data structure that follows the First-In-First-Out (FIFO) principle.",
-    "learningObjectives": [
-      "Understand the FIFO principle.",
-      "Implement a Queue using a Linked List (or dynamic array).",
-      "Recognize problems that require sequential processing like BFS."
-    ],
-    "interviewRelevance": "Queues are the backbone of Breadth-First Search (BFS) for trees and graphs, and are essential for scheduling tasks."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A printer has 20 jobs waiting. When the first one finishes, who prints next, and how does the computer keep the line without sliding all the other jobs forward?",
     "paragraphs": [
-      "Think of a line at a coffee shop. You enter at the back of the line, and you wait your turn.",
-      "The first person who got in line is the first person to order and leave. This is FIFO."
+      "Jobs must print in the order they arrived. Store them in a row of boxes and the first job sits in box 0. When it finishes, the obvious fix is to slide jobs 2 to 20 one box to the left: 19 moves for every page that prints.",
+      "That is a lot of shuffling just to forget one job. What if every job stayed exactly where it is, and only something small changed?"
     ],
-    "ahaMoment": "A Queue preserves the exact order of arrival. It's the ultimate 'fair' data structure."
+    "aha": "Move the markers, not the jobs. front remembers which box holds the next job to print, and back remembers where the next newcomer goes. Both only move forward, and after the last box they wrap round to box 0 to reuse the boxes that finished jobs left behind. Each step is one small change, however long the line is."
   },
-  "definition": {
-    "technicalDefinition": "A Queue is an abstract data type that serves as a collection of elements, with two principal operations: enqueue (adds to the back) and dequeue (removes from the front).",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "array",
+      "label": "line",
+      "cells": [
+        8,
+        3,
+        null,
+        2,
+        7,
+        5
+      ],
+      "pointers": [
+        {
+          "name": "front",
+          "index": 3,
+          "role": "ptrA"
+        },
+        {
+          "name": "back",
+          "index": 1,
+          "role": "ptrB"
+        }
+      ],
+      "marks": [
+        {
+          "index": 1,
+          "role": "changed"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "Enqueue",
-        "definition": "Insert an element at the back (tail) of the queue."
+        "target": "ptr:front",
+        "text": "leaves first"
       },
       {
-        "term": "Dequeue",
-        "definition": "Remove the element at the front (head) of the queue."
+        "target": "cell:0",
+        "text": "wrapped past the end"
       },
       {
-        "term": "Front / Peek",
-        "definition": "Look at the first element without removing it."
-      },
-      {
-        "term": "FIFO",
-        "definition": "First-In-First-Out."
+        "target": "cell:2",
+        "text": "next arrival lands here"
       }
-    ],
-    "keyProperties": [
-      "O(1) Enqueue and Dequeue operations.",
-      "O(n) search (since you only have direct access to the front).",
-      "Best implemented with a Linked List to avoid O(n) shifting."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A car wash tunnel. Cars enter one side and exit the other side in the exact same order."
+      "A ticket counter calls tickets in the order people joined the line: newcomers go to the back, the front is served next, and nobody walks forward when someone leaves.",
+      "Now picture a sushi belt with 6 spots that loops back on itself. After spot 5 comes spot 0 again, so a spot you just emptied is the next one a new plate can use. That belt is a circular buffer."
     ],
-    "clickSentence": "Use a Queue whenever you need to process things in the exact order they were discovered.",
-    "diagramType": "ArrayDiagram",
-    "cells": [],
-    "diagramState": {}
+    "click": "Nobody in the line moves, only two markers do: front says who is served next, back says where the newcomer goes, and both wrap from the last slot to slot 0.",
+    "glossary": [
+      {
+        "term": "enqueue",
+        "definition": "Join the line: put a new item at the back."
+      },
+      {
+        "term": "dequeue",
+        "definition": "Serve the line: remove and return the item at the front."
+      },
+      {
+        "term": "front",
+        "definition": "The oldest item, the next one to leave. Also called the head."
+      },
+      {
+        "term": "back",
+        "definition": "The newest item, the last to arrive. Also called the tail or rear."
+      },
+      {
+        "term": "FIFO",
+        "definition": "First in, first out. Items leave in exactly the order they arrived."
+      },
+      {
+        "term": "circular buffer",
+        "definition": "A fixed array treated as a loop: front and back move forward with % capacity, so freed slots get reused and nothing ever shifts."
+      },
+      {
+        "term": "deque",
+        "definition": "A double-ended queue (say \"deck\"): you can add and remove at both the front and the back, each in O(1)."
+      },
+      {
+        "term": "monotonic deque",
+        "definition": "A deque whose values stay in one order, like biggest to smallest, because you pop anything that would break it before adding a new item."
+      }
+    ],
+    "definition": "A queue is a collection where items leave in the order they arrived (FIFO). enqueue adds at the back, dequeue removes from the front, and both run in O(1). A plain array makes dequeue cost O(n) because everyone shifts, so real queues track front and back instead. Most libraries use a circular array that grows when full (Java's ArrayDeque) or a deque built from fixed-size blocks (Python's collections.deque, and std::deque behind C++'s std::queue); a linked list works too (Java's LinkedList), but it is not the usual choice. A deque allows both ends, which also lets it serve as a stack."
   },
-  "structure": {
-    "memoryDescription": [
-      "Implementing a Queue with a standard Array is bad because removing the first element requires shifting all other elements (O(n)).",
-      "Instead, Queues are usually implemented using a Doubly Linked List, where enqueueing at the tail and dequeueing at the head are both O(1)."
+  "stage": {
+    "tracks": [
+      {
+        "id": "circular",
+        "label": "Circular queue",
+        "tracer": "queues/enqueue-dequeue",
+        "predict": {
+          "tags": [
+            "where-back-goes",
+            "who-leaves",
+            "refused-or-ok"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "window-max",
+        "label": "Window maximum (deque)",
+        "tracer": "queues/window-max",
+        "predict": {
+          "tags": [
+            "pop-back-or-keep",
+            "front-expired"
+          ],
+          "max": 4
+        }
+      }
     ],
-    "definitionCode": {
-      "python": "from collections import deque\nq = deque()\nq.append(1)    # Enqueue\nfront = q.popleft() # Dequeue",
-      "javascript": "const q = [];\nq.push(1);    // Enqueue\nconst front = q.shift(); // Dequeue (O(n) in JS array!)",
-      "java": "Queue<Integer> q = new LinkedList<>();\nq.offer(1); // Enqueue\nint front = q.poll(); // Dequeue",
-      "cpp": "std::queue<int> q;\nq.push(1); // Enqueue\nint front = q.front(); q.pop(); // Dequeue"
-    },
-    "memoryLayout": [
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "Things must be handled in the order they arrived: print jobs, tickets, requests, messages.",
+      "You explore a tree, grid or graph level by level, or the nearest things first (BFS): shortest path with equal steps, minimum moves.",
+      "Only the most recent items matter and old ones expire from the front: the last 3000 ms of calls, a moving average.",
+      "A window slides along and you need its maximum or minimum at every step: a monotonic deque."
+    ],
+    "notWhen": [
+      "The newest item must come out first (undo, matching brackets, backtracking): that is a stack.",
+      "The best item must come out next, whatever order it arrived in (most urgent, smallest, top K): that is a heap.",
+      "You need an item by position or by value: an array or a hash map reaches it directly, a queue only shows its ends."
+    ],
+    "quiz": [
       {
-        "label": "Front",
-        "value": "10 (Oldest)"
+        "problem": "Count how many requests arrived in the last 3000 milliseconds, every time a new request comes in. Timestamps only go up.",
+        "answer": "queues",
+        "options": [
+          "stacks",
+          "heaps",
+          "queues",
+          "hash-maps"
+        ],
+        "explanation": "Time only moves forward, so the oldest request is always at the front. Enqueue each new one and dequeue from the front while it is older than 3000 ms."
       },
       {
-        "label": "Middle",
-        "value": "20"
+        "problem": "Given a binary tree, return its values level by level, from the root down, left to right.",
+        "answer": "bfs-dfs",
+        "options": [
+          "stacks",
+          "bfs-dfs",
+          "trees",
+          "dynamic-programming"
+        ],
+        "explanation": "Level by level is breadth-first search. It uses a queue inside, but the pattern to recognise is BFS: finish one level before starting the next."
       },
       {
-        "label": "Back",
-        "value": "30 (Newest)"
+        "problem": "Check whether a string of brackets like ( [ { } ] ) is properly nested and closed.",
+        "answer": "stacks",
+        "options": [
+          "queues",
+          "strings",
+          "stacks",
+          "recursion"
+        ],
+        "explanation": "The bracket you must close first is the one you opened last. Last in, first out is a stack, not a queue."
+      },
+      {
+        "problem": "An emergency room always treats the most critical patient next, no matter who arrived first.",
+        "answer": "heaps",
+        "options": [
+          "queues",
+          "stacks",
+          "heaps",
+          "sorting"
+        ],
+        "explanation": "A queue serves by arrival time. Serving by urgency needs a priority queue, which is a heap."
+      },
+      {
+        "problem": "Given an array and k, return the maximum of every window of k consecutive numbers, in O(n) time.",
+        "answer": "queues",
+        "options": [
+          "heaps",
+          "queues",
+          "binary-search",
+          "prefix-sum"
+        ],
+        "explanation": "A heap works in O(n log n). A monotonic deque keeps only the candidates, biggest at the front, and each index enters and leaves once, so the whole pass is O(n)."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "ArrayDiagram",
-    "array": [],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive visualization for Queues is coming soon.",
-        "activeLine": 1
+        "text": "buffer = 6 empty slots; front = 0, back = 5, size = 0",
+        "anchor": "init"
+      },
+      {
+        "text": "enqueue(x):"
+      },
+      {
+        "text": "if size == 6: refuse (the line is full)",
+        "anchor": "full",
+        "indent": 1
+      },
+      {
+        "text": "back = (back + 1) % 6, buffer[back] = x, size = size + 1",
+        "anchor": "enqueue",
+        "indent": 1
+      },
+      {
+        "text": "dequeue():"
+      },
+      {
+        "text": "if size == 0: refuse (nobody to serve)",
+        "anchor": "empty",
+        "indent": 1
+      },
+      {
+        "text": "x = buffer[front], front = (front + 1) % 6, size = size - 1, return x",
+        "anchor": "dequeue",
+        "indent": 1
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Enqueue",
-      "description": "Add an item to the back of the queue.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "q.append(val)",
-        "javascript": "q.push(val);",
-        "java": "q.offer(val);",
-        "cpp": "q.push(val);"
-      },
-      "visualNote": "A new element enters the back of the line."
-    },
-    {
-      "name": "Dequeue",
-      "description": "Remove the front item.",
-      "timeComplexity": "O(1)",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "val = q.popleft()",
-        "javascript": "const val = q.shift();",
-        "java": "int val = q.poll();",
-        "cpp": "int val = q.front(); q.pop();"
-      },
-      "visualNote": "The front element exits the line."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "q = new Queue()\nq.enqueue(start_node)\nwhile not q.is_empty():\n  curr = q.dequeue()\n  process(curr)\n  for neighbor in curr.neighbors:\n    q.enqueue(neighbor)",
-    "whenToUse": "Whenever you need to process data level-by-level, or maintain fairness (First come, first served).",
-    "timeComplexity": "O(n) if processing a sequence.",
-    "spaceComplexity": "O(n) max queue length."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You are building a customer support ticket system where the oldest tickets must be answered first.",
-    "correctPatternId": "queues",
-    "distractors": [
-      "arrays",
-      "stacks",
-      "hash-maps"
     ],
-    "explanation": "Oldest first means First-In-First-Out (FIFO). This is the textbook definition of a Queue."
+    "tracer": "queues/enqueue-dequeue",
+    "time": "O(1) per enqueue or dequeue",
+    "space": "O(k) for a buffer of k slots",
+    "notes": [
+      "Neither operation loops, so both are O(1). The only way to make dequeue slow is to shift items forward, which is exactly what front and back avoid.",
+      "front and back look the same when the line is full and when it is empty. Keep a size counter (as here), or leave one slot unused, to tell them apart.",
+      "Empty-queue behaviour depends on the language. Python's deque.popleft() raises IndexError, Java's Queue.poll() returns null (remove() throws NoSuchElementException), and C++'s std::queue::pop() on an empty queue is undefined behaviour, so check empty() first.",
+      "In real code use the library queue: collections.deque in Python (never list.pop(0), which shifts everything), ArrayDeque in Java, std::queue or std::deque in C++. They are mostly circular arrays or block lists, not plain linked lists.",
+      "For sliding window maximum the deque holds indexes, not values, so you can tell when the front has left the window. Each index is pushed once and popped at most once, which is why the whole pass is O(n)."
+    ]
   },
   "examples": [
     {
-      "title": "Number of Recent Calls",
-      "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/number-of-recent-calls/",
-      "problemStatement": "Count the number of requests that happened in the past 3000 milliseconds.",
-      "inputExample": "ping(1), ping(100), ping(3001), ping(3002)",
-      "outputExample": "3",
-      "steps": [
-        "Store all pings in a Queue.",
-        "When a new ping arrives, enqueue its timestamp.",
-        "While the front of the queue is older than (current_ping - 3000), dequeue it.",
-        "Return the size of the queue."
+      "title": "Design Circular Queue",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/design-circular-queue/",
+      "problem": "Build a queue with a fixed capacity k that reuses freed space. Support enQueue, deQueue, Front, Rear, isEmpty and isFull, each in O(1).",
+      "input": "MyCircularQueue(3), enQueue(1), enQueue(2), enQueue(3), enQueue(4), Rear(), isFull(), deQueue(), enQueue(4), Rear()",
+      "output": "[null, true, true, true, false, 3, true, true, true, 4]",
+      "approach": [
+        "Keep an array of k slots plus front, back and size. Start with front = 0 and back = k - 1 so the first enqueue lands in slot 0.",
+        "enQueue: if size == k return false. Otherwise back = (back + 1) % k, store the value there and grow size.",
+        "deQueue: if size == 0 return false. Otherwise front = (front + 1) % k and shrink size. The old value just stays unread.",
+        "In the example the fourth enQueue is refused (full), and after one deQueue the fifth lands in slot 0, so Rear() is 4."
       ],
-      "code": {
-        "python": "class RecentCounter:\n    def __init__(self):\n        self.q = deque()\n\n    def ping(self, t: int) -> int:\n        self.q.append(t)\n        while self.q[0] < t - 3000:\n            self.q.popleft()\n        return len(self.q)",
-        "javascript": "class RecentCounter {\n    constructor() {\n        this.q = [];\n    }\n    ping(t) {\n        this.q.push(t);\n        while (this.q[0] < t - 3000) {\n            this.q.shift();\n        }\n        return this.q.length;\n    }\n}",
-        "java": "class RecentCounter {\n    Queue<Integer> q;\n    public RecentCounter() {\n        q = new LinkedList<>();\n    }\n    public int ping(int t) {\n        q.offer(t);\n        while (q.peek() < t - 3000) {\n            q.poll();\n        }\n        return q.size();\n    }\n}",
-        "cpp": "class RecentCounter {\n    queue<int> q;\npublic:\n    int ping(int t) {\n        q.push(t);\n        while (q.front() < t - 3000) {\n            q.pop();\n        }\n        return q.size();\n    }\n};"
-      },
-      "timeComplexity": "O(1) amortized per ping",
-      "spaceComplexity": "O(W) where W is the window size",
-      "rationale": "Since time always moves forward, the oldest pings will always be at the front of the queue, making them easy to discard."
+      "code": "queues/design-circular-queue",
+      "tracer": "queues/enqueue-dequeue",
+      "time": "O(1) per operation",
+      "space": "O(k)"
+    },
+    {
+      "title": "Implement Queue using Stacks",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
+      "problem": "Build a first-in-first-out queue from two stacks. It must support push, pop, peek and empty.",
+      "input": "MyQueue(), push(1), push(2), peek(), pop(), empty()",
+      "output": "[null, null, null, 1, 1, false]",
+      "approach": [
+        "A stack hands back the newest item first, so pour one stack into another to reverse the order.",
+        "push always goes onto the inbox stack. Nothing else happens, so it is O(1).",
+        "pop and peek read from the outbox. Only when the outbox is empty, pour the whole inbox into it: the oldest item ends up on top.",
+        "Each item is poured at most once, so the cost per operation is O(1) amortized. After push(1), push(2) the first peek pours [1, 2] into [2, 1], and 1 comes out."
+      ],
+      "code": "queues/queue-from-stacks",
+      "time": "O(1) amortized per operation",
+      "space": "O(n)"
+    },
+    {
+      "title": "Sliding Window Maximum",
+      "difficulty": "hard",
+      "url": "https://leetcode.com/problems/sliding-window-maximum/",
+      "problem": "Given an array nums and a window size k, slide the window from the left end to the right end. Return the maximum of every window.",
+      "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3",
+      "output": "[3, 3, 5, 5, 6, 7]",
+      "approach": [
+        "Keep a deque of indexes whose values go from biggest at the front to smallest at the back. The front is always the window's maximum.",
+        "For each new index i, first pop the front if it has left the window (index i - k).",
+        "Then pop from the back while nums[back] < nums[i]: an older, smaller number can never be a maximum again. Push i at the back.",
+        "Once the first window is full (i >= k - 1), the front index gives that window's maximum. Every index is pushed once and popped at most once, so it is O(n)."
+      ],
+      "code": "queues/window-max",
+      "tracer": "queues/window-max",
+      "time": "O(n)",
+      "space": "O(k) for the deque, plus the output"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Which principle does a Queue follow?",
+      "question": "A circular queue has 6 slots and is not full. back is at slot 5. Where does the next enqueue go?",
       "options": [
-        "FIFO (First In, First Out)",
-        "LIFO (Last In, First Out)",
-        "FILO (First In, Last Out)",
-        "Random Access"
+        "Slot 6, one past the end",
+        "Slot 5 again, replacing the newest item",
+        "Slot 0, because (5 + 1) % 6 = 0",
+        "Nowhere: the enqueue is refused"
       ],
-      "correctIndex": 0,
-      "explanation": "FIFO. The first item to enter the queue is the first one to leave."
+      "answer": 2,
+      "explanation": "back moves to (5 + 1) % 6 = 0. The % wraps it round to the start, and slot 0 is free because the queue is not full."
     },
     {
-      "question": "Why is implementing a Queue with a standard array usually bad?",
+      "question": "Why does a circular queue not need to shift everyone forward after a dequeue?",
       "options": [
-        "Dequeueing from the front requires shifting all other elements O(n).",
-        "Arrays cannot store dynamic data types.",
-        "Arrays are LIFO.",
-        "It uses more memory."
+        "Only front moves on; the items stay in their slots",
+        "It copies the line into a bigger array first",
+        "It sorts the slots after each dequeue",
+        "It stores the line as a linked list"
       ],
-      "correctIndex": 0,
-      "explanation": "If you remove index 0, index 1 must move to index 0, index 2 to index 1, etc. This is O(n) time. Linked Lists can dequeue in O(1)."
+      "answer": 0,
+      "explanation": "The order lives in the two markers, not in the positions. Dequeue changes front by one and nothing else, so it costs O(1) however long the line is."
+    },
+    {
+      "question": "In a circular queue with 6 slots, front == (back + 1) % 6. Is the line full or empty?",
+      "options": [
+        "Always full",
+        "Always empty",
+        "Full, because a queue can never have 0 items",
+        "You can't tell from the markers alone, so keep a size counter"
+      ],
+      "answer": 3,
+      "explanation": "Both a full line and an empty one look like this. A size variable (or one deliberately unused slot) settles it."
+    },
+    {
+      "question": "You call dequeue on an empty queue. What happens?",
+      "options": [
+        "It always returns 0",
+        "It depends on the language: Python's deque.popleft() raises IndexError, Java's poll() returns null, C++'s pop() is undefined behaviour",
+        "It waits until someone enqueues, in every language",
+        "It always throws the same exception"
+      ],
+      "answer": 1,
+      "explanation": "Libraries disagree, so check for empty before you dequeue, or handle the language's own signal."
+    },
+    {
+      "question": "Sliding window maximum: the deque holds the values 9, 5, 4 from front to back, and a new number 7 arrives. What happens?",
+      "options": [
+        "Pop 9 from the front, then push 7",
+        "Clear the deque and start again with 7",
+        "Pop 4 and 5 from the back, keep 9, push 7 at the back",
+        "Nothing: 7 is added at the front"
+      ],
+      "answer": 2,
+      "explanation": "4 and 5 are older and smaller than 7, so they can never be a maximum again. 9 is bigger, so it stays in front, and 7 waits behind it as the next candidate."
     }
   ],
   "practice": [
@@ -198,13 +358,73 @@
       "title": "Number of Recent Calls",
       "url": "https://leetcode.com/problems/number-of-recent-calls/",
       "difficulty": "easy",
-      "keyInsight": "Use a queue to track the rolling 3000ms window."
+      "insight": "Timestamps only go up, so old pings sit at the front. Dequeue while the front is older than t - 3000; the queue's size is the answer."
     },
     {
-      "title": "Implement Queue using Stacks",
-      "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
+      "title": "Time Needed to Buy Tickets",
+      "url": "https://leetcode.com/problems/time-needed-to-buy-tickets/",
       "difficulty": "easy",
-      "keyInsight": "Use two stacks: one for pushing, one for popping/peeking."
+      "insight": "Simulate the line: whoever is served buys one ticket and rejoins the back if they still need more. Count seconds until person k is done."
+    },
+    {
+      "title": "Implement Stack using Queues",
+      "url": "https://leetcode.com/problems/implement-stack-using-queues/",
+      "difficulty": "easy",
+      "insight": "After enqueueing x, rotate the older items behind it by moving size - 1 items from the front to the back, so the newest sits at the front."
+    },
+    {
+      "title": "Design Circular Deque",
+      "url": "https://leetcode.com/problems/design-circular-deque/",
+      "difficulty": "medium",
+      "insight": "Same circular buffer, but both ends move. Moving front backwards needs (front - 1 + k) % k so the index never goes negative."
+    },
+    {
+      "title": "Reveal Cards In Increasing Order",
+      "url": "https://leetcode.com/problems/reveal-cards-in-increasing-order/",
+      "difficulty": "medium",
+      "insight": "Run the reveal rule on a queue of positions, not cards: the first position gets the smallest card, the next position goes to the back."
+    },
+    {
+      "title": "Rotting Oranges",
+      "url": "https://leetcode.com/problems/rotting-oranges/",
+      "difficulty": "medium",
+      "insight": "Queue every rotten orange first. Each round rots the neighbours of everything currently in the queue, so the number of rounds is the answer."
+    },
+    {
+      "title": "Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit",
+      "url": "https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/",
+      "difficulty": "medium",
+      "insight": "Keep one monotonic deque for the window's max and one for its min. Shrink from the left while max minus min is over the limit."
+    },
+    {
+      "title": "Shortest Subarray with Sum at Least K",
+      "url": "https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/",
+      "difficulty": "hard",
+      "insight": "Work on prefix sums, with negatives allowed. A deque of indexes with increasing prefix sums lets you pop the front when it is long enough and the back when it can't help."
+    }
+  ],
+  "overview": [
+    "Explain why a queue serves items in first-in, first-out order.",
+    "Trace enqueue and dequeue on a circular buffer with wrap-around.",
+    "Explain why moving only front and back keeps each step O(1).",
+    "Use a monotonic deque to track a sliding window's maximum.",
+    "Choose a stack instead when the newest item must come out first."
+  ],
+  "resources": [
+    {
+      "title": "Queue (abstract data type)",
+      "url": "https://en.wikipedia.org/wiki/Queue_(abstract_data_type)",
+      "note": "Defines enqueue, dequeue and the first-in, first-out rule, plus common variants."
+    },
+    {
+      "title": "Circular buffer",
+      "url": "https://en.wikipedia.org/wiki/Circular_buffer",
+      "note": "Explains the wrap-around indexing that lets a fixed buffer act as an endless queue."
+    },
+    {
+      "title": "Queue array visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/QueueArray.html",
+      "note": "Animated enqueue and dequeue on an array queue, showing front and back move."
     }
   ]
 }

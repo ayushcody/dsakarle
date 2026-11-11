@@ -1,5 +1,5 @@
 import React from 'react';
-import { LearningTopBar } from '@/components/layout/LearningTopBar';
+import { SiteHeader } from '@/components/layout/SiteHeader';
 
 export default function AppLayout({
   children,
@@ -8,8 +8,8 @@ export default function AppLayout({
 }) {
   return (
     <>
-      <LearningTopBar />
-      <div className="flex-grow pt-[64px]">
+      <SiteHeader />
+      <div id="main-content" className="flex-grow pt-16 focus:outline-none">
         {children}
       </div>
     </>

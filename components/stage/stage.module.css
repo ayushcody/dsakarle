@@ -1,0 +1,120 @@
+/* Stage layout. The root is a size container; every height below is a number the
+   stage computed from the pure scene layout (--sh0..--sh8, one per stage-width
+   bucket), so the right box is there on the first paint and never changes while
+   stepping. Keep the bucket widths and paddings in step with scenes/reserve.ts. */
+.root {
+  container: stage / inline-size;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  --sh: var(--sh0);
+  --cap: 60vh;
+  --floor: 0px;
+}
+
+@container stage (min-width: 360px) { .body { --sh: var(--sh1); } }
+@container stage (min-width: 440px) { .body { --sh: var(--sh2); } }
+@container stage (min-width: 540px) { .body { --sh: var(--sh3); } }
+@container stage (min-width: 660px) { .body { --sh: var(--sh4); } }
+@container stage (min-width: 760px) { .body { --sh: var(--sh5); } }
+@container stage (min-width: 840px) { .body { --sh: var(--sh6); } }
+@container stage (min-width: 960px) { .body { --sh: var(--sh7); } }
+@container stage (min-width: 1100px) { .body { --sh: var(--sh8); } }
+
+.sceneBox {
+  order: 1;
+  position: relative;
+  overflow: hidden;
+  height: clamp(var(--floor), var(--sh), var(--cap));
+  border-radius: var(--r-card);
+  border: 1px solid var(--rule);
+  background-color: var(--paper-raised);
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.sceneFit {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%) scale(var(--fit, 1));
+  transition: transform 150ms ease;
+}
+
+.hero .sceneBox { --cap: 360px; }
+
+/* Single column: the side column dissolves and its children take part in the grid. */
+.sideOuter,
+.sideScroll {
+  display: contents;
+}
+.narration { order: 3; }
+.controls { order: 2; }
+.nudge { order: 4; }
+.rules { order: 5; }
+
+.predictLayer { position: static; }
+
+.narrowOnly { display: block; }
+
+@container stage (min-width: 760px) {
+  .split {
+    grid-template-columns: minmax(0, 60fr) minmax(0, 40fr);
+    grid-template-areas:
+      'scene side'
+      'controls controls';
+    column-gap: 24px;
+    --cap: 480px;
+    --floor: 360px;
+  }
+}
+
+@container stage (min-width: 760px) {
+  .split .sceneBox { grid-area: scene; }
+  .split .controls { grid-area: controls; }
+  .split .sideOuter {
+    grid-area: side;
+    display: block;
+    position: relative;
+    height: clamp(var(--floor), var(--sh), var(--cap));
+    min-height: 0;
+  }
+  .split .sideScroll {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 4px;
+    overscroll-behavior: contain;
+  }
+  .split .sideScroll > * { flex-shrink: 0; }
+  /* A predict question takes over the whole column, so nothing grows. */
+  .split .predictLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    overflow-y: auto;
+    background: var(--paper-raised);
+  }
+  .split .narrowOnly { display: none; }
+  /* The finish note sits at the foot of the column. */
+  .split .nudge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+  }
+  .split .nudge > [aria-hidden='true'] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sceneFit { transition: none; }
+}

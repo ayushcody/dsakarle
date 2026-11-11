@@ -1,216 +1,438 @@
 {
-  "id": "hash-maps",
+  "schemaVersion": 2,
   "slug": "hash-maps",
-  "title": "Hash Maps",
-  "category": "data-structure",
-  "difficulty": "beginner",
-  "estimatedMinutes": 40,
-  "prerequisites": ["arrays"],
-  "tags": [
-    "data-structure",
-    "hash-table",
-    "dictionary"
-  ],
-  "overview": {
-    "summary": "Hash Maps store data in key-value pairs, providing average O(1) time complexity for lookups, insertions, and deletions.",
-    "learningObjectives": [
-      "Understand the concept of a hashing function.",
-      "Explain how key-value pairs are stored and retrieved.",
-      "Understand hash collisions and basic resolution techniques."
-    ],
-    "interviewRelevance": "Hash maps are the ultimate 'cheat code' in interviews. Whenever you need to optimize a lookup from O(n) to O(1), a hash map is usually the answer."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A library holds 1,000,000 books. How can the librarian hand you any one of them at once, without walking the shelves to look for it?",
     "paragraphs": [
-      "Imagine walking into a massive library and wanting a specific book. Instead of checking every shelf (which takes hours), you ask the librarian.",
-      "You give the librarian the title (the Key), and they instantly give you the exact aisle and shelf number (the Value). A Hash Map is your digital librarian."
+      "Checking shelf after shelf could mean a million looks. Keeping the books sorted helps, but you still have to hunt for the right spot every time.",
+      "Now suppose the shelf number isn't kept in a list anywhere. The librarian works it out from the title with a fixed recipe, and the same title always gives the same shelf. Where would you walk?"
     ],
-    "ahaMoment": "A hash function mathematically converts a key directly into a memory address, skipping the search entirely."
+    "aha": "Compute the place instead of searching for it. A hash function turns a key into a bucket number, so you go straight to one small bucket and ignore the rest. On average that is one step, whether the table holds ten books or a million."
   },
-  "definition": {
-    "technicalDefinition": "A Hash Map (or Hash Table) is a data structure that implements an associative array abstract data type, a structure that can map keys to values using a hash function.",
-    "vocabulary": [
+  "shape": {
+    "scene": {
+      "kind": "hash-map",
+      "buckets": [
+        [],
+        [
+          {
+            "key": 6,
+            "value": "d"
+          }
+        ],
+        [
+          {
+            "key": 12,
+            "value": "a"
+          },
+          {
+            "key": 17,
+            "value": "c"
+          }
+        ],
+        [
+          {
+            "key": 8,
+            "value": "b"
+          }
+        ],
+        []
+      ],
+      "hashing": {
+        "key": 8,
+        "hash": 8,
+        "bucket": 3
+      },
+      "marks": [
+        {
+          "bucket": 3,
+          "role": "focus"
+        }
+      ]
+    },
+    "callouts": [
       {
-        "term": "Key",
-        "definition": "The unique identifier used to retrieve the value."
+        "target": "bucket:3",
+        "text": "key → bucket: look only here"
       },
       {
-        "term": "Value",
-        "definition": "The data associated with the key."
+        "target": "bucket:2",
+        "text": "collision chain"
       },
       {
-        "term": "Hash Function",
-        "definition": "An algorithm that converts a key into a specific array index."
-      },
-      {
-        "term": "Collision",
-        "definition": "When two different keys hash to the same exact index."
+        "target": "bucket:4",
+        "text": "other buckets: never touched"
       }
-    ],
-    "keyProperties": [
-      "O(1) average time complexity for lookup, insert, and delete.",
-      "Keys must be unique and hashable (usually immutable).",
-      "Unordered data (unless using specific variants like LinkedHashMap)."
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "A coat check room. You hand in your coat (value), get a numbered ticket (hash of the key), and can retrieve it instantly later."
+      "Picture a library with one rule: do a little arithmetic on the title and the answer is the shelf number. Anyone can work out where a title lives without asking, so finding a book means walking to one shelf and glancing along it. If two titles land on the same shelf, they simply sit side by side."
     ],
-    "clickSentence": "By trading space (memory) for time, we eliminate the need to search.",
-    "diagramType": "hash-map",
-    "cells": [],
-    "diagramState": {}
+    "click": "A hash function turns a key into a bucket number, so you only ever search one small bucket, never the whole collection.",
+    "glossary": [
+      {
+        "term": "key",
+        "definition": "The label you look things up by, like a title, a name or a number. Each key appears at most once in a map."
+      },
+      {
+        "term": "value",
+        "definition": "What you store under a key: a count, an index, a list, a name."
+      },
+      {
+        "term": "hash function",
+        "definition": "A fixed recipe that turns a key into a number. The same key always gives the same number. In our pictures it is simply key % 5."
+      },
+      {
+        "term": "bucket",
+        "definition": "One numbered slot in the table. The hash function says which bucket a key belongs to."
+      },
+      {
+        "term": "collision",
+        "definition": "Two different keys landing in the same bucket. It is normal, not an error, and every hash map has a plan for it."
+      },
+      {
+        "term": "chaining",
+        "definition": "Keeping a short list of entries inside each bucket, so colliding keys just sit side by side. One common plan; other tables use others."
+      },
+      {
+        "term": "load factor",
+        "definition": "Entries divided by buckets. As it climbs, chains get longer, so real hash maps add buckets and spread the entries out again."
+      },
+      {
+        "term": "set",
+        "definition": "A hash map that keeps only keys, with no values. It answers one question quickly: is this in here?"
+      }
+    ],
+    "definition": "A hash map stores key-value pairs in an array of buckets. A hash function maps each key to a bucket index, and the pair is kept in that bucket, often in a short chain. To put, get or delete, you hash the key and search only that bucket, so each operation takes O(1) time on average when keys spread evenly. If many keys share a bucket, an operation can take O(n) in the worst case. A set is the same structure without values. Ordering depends on the language: Python's dict remembers insertion order, while Java's HashMap and C++'s unordered_map make no promise about order. If you need sorted keys, use a sorted structure (a tree map, or sort the keys)."
   },
-  "structure": {
-    "memoryDescription": [
-      "Under the hood, a hash map is usually just an Array.",
-      "The Hash Function computes an index, and the key-value pair is stored at that specific index in the array."
+  "stage": {
+    "tracks": [
+      {
+        "id": "put-get",
+        "label": "Put & get",
+        "tracer": "hash-maps/put-get",
+        "predict": {
+          "tags": [
+            "which-bucket",
+            "collision"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "two-sum",
+        "label": "Two Sum",
+        "tracer": "hash-maps/two-sum",
+        "predict": {
+          "tags": [
+            "seen-it"
+          ],
+          "max": 3
+        }
+      }
     ],
-    "definitionCode": {
-      "python": "hash_map = {'alice': 25, 'bob': 30}\n# Lookup\nage = hash_map['alice']",
-      "javascript": "const hashMap = new Map();\nhashMap.set('alice', 25);\n// Lookup\nconst age = hashMap.get('alice');",
-      "java": "HashMap<String, Integer> map = new HashMap<>();\nmap.put(\"alice\", 25);\n// Lookup\nint age = map.get(\"alice\");",
-      "cpp": "std::unordered_map<std::string, int> map;\nmap[\"alice\"] = 25;\n// Lookup\nint age = map[\"alice\"];"
-    },
-    "memoryLayout": [
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "The problem asks \"have I seen this before?\": duplicates, first repeat, membership.",
+      "You need to count how often each thing appears (frequency).",
+      "For each item you need a partner, a complement or an earlier value, and you can name exactly what to look for.",
+      "A nested loop is only there to search for a match. A map or set can replace the inner loop."
+    ],
+    "notWhen": [
+      "You need the keys in order, or the next larger key. A hash scatters keys on purpose, so reach for sorting or a binary search tree.",
+      "You need to ask about ranges, like everything between 10 and 20, or the sum of a stretch. A hash can't answer that. Think prefix sums or a tree.",
+      "The keys are tiny whole numbers in a small range, like the letters a to z. A plain array of counts is simpler and faster."
+    ],
+    "quiz": [
       {
-        "label": "Index 0",
-        "value": "empty"
+        "problem": "Given an array of numbers, return true if any value appears at least twice.",
+        "answer": "hash-maps",
+        "options": [
+          "binary-search",
+          "hash-maps",
+          "stacks",
+          "dynamic-programming"
+        ],
+        "explanation": "For each number ask \"have I seen it?\". A set answers that in one step, so one pass is enough."
       },
       {
-        "label": "Index 1",
-        "value": "[\"bob\": 30]"
+        "problem": "Given a sorted array, find two numbers that add up to a target, using only O(1) extra space.",
+        "answer": "two-pointers",
+        "options": [
+          "hash-maps",
+          "prefix-sum",
+          "two-pointers",
+          "sliding-window"
+        ],
+        "explanation": "A hash map would work, but it costs O(n) space. Because the array is sorted, one pointer at each end can close in on the target with no extra memory."
       },
       {
-        "label": "Index 2",
-        "value": "empty"
+        "problem": "Keys keep arriving, and each time you must report the smallest key stored that is larger than 40.",
+        "answer": "bst",
+        "options": [
+          "queues",
+          "heaps",
+          "hash-maps",
+          "bst"
+        ],
+        "explanation": "\"Next larger key\" needs the keys in order. A hash map scatters them, but a binary search tree keeps them sorted and finds the next one quickly."
       },
       {
-        "label": "Index 3",
-        "value": "[\"alice\": 25]"
+        "problem": "Given a list of words, group together the words that are anagrams of each other.",
+        "answer": "hash-maps",
+        "options": [
+          "hash-maps",
+          "tries",
+          "greedy",
+          "bfs-dfs"
+        ],
+        "explanation": "Give every anagram the same key, such as its letters in sorted order, and store each word in a list under that key."
+      },
+      {
+        "problem": "Find the length of the longest substring that has at most 2 different letters.",
+        "answer": "sliding-window",
+        "options": [
+          "strings",
+          "hash-maps",
+          "sliding-window",
+          "recursion"
+        ],
+        "explanation": "A substring is contiguous and the rule can be checked as it grows, so this is a sliding window. A small count map lives inside the window, but the window is the pattern."
       }
     ]
   },
-  "stepper": {
-    "diagramType": "hash-map",
-    "array": [],
-    "steps": [
+  "template": {
+    "pseudocode": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive visualization for Hash Maps is coming soon.",
-        "activeLine": 1
+        "text": "seen = an empty map, answer = nothing yet",
+        "anchor": "init"
+      },
+      {
+        "text": "for each position i in nums:"
+      },
+      {
+        "text": "need = target - nums[i]",
+        "anchor": "need",
+        "indent": 1
+      },
+      {
+        "text": "if need is already in seen:",
+        "anchor": "check",
+        "indent": 1
+      },
+      {
+        "text": "answer = [seen[need], i], then stop",
+        "anchor": "found",
+        "indent": 2
+      },
+      {
+        "text": "seen[nums[i]] = i",
+        "anchor": "store",
+        "indent": 1
+      },
+      {
+        "text": "return answer",
+        "anchor": "done"
       }
-    ]
-  },
-  "operations": [
-    {
-      "name": "Insert / Update",
-      "description": "Calculate the hash of the key, find the index, and store the value.",
-      "timeComplexity": "O(1) average",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "map[key] = value",
-        "javascript": "map.set(key, value);",
-        "java": "map.put(key, value);",
-        "cpp": "map[key] = value;"
-      },
-      "visualNote": "Instantly drops the value into the bucket."
-    },
-    {
-      "name": "Lookup",
-      "description": "Calculate the hash of the key and retrieve the value at that index.",
-      "timeComplexity": "O(1) average",
-      "spaceComplexity": "O(1)",
-      "code": {
-        "python": "val = map[key]",
-        "javascript": "const val = map.get(key);",
-        "java": "int val = map.get(key);",
-        "cpp": "int val = map[key];"
-      },
-      "visualNote": "Instantly jumps to the bucket and retrieves."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "map = new Map()\nfor item in list:\n  if condition_met(map.get(target)):\n    return item\n  map.set(item.key, item.value)",
-    "whenToUse": "Whenever you are repeatedly searching an array for a value. Store values in a map as you go to turn O(n) lookups into O(1).",
-    "timeComplexity": "O(1) amortized.",
-    "spaceComplexity": "O(n) memory to store the elements."
-  },
-  "recognitionQuiz": {
-    "problemStatement": "You have an array of integers. You need to check if there are two numbers that add up to a target sum. A nested loop takes O(n²). How can you do it in O(n)?",
-    "correctPatternId": "hash-maps",
-    "distractors": [
-      "linked-lists",
-      "stacks",
-      "sorting"
     ],
-    "explanation": "As you iterate, store each number in a Hash Map. For each number, you can instantly check if `(target - current_number)` is already in the map."
+    "tracer": "hash-maps/two-sum",
+    "time": "O(n) total, O(1) per lookup on average",
+    "space": "O(n)",
+    "notes": [
+      "One pass: each number triggers one lookup and one store. Both are O(1) on average, so n numbers cost O(n) in total.",
+      "\"On average\" is honest. If many keys land in one bucket, a single lookup walks a long chain and costs O(n), so a loop of n lookups could reach O(n²). A good hash function and resizing make this rare, and some libraries (Java's HashMap, for one) turn very long chains into trees.",
+      "The map costs O(n) memory. You are trading space for time: the nested-loop version needs no extra memory but takes O(n²) time.",
+      "Check the map before you store nums[i]. That order stops a number from pairing with itself.",
+      "Look up without inserting. In C++, seen[x] adds a default entry when x is missing, so use find or count to ask \"is it there?\". In Python, `x in seen` and `seen.get(x)` never insert.",
+      "Order is not part of the promise. Python's dict remembers insertion order; Java's HashMap and C++'s unordered_map do not. Never rely on it unless you picked an ordered type, like Java's LinkedHashMap or C++'s std::map."
+    ]
   },
   "examples": [
     {
       "title": "Two Sum",
       "difficulty": "easy",
-      "leetcodeUrl": "https://leetcode.com/problems/two-sum/",
-      "problemStatement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-      "inputExample": "nums = [2,7,11,15], target = 9",
-      "outputExample": "[0, 1]",
-      "steps": [
-        "Create an empty Hash Map.",
-        "Iterate through the array.",
-        "Calculate the 'complement' needed (target - current).",
-        "If complement is in map, you found the pair!",
-        "Otherwise, add the current number and its index to the map."
+      "url": "https://leetcode.com/problems/two-sum/",
+      "problem": "Given an array of integers nums and an integer target, return the indices of the two numbers that add up to target. Each number may be used only once.",
+      "input": "nums = [8,3,2,4,6], target = 9",
+      "output": "[1, 4]",
+      "approach": [
+        "The slow way tries every pair. Instead, for each number ask: which partner would finish the sum? That partner is target minus the number.",
+        "Keep a map of the numbers you have already passed, each with its index. Looking up the partner takes one step.",
+        "Walk left to right. 8, 3, 2 and 4 find no partner, so each is stored. At 6 the partner is 3, and 3 is in the map from index 1.",
+        "Look before you store, so a number can never pair with itself. The answer is [1, 4]."
       ],
-      "code": {
-        "python": "seen = {}\nfor i, num in enumerate(nums):\n    comp = target - num\n    if comp in seen:\n        return [seen[comp], i]\n    seen[num] = i\nreturn []",
-        "javascript": "const seen = new Map();\nfor (let i = 0; i < nums.length; i++) {\n    const comp = target - nums[i];\n    if (seen.has(comp)) {\n        return [seen.get(comp), i];\n    }\n    seen.set(nums[i], i);\n}\nreturn [];",
-        "java": "Map<Integer, Integer> seen = new HashMap<>();\nfor (int i = 0; i < nums.length; i++) {\n    int comp = target - nums[i];\n    if (seen.containsKey(comp)) {\n        return new int[] { seen.get(comp), i };\n    }\n    seen.put(nums[i], i);\n}\nreturn new int[] {};",
-        "cpp": "std::unordered_map<int, int> seen;\nfor (int i = 0; i < nums.size(); i++) {\n    int comp = target - nums[i];\n    if (seen.count(comp)) {\n        return { seen[comp], i };\n    }\n    seen[nums[i]] = i;\n}\nreturn {};"
-      },
-      "timeComplexity": "O(n)",
-      "spaceComplexity": "O(n)",
-      "rationale": "We trade O(n) space for O(1) lookups, dropping total time from O(n²) to O(n)."
+      "code": "hash-maps/two-sum",
+      "tracer": "hash-maps/two-sum",
+      "time": "O(n)",
+      "space": "O(n)"
+    },
+    {
+      "title": "Valid Anagram",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/valid-anagram/",
+      "problem": "Given two strings s and t, return true if t is an anagram of s: the same letters, used the same number of times, in any order.",
+      "input": "s = \"anagram\", t = \"nagaram\"",
+      "output": "true",
+      "approach": [
+        "If the lengths differ, they can't be anagrams. Stop early.",
+        "Count each letter of s in a map: a is 3, n is 1, g is 1, r is 1, m is 1.",
+        "Go through t. Each letter must still have a count above zero; spend one. A missing letter, or one whose count hit zero, means false.",
+        "Equal lengths and no failed spend means every count ends at zero, so the answer is true."
+      ],
+      "code": "hash-maps/valid-anagram",
+      "time": "O(n)",
+      "space": "O(k) for k different letters"
+    },
+    {
+      "title": "Longest Consecutive Sequence",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/longest-consecutive-sequence/",
+      "problem": "Given an unsorted array of integers, return the length of the longest run of consecutive values, like 1, 2, 3, 4. It must run in O(n) time.",
+      "input": "nums = [100,4,200,1,3,2]",
+      "output": "4",
+      "approach": [
+        "Sorting would cost O(n log n). Instead put every number in a set, where \"is x here?\" takes one step.",
+        "A number starts a run only if its predecessor is missing: v - 1 is not in the set. Only those numbers do any counting.",
+        "From a start, keep asking whether v + 1, v + 2, ... are in the set, and count how far the run goes. Here 1 starts a run and reaches 4, so the run has length 4.",
+        "The while loop is not a hidden O(n²): every number is counted in exactly one run, so the total work is O(n)."
+      ],
+      "code": "hash-maps/longest-consecutive",
+      "time": "O(n)",
+      "space": "O(n)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "What is a Hash Collision?",
+      "question": "Why is looking up a key in a hash map usually fast?",
       "options": [
-        "When two different keys generate the exact same index in the underlying array.",
-        "When you try to look up a key that doesn't exist.",
-        "When the hash map runs out of memory.",
-        "When you delete a key while iterating."
+        "It keeps the keys sorted, so it can binary search them.",
+        "It checks every key, but the computer does it very quickly.",
+        "The hash function points to one bucket, so only a few entries are checked.",
+        "It stores keys in arrival order and starts from the newest."
       ],
-      "correctIndex": 0,
-      "explanation": "Because the underlying array is smaller than the infinite possibilities of keys, eventually two keys will hash to the same slot."
+      "answer": 2,
+      "explanation": "The key itself tells you which bucket to open. Everything in the other buckets is ignored, so the work depends on the length of one chain, not on the size of the table."
     },
     {
-      "question": "Why is Hash Map lookup O(1) 'average' and not 'guaranteed'?",
+      "question": "With 5 buckets and key % 5 as the hash function, you put key 12 and then key 17. What happens?",
       "options": [
-        "Because hash collisions might occur, requiring the map to check a short list of items at that index.",
-        "Because sometimes the computer CPU is busy.",
-        "Because memory addresses take time to calculate.",
-        "It actually is guaranteed O(1)."
+        "17 overwrites 12, because both are in bucket 2.",
+        "Both are kept: they share bucket 2 as a chain, and a lookup compares keys along it.",
+        "The table reports an error, because bucket 2 is taken.",
+        "17 is quietly moved to bucket 3."
       ],
-      "correctIndex": 0,
-      "explanation": "In the worst case (e.g., all keys collide to the exact same index), looking up a key degrades to O(n) as it searches through the collided list."
+      "answer": 1,
+      "explanation": "12 % 5 and 17 % 5 are both 2, which is a collision. Only the same key replaces an entry. A different key in the same bucket is added to the chain."
+    },
+    {
+      "question": "A hash map lookup is O(1) on average. What is its worst case, and when does it happen?",
+      "options": [
+        "O(1) always, because hashing is deterministic.",
+        "O(log n), because buckets are kept in order.",
+        "O(n²), because every key is compared with every other key.",
+        "O(n), when many keys share one bucket and the whole chain must be walked."
+      ],
+      "answer": 3,
+      "explanation": "If all n keys land in the same bucket, that bucket is just a list of n entries, and finding a key means walking it. A good hash function makes this rare, but it is why the guarantee says \"on average\"."
+    },
+    {
+      "question": "Why do real hash maps add more buckets as they fill up?",
+      "options": [
+        "To keep the load factor low, so chains stay short and lookups stay fast.",
+        "Because a bucket can only ever hold one entry.",
+        "To keep the keys in sorted order.",
+        "To make room for bigger values."
+      ],
+      "answer": 0,
+      "explanation": "Load factor is entries divided by buckets. If it grows, the average chain grows with it and lookups slow down. Adding buckets and re-spreading the entries keeps chains short."
+    },
+    {
+      "question": "In Two Sum, why do we look for the partner before storing nums[i]?",
+      "options": [
+        "Because the map must be empty when the loop starts.",
+        "Because storing first would make the lookup slower.",
+        "So a number can't pair with itself.",
+        "Because the map only accepts new keys after a failed lookup."
+      ],
+      "answer": 2,
+      "explanation": "With nums = [5, 1, 3, 4] and target 10, storing 5 first would let the lookup for 10 - 5 = 5 find the 5 we just stored. Looking first means we only pair with earlier numbers."
     }
   ],
   "practice": [
     {
-      "title": "Valid Anagram",
-      "url": "https://leetcode.com/problems/valid-anagram/",
+      "title": "Contains Duplicate",
+      "url": "https://leetcode.com/problems/contains-duplicate/",
       "difficulty": "easy",
-      "keyInsight": "Count character frequencies using a hash map."
+      "insight": "For each number ask \"have I seen it?\". A set answers that in one step."
+    },
+    {
+      "title": "Ransom Note",
+      "url": "https://leetcode.com/problems/ransom-note/",
+      "difficulty": "easy",
+      "insight": "Count the letters the magazine offers, then spend one count for every letter the note needs."
+    },
+    {
+      "title": "Isomorphic Strings",
+      "url": "https://leetcode.com/problems/isomorphic-strings/",
+      "difficulty": "easy",
+      "insight": "Each letter must always map to the same partner, and no two letters may share one, so track the mapping in both directions."
     },
     {
       "title": "Group Anagrams",
       "url": "https://leetcode.com/problems/group-anagrams/",
       "difficulty": "medium",
-      "keyInsight": "Use the sorted version of the string as the key in the hash map."
+      "insight": "All anagrams share something identical, like their letters in sorted order. Use that as the key and keep a list of words under it."
+    },
+    {
+      "title": "Top K Frequent Elements",
+      "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+      "difficulty": "medium",
+      "insight": "Count with a map first. Then the job is picking the k biggest counts, which sorting or bucketing by count can do."
+    },
+    {
+      "title": "Subarray Sum Equals K",
+      "url": "https://leetcode.com/problems/subarray-sum-equals-k/",
+      "difficulty": "medium",
+      "insight": "Think prefix sums: a stretch sums to k when two running totals differ by k. What would you store to find the earlier total quickly?"
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+      "difficulty": "medium",
+      "insight": "It is a sliding window, and the set or map is how you notice the window has just been broken."
+    },
+    {
+      "title": "LRU Cache",
+      "url": "https://leetcode.com/problems/lru-cache/",
+      "difficulty": "medium",
+      "insight": "A map finds an entry in O(1). You also need to move entries to \"most recent\" in O(1), so ask what structure reorders cheaply."
+    }
+  ],
+  "overview": [
+    "Explain why a hash function turns lookups into near one-step jumps.",
+    "Trace how Two Sum stores each number and checks for its partner.",
+    "Spot problems asking \"have I seen this before?\" or needing counts.",
+    "Compare a nested-loop search with a single-pass map lookup.",
+    "Avoid inserting by accident when you only mean to check a key."
+  ],
+  "resources": [
+    {
+      "title": "Hash table",
+      "url": "https://en.wikipedia.org/wiki/Hash_table",
+      "note": "Buckets, collisions and load factor explained, with the average-case cost you'll rely on."
+    },
+    {
+      "title": "Mapping types: dict",
+      "url": "https://docs.python.org/3/builtins/stdtypes.html",
+      "note": "Official reference for dict and set operations, including the membership and get checks used here."
+    },
+    {
+      "title": "Open hashing visualization",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/OpenHash.html",
+      "note": "Step through inserts and lookups and watch collisions grow into chains."
     }
   ]
 }

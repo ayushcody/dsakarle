@@ -1,165 +1,512 @@
 {
-  "id": "bfs-dfs",
+  "schemaVersion": 2,
   "slug": "bfs-dfs",
-  "title": "BFS & DFS",
-  "category": "algorithm",
-  "difficulty": "hard",
-  "estimatedMinutes": 60,
-  "prerequisites": ["graphs", "trees", "recursion", "queues"],
-  "tags": ["graph", "tree", "search", "traversal"],
-  "overview": {
-    "summary": "Breadth-First Search (BFS) and Depth-First Search (DFS) are the two fundamental algorithms for traversing or searching tree and graph data structures.",
-    "learningObjectives": [
-      "Understand why BFS uses a Queue and DFS uses a Stack (or Recursion).",
-      "Recognize when to use BFS (Shortest Path) vs DFS (Exhaustive Search).",
-      "Correctly implement the 'visited' set to prevent infinite loops."
-    ],
-    "interviewRelevance": "More than 30% of all interview questions boil down to running BFS or DFS on a grid, tree, or graph."
-  },
-  "realWorldHook": {
+  "hook": {
+    "question": "A rumour starts with one student. Every hour, everyone who knows it tells all their friends. Who hears it in hour 1, hour 2, hour 3?",
     "paragraphs": [
-      "Imagine you are stuck in the center of a corn maze and need to find the exit.",
-      "DFS is putting your hand on the right wall and walking forward until you hit a dead end, then backing up. BFS is cloning yourself at every intersection and exploring every path simultaneously layer by layer."
+      "Hour 1 is the starter's friends. Hour 2 is those friends' friends who haven't heard it yet. Each hour is one ring around the starter, and the hour you hear the rumour is exactly how many friendship steps you are from them.",
+      "Now explore a cave instead. Take a tunnel, then the next unexplored tunnel, then the next, until you hit a dead end. Only then do you walk back to the last fork and try the tunnel you skipped. Same tunnels, but a completely different order of visits."
     ],
-    "ahaMoment": "BFS and DFS are exactly the same algorithm, except one uses a Queue (First In First Out) and the other uses a Stack (Last In First Out)."
+    "aha": "Both are one loop: take something off a to-do pile, add its unseen neighbours, repeat. Only the choice of what to take next differs. Take the oldest (a queue) and the search spreads in rings and finds the fewest steps: that's BFS. Take the newest (a stack) and it dives deep, then backs up: that's DFS."
   },
-  "definition": {
-    "technicalDefinition": "BFS explores the neighbor nodes first, before moving to the next level neighbors. DFS explores as far as possible along each branch before backtracking.",
-    "vocabulary": [
-      { "term": "Queue", "definition": "The data structure required for BFS. Ensures nodes discovered first are processed first." },
-      { "term": "Stack / Call Stack", "definition": "The data structure required for DFS. Ensures the most recently discovered node is processed first." },
-      { "term": "Visited Set", "definition": "A Hash Set used to track which nodes have already been processed to prevent infinite cycles." }
-    ],
-    "keyProperties": [
-      "BFS guarantees the shortest path in an unweighted graph.",
-      "DFS is easier to write because it uses recursion.",
-      "Both traverse every reachable node in O(V + E) time."
+  "shape": {
+    "scene": {
+      "kind": "composite",
+      "layout": "column",
+      "parts": [
+        {
+          "title": "Grid: distance from S, written in each cell",
+          "scene": {
+            "kind": "grid",
+            "rows": [
+              [
+                "S",
+                1,
+                2,
+                "#"
+              ],
+              [
+                1,
+                "#",
+                null,
+                null
+              ],
+              [
+                2,
+                null,
+                null,
+                "E"
+              ]
+            ],
+            "rowLabels": [
+              "0",
+              "1",
+              "2"
+            ],
+            "colLabels": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ],
+            "marks": [
+              {
+                "r": 0,
+                "c": 0,
+                "role": "visited"
+              },
+              {
+                "r": 0,
+                "c": 1,
+                "role": "visited"
+              },
+              {
+                "r": 1,
+                "c": 0,
+                "role": "focus"
+              },
+              {
+                "r": 0,
+                "c": 2,
+                "role": "compare"
+              },
+              {
+                "r": 2,
+                "c": 0,
+                "role": "compare"
+              }
+            ],
+            "pointers": [
+              {
+                "name": "cur",
+                "r": 1,
+                "c": 0,
+                "role": "focus"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Queue (front is next out)",
+          "scene": {
+            "kind": "array",
+            "label": "queue",
+            "cells": [
+              "0,2",
+              "2,0"
+            ],
+            "pointers": [
+              {
+                "name": "front",
+                "index": 0,
+                "role": "ptrA"
+              },
+              {
+                "name": "back",
+                "index": 1,
+                "role": "ptrB"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "callouts": [
+      {
+        "target": "cell:1,0",
+        "text": "popped: being expanded now"
+      },
+      {
+        "target": "cell:0,2",
+        "text": "frontier: waiting in queue"
+      },
+      {
+        "target": "cell:1,1",
+        "text": "walls are never entered"
+      }
     ]
   },
   "mentalModel": {
     "metaphor": [
-      "BFS: A ripple in a pond. The water expands outward in perfect circles.",
-      "DFS: A snake hunting. It slithers all the way down a tunnel, comes back out, and goes down the next tunnel."
+      "BFS is a ripple in a pond. It reaches everything one step away, then everything two steps away, then three, one full ring at a time.",
+      "DFS is a maze explorer trailing a ball of string. Follow one corridor as far as it goes, and at a dead end wind the string back to the last junction that still has a way you haven't tried."
     ],
-    "clickSentence": "BFS goes WIDE. DFS goes DEEP.",
-    "diagramType": "GraphDiagramInner",
-    "cells": [1, 2, 3, 4, 5, 6],
-    "diagramState": {}
-  },
-  "structure": {
-    "memoryDescription": [
-      "BFS requires O(W) memory for the Queue, where W is the maximum width of the graph.",
-      "DFS requires O(H) memory for the Call Stack, where H is the maximum depth of the graph."
-    ],
-    "definitionCode": {
-      "python": "# BFS Iterative\nfrom collections import deque\nq = deque([start])\nvisited = set([start])\nwhile q:\n    node = q.popleft() # Pop from FRONT\n    for neighbor in graph[node]:\n        if neighbor not in visited:\n            visited.add(neighbor)\n            q.append(neighbor) # Push to BACK",
-      "javascript": "// DFS Recursive\nconst visited = new Set();\nfunction dfs(node) {\n    if (visited.has(node)) return;\n    visited.add(node);\n    for (let neighbor of graph[node]) {\n        dfs(neighbor);\n    }\n}"
-    },
-    "memoryLayout": [
-      { "label": "BFS Queue", "value": "Front -> [Level 2 nodes] ... [Level 3 nodes] <- Back" },
-      { "label": "DFS Stack", "value": "Top -> [Deepest node] ... [Root node] <- Bottom" }
-    ]
-  },
-  "stepper": {
-    "diagramType": "GraphDiagramInner",
-    "array": [],
-    "steps": [
+    "click": "Both pull the next cell off a to-do pile and never visit a cell twice. Take the oldest and you spread in rings; take the newest and you dive deep.",
+    "glossary": [
       {
-        "stepIndex": 0,
-        "diagramState": {},
-        "variables": {},
-        "explanation": "Interactive BFS vs DFS visualization coming soon.",
-        "activeLine": 1
+        "term": "BFS",
+        "definition": "Breadth-first search. Visit everything one step away, then everything two steps away, and so on. It keeps its to-do pile in a queue."
+      },
+      {
+        "term": "DFS",
+        "definition": "Depth-first search. Follow one path as far as it goes, then back up and try the next. Its to-do pile is a stack, or the recursion call stack."
+      },
+      {
+        "term": "frontier",
+        "definition": "The cells you have discovered but not explored yet. In BFS these are exactly the cells waiting in the queue."
+      },
+      {
+        "term": "visited set",
+        "definition": "A record of which cells you have already seen. Check it before queueing a cell so nothing is queued twice and a loop can't trap you."
+      },
+      {
+        "term": "queue vs stack",
+        "definition": "A queue hands back the oldest item (first in, first out). A stack hands back the newest (last in, first out). That one choice turns the same loop into BFS or DFS."
+      },
+      {
+        "term": "level",
+        "definition": "All the cells at the same distance from the start. BFS finishes one level completely before it starts the next."
+      },
+      {
+        "term": "shortest path (unweighted)",
+        "definition": "The path with the fewest steps when every step counts the same. BFS finds it because it reaches each cell by its fewest steps first. If steps have different costs, plain BFS can be wrong."
+      },
+      {
+        "term": "connected component",
+        "definition": "A group of nodes that can all reach each other. One search from any node visits exactly its component, so start a new search at each unvisited node to count components."
+      }
+    ],
+    "definition": "BFS and DFS visit every node reachable from a start node exactly once, in O(V + E) time (O(R·C) on an R × C grid). They differ only in order. BFS takes the oldest discovered node next, using a queue, so it visits nodes in order of distance and finds fewest-step paths in unweighted graphs. DFS takes the newest, using a stack or recursion, so it follows one path as deep as it can and then backtracks. Both keep a visited set, so extra space is O(V) in general. On a tree there is no visited set to keep: BFS holds one level at a time, O(width), while DFS holds one root-to-node path, O(height)."
+  },
+  "stage": {
+    "tracks": [
+      {
+        "id": "bfs-grid",
+        "label": "BFS on a grid",
+        "tracer": "bfs-dfs/bfs-grid",
+        "predict": {
+          "tags": [
+            "next-from-queue",
+            "distance-here"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "dfs-graph",
+        "label": "DFS on a graph",
+        "tracer": "bfs-dfs/dfs-graph",
+        "predict": {
+          "tags": [
+            "next-visit",
+            "backtrack-or-go"
+          ],
+          "max": 3
+        }
+      }
+    ],
+    "playground": true
+  },
+  "recognise": {
+    "useWhen": [
+      "You need the fewest steps, moves or hops and every step costs the same: a maze, a word ladder, a knight's moves.",
+      "You must visit everything reachable from a start: count islands, flood-fill a region, find a connected group.",
+      "Something spreads outward from one or many places at once, minute by minute, like rotting oranges or the distance to the nearest 0.",
+      "The problem hides a graph: grid cells with four neighbours, words one letter apart, puzzle states one move apart."
+    ],
+    "notWhen": [
+      "Steps have different costs, like roads with distances or flights with prices. Plain BFS counts steps, not total cost. That is weighted shortest path, so reach for Dijkstra, which swaps the queue for a heap.",
+      "You are picking the best answer from overlapping subproblems, like fewest coins or longest increasing run. Nothing is being searched, so dynamic programming fits.",
+      "You must build every subset or arrangement and undo choices as you go. That is backtracking: a recursion pattern that dives like DFS but explores choices, not a given graph."
+    ],
+    "quiz": [
+      {
+        "problem": "Given a grid of '1' (land) and '0' (water), count how many separate islands there are.",
+        "answer": "bfs-dfs",
+        "options": [
+          "dynamic-programming",
+          "bfs-dfs",
+          "two-pointers",
+          "arrays"
+        ],
+        "explanation": "Land cells that touch form a connected component. Scan the grid, and each time you meet unvisited land, count one island and flood the whole island with a search so you never count it again."
+      },
+      {
+        "problem": "A road map gives the length of every road. Find the shortest total distance from city A to city B.",
+        "answer": "heaps",
+        "options": [
+          "bfs-dfs",
+          "heaps",
+          "binary-search",
+          "sorting"
+        ],
+        "explanation": "The roads have different lengths, so plain BFS (which counts roads, not kilometres) can pick a worse route. Dijkstra's algorithm fixes this by using a priority queue, which is a heap, to always expand the closest city next."
+      },
+      {
+        "problem": "Given two words and a dictionary, find the fewest single-letter changes that turn one word into the other, using only dictionary words.",
+        "answer": "bfs-dfs",
+        "options": [
+          "strings",
+          "recursion",
+          "bfs-dfs",
+          "hash-maps"
+        ],
+        "explanation": "Each word is a node, and two words are joined if they differ by one letter. Every change costs one, so the fewest changes is the shortest path, and BFS finds it by trying all 1-change words, then all 2-change words."
+      },
+      {
+        "problem": "Given an array of distinct numbers, return every possible subset.",
+        "answer": "recursion",
+        "options": [
+          "recursion",
+          "bfs-dfs",
+          "sorting",
+          "greedy"
+        ],
+        "explanation": "There is no graph to search. You build each subset by choosing to include or skip each number, and undo the choice to try the other branch. That is recursion with backtracking."
+      },
+      {
+        "problem": "You can climb 1 or 2 stairs at a time. How many different ways are there to reach the top of an n-step staircase?",
+        "answer": "dynamic-programming",
+        "options": [
+          "bfs-dfs",
+          "queues",
+          "dynamic-programming",
+          "binary-search"
+        ],
+        "explanation": "The ways to reach step n are the ways to reach n - 1 plus the ways to reach n - 2. Overlapping subproblems with a count as the answer call for dynamic programming, not a graph search."
       }
     ]
   },
-  "operations": [
-    {
-      "name": "BFS (Queue)",
-      "description": "Process the oldest discovered node first.",
-      "timeComplexity": "O(V + E)",
-      "spaceComplexity": "O(V)",
-      "code": {
-        "python": "node = q.popleft()"
+  "template": {
+    "pseudocode": [
+      {
+        "text": "dist = a table of −1 (−1 means not seen yet)",
+        "anchor": "init"
       },
-      "visualNote": "Highlights expand in concentric rings."
-    },
-    {
-      "name": "DFS (Stack)",
-      "description": "Process the newest discovered node first.",
-      "timeComplexity": "O(V + E)",
-      "spaceComplexity": "O(V)",
-      "code": {
-        "python": "dfs(neighbor) # Implicitly pushes to stack"
+      {
+        "text": "dist[S] = 0, queue = [S]",
+        "anchor": "init"
       },
-      "visualNote": "A single line shoots deep into the graph, bouncing off dead ends."
-    }
-  ],
-  "patternTemplate": {
-    "pseudocode": "def search(start):\n  ds = new DataStructure()\n  ds.add(start)\n  visited.add(start)\n  while not ds.is_empty():\n    curr = ds.remove()\n    process(curr)\n    for neighbor in get_neighbors(curr):\n      if neighbor not in visited:\n        visited.add(neighbor)\n        ds.add(neighbor)",
-    "whenToUse": "BFS: Shortest Path, Level Order Traversal, Nearest Neighbor.\nDFS: Cycle Detection, Path Exists, Topological Sort, Exhaustive search.",
-    "timeComplexity": "O(V + E)",
-    "spaceComplexity": "O(V)"
-  },
-  "recognitionQuiz": {
-    "problemStatement": "Given a 2D grid representing a maze, find the MINIMUM number of steps required to reach the exit.",
-    "correctPatternId": "bfs-dfs",
-    "distractors": [
-      "dynamic-programming",
-      "binary-search",
-      "two-pointers"
+      {
+        "text": "while the queue is not empty:"
+      },
+      {
+        "text": "cell = take the front of the queue",
+        "anchor": "pop",
+        "indent": 1
+      },
+      {
+        "text": "if cell is E: return dist[cell]",
+        "anchor": "done",
+        "indent": 1
+      },
+      {
+        "text": "for each neighbour: up, right, down, left:",
+        "indent": 1
+      },
+      {
+        "text": "if off the grid, a wall, or dist != −1: skip it",
+        "anchor": "skip",
+        "indent": 2
+      },
+      {
+        "text": "dist[neighbour] = dist[cell] + 1",
+        "anchor": "discover",
+        "indent": 2
+      },
+      {
+        "text": "add neighbour to the back of the queue",
+        "anchor": "discover",
+        "indent": 2
+      },
+      {
+        "text": "return −1   (E was never reached)",
+        "anchor": "done"
+      }
     ],
-    "explanation": "The word 'MINIMUM number of steps' in an unweighted grid means you must use BFS. DFS will find A path, but BFS guarantees it finds the SHORTEST path."
+    "tracer": "bfs-dfs/bfs-grid",
+    "time": "O(R·C) on an R × C grid, or O(V + E) in a general graph",
+    "space": "O(R·C) for the distance table, or O(V) in a general graph",
+    "notes": [
+      "Stamp a cell when you queue it, not when you pop it. Stamping late lets several neighbours queue the same cell, which bloats the queue and can make the search far slower.",
+      "The dist table is both the answer and the visited set: −1 means unseen. It also leaves the input grid untouched. Many solutions overwrite the grid with a marker to save memory; that is only fine when you are allowed to change the input.",
+      "Space, precisely: the queue holds one frontier. On a tree that is O(width) for BFS against O(height) of recursion for DFS. On a general graph or grid the visited set is O(V) (O(R·C)) either way, so quote O(V) overall.",
+      "Swap the queue for a stack (or recursion) and you get DFS. It still visits each node once in O(V + E), but the first path it finds is not guaranteed to be shortest.",
+      "For several starting points, such as every rotten orange or every 0, put them all in the queue at distance 0 before the loop. That is multi-source BFS: one search, many ripples starting together."
+    ]
   },
   "examples": [
     {
+      "title": "Flood Fill",
+      "difficulty": "easy",
+      "url": "https://leetcode.com/problems/flood-fill/",
+      "problem": "You are given an image as a grid of colours, a starting pixel (sr, sc) and a new colour. Repaint the starting pixel and every pixel connected to it up, down, left or right that has the same original colour. Return the repainted image.",
+      "input": "image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, color = 2",
+      "output": "[[2,2,2],[2,2,0],[2,0,1]]",
+      "approach": [
+        "Remember the starting colour, old. The area to repaint is every pixel reachable from the start through pixels that still have the colour old.",
+        "Recurse: repaint this pixel, then try the four neighbours. Stop at the edge or at any pixel whose colour is not old.",
+        "If old already equals the new colour, return early. Otherwise a repainted pixel still looks like old and the recursion never stops.",
+        "Work on a copy of the image so the caller's grid is not changed. The pixel at (2,2) is not connected to the start through 1s, so it stays 1."
+      ],
+      "code": "bfs-dfs/flood-fill",
+      "time": "O(R·C)",
+      "space": "O(R·C) for the recursion in the worst case"
+    },
+    {
+      "title": "Number of Islands",
+      "difficulty": "medium",
+      "url": "https://leetcode.com/problems/number-of-islands/",
+      "problem": "Given a grid of '1' (land) and '0' (water), return the number of islands. An island is land joined up, down, left or right, and the edges of the grid count as water.",
+      "input": "grid = [[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]",
+      "output": "3",
+      "approach": [
+        "Scan every cell. Land you have not seen yet must belong to an island nobody has counted, so add one to the count.",
+        "Right then, run a DFS from that cell and mark every connected land cell as seen. The whole island is now used up.",
+        "Keep a separate seen table. Many solutions flip '1' to '0' instead, which quietly changes the input grid.",
+        "Here the scan finds the top-left block, then the single cell at (2,2), then the pair in the bottom-right: 3 islands. Each cell is visited a constant number of times."
+      ],
+      "code": "bfs-dfs/number-of-islands",
+      "time": "O(R·C)",
+      "space": "O(R·C) for the seen table and recursion"
+    },
+    {
       "title": "Rotting Oranges",
       "difficulty": "medium",
-      "leetcodeUrl": "https://leetcode.com/problems/rotting-oranges/",
-      "problemStatement": "Given an m x n grid, each cell has an orange (fresh or rotten). Every minute, any fresh orange adjacent to a rotten orange becomes rotten. Return the minimum number of minutes until no cell has a fresh orange.",
-      "inputExample": "grid = [[2,1,1],[1,1,0],[0,1,1]]",
-      "outputExample": "4",
-      "steps": [
-        "This is a Multi-Source BFS.",
-        "Scan the grid and add EVERY rotten orange to the queue simultaneously. Count the fresh oranges.",
-        "While the queue is not empty and we still have fresh oranges, pop the current layer, rot the neighbors, and increment time.",
-        "If fresh oranges remain at the end, return -1."
+      "url": "https://leetcode.com/problems/rotting-oranges/",
+      "problem": "A grid has 0 (empty), 1 (fresh orange) and 2 (rotten orange). Every minute, each fresh orange next to a rotten one becomes rotten. Return the minutes until no fresh orange is left, or -1 if that never happens.",
+      "input": "grid = [[2,1,1],[1,1,0],[0,1,1]]",
+      "output": "4",
+      "approach": [
+        "Every rotten orange spreads at the same time, so this is a BFS that starts from all of them. Put every 2 in the queue at minute 0 and count the fresh oranges.",
+        "Each ring of the BFS is one minute. When a fresh orange is reached, write its minute (its parent's minute + 1) and take one off the fresh count.",
+        "Here minute 1 rots (0,1) and (1,0), minute 2 rots (0,2) and (1,1), minute 3 rots (2,1), and minute 4 rots (2,2). The last minute written is 4.",
+        "If the queue empties while some orange is still fresh, a wall of empty cells blocked it, so the answer is -1."
       ],
-      "code": {
-        "python": "from collections import deque\ndef orangesRotting(grid):\n    ROWS, COLS = len(grid), len(grid[0])\n    q = deque()\n    fresh = 0\n    time = 0\n    \n    for r in range(ROWS):\n        for c in range(COLS):\n            if grid[r][c] == 1: fresh += 1\n            if grid[r][c] == 2: q.append((r, c))\n            \n    directions = [[0,1], [0,-1], [1,0], [-1,0]]\n    while q and fresh > 0:\n        for i in range(len(q)):\n            r, c = q.popleft()\n            for dr, dc in directions:\n                row, col = r + dr, c + dc\n                if 0 <= row < ROWS and 0 <= col < COLS and grid[row][col] == 1:\n                    grid[row][col] = 2\n                    q.append((row, col))\n                    fresh -= 1\n        time += 1\n        \n    return time if fresh == 0 else -1"
-      },
-      "timeComplexity": "O(M * N)",
-      "spaceComplexity": "O(M * N)",
-      "rationale": "BFS simulates 'time' perfectly. One full cycle of the while loop equals exactly one minute passing."
+      "code": "bfs-dfs/rotting-oranges",
+      "time": "O(R·C)",
+      "space": "O(R·C)"
     }
   ],
   "conceptQuiz": [
     {
-      "question": "Can DFS find the shortest path in a maze?",
+      "question": "You want the fewest steps from S to E in a maze where every step costs the same. Why does BFS find them?",
       "options": [
-        "Yes, but you have to check EVERY SINGLE PATH to the end and compare their lengths, making it terribly slow (Exponential).",
-        "No, it is mathematically impossible.",
-        "Yes, and it is faster than BFS.",
-        "Yes, but only if you don't use recursion."
+        "It tries every path and keeps the shortest.",
+        "It reaches cells in order of distance, so the first time it reaches E is by a shortest route.",
+        "It always walks straight toward E.",
+        "It needs less memory than DFS."
       ],
-      "correctIndex": 0,
-      "explanation": "DFS might find the exit immediately by blindly running forward, but it might be a terrible winding path. To guarantee it's the shortest, DFS has to try all other paths to be sure. BFS finds the shortest path on its very first try."
+      "answer": 1,
+      "explanation": "The queue releases every distance-d cell before any distance-(d + 1) cell, so E is first reached with the fewest steps. It never has to compare paths."
     },
     {
-      "question": "In Python, why do we use `from collections import deque` for BFS instead of a standard list `[]`?",
+      "question": "BFS pops a cell whose distance is 3 and finds an open neighbour that has not been seen. What gets written on that neighbour?",
       "options": [
-        "Because popping from the front of a standard list `list.pop(0)` takes O(N) time, making BFS O(N^2). A deque takes O(1) time.",
-        "Because deque is required for recursion.",
-        "It is just a stylistic choice.",
-        "Because deque prevents infinite loops."
+        "3",
+        "2",
+        "5",
+        "4"
       ],
-      "correctIndex": 0,
-      "explanation": "A Python list is an array. If you remove the first element, every other element has to shift left by one spot, which takes O(N) time. A `deque` is a doubly-linked list, so `popleft()` is O(1)."
+      "answer": 3,
+      "explanation": "The neighbour is one step further than the cell you popped, so it gets 3 + 1 = 4. This is why BFS distances grow by exactly one per ring."
+    },
+    {
+      "question": "DFS reaches E and stops. What do you know about the path it followed?",
+      "options": [
+        "It is a valid path, but not necessarily the shortest.",
+        "It is the shortest path.",
+        "It is the longest path.",
+        "It is the shortest path, as long as the grid has no walls."
+      ],
+      "answer": 0,
+      "explanation": "DFS takes the first route it stumbles on, which can twist all over the grid. To guarantee the shortest, DFS would have to try every path and compare, which can take exponential time. BFS needs one pass."
+    },
+    {
+      "question": "What goes wrong if BFS marks a cell as seen only when it is popped, instead of when it is queued?",
+      "options": [
+        "Nothing changes: the work is identical.",
+        "It returns wrong distances every time.",
+        "Several neighbours can queue the same cell, so the queue bloats and the search can slow badly.",
+        "It never reaches E."
+      ],
+      "answer": 2,
+      "explanation": "Until a cell is popped it still looks unseen, so each neighbour that touches it queues it again. The answer can still be right, but the extra copies waste time and memory."
+    },
+    {
+      "question": "Both BFS and DFS run on a general graph with V nodes. What extra memory do both need in the worst case?",
+      "options": [
+        "BFS needs O(V) and DFS needs O(1).",
+        "A visited set that can grow to O(V).",
+        "BFS needs O(V) and DFS needs O(E).",
+        "Only O(1): they just follow edges."
+      ],
+      "answer": 1,
+      "explanation": "Without a visited set a cycle would loop forever, so both remember every node they have seen: O(V). On a tree (no cycles) you can drop it, and then BFS holds one level, O(width), while DFS holds one path, O(height)."
     }
   ],
   "practice": [
-    { "title": "Word Ladder", "url": "https://leetcode.com/problems/word-ladder/", "difficulty": "hard", "keyInsight": "Shortest transformation sequence = BFS." },
-    { "title": "Surrounded Regions", "url": "https://leetcode.com/problems/surrounded-regions/", "difficulty": "medium", "keyInsight": "DFS from the borders to mark 'safe' regions." },
-    { "title": "01 Matrix", "url": "https://leetcode.com/problems/01-matrix/", "difficulty": "medium", "keyInsight": "Multi-Source BFS starting from all the 0s." }
+    {
+      "title": "Find if Path Exists in Graph",
+      "url": "https://leetcode.com/problems/find-if-path-exists-in-graph/",
+      "difficulty": "easy",
+      "insight": "Build neighbour lists from the edges, then search from the source. If the destination ever gets visited, a path exists."
+    },
+    {
+      "title": "Max Area of Island",
+      "url": "https://leetcode.com/problems/max-area-of-island/",
+      "difficulty": "medium",
+      "insight": "It is the island counter again, but each search also returns how many cells it used. Keep the biggest."
+    },
+    {
+      "title": "Shortest Path in Binary Matrix",
+      "url": "https://leetcode.com/problems/shortest-path-in-binary-matrix/",
+      "difficulty": "medium",
+      "insight": "Plain grid BFS, but a step may go to any of 8 neighbours. Count cells on the path, not moves between them."
+    },
+    {
+      "title": "01 Matrix",
+      "url": "https://leetcode.com/problems/01-matrix/",
+      "difficulty": "medium",
+      "insight": "Searching from every 1 is slow. Flip it: queue all the 0s at distance 0 and let one BFS ripple outward."
+    },
+    {
+      "title": "As Far from Land as Possible",
+      "url": "https://leetcode.com/problems/as-far-from-land-as-possible/",
+      "difficulty": "medium",
+      "insight": "Start the ripples from all land cells at once. The last water cell the BFS reaches is the farthest one."
+    },
+    {
+      "title": "Surrounded Regions",
+      "url": "https://leetcode.com/problems/surrounded-regions/",
+      "difficulty": "medium",
+      "insight": "Ask which O cells can escape: those touching the border through other Os. Search inward from the border first, then flip what's left."
+    },
+    {
+      "title": "Pacific Atlantic Water Flow",
+      "url": "https://leetcode.com/problems/pacific-atlantic-water-flow/",
+      "difficulty": "medium",
+      "insight": "Don't test every cell. Search uphill from each ocean's coast, then keep the cells both oceans reach."
+    },
+    {
+      "title": "Word Ladder",
+      "url": "https://leetcode.com/problems/word-ladder/",
+      "difficulty": "hard",
+      "insight": "Words are nodes and one-letter changes are edges. Fewest changes is shortest path; generate neighbours by swapping each letter."
+    }
+  ],
+  "overview": [
+    "Explain why BFS finds the fewest steps when every step costs the same.",
+    "Trace BFS on a grid, recording the distance to each cell as it spreads.",
+    "Trace DFS on a graph, backtracking when a branch has nothing new.",
+    "Implement one visit loop that switches between a queue and a stack.",
+    "Choose BFS for shortest hops, and reach for Dijkstra when steps have costs."
+  ],
+  "resources": [
+    {
+      "title": "Breadth-first search (cp-algorithms)",
+      "url": "https://cp-algorithms.com/graph/breadth-first-search.html",
+      "note": "Shortest paths in unweighted graphs, with code and a clear explanation of the queue."
+    },
+    {
+      "title": "Depth-first search (cp-algorithms)",
+      "url": "https://cp-algorithms.com/graph/depth-first-search.html",
+      "note": "Recursive and iterative DFS with code, and why each node is visited only once."
+    },
+    {
+      "title": "BFS visualization (USF)",
+      "url": "https://www.cs.usfca.edu/~galles/visualization/BFS.html",
+      "note": "Step-through animation of breadth-first search on a small graph."
+    }
   ]
 }

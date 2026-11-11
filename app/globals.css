@@ -1,101 +1,513 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   DSA Karle design tokens. Contract: docs/DESIGN_SYSTEM.md
+   Light is the default. Dark = [data-theme="dark"], or the system preference
+   when no data-theme="light" is set. The dark palette therefore appears twice
+   below (media query + explicit attribute); keep the two blocks identical.
+   Fonts (--font-serif/sans/mono/hand) are set on <html> by next/font in app/fonts.ts.
+   ========================================================================== */
+
 :root {
-  --font-dmsans: Satoshi, "DM Sans", Inter, Manrope, "Plus Jakarta Sans", Geist, system-ui, sans-serif;
-  --font-dmmono: 'JetBrains Mono', 'DM Mono', 'SFMono-Regular', monospace;
-  --bg-primary: #FBF5EF;
-  --bg-secondary: #FFFDF9;
-  --bg-dark: #1D1D1F;
+  /* Surfaces and ink */
+  --paper: #FAFAF9;
+  --paper-raised: #FFFFFF;
+  --paper-sunken: #F5F5F4;
+  --ink: #1C1917;
+  --ink-2: #44403C;
+  --ink-3: #6B6560;
+  --rule: rgba(28, 25, 23, 0.10);
+  --rule-strong: rgba(28, 25, 23, 0.18);
+  --control-border: #8A8279; /* >= 3:1 on paper, raised and sunken: edges of text fields and search triggers */
+  --grid: rgba(28, 25, 23, 0.03);
+
+  /* Brand */
+  --coral: #CC5A37;
+  --coral-ink: #A83A1D;
+  --coral-ink-2: #8C2F16; /* primary button hover/active fill */
+  --coral-wash: rgba(204, 90, 55, 0.08);
+  --amber: #D99B26;
+  --amber-ink: #855A05; /* amber as TEXT (AA); --role-compare stays for strokes */
+  --teal: #1E7B6C;
+  --teal-ink: #17695C; /* teal as TEXT on teal washes (AA) */
+  --focus-ring: #CC5A37;
+
+  /* Semantic roles (use via lib/stage/semantics.ts and Stage primitives) */
+  --role-ptr-a: #1E7B6C;
+  --role-ptr-a-wash: rgba(30, 123, 108, 0.12);
+  --role-ptr-b: #4C55B8;
+  --role-ptr-b-wash: rgba(76, 85, 184, 0.12);
+  --role-focus: #CC5A37;
+  --role-compare: #B57D12;
+  --role-window: #CC5A37;
+  --role-window-wash: rgba(204, 90, 55, 0.08);
+  --role-visited: rgba(28, 25, 23, 0.35);
+  --role-discarded-opacity: 0.35;
+  --role-changed: #F6D36B;
+  --role-found: #2F8F4E;
+  --role-found-wash: rgba(47, 143, 78, 0.12);
+  --role-error: #C23B3B;
+  --role-error-wash: rgba(194, 59, 59, 0.10);
+  --found-ink: #256F3A; /* success as TEXT (AA, also on its wash) */
+  --error-ink: #A82F2F; /* error as TEXT (AA, also on its wash) */
+
+  /* Shape and elevation */
+  --r-cell: 6px;
+  --r-card: 8px;
+  --r-control: 6px;
+  --r-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* Legacy-only surfaces (dark-mode-friendly values below) */
+  --bg-dark: #1C1917;
   --bg-dark-secondary: #2A2A2C;
   --bg-dark-tertiary: #171515;
-  --accent-coral: #CC5A37;
-  --accent-coral-dark: #A83A1D;
-  --accent-amber: #D99B26;
-  --accent-teal: #1E7B6C;
-  --text-primary: #1D1D1F;
-  --text-secondary: #4A4A4A;
-  --text-muted: #737373;
-  --text-inverse-muted: #a8a29e;
-  --text-inverse-subtle: #57534e;
-  --border: rgba(204, 90, 55, 0.22);
-  --border-strong: rgba(204, 90, 55, 0.4);
-  --white: #ffffff;
-  --radius: 12px;
-  --radius-sm: 8px;
+  --text-inverse-muted: #A8A29E;
+  --text-inverse-subtle: #57534E;
   --surface-teal: rgba(30, 123, 108, 0.1);
   --surface-amber: rgba(217, 155, 38, 0.1);
-  --surface-coral: rgba(204, 90, 55, 0.1);
   --surface-highlight: rgba(217, 155, 38, 0.2);
   --surface-success: rgba(30, 123, 108, 0.08);
   --surface-danger: rgba(239, 68, 68, 0.08);
-  --state-success: #1E7B6C;
-  --state-warning: #D99B26;
-  --state-danger: #EF4444;
-  --pointer-left: #1E7B6C;
-  --pointer-right: #D99B26;
-  --shadow-card: 0 4px 15px rgba(204, 90, 55, 0.04);
-  --shadow-card-hover: 0 12px 30px rgba(204, 90, 55, 0.1);
-  --shadow-nav: 0 2px 24px rgba(204, 90, 55, 0.04);
+
+  /* Shiki code colours: switched per theme, see "Code blocks" below */
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121110;
+    --paper-raised: #1B1A18;
+    --paper-sunken: #0D0C0B;
+    --ink: #F5F5F4;
+    --ink-2: #D6D3D1;
+    --ink-3: #A8A29E;
+    --rule: rgba(245, 245, 244, 0.10);
+    --rule-strong: rgba(245, 245, 244, 0.18);
+    --control-border: #7D7569;
+    --grid: rgba(245, 245, 244, 0.035);
+
+    --coral: #F08A64;
+    --coral-ink: #F5A584;
+    --coral-ink-2: #F9BDA2;
+    --coral-wash: rgba(240, 138, 100, 0.12);
+    --amber: #F2C14E;
+    --amber-ink: #F2C14E;
+    --teal: #4FB7A5;
+    --teal-ink: #4FB7A5;
+    --focus-ring: #F08A64;
+
+    --role-ptr-a: #4FB7A5;
+    --role-ptr-a-wash: rgba(79, 183, 165, 0.16);
+    --role-ptr-b: #9097F0;
+    --role-ptr-b-wash: rgba(144, 151, 240, 0.16);
+    --role-focus: #F08A64;
+    --role-compare: #F2C14E;
+    --role-window: #F08A64;
+    --role-window-wash: rgba(240, 138, 100, 0.14);
+    --role-visited: rgba(245, 245, 244, 0.35);
+    --role-discarded-opacity: 0.35;
+    --role-changed: #8A6D1F;
+    --role-found: #5CC77E;
+    --role-found-wash: rgba(92, 199, 126, 0.16);
+    --role-error: #F07171;
+    --role-error-wash: rgba(240, 113, 113, 0.14);
+    --found-ink: #5CC77E;
+    --error-ink: #F07171;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+    --bg-dark: #0D0C0B;
+    --bg-dark-secondary: #252321;
+    --bg-dark-tertiary: #090908;
+    --text-inverse-muted: #A8A29E;
+    --text-inverse-subtle: #6B645C;
+    --surface-teal: rgba(79, 183, 165, 0.16);
+    --surface-amber: rgba(242, 193, 78, 0.14);
+    --surface-highlight: rgba(242, 193, 78, 0.22);
+    --surface-success: rgba(92, 199, 126, 0.14);
+    --surface-danger: rgba(240, 113, 113, 0.14);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #121110;
+  --paper-raised: #1B1A18;
+  --paper-sunken: #0D0C0B;
+  --ink: #F5F5F4;
+  --ink-2: #D6D3D1;
+  --ink-3: #A8A29E;
+  --rule: rgba(245, 245, 244, 0.10);
+  --rule-strong: rgba(245, 245, 244, 0.18);
+  --control-border: #7D7569;
+  --grid: rgba(245, 245, 244, 0.035);
+
+  --coral: #F08A64;
+  --coral-ink: #F5A584;
+  --coral-ink-2: #F9BDA2;
+  --coral-wash: rgba(240, 138, 100, 0.12);
+  --amber: #F2C14E;
+  --amber-ink: #F2C14E;
+  --teal: #4FB7A5;
+  --teal-ink: #4FB7A5;
+  --focus-ring: #F08A64;
+
+  --role-ptr-a: #4FB7A5;
+  --role-ptr-a-wash: rgba(79, 183, 165, 0.16);
+  --role-ptr-b: #9097F0;
+  --role-ptr-b-wash: rgba(144, 151, 240, 0.16);
+  --role-focus: #F08A64;
+  --role-compare: #F2C14E;
+  --role-window: #F08A64;
+  --role-window-wash: rgba(240, 138, 100, 0.14);
+  --role-visited: rgba(245, 245, 244, 0.35);
+  --role-discarded-opacity: 0.35;
+  --role-changed: #8A6D1F;
+  --role-found: #5CC77E;
+  --role-found-wash: rgba(92, 199, 126, 0.16);
+  --role-error: #F07171;
+  --role-error-wash: rgba(240, 113, 113, 0.14);
+  --found-ink: #5CC77E;
+  --error-ink: #F07171;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --bg-dark: #0D0C0B;
+  --bg-dark-secondary: #252321;
+  --bg-dark-tertiary: #090908;
+  --text-inverse-muted: #A8A29E;
+  --text-inverse-subtle: #6B645C;
+  --surface-teal: rgba(79, 183, 165, 0.16);
+  --surface-amber: rgba(242, 193, 78, 0.14);
+  --surface-highlight: rgba(242, 193, 78, 0.22);
+  --surface-success: rgba(92, 199, 126, 0.14);
+  --surface-danger: rgba(240, 113, 113, 0.14);
+
+  color-scheme: dark;
+}
+
+/* Legacy aliases. Existing components use these names until Phase 5 retires them.
+   Aliases only: they inherit dark mode from the tokens above. */
+:root {
+  --bg-primary: var(--paper);
+  --bg-secondary: var(--paper-raised);
+  --white: var(--paper-raised);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-2);
+  --text-muted: var(--ink-3);
+  --border: var(--rule);
+  --border-strong: var(--rule-strong);
+  --accent-coral: var(--coral);
+  --accent-coral-dark: var(--coral-ink);
+  --accent-amber: var(--amber);
+  --accent-teal: var(--teal);
+  --surface-coral: var(--coral-wash);
+  --pointer-left: var(--role-ptr-a);
+  --pointer-right: var(--role-ptr-b);
+  --state-success: var(--role-found);
+  --state-danger: var(--role-error);
+  --state-warning: var(--amber);
+  --radius: var(--r-card);
+  --radius-sm: var(--r-cell);
+  --shadow-card: var(--shadow-1);
+  --shadow-card-hover: var(--shadow-2);
+  --shadow-nav: var(--shadow-1);
+
+  --font-dmsans: var(--font-sans);
+  --font-dmmono: var(--font-mono);
+  --font-dm-mono: var(--font-mono); /* typo alias, remove once usages are swept */
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 96px; /* sticky header (+ lesson strip) */
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     min-height: 100vh;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    background-color: var(--paper);
+    color: var(--ink-2);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   a {
     color: inherit;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--coral-wash);
+    color: var(--ink);
+  }
 }
 
 @layer components {
+  /* ---- Type scale (Inter everywhere; Fraunces only for .t-display) ---- */
+  .t-display {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 144;
+    color: var(--ink);
+  }
+
+  .t-h1 {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(28px, 3.2vw, 34px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+
+  .t-h2 {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .t-h3 {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    color: var(--ink);
+  }
+
+  /* 16/28 on phones, 17/28 from md: Inter reads small at 16 on wide columns. */
+  .t-body {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 28px;
+    color: var(--ink-2);
+  }
+
+  .t-small {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .t-caption {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0.01em;
+  }
+
+  .t-eyebrow {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .prose-notebook {
+    max-width: 68ch;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+    color: var(--ink-2);
+  }
+
+  .prose-notebook > * + * {
+    margin-top: 1.1em;
+  }
+
+  .prose-notebook h2,
+  .prose-notebook h3 {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .prose-notebook h2 {
+    margin-top: 2.25em;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .prose-notebook h3 {
+    margin-top: 1.75em;
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  .prose-notebook ul,
+  .prose-notebook ol {
+    padding-left: 1.5em;
+  }
+
+  .prose-notebook ul {
+    list-style: disc;
+  }
+
+  .prose-notebook ol {
+    list-style: decimal;
+  }
+
+  .prose-notebook li + li {
+    margin-top: 0.5em;
+  }
+
+  .prose-notebook li::marker {
+    color: var(--ink-3);
+  }
+
+  .prose-notebook a {
+    color: var(--coral-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .prose-notebook a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .prose-notebook strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .prose-notebook blockquote {
+    border-left: 3px solid var(--rule-strong);
+    padding-left: 1em;
+    color: var(--ink-2);
+  }
+
+  .prose-notebook :not(pre) > code {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.875em;
+    background: var(--paper-sunken);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+  }
+
+  @media (min-width: 768px) {
+    .t-body,
+    .prose-notebook {
+      font-size: 17px;
+    }
+  }
+
+  /* ---- Anchor headings: <h2 id class="anchor-heading"><a href="#id">Title</a></h2> ----
+     The link reads as plain heading text; a quiet "#" appears to its left on hover / focus (>= md). */
+  .anchor-heading {
+    position: relative;
+    scroll-margin-top: 96px;
+  }
+
+  .anchor-heading > a {
+    /* Hit area >= 40px tall; negative margin keeps the heading rhythm unchanged. */
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    margin-block: -0.35rem;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+
+  .anchor-heading > a::before {
+    content: "#";
+    position: absolute;
+    right: 100%;
+    margin-right: 0.35em;
+    color: var(--ink-3);
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .anchor-heading > a::before {
+      display: inline;
+    }
+  }
+
+  .anchor-heading:hover > a::before,
+  .anchor-heading > a:focus-visible::before {
+    opacity: 1;
+  }
+
+  .anchor-heading > a:hover::before {
+    color: var(--coral-ink);
+  }
+
+  /* ---- Graph paper (Stage surface only) ---- */
+  .graph-paper {
+    background-color: var(--paper-raised);
+    background-image:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* ---- Legacy components ---- */
   .badge-pill {
     display: inline-flex;
     align-items: center;
-    border-radius: 9999px;
-    padding: 0.375rem 0.75rem;
-    font-family: var(--font-dmmono);
+    border-radius: var(--r-pill);
+    padding: 2px 10px;
+    font-family: var(--font-mono), ui-monospace, monospace;
     font-size: 11px;
-    letter-spacing: 0.1em;
+    font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
 
   .badge-pill-teal {
-    background: var(--surface-teal);
-    color: var(--accent-teal);
+    background-color: var(--surface-teal);
+    color: var(--teal);
   }
 
   .badge-pill-amber {
-    background: var(--surface-amber);
-    color: var(--accent-amber);
+    background-color: var(--surface-amber);
+    color: var(--amber);
   }
 
   .badge-pill-coral {
-    background: var(--surface-coral);
-    color: var(--accent-coral);
+    background-color: var(--surface-coral);
+    color: var(--coral-ink);
   }
 
   .badge-pill-dark {
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--rule-strong);
     background: var(--bg-dark-secondary);
-    color: var(--white);
+    color: var(--text-inverse-muted);
   }
 
   .button-primary {
-    border-radius: var(--radius-sm);
-    background: var(--accent-coral);
-    color: var(--white);
-    font-family: var(--font-dmsans);
+    border-radius: var(--r-cell);
+    background: var(--coral-ink);
+    color: var(--paper-raised);
+    font-family: var(--font-sans), system-ui, sans-serif;
     font-weight: 500;
     transition:
       transform 0.2s ease,
@@ -104,23 +516,22 @@
   }
 
   .button-primary:hover {
-    transform: translateY(-2px);
-    background: var(--accent-coral-dark);
-    box-shadow: var(--shadow-card-hover);
+    background: var(--coral-ink-2);
+    box-shadow: var(--shadow-2);
   }
 
   .surface-muted {
-    background: var(--bg-secondary);
+    background: var(--paper-raised);
   }
 
   .section-heading {
     margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--rule);
     padding-bottom: 1rem;
-    font-family: var(--font-dmsans);
+    font-family: var(--font-sans), system-ui, sans-serif;
     font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-weight: 600;
+    color: var(--ink);
   }
 
   .code-container pre {
@@ -137,8 +548,8 @@
   }
 
   .code-container .active-line {
-    border-left-color: var(--accent-coral);
-    background: rgba(212, 96, 58, 0.15);
+    border-left-color: var(--coral);
+    background: var(--coral-wash);
   }
 
   .code-line {
@@ -148,8 +559,8 @@
   }
 
   .code-line.active-line {
-    background: rgba(212, 96, 58, 0.12);
-    border-left: 2px solid var(--accent-coral);
+    background: var(--coral-wash);
+    border-left: 2px solid var(--coral);
     border-radius: 2px;
   }
 }
@@ -188,74 +599,94 @@
 
 /* Topic page h2 */
 .topic-h2 {
-  font-family: var(--font-dmsans);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 26px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink);
   margin-bottom: 20px;
   margin-top: 56px;
 }
+
 /* Stepper card */
 .stepper-card {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background-color: white;
-  box-shadow: var(--shadow-card);
+  border-radius: var(--r-card);
+  border: 1px solid var(--rule);
+  background-color: var(--paper-raised);
+  box-shadow: var(--shadow-1);
   padding: 32px;
   margin-top: 40px;
 }
+
 /* Section spacing (replaces cards) */
 .topic-section {
   margin-top: 56px;
 }
-/* Pill badge */
-.badge-pill {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 9999px;
-  padding: 2px 10px;
-  font-family: var(--font-dm-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-}
-.badge-pill-teal {
-  background-color: var(--surface-teal);
-  color: var(--accent-teal);
-}
-.badge-pill-amber {
-  background-color: var(--surface-amber);
-  color: var(--accent-amber);
-}
-.badge-pill-coral {
-  background-color: var(--surface-coral);
-  color: var(--accent-coral);
-}
 
-/* DSAKarle Pre-attentive Color Encoding System */
-:root {
-  --color-pointer: #22C55E;       /* Green: pointers, insertions, success */
-  --color-active: #F59E0B;        /* Amber: currently evaluated */
-  --color-error: #EF4444;         /* Red: out-of-bounds, deletion, failure */
-  --color-target: #3B82F6;        /* Blue: target value, finalized */
-  --color-neutral: #E5E7EB;       /* Gray: unvisited, default */
-}
+/* Stepper cell states, mapped onto role tokens */
+.cell-pointer { fill: var(--role-ptr-a); }
+.cell-active  { fill: var(--role-compare); }
+.cell-error   { fill: var(--role-error); }
+.cell-target  { fill: var(--role-found); }
+.cell-neutral { fill: var(--rule); }
 
-/* Stepper cell states — use these classes in all DiagramBlock SVGs */
-.cell-pointer  { fill: var(--color-pointer); }
-.cell-active   { fill: var(--color-active); }
-.cell-error    { fill: var(--color-error); }
-.cell-target   { fill: var(--color-target); }
-.cell-neutral  { fill: var(--color-neutral); }
-
-/* Shiki highlighted line — stepper active line */
+/* Shiki highlighted line: stepper active line */
 .shiki-wrapper .shiki .line.highlighted {
-  background-color: rgba(248, 163, 35, 0.15);
-  border-left: 3px solid #F5A623;
+  background-color: var(--coral-wash);
+  border-left: 3px solid var(--coral);
   padding-left: 1rem;
   display: block;
   width: 100%;
   transition: background-color 0.3s ease;
 }
 
+/* ==========================================================================
+   Code blocks. page.tsx renders Shiki with themes {light, dark} and
+   defaultColor:false, so every token span carries --shiki-light / --shiki-dark.
+   ========================================================================== */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+
+:root[data-theme="dark"] .shiki,
+:root[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shiki,
+  :root:not([data-theme="light"]) .shiki span {
+    color: var(--shiki-dark);
+  }
+}
+
+.shiki {
+  background-color: transparent;
+}
+
+/* Bridge: CodeTabs still paints its scroller with a hardcoded light colour. Until it is
+   rewritten, make that scroller follow the theme. Remove once CodeTabs uses tokens. */
+div:has(> pre.shiki) {
+  background: var(--paper-sunken) !important;
+}
+
+/* ==========================================================================
+   Reduced motion: no CSS animation or smooth scrolling.
+   (Framer Motion is handled by <MotionConfig reducedMotion="user">.)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
