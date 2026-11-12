@@ -1,138 +1,187 @@
-# 🚀 DSAKarle
+# DSA Karle
 
-> **Master Data Structures & Algorithms with a Premium Interactive Learning Experience.**
+**Learn data structures and algorithms by watching them run.**
 
-DSAKarle is a high-performance, visually stunning study platform designed for engineering students to bridge the gap between theory and implementation. Featuring interactive visualizations, a structured curriculum, and a modern UI, it's the ultimate companion for your DSA journey.
+DSA Karle teaches each idea in the same order. You see a picture of it, step through the real algorithm, guess its next move, try your own input, and only then read the code in Python, Java or C++.
 
----
+*Karle* is Hindi for "do it". The site is built around doing, not just reading.
 
-## 🖼️ Visual Showcase
-
-*Bring your project to life!*
-> [!TIP]
-> **Admins:** Replace these placeholders with your actual project screenshots to "wow" your users.
-
-<!-- slide -->
-![Hero Landing Page](https://via.placeholder.com/1200x630/0f172a/ffffff?text=DSAKarle+Hero+Experience)
-*The immersive landing experience designed for focus.*
-
-<!-- slide -->
-![Interactive Learning Path](https://via.placeholder.com/1200x630/0f172a/ffffff?text=Structured+Curriculum+Roadmap)
-*A clear, step-by-step roadmap from Arrays to Advanced DP.*
-
-<!-- slide -->
-![Dynamic Algorithm Visualization](https://via.placeholder.com/1200x630/0f172a/ffffff?text=Interactive+Diagrams+&+Visualizations)
-*Visualize complex data structures and algorithms in real-time.*
+**Live site:** https://dsakarle.vercel.app
 
 ---
 
-## ✨ Key Features
+## What you can do
 
-- 🗺️ **Comprehensive Roadmap**: A carefully curated learning path covering 20+ essential DSA topics.
-- 🎨 **Interactive Diagrams**: Custom-built visualizations using **Framer Motion** to simplify complex logic.
-- 🔍 **Instant Search**: Blazing fast topic lookup powered by **Fuse.js**.
-- 🌓 **Premium UI**: Sleek Dark/Light modes with modern typography (**Geist/Inter**) and smooth transitions.
-- 📝 **Practice Mode**: Hands-on practice sections for every topic to reinforce learning.
-- ⚡ **Optimized Performance**: Built with **Next.js 14 App Router** for lightning-fast navigation.
+- **Follow a path.** 23 lessons are grouped into four paths, each split into short sections. Start at Foundations, or jump to the path you need.
+- **Watch it run.** Every lesson has an interactive walkthrough driven by the real algorithm, not hand-drawn slides. Step with `←` / `→`, play, pause and scrub, and see the matching line light up in each language.
+- **Predict the next move.** The walkthrough pauses at key decisions ("Expand or shrink?", "Which pointer moves?") and asks for your guess before it shows you.
+- **Try your own input.** Type your own array, string, grid or graph and watch the same algorithm run on it.
+- **Recognise the pattern.** Each lesson ends with "reach for it when / not this when" clues and recognition questions. The **Pattern Gym** mixes them across all lessons, and questions you missed come back more often.
+- **Practise for real.** Each lesson has worked examples and an assignment of LeetCode problems. The Practice page collects all of them, and every link points to a real, free problem.
+- **Track progress.** Mark lessons complete, see per-path progress on the dashboard, and pick up where you left off. Progress is stored in your own browser; there are no accounts.
+- **Find your way.** Search everything with `⌘K` / `Ctrl+K` or `/`, browse the pattern map of how the ideas connect, and switch between light and dark mode.
 
----
+## Paths and lessons
 
-## 🛠️ Tech Stack
+| Path | Sections and lessons |
+|---|---|
+| **Foundations** | **Data in a row:** Arrays, Dynamic Arrays, Strings<br>**Chains, piles and lines:** Linked Lists, Stacks, Queues<br>**Instant lookups:** Hash Maps & Sets |
+| **Core Patterns** | **Pointers and windows:** Two Pointers, Sliding Window, Fast & Slow Pointers, Prefix Sum<br>**Searching and sorting:** Binary Search, Searching, Sorting |
+| **Recursion, Trees & Graphs** | **Thinking recursively:** Recursion & Backtracking<br>**Trees:** Binary Trees, Binary Search Trees, Heaps & Priority Queues, Tries<br>**Graphs:** Graphs, BFS & DFS |
+| **Optimization** | **Choosing well:** Greedy<br>**Remembering answers:** Dynamic Programming |
 
-- **Framework**: [Next.js 14 (App Router)](https://nextjs.org/)
-- **UI & Styling**: [Tailwind CSS](https://tailwindcss.com/) + [Framer Motion](https://www.framer.com/motion/)
-- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
-- **Search Engine**: [Fuse.js](https://www.fusejs.io/)
-- **Syntax Highlighting**: [Shiki](https://shiki.matsu.io/)
-- **Type Safety**: [TypeScript](https://www.typescriptlang.org/) + [Zod](https://zod.dev/)
+Every lesson has the same sections:
 
----
+**Introduction → Lesson overview → The picture → Mental model → Watch it run → Recognise it → The code → Worked examples → Knowledge check → Assignment → Additional resources**
 
-## 📂 Project Structure
+## Pages
 
-```text
-├── app/              # Next.js 14 App Router (Pages & Layouts)
-├── components/       # Reusable UI & Interactive Components
-│   ├── diagrams/     # Algorithm Visualization Engine
-│   ├── home/         # Landing Page specific sections
-│   └── ui/           # Radix-inspired primitive components
-├── content/          # DSA Topic data and course structure
-├── lib/              # Utility functions and shared logic
-├── hooks/            # Custom React hooks
-├── public/           # Static assets and fonts
-└── scripts/          # Build scripts (e.g., search index generation)
+| Route | What it is |
+|---|---|
+| `/` | Home, with a live walkthrough you can step through |
+| `/paths`, `/paths/[id]` | All paths, and one path's sections and lessons |
+| `/learn/[slug]` | A lesson |
+| `/gym` | Pattern Gym: mixed "which pattern is this?" drills |
+| `/practice` | Every practice problem, filterable by pattern, difficulty and solved status |
+| `/map` | How the ideas connect (prerequisites and related topics) |
+| `/dashboard` | Your progress, stored in this browser |
+| `/about` | What DSA Karle is and how a lesson works |
+
+## Tech stack
+
+| Area | Tools |
+|---|---|
+| **Framework** | Next.js 14 (App Router, static generation), React 18, TypeScript |
+| **Styling** | Tailwind CSS with design tokens in CSS variables, including dark mode |
+| **Motion** | Framer Motion, with `prefers-reduced-motion` respected throughout |
+| **State** | Zustand (one store per walkthrough) |
+| **Code highlighting** | Shiki, rendered on the server with light and dark themes |
+| **Search** | Fuse.js over a search index generated at build time |
+| **Pattern map and complexity chart** | d3 |
+| **Content validation** | Zod |
+| **Tests** | Vitest |
+
+## Getting started
+
+You need **Node.js 18.17 or later** and npm.
+
+```bash
+git clone https://github.com/ayushcody/dsakarle.git
 ```
 
----
+```bash
+cd dsakarle
+```
 
-## 🎓 Content Roadmap
+```bash
+npm install
+```
 
-### 🧱 Data Structures
-- `Arrays`, `Vectors`, `Strings`
-- `Linked Lists`, `Stacks`, `Queues`
-- `Hash Maps & Hash Sets`
-- `Binary Trees`, `BST`, `Heaps`
-- `Graphs`, `Tries`
+```bash
+npm run dev
+```
 
-### ⚙️ Algorithms
-- `Sliding Window`, `Two Pointers`, `Prefix Sum`
-- `Binary Search Pattern`
-- `Sorting & Searching`
-- `Recursion & Backtracking`
-- `Dynamic Programming`, `Greedy`
-- `BFS & DFS`
+Then open http://localhost:3000.
 
----
+### Scripts
 
-## 🚀 Getting Started
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Validate content, build the search index, then do a production build |
+| `npm start` | Serve the production build |
+| `npm run validate` | Check every lesson and the curriculum (fails the build on errors) |
+| `npm test` | Run the unit tests (Vitest) |
+| `npm run typecheck` | TypeScript, no emit |
+| `npm run lint` | ESLint |
+| `npm run check` | Typecheck, lint, validate and test in one go |
 
-### Prerequisites
-- Node.js 18.x or later
-- npm / yarn / pnpm
+## How it works
 
-### Installation
+### Tracers drive every walkthrough
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/dsakarle.git
-   cd dsakarle
-   ```
+Each algorithm is a **tracer** in `lib/tracers/<lesson>/<algorithm>.ts`. A tracer runs the real algorithm on an input and records one **frame** per meaningful moment. Each frame holds:
+- a scene describing the data (array, linked list, hash map, stack, tree, graph, grid or call tree)
+- the variables
+- one sentence of narration
+- the rule being executed
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+The same tracer powers four things:
+- the guided walkthrough
+- predict-then-reveal questions (the tracer flags decision points, and the lesson picks which ones to ask)
+- the "Try your own input" playground
+- code highlighting
 
-3. **Build the search index:**
-   ```bash
-   npm run build:search-index
-   ```
+The contract lives in `lib/engine/types.ts`.
 
-4. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
+### Code is line-synced in three languages
 
-Visit `http://localhost:3000` to see the magic! ✨
+Canonical code for each tracer lives in `content/code/<lesson>/<algorithm>.{py,java,cpp}`. A trailing marker like `# @expand` or `// @expand` ties a line to a rule. The markers are stripped before display and used to highlight the right line in each language as you step.
 
----
+### Content is data, and it's validated
 
-## 🤝 Contributing
+- `content/curriculum.json` is the single source of truth: paths, sections, lessons, order, titles, glyphs, difficulty and prerequisites.
+- `content/topics/<slug>.json` holds each lesson: hook, picture, mental model, walkthrough tracks, recognition clues, template, worked examples, quizzes, assignment and resources.
+- `npm run validate` runs on every build. It checks:
+  - the schema
+  - that each lesson's Python, Java and C++ code files exist and share the same rule markers
+  - that quiz answers vary in position
+  - that LeetCode URLs are well formed
+  - that path order matches lesson order
+  - that no placeholder text remains
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Tested
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+The suite has over 2,000 tests. Every tracer is run on 200 random inputs and checked against an independent reference implementation. The tests also check:
+- that every rule appears in all three languages
+- that output is deterministic
+- that predict answers match what actually happens next
+- that bad input is rejected with friendly messages
 
----
+## Project structure
 
-## 📄 License
+```text
+app/
+  (public)/          home, paths, gym, practice, map, dashboard, about
+  (app)/learn/       lesson pages
+components/
+  lesson/            lesson page sections and sidebars
+  stage/             the interactive walkthrough (controls, predict, playground, code panel)
+    scenes/          diagram layouts per scene type
+    primitives/      shared SVG building blocks (cells, pointers, nodes, arrows)
+  paths/ dashboard/ gym/ practice/ map/ home/ about/
+  layout/            header, sidebar, footer
+  search/            ⌘K command palette
+  glyph/ brand/ ui/  pattern glyphs, logo, UI primitives
+content/
+  curriculum.json    paths → sections → lessons
+  topics/            one JSON file per lesson
+  code/              Python / Java / C++ source with rule markers
+lib/
+  engine/            frame and scene contract, walkthrough store
+  tracers/           one tracer per algorithm
+  code/              anchor parsing and server-side highlighting
+  curriculum.ts      curriculum and path helpers
+  progress.ts        local progress storage
+scripts/             content validator, search-index builder
+tests/               Vitest suites (tracers, engine, code, validator, gym)
+docs/                content guide and design system
+```
 
-Distributed under the MIT License. See `LICENSE` for more information.
+## Adding or editing a lesson
 
----
+1. Read [`docs/CONTENT_GUIDE.md`](docs/CONTENT_GUIDE.md) for the lesson format, tracer rules and voice.
+2. Add the lesson to `content/curriculum.json`, in a path and section.
+3. Write the tracer, register it in `lib/tracers/index.ts`, and add its Python, Java and C++ files with matching rule markers.
+4. Write `content/topics/<slug>.json`.
+5. Run `npm run check`. The tracer harness tests the new tracer automatically.
 
-<p align="center">Made with ❤️ for Engineering Students</p>
+The visual language is documented in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md). It covers tokens, typography, and the colour roles: teal for the left/slow pointer, indigo for the right/fast pointer, coral for focus, amber for compare, green for found and red for error.
+
+## Contributing
+
+Found a mistake in a lesson? Every lesson page has **Edit this lesson on GitHub** and **Report an issue** links at the bottom. You can also [open an issue](https://github.com/ayushcody/dsakarle/issues/new). Pull requests are welcome; please run `npm run check` before opening one.
+
+## License
+
+This repository doesn't include a license file yet.
