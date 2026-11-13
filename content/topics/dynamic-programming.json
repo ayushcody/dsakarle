@@ -188,6 +188,28 @@
           ],
           "max": 3
         }
+      },
+      {
+        "id": "knapsack",
+        "label": "0/1 knapsack: take it or leave it",
+        "tracer": "dynamic-programming/knapsack",
+        "predict": {
+          "tags": [
+            "take-or-skip"
+          ],
+          "max": 3
+        }
+      },
+      {
+        "id": "lcs",
+        "label": "LCS: matching two strings",
+        "tracer": "dynamic-programming/lcs",
+        "predict": {
+          "tags": [
+            "match-or-max"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true

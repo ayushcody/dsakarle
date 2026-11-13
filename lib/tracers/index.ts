@@ -66,6 +66,15 @@ export const TRACER_LOADERS: Record<TracerId, TracerLoader> = {
   'dynamic-programming/climb-stairs': () => import('./dynamic-programming/climb-stairs'),
   'dynamic-programming/unique-paths': () => import('./dynamic-programming/unique-paths'),
   'dynamic-programming/coin-change': () => import('./dynamic-programming/coin-change'),
+  // Tier 1 (the /visualize gallery round)
+  'graphs/dijkstra': () => import('./graphs/dijkstra'),
+  'graphs/union-find': () => import('./graphs/union-find'),
+  'dynamic-programming/knapsack': () => import('./dynamic-programming/knapsack'),
+  'dynamic-programming/lcs': () => import('./dynamic-programming/lcs'),
+  'recursion/n-queens': () => import('./recursion/n-queens'),
+  'greedy/merge-intervals': () => import('./greedy/merge-intervals'),
+  'stacks/largest-rectangle': () => import('./stacks/largest-rectangle'),
+  'sorting/heap-sort': () => import('./sorting/heap-sort'),
 }
 
 export const TRACER_IDS = Object.keys(TRACER_LOADERS) as TracerId[]

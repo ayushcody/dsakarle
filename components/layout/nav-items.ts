@@ -6,6 +6,7 @@ export interface NavItem {
 /** The site's destinations. One list, used by the header, its mobile sheet and the lesson drawer. */
 export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'Paths', href: '/paths' },
+  { label: 'Visualize', href: '/visualize' },
   { label: 'Gym', href: '/gym' },
   { label: 'Practice', href: '/practice' },
   { label: 'Map', href: '/map' },

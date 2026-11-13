@@ -9,6 +9,10 @@
 import { describe, expect, it } from 'vitest'
 import buildAdjacency from '@/lib/tracers/graphs/build-adjacency'
 import type { BuildAdjacencyInput } from '@/lib/tracers/graphs/build-adjacency'
+import dijkstra from '@/lib/tracers/graphs/dijkstra'
+import type { DijkstraInput } from '@/lib/tracers/graphs/dijkstra'
+import unionFind from '@/lib/tracers/graphs/union-find'
+import type { UnionFindInput } from '@/lib/tracers/graphs/union-find'
 import topoSort from '@/lib/tracers/graphs/topo-sort'
 import type { TopoSortInput } from '@/lib/tracers/graphs/topo-sort'
 import { MAX_NODES, MIN_NODES, POSITIONS, graphNodes } from '@/lib/tracers/graphs/common'
@@ -439,5 +443,193 @@ describe('graphs/topo-sort: parsing', () => {
       if (!r.ok) expect(r.error, label).toMatch(re)
     }
     expect(ts.parse({ n: '2', edges: '0->1, 1->0' }).ok).toBe(true)
+  })
+})
+
+// ===========================================================================
+// graphs/dijkstra
+// ===========================================================================
+
+const dj = dijkstra.input
+
+function allDijkstraRuns(): Array<{ input: DijkstraInput; frames: Frame[]; dist: number[] }> {
+  const inputs = [...dj.presets.map((p) => p.value), ...Array.from({ length: 200 }, (_, i) => dj.random(i + 1))] as DijkstraInput[]
+  return inputs.map((value) => {
+    const { frames, result } = dijkstra.run(value)
+    return { input: value, frames, dist: result.dist }
+  })
+}
+
+describe('graphs/dijkstra: scenes', () => {
+  it('draws a weighted graph plus a dist array that agrees with the badges', () => {
+    for (const { input, frames } of allDijkstraRuns()) {
+      frames.forEach((f, i) => {
+        const where = `n=${input.n} frame ${i}`
+        const g = graphOf(f.scene)
+        checkGraph(g, input.n, where)
+        expect(g.edges.map((e) => e.weight), `${where}: weights`).toEqual(input.edges.map(([, , w]) => w))
+        const dist = arrayOf(f.scene, 1)
+        expect(dist.cells, where).toHaveLength(input.n)
+        const badges = new Map((g.badges ?? []).map((b) => [b.id, b.text]))
+        dist.cells.forEach((c, k) => expect(badges.get(idOf(k)), `${where}: badge ${k}`).toBe(String(c)))
+      })
+    }
+  })
+
+  it('only ever lowers a distance, and settled distances never change', () => {
+    for (const { input, frames } of allDijkstraRuns()) {
+      for (let i = 1; i < frames.length; i++) {
+        const prev = arrayOf(frames[i - 1].scene, 1).cells.map((c) => (c === '∞' ? Infinity : (c as number)))
+        const cur = arrayOf(frames[i].scene, 1).cells.map((c) => (c === '∞' ? Infinity : (c as number)))
+        cur.forEach((d, k) => expect(d, `n=${input.n} frame ${i} node ${k}`).toBeLessThanOrEqual(prev[k]))
+      }
+    }
+  })
+})
+
+describe('graphs/dijkstra: default preset', () => {
+  const { frames, result } = dijkstra.run(dj.presets[0].value as DijkstraInput)
+  it('finds the detour through node 2 and stays in the guided range', () => {
+    expect(result.dist).toEqual([0, 3, 1, 8, 9, 14])
+    expect(frames.length).toBeGreaterThanOrEqual(15)
+    expect(frames.length).toBeLessThanOrEqual(40)
+    expect(frames.some((f) => f.say.includes('drops from 4 to 3'))).toBe(true)
+  })
+  it('shows a no-improvement relax and a final tree', () => {
+    expect(frames.some((f) => f.at === 'relax' && f.say.includes('no better'))).toBe(true)
+    const last = graphOf(frames[frames.length - 1].scene)
+    expect(last.edges.filter((e) => e.role === 'found')).toHaveLength(5)
+  })
+})
+
+describe('graphs/dijkstra: predicts and parsing', () => {
+  it('next-settled answers match the pick frame; improves answers match the update that follows', () => {
+    let nextSettled = 0
+    let improves = 0
+    for (const { frames } of allDijkstraRuns()) {
+      frames.forEach((f, i) => {
+        const p = f.predict
+        if (!p) return
+        const next = frames[i + 1]
+        if (p.tag === 'next-settled') {
+          nextSettled++
+          expect(next.at).toBe('pick')
+          const focus = (graphOf(next.scene).marks ?? []).find((m) => m.role === 'focus')
+          expect(focus?.id).toBe(p.answer)
+        } else {
+          improves++
+          expect(p.tag).toBe('improves')
+          expect(next.at).toBe('relax')
+          expect(frames[i + 2].at === 'update', String(p.prompt)).toBe(p.answer === 'Yes, it is cheaper')
+        }
+      })
+    }
+    expect(nextSettled).toBeGreaterThan(50)
+    expect(improves).toBeGreaterThan(50)
+  })
+
+  it('parses weighted roads and rejects bad ones kindly', () => {
+    const base = dj.format(dj.presets[0].value)
+    expect(base.edges).toBe('0-1:4, 0-2:1, 1-2:2, 1-3:5, 2-4:8, 3-4:3, 3-5:6')
+    const bad: Array<[string, Record<string, string>, RegExp]> = [
+      ['no weight', { edges: '0-1' }, /weight/],
+      ['weight 0', { edges: '0-1:0' }, /Weights/],
+      ['weight 10', { edges: '0-1:10' }, /Weights/],
+      ['unknown node', { edges: '0-9:2' }, /Node 9/],
+      ['duplicate', { edges: '0-1:2, 1-0:3' }, /same road/],
+      ['bad start', { src: '6' }, /Start/],
+    ]
+    for (const [label, override, re] of bad) {
+      const r = dj.parse({ ...base, ...override })
+      expect(r.ok, label).toBe(false)
+      if (!r.ok) expect(r.error, label).toMatch(re)
+    }
+  })
+})
+
+// ===========================================================================
+// graphs/union-find
+// ===========================================================================
+
+const uf = unionFind.input
+
+function allUnionFindRuns(): Array<{ input: UnionFindInput; frames: Frame[] }> {
+  const inputs = [...uf.presets.map((p) => p.value), ...Array.from({ length: 200 }, (_, i) => uf.random(i + 1))] as UnionFindInput[]
+  return inputs.map((value) => ({ input: value, frames: unionFind.run(value).frames }))
+}
+
+describe('graphs/union-find: scenes', () => {
+  it('draws one parent arrow per non-root, laid out as a forest on the grid, matching the parent array', () => {
+    for (const { input, frames } of allUnionFindRuns()) {
+      frames.forEach((f, i) => {
+        const where = `n=${input.n} frame ${i}`
+        const g = graphOf(f.scene)
+        checkGraph(g, input.n, where)
+        expect(g.directed, where).toBe(true)
+        const parent = arrayOf(f.scene, 1).cells as number[]
+        const roots = parent.flatMap((p, k) => (p === k ? [k] : []))
+        expect(g.edges, `${where}: edge count`).toHaveLength(input.n - roots.length)
+        for (const e of g.edges) expect(parent[numOf(e.from)], `${where}: ${e.from}->${e.to}`).toBe(numOf(e.to))
+        for (const r of roots) expect(g.nodes[r].at.row, `${where}: root ${r} in row 0`).toBe(0)
+        for (const nd of g.nodes) {
+          if (parent[numOf(nd.id)] !== numOf(nd.id)) {
+            expect(nd.at.row, `${where}: child below parent`).toBeGreaterThan(g.nodes[parent[numOf(nd.id)]].at.row)
+          }
+        }
+        const spots = g.nodes.map((nd) => `${nd.at.col},${nd.at.row}`)
+        expect(new Set(spots).size, `${where}: distinct spots`).toBe(input.n)
+      })
+    }
+  })
+})
+
+describe('graphs/union-find: default preset', () => {
+  const { frames, result } = unionFind.run(uf.presets[0].value as UnionFindInput)
+  it('ends with one group and uses compression, a skipped pair and union by size', () => {
+    expect(result.components).toBe(1)
+    expect(frames.length).toBeGreaterThanOrEqual(15)
+    expect(frames.length).toBeLessThanOrEqual(40)
+    expect(frames.filter((f) => f.at === 'same')).toHaveLength(1)
+    const compress = frames.find((f) => f.at === 'compress')!
+    expect(graphOf(compress.scene).edges.some((e) => e.role === 'changed')).toBe(true)
+    // Last pair 5-4: the bigger group (root 0) stays on top.
+    expect(frames[frames.length - 2].say).toContain('hang root 5 under root 0')
+  })
+})
+
+describe('graphs/union-find: predicts and parsing', () => {
+  it('find-root, connected and bigger-root answers match what the next frame shows', () => {
+    const seen = new Set<string>()
+    for (const { frames } of allUnionFindRuns()) {
+      frames.forEach((f, i) => {
+        const p = f.predict
+        if (!p) return
+        const next = frames[i + 1]
+        seen.add(p.tag)
+        if (p.tag === 'find-root') {
+          expect(next.at).toBe('find')
+          expect(next.say).toContain(`The root is ${numOf(String(p.answer))}.`)
+        } else if (p.tag === 'connected') {
+          expect(next.at).toBe('find')
+          const after = frames.slice(i + 2).find((x) => x.at === 'same' || x.at === 'union')!
+          expect(after.at === 'same').toBe(p.answer === 'Yes, same group')
+        } else {
+          expect(p.tag).toBe('bigger-root')
+          expect(next.at).toBe('union')
+          const top = (graphOf(next.scene).marks ?? []).find((m) => m.role === 'found')
+          expect(top?.id).toBe(p.answer)
+        }
+      })
+    }
+    expect([...seen].sort()).toEqual(['bigger-root', 'connected', 'find-root'])
+  })
+
+  it('counts groups correctly and parses pairs', () => {
+    expect(unionFind.run({ n: 4, edges: [[0, 1], [2, 3], [1, 0 + 2]] }).result).toEqual({ components: 1, groups: [[0, 1, 2, 3]] })
+    expect(unionFind.run({ n: 3, edges: [[0, 1]] }).result).toEqual({ components: 2, groups: [[0, 1], [2]] })
+    const base = uf.format(uf.presets[0].value)
+    expect(base.edges).toBe('0-1, 2-3, 0-2, 3-4, 1-4, 5-4')
+    expect(uf.parse({ ...base, edges: '0-9' }).ok).toBe(false)
+    expect(uf.parse({ ...base, edges: '1-1' }).ok).toBe(false)
   })
 })

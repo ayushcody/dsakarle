@@ -279,7 +279,7 @@ export function describeTracer(tracer: AnyTracer, opts: DescribeTracerOptions = 
           expect(spec.random(seed), `random(${seed}) is not deterministic`).toEqual(a)
           seen.add(JSON.stringify(a))
         }
-        expect(seen.size, 'random(seed) barely varies').toBeGreaterThanOrEqual(Math.min(20, seeds))
+        expect(seen.size, 'random(seed) barely varies').toBeGreaterThanOrEqual(Math.min(20, seeds, spec.space ?? Infinity))
       })
     })
 

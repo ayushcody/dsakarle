@@ -122,6 +122,17 @@
           ],
           "max": 4
         }
+      },
+      {
+        "id": "merge",
+        "label": "Merge intervals: sort, then sweep",
+        "tracer": "greedy/merge-intervals",
+        "predict": {
+          "tags": [
+            "merge-or-new"
+          ],
+          "max": 3
+        }
       }
     ],
     "playground": true
@@ -403,6 +414,18 @@
       "url": "https://leetcode.com/problems/candy/",
       "difficulty": "hard",
       "insight": "Satisfy the left-neighbour rule in one pass and the right-neighbour rule in another, then keep the larger requirement for each child."
+    },
+    {
+      "title": "Merge Intervals",
+      "url": "https://leetcode.com/problems/merge-intervals/",
+      "difficulty": "medium",
+      "insight": "Sort by start so overlaps become neighbours. Then keep stretching the last output interval while the next one starts at or before its end."
+    },
+    {
+      "title": "Insert Interval",
+      "url": "https://leetcode.com/problems/insert-interval/",
+      "difficulty": "medium",
+      "insight": "The list is already sorted. Copy everything that ends before the new one, merge everything that overlaps it, then copy the rest."
     }
   ],
   "overview": [

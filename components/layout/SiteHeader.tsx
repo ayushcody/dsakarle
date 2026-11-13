@@ -234,7 +234,7 @@ export function SiteHeader() {
             <ThemeToggle className="hidden md:inline-flex" />
 
             {!isLesson ? (
-              <Button href={startHref} size="sm" className="hidden md:inline-flex">
+              <Button href={startHref} size="sm" className="hidden xl:inline-flex">
                 {ctaLabel}
               </Button>
             ) : null}

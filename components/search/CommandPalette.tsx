@@ -91,6 +91,19 @@ const ACTIONS: QuickAction[] = [
     run: (router) => router.push('/dashboard'),
   },
   {
+    id: 'visualize',
+    label: 'Open the visualizer',
+    hint: 'Every algorithm, step by step',
+    keywords: 'visualize visualizer visualization animation algorithm playground lab',
+    icon: (
+      <svg {...iconProps}>
+        <path d="M4 19V5M4 19h16" />
+        <path d="M8 15l3.5-4 3 2.5L19 8" />
+      </svg>
+    ),
+    run: (router) => router.push('/visualize'),
+  },
+  {
     id: 'gym',
     label: 'Open Pattern Gym',
     hint: 'Drill spotting the right pattern',

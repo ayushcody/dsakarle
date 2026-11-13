@@ -111,13 +111,25 @@
       },
       {
         "id": "monotonic",
-        "label": "Monotonic stack",
+        "label": "Next greater (monotonic stack)",
         "tracer": "stacks/next-greater",
         "predict": {
           "tags": [
             "pop-or-stay"
           ],
           "max": 3
+        }
+      },
+      {
+        "id": "largest-rectangle",
+        "label": "Largest rectangle",
+        "tracer": "stacks/largest-rectangle",
+        "predict": {
+          "tags": [
+            "push-or-pop",
+            "rect-width"
+          ],
+          "max": 4
         }
       }
     ],

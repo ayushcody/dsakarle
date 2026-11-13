@@ -131,6 +131,19 @@
           ],
           "max": 3
         }
+      },
+      {
+        "id": "n-queens",
+        "label": "N-Queens: place, check, backtrack",
+        "tracer": "recursion/n-queens",
+        "preset": 0,
+        "predict": {
+          "tags": [
+            "safe-or-attacked",
+            "backtrack-or-continue"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true
