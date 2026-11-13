@@ -111,6 +111,18 @@
           ],
           "max": 3
         }
+      },
+      {
+        "id": "no-repeats",
+        "label": "Longest without repeats",
+        "tracer": "sliding-window/longest-unique",
+        "predict": {
+          "tags": [
+            "expand-or-shrink",
+            "new-best"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true

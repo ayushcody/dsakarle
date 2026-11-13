@@ -18,6 +18,10 @@ import knapsack from '@/lib/tracers/dynamic-programming/knapsack'
 import type { KnapsackInput } from '@/lib/tracers/dynamic-programming/knapsack'
 import lcs from '@/lib/tracers/dynamic-programming/lcs'
 import type { LcsInput } from '@/lib/tracers/dynamic-programming/lcs'
+import editDistance from '@/lib/tracers/dynamic-programming/edit-distance'
+import type { EditDistanceInput } from '@/lib/tracers/dynamic-programming/edit-distance'
+import lis from '@/lib/tracers/dynamic-programming/lis'
+import type { LisInput } from '@/lib/tracers/dynamic-programming/lis'
 import type { AnyTracer, Frame, GridScene } from '@/lib/engine/types'
 
 function grid(frame: Frame): GridScene {
@@ -586,6 +590,104 @@ describe('lcs: grid scenes, traceback and predicts', () => {
 })
 
 // ===========================================================================
+// dynamic-programming/edit-distance
+// ===========================================================================
+
+describe('edit-distance: grid scenes and predicts', () => {
+  it('keeps every grid frame inside the table and fills dp by the recurrence', () => {
+    for (const { input, frames } of runsOf<EditDistanceInput>(editDistance)) {
+      frames.forEach((f, idx) => checkGrid(f, `edit-distance frame ${idx}`))
+      const final = grid(frames[frames.length - 1])
+      for (let r = 1; r <= input.a.length; r++) {
+        for (let c = 1; c <= input.b.length; c++) {
+          const v = final.rows[r][c] as number
+          const diag = final.rows[r - 1][c - 1] as number
+          const expected = input.a[r - 1] === input.b[c - 1] ? diag : 1 + Math.min(diag, final.rows[r - 1][c] as number, final.rows[r][c - 1] as number)
+          expect(v, `${JSON.stringify(input)} dp[${r}][${c}]`).toBe(expected)
+        }
+      }
+    }
+  })
+
+  it('predict answers match the next frame', () => {
+    for (const { frames } of runsOf<EditDistanceInput>(editDistance)) {
+      frames.forEach((f, idx) => {
+        if (!f.predict) return
+        expect(f.predict.answer).toBe(f.predict.options![frames[idx + 1].at === 'match' ? 0 : 1])
+        expect(frames[idx + 1].at).toBe(f.predict.answer === f.predict.options![0] ? 'match' : 'edit')
+      })
+    }
+  })
+
+  it('shows every rule in the guided run, and known distances', () => {
+    const { frames, result } = editDistance.run(editDistance.input.presets[0].value)
+    expect(new Set(frames.map((f) => f.at))).toEqual(new Set(Object.keys(editDistance.anchors)))
+    expect(frames.length).toBeGreaterThanOrEqual(15)
+    expect(frames.length).toBeLessThanOrEqual(45)
+    expect(result).toBe(3)
+    expect(editDistance.run({ a: 'kitten', b: 'sit' }).result).toBe(4)
+  })
+
+  it('parses lower-cased words and rejects bad ones', () => {
+    expect(editDistance.input.parse({ a: 'Horse', b: 'ROS' })).toEqual({ ok: true, value: { a: 'horse', b: 'ros' } })
+    expect(editDistance.input.parse({ a: 'ab1', b: 'abc' }).ok).toBe(false)
+    expect(editDistance.input.parse({ a: 'abcdefg', b: 'abc' }).ok).toBe(false)
+  })
+})
+
+// ===========================================================================
+// dynamic-programming/lis
+// ===========================================================================
+
+describe('lis: composite scenes, traceback and predicts', () => {
+  it('draws two aligned arrays with in-range pointers and marks', () => {
+    for (const { input, frames } of runsOf<LisInput>(lis)) {
+      for (const f of frames) {
+        if (f.scene.kind !== 'composite') throw new Error('expected composite')
+        expect(f.scene.parts).toHaveLength(2)
+        for (const part of f.scene.parts) {
+          if (part.scene.kind !== 'array') throw new Error('expected array')
+          expect(part.scene.cells).toHaveLength(input.a.length)
+        }
+      }
+    }
+  })
+
+  it('predict answers match the next frame', () => {
+    for (const { frames } of runsOf<LisInput>(lis)) {
+      frames.forEach((f, idx) => {
+        if (!f.predict) return
+        expect(frames[idx + 1].at).toBe(f.predict.answer === 'Yes' ? 'extend' : 'skip')
+      })
+    }
+  })
+
+  it('ends with a real increasing subsequence of the reported length, marked found', () => {
+    for (const { input, frames, result } of runsOf<LisInput>(lis)) {
+      const last = frames[frames.length - 1]
+      if (last.scene.kind !== 'composite' || last.scene.parts[0].scene.kind !== 'array') throw new Error('expected composite of arrays')
+      const idx = (last.scene.parts[0].scene.marks ?? []).filter((m) => m.role === 'found').map((m) => m.index).sort((x, y) => x - y)
+      expect(idx).toHaveLength(result as number)
+      const values = idx.map((k) => input.a[k])
+      for (let k = 1; k < values.length; k++) expect(values[k]).toBeGreaterThan(values[k - 1])
+    }
+  })
+
+  it('shows every rule in the guided run and keeps it short', () => {
+    const { frames, result } = lis.run(lis.input.presets[0].value)
+    expect(new Set(frames.map((f) => f.at))).toEqual(new Set(Object.keys(lis.anchors)))
+    expect(frames.length).toBeLessThanOrEqual(45)
+    expect(result).toBe(3)
+  })
+
+  it('rejects too many numbers and out-of-range values kindly', () => {
+    expect(lis.input.parse({ a: '1,2,3,4,5,6,7,8,9' }).ok).toBe(false)
+    expect(lis.input.parse({ a: '100' }).ok).toBe(false)
+    expect(lis.input.parse({ a: '[3, -1, 2]' })).toEqual({ ok: true, value: { a: [3, -1, 2] } })
+  })
+})
+
+// ===========================================================================
 // content/topics/dynamic-programming.json
 // ===========================================================================
 
@@ -611,6 +713,8 @@ describe('content/topics/dynamic-programming.json', () => {
       'dynamic-programming/coin-change': coin,
       'dynamic-programming/knapsack': knapsack,
       'dynamic-programming/lcs': lcs,
+      'dynamic-programming/edit-distance': editDistance,
+      'dynamic-programming/lis': lis,
     }
     for (const track of lesson.stage.tracks as Array<{ tracer: string; preset?: number; predict?: { tags: string[] } }>) {
       const tracer = byId[track.tracer]

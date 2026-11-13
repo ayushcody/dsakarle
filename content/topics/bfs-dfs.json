@@ -193,6 +193,18 @@
           ],
           "max": 3
         }
+      },
+      {
+        "id": "islands",
+        "label": "Number of islands: flood fill",
+        "tracer": "bfs-dfs/islands",
+        "predict": {
+          "tags": [
+            "new-island",
+            "next-fill"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true

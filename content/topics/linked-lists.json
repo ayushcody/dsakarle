@@ -152,6 +152,18 @@
           ],
           "max": 3
         }
+      },
+      {
+        "id": "merge",
+        "label": "Merge two sorted lists",
+        "tracer": "linked-lists/merge-sorted",
+        "predict": {
+          "tags": [
+            "which-next",
+            "leftover-list"
+          ],
+          "max": 3
+        }
       }
     ],
     "playground": true

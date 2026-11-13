@@ -75,6 +75,17 @@ export const TRACER_LOADERS: Record<TracerId, TracerLoader> = {
   'greedy/merge-intervals': () => import('./greedy/merge-intervals'),
   'stacks/largest-rectangle': () => import('./stacks/largest-rectangle'),
   'sorting/heap-sort': () => import('./sorting/heap-sort'),
+  // Tier 2
+  'sorting/bubble-sort': () => import('./sorting/bubble-sort'),
+  'sorting/selection-sort': () => import('./sorting/selection-sort'),
+  'dynamic-programming/edit-distance': () => import('./dynamic-programming/edit-distance'),
+  'dynamic-programming/lis': () => import('./dynamic-programming/lis'),
+  'graphs/kruskal': () => import('./graphs/kruskal'),
+  'bfs-dfs/islands': () => import('./bfs-dfs/islands'),
+  'recursion/fib-memo': () => import('./recursion/fib-memo'),
+  'linked-lists/merge-sorted': () => import('./linked-lists/merge-sorted'),
+  'sliding-window/longest-unique': () => import('./sliding-window/longest-unique'),
+  'two-pointers/container-water': () => import('./two-pointers/container-water'),
 }
 
 export const TRACER_IDS = Object.keys(TRACER_LOADERS) as TracerId[]

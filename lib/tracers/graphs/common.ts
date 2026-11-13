@@ -206,7 +206,12 @@ export const MAX_WEIGHT = 9
  * "0-1:4, 0-2:1". Same rules as parseEdges (undirected unless `directed`), plus a
  * weight from MIN_WEIGHT to MAX_WEIGHT after a colon on every edge.
  */
-export function parseWeightedEdges(raw: string | undefined, n: number, directed: boolean): ParseResult<WeightedEdge[]> {
+export function parseWeightedEdges(
+  raw: string | undefined,
+  n: number,
+  directed: boolean,
+  maxWeight: number = MAX_WEIGHT,
+): ParseResult<WeightedEdge[]> {
   const field = 'edges'
   const parts = (raw ?? '')
     .split(/[,;\n]+/)
@@ -224,8 +229,8 @@ export function parseWeightedEdges(raw: string | undefined, n: number, directed:
       return { ok: false, field, error: `"${shown(part)}" needs a weight. Write it like 0-1:4, where 4 is the road length.` }
     }
     const w = Number(wText)
-    if (w < MIN_WEIGHT || w > MAX_WEIGHT) {
-      return { ok: false, field, error: `Weights run from ${MIN_WEIGHT} to ${MAX_WEIGHT}, not ${w}.` }
+    if (w < MIN_WEIGHT || w > maxWeight) {
+      return { ok: false, field, error: `Weights run from ${MIN_WEIGHT} to ${maxWeight}, not ${w}.` }
     }
     weights.push(w)
     bare.push(part.slice(0, i))

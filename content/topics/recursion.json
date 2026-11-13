@@ -144,6 +144,18 @@
           ],
           "max": 4
         }
+      },
+      {
+        "id": "memoization",
+        "label": "Memoization: never solve twice",
+        "tracer": "recursion/fib-memo",
+        "predict": {
+          "tags": [
+            "in-memo",
+            "fib-returns"
+          ],
+          "max": 3
+        }
       }
     ],
     "playground": true

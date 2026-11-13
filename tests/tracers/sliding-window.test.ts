@@ -9,6 +9,7 @@ import tracer from '@/lib/tracers/sliding-window/max-sum-k'
 import type { MaxSumKInput } from '@/lib/tracers/sliding-window/max-sum-k'
 import minLen from '@/lib/tracers/sliding-window/min-len-target'
 import type { MinLenTargetInput } from '@/lib/tracers/sliding-window/min-len-target'
+import longestUnique from '@/lib/tracers/sliding-window/longest-unique'
 import type { Frame } from '@/lib/engine/types'
 
 const input = tracer.input
@@ -343,5 +344,49 @@ describe('sliding-window/min-len-target: input rules', () => {
     expect(answers.some((a) => a === 0)).toBe(true)
     expect(answers.some((a) => a === 1)).toBe(true)
     expect(answers.some((a) => a > 1)).toBe(true)
+  })
+})
+
+// ===========================================================================
+// sliding-window/longest-unique
+// ===========================================================================
+
+describe('sliding-window/longest-unique', () => {
+  const t = longestUnique
+  const runs = [
+    ...t.input.presets.map((p) => p.value),
+    ...Array.from({ length: 200 }, (_, i) => t.input.random(i + 1)),
+  ].map((value) => ({ input: value, frames: t.run(value).frames }))
+
+  it('gives the classic answers for the presets', () => {
+    expect(t.input.presets.map((p) => t.run(p.value).result)).toEqual([3, 3, 1])
+  })
+
+  it('guided preset has 15 to 45 frames and uses every anchor', () => {
+    const frames = t.run(t.input.presets[0].value).frames
+    expect(frames.length).toBeGreaterThanOrEqual(15)
+    expect(frames.length).toBeLessThanOrEqual(45)
+    expect(new Set(frames.map((f) => f.at))).toEqual(new Set(Object.keys(t.anchors)))
+  })
+
+  it('every predict answer is true in the next frame', () => {
+    for (const { frames } of runs) {
+      frames.forEach((f, i) => {
+        if (f.predict?.tag === 'expand-or-shrink') {
+          expect(frames[i + 1].at).toBe(f.predict.answer === 'Shrink from the left' ? 'shrink' : 'expand')
+        }
+        if (f.predict?.tag === 'new-best') {
+          const before = Number(f.vars.best)
+          const after = Number(frames[i + 1].vars.best)
+          expect(after > before).toBe(f.predict.answer === 'Yes')
+        }
+      })
+    }
+  })
+
+  it('rejects bad input kindly', () => {
+    expect(t.input.parse({ s: 'Hello' }).ok).toBe(false)
+    expect(t.input.parse({ s: 'abcdefghijklm' }).ok).toBe(false)
+    expect(t.input.parse({ s: '' }).ok).toBe(false)
   })
 })

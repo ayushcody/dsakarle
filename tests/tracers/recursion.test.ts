@@ -7,6 +7,8 @@
 import { describe, expect, it } from 'vitest'
 import factorial from '@/lib/tracers/recursion/factorial'
 import type { FactorialInput } from '@/lib/tracers/recursion/factorial'
+import fibMemo from '@/lib/tracers/recursion/fib-memo'
+import type { FibMemoInput } from '@/lib/tracers/recursion/fib-memo'
 import nQueens from '@/lib/tracers/recursion/n-queens'
 import type { NQueensInput } from '@/lib/tracers/recursion/n-queens'
 import subsets from '@/lib/tracers/recursion/subsets'
@@ -409,5 +411,92 @@ describe('recursion/n-queens', () => {
   it('rejects out-of-range input with friendly errors', () => {
     expect(nq.parse({ n: '3' }).ok).toBe(false)
     expect(nq.parse({ n: '7' }).ok).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// recursion/fib-memo
+// ---------------------------------------------------------------------------
+
+describe('recursion/fib-memo', () => {
+  const fm = fibMemo.input
+  const all: FibMemoInput[] = Array.from({ length: 8 }, (_, i) => ({ n: i + 1 }))
+
+  it('makes exactly 2n - 1 calls and returns the Fibonacci number', () => {
+    const expected = [1, 1, 2, 3, 5, 8, 13, 21]
+    for (const input of all) {
+      const { frames, result } = fibMemo.run(input)
+      expect(result, `n=${input.n}`).toBe(expected[input.n - 1])
+      expect(callTreeOf(frames[frames.length - 1].scene).calls, `n=${input.n} calls`).toHaveLength(2 * input.n - 1)
+      expect(frames.length).toBeLessThanOrEqual(60)
+    }
+  })
+
+  it('the default preset is fib(5): 9 calls, 2 memo hits, 4 stores, 22 frames', () => {
+    const input = fm.presets[0].value as FibMemoInput
+    const { frames } = fibMemo.run(input)
+    const count = (at: string): number => frames.filter((f) => f.at === at).length
+    expect(input).toEqual({ n: 5 })
+    expect([count('call'), count('base'), count('hit'), count('compute'), count('store')]).toEqual([9, 3, 2, 4, 4])
+    expect(frames).toHaveLength(22)
+    const end = callTreeOf(frames[frames.length - 1].scene)
+    expect(end.calls.filter((c) => c.result?.endsWith('(memo)'))).toHaveLength(2)
+  })
+
+  it('scenes are a call tree over the memo, and the memo fills with the right values', () => {
+    const fibs = [0, 1, 1, 2, 3, 5, 8, 13, 21]
+    for (const input of all) {
+      const { frames } = fibMemo.run(input)
+      frames.forEach((frame, i) => {
+        const where = `n=${input.n} frame ${i}`
+        checkCallTree(callTreeOf(frame.scene), where)
+        if (frame.scene.kind !== 'composite') throw new Error('expected composite')
+        const memo = frame.scene.parts.map((p) => p.scene).find((s): s is ArrayScene => s.kind === 'array')!.cells
+        expect(memo, where).toHaveLength(input.n + 1)
+        memo.forEach((cell, k) => {
+          if (cell !== null) expect(cell, `${where} memo[${k}]`).toBe(fibs[k])
+        })
+        expect(frame.gauge?.value).toBe(callTreeOf(frame.scene).calls.length)
+      })
+    }
+  })
+
+  it('in-memo predicts: the next frame is a hit exactly when the answer is yes', () => {
+    let asked = 0
+    for (const input of all) {
+      const { frames } = fibMemo.run(input)
+      frames.forEach((frame, i) => {
+        const p = frame.predict
+        if (!p || p.tag !== 'in-memo') return
+        asked++
+        expect(frame.at).toBe('call')
+        expect(['hit', 'compute']).toContain(frames[i + 1].at)
+        expect(p.answer === 'Yes, it is saved').toBe(frames[i + 1].at === 'hit')
+      })
+    }
+    expect(asked).toBeGreaterThan(20)
+  })
+
+  it('fib-returns predicts: the next frame stores a + b', () => {
+    let asked = 0
+    for (const input of all) {
+      const { frames } = fibMemo.run(input)
+      frames.forEach((frame, i) => {
+        const p = frame.predict
+        if (!p || p.tag !== 'fib-returns') return
+        asked++
+        const next = frames[i + 1]
+        expect(next.at).toBe('store')
+        expect(p.answer).toBe(String(next.vars.result))
+        expect(new Set(p.options).size).toBe(3)
+      })
+    }
+    expect(asked).toBeGreaterThan(20)
+  })
+
+  it('rejects out-of-range input', () => {
+    expect(fm.parse({ n: '0' }).ok).toBe(false)
+    expect(fm.parse({ n: '9' }).ok).toBe(false)
+    expect(fm.parse({ n: '8' })).toEqual({ ok: true, value: { n: 8 } })
   })
 })
