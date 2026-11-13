@@ -137,6 +137,18 @@
           ],
           "max": 3
         }
+      },
+      {
+        "id": "heap",
+        "label": "Heap sort",
+        "tracer": "sorting/heap-sort",
+        "predict": {
+          "tags": [
+            "bigger-child",
+            "swap-or-stop"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true

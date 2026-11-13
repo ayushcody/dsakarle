@@ -82,6 +82,10 @@ export interface GraphView {
   marks?: Array<{ node: number; role: MarkRole }>
   /** One badge text per node; '' or undefined = none. */
   badges?: Array<string | undefined>
+  /** One weight per edge (same order as `edges`); drawn as a chip on the edge. */
+  weights?: number[]
+  /** Custom node placement (same order as node ids); default is the fixed layout for n. */
+  nodes?: GraphNode[]
   annotations?: GraphScene['annotations']
 }
 
@@ -89,10 +93,13 @@ export function graphScene(view: GraphView): GraphScene {
   const scene: GraphScene = {
     kind: 'graph',
     directed: view.directed,
-    nodes: graphNodes(view.n),
+    nodes: view.nodes ?? graphNodes(view.n),
     edges: view.edges.map(([a, b], i) => {
       const role = view.edgeRoles?.[i]
-      return role ? { from: nodeId(a), to: nodeId(b), role } : { from: nodeId(a), to: nodeId(b) }
+      const edge: GraphScene['edges'][number] = { from: nodeId(a), to: nodeId(b) }
+      if (view.weights) edge.weight = view.weights[i]
+      if (role) edge.role = role
+      return edge
     }),
   }
   if (view.marks?.length) scene.marks = view.marks.map((m) => ({ id: nodeId(m.node), role: m.role }))
@@ -187,6 +194,49 @@ export function parseEdges(raw: string | undefined, n: number, directed: boolean
     edges.push([a, b])
   }
   return { ok: true, value: edges }
+}
+
+/** [from, to, weight]. */
+export type WeightedEdge = [number, number, number]
+
+export const MIN_WEIGHT = 1
+export const MAX_WEIGHT = 9
+
+/**
+ * "0-1:4, 0-2:1". Same rules as parseEdges (undirected unless `directed`), plus a
+ * weight from MIN_WEIGHT to MAX_WEIGHT after a colon on every edge.
+ */
+export function parseWeightedEdges(raw: string | undefined, n: number, directed: boolean): ParseResult<WeightedEdge[]> {
+  const field = 'edges'
+  const parts = (raw ?? '')
+    .split(/[,;\n]+/)
+    .map((p) => p.trim())
+    .filter((p) => p !== '')
+  if (parts.length === 0) {
+    return { ok: false, field, error: 'Type at least one road with its length, like 0-1:4, 0-2:1.' }
+  }
+  const weights: number[] = []
+  const bare: string[] = []
+  for (const part of parts) {
+    const i = part.indexOf(':')
+    const wText = i < 0 ? '' : part.slice(i + 1).trim()
+    if (i < 0 || !/^\d+$/.test(wText)) {
+      return { ok: false, field, error: `"${shown(part)}" needs a weight. Write it like 0-1:4, where 4 is the road length.` }
+    }
+    const w = Number(wText)
+    if (w < MIN_WEIGHT || w > MAX_WEIGHT) {
+      return { ok: false, field, error: `Weights run from ${MIN_WEIGHT} to ${MAX_WEIGHT}, not ${w}.` }
+    }
+    weights.push(w)
+    bare.push(part.slice(0, i))
+  }
+  const edges = parseEdges(bare.join(', '), n, directed)
+  if (!edges.ok) return edges
+  return { ok: true, value: edges.value.map(([a, b], k) => [a, b, weights[k]] as WeightedEdge) }
+}
+
+export function formatWeightedEdges(edges: WeightedEdge[], directed: boolean): string {
+  return edges.map(([a, b, w]) => `${a}${directed ? '->' : '-'}${b}:${w}`).join(', ')
 }
 
 export function formatEdges(edges: Edge[], directed: boolean): string {

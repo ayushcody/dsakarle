@@ -14,6 +14,10 @@ import paths from '@/lib/tracers/dynamic-programming/unique-paths'
 import type { UniquePathsInput } from '@/lib/tracers/dynamic-programming/unique-paths'
 import coin from '@/lib/tracers/dynamic-programming/coin-change'
 import type { CoinChangeInput } from '@/lib/tracers/dynamic-programming/coin-change'
+import knapsack from '@/lib/tracers/dynamic-programming/knapsack'
+import type { KnapsackInput } from '@/lib/tracers/dynamic-programming/knapsack'
+import lcs from '@/lib/tracers/dynamic-programming/lcs'
+import type { LcsInput } from '@/lib/tracers/dynamic-programming/lcs'
 import type { AnyTracer, Frame, GridScene } from '@/lib/engine/types'
 
 function grid(frame: Frame): GridScene {
@@ -456,6 +460,132 @@ describe('coin-change: predicts tell the truth', () => {
 })
 
 // ===========================================================================
+// dynamic-programming/knapsack
+// ===========================================================================
+
+describe('knapsack: grid scenes and recurrence', () => {
+  it('keeps every grid inside 8 x 8 with valid marks and arrows', () => {
+    for (const { frames } of runsOf<KnapsackInput>(knapsack)) {
+      frames.forEach((f, idx) => {
+        checkGrid(f, `knapsack frame ${idx}`)
+        const g = grid(f)
+        expect(g.rows.length).toBeLessThanOrEqual(8)
+        expect(g.rows[0].length).toBeLessThanOrEqual(8)
+      })
+    }
+  })
+
+  it('fills each cell from skip or take, and predicts tell the truth', () => {
+    let asked = 0
+    for (const { input, frames } of runsOf<KnapsackInput>(knapsack)) {
+      const { weights, values } = input
+      frames.forEach((f, idx) => {
+        if (f.at === 'pick') {
+          const i = f.vars.i as number
+          const w = f.vars.w as number
+          const g = grid(f)
+          const skip = g.rows[i - 1][w] as number
+          const take = (g.rows[i - 1][w - weights[i - 1]] as number) + values[i - 1]
+          expect(g.rows[i][w]).toBe(Math.max(skip, take))
+        }
+        if (!f.predict) return
+        asked++
+        expect(f.predict.tag).toBe('take-or-skip')
+        const next = frames[idx + 1]
+        expect(f.at).toBe('look')
+        expect(next.at).toBe('pick')
+        const i = f.vars.i as number
+        const w = f.vars.w as number
+        const g = grid(next)
+        const skip = g.rows[i - 1][w] as number
+        const tookIt = g.rows[i][w] !== skip
+        expect(f.predict.answer).toBe(tookIt ? 'Take it' : 'Skip it')
+      })
+    }
+    expect(asked).toBeGreaterThan(100)
+  })
+
+  it('the guided preset uses every rule and stays short', () => {
+    const { frames } = knapsack.run(knapsack.input.presets[0].value)
+    expect(new Set(frames.map((f) => f.at))).toEqual(new Set(Object.keys(knapsack.anchors)))
+    expect(frames.length).toBeLessThanOrEqual(45)
+  })
+
+  it('rejects mismatched lengths and big capacities', () => {
+    expect(knapsack.input.parse({ weights: '1, 2', values: '3', capacity: '4' }).ok).toBe(false)
+    expect(knapsack.input.parse({ weights: '1, 2', values: '3, 4', capacity: '8' }).ok).toBe(false)
+    expect(knapsack.input.parse({ weights: '1, 2', values: '3, 4', capacity: '0' }).ok).toBe(false)
+    expect(knapsack.input.parse({ weights: '1, 2', values: '3, 4', capacity: '7' }).ok).toBe(true)
+  })
+})
+
+// ===========================================================================
+// dynamic-programming/lcs
+// ===========================================================================
+
+describe('lcs: grid scenes, traceback and predicts', () => {
+  it('keeps every grid inside 8 x 8 with valid marks and arrows', () => {
+    for (const { frames } of runsOf<LcsInput>(lcs)) {
+      frames.forEach((f, idx) => {
+        checkGrid(f, `lcs frame ${idx}`)
+        expect(grid(f).rows.length).toBeLessThanOrEqual(8)
+        expect(grid(f).rows[0].length).toBeLessThanOrEqual(8)
+      })
+    }
+  })
+
+  it('match / mismatch frames follow the recurrence and predicts tell the truth', () => {
+    let asked = 0
+    for (const { input, frames } of runsOf<LcsInput>(lcs)) {
+      frames.forEach((f, idx) => {
+        if (f.at === 'match' || f.at === 'mismatch') {
+          const i = f.vars.i as number
+          const j = f.vars.j as number
+          const g = grid(f)
+          const same = input.a[i - 1] === input.b[j - 1]
+          expect(f.at).toBe(same ? 'match' : 'mismatch')
+          const expected = same ? (g.rows[i - 1][j - 1] as number) + 1 : Math.max(g.rows[i - 1][j] as number, g.rows[i][j - 1] as number)
+          expect(g.rows[i][j]).toBe(expected)
+          expect(cellsWith(f, 'found').length > 0).toBe(same)
+        }
+        if (!f.predict) return
+        asked++
+        expect(f.predict.tag).toBe('match-or-max')
+        expect(f.predict.answer).toBe(frames[idx + 1].at === 'match' ? 'Match: diagonal + 1' : 'No match: max of up and left')
+      })
+    }
+    expect(asked).toBeGreaterThan(100)
+  })
+
+  it('the traceback ends at the top or left edge and the LCS has the right length', () => {
+    for (const { input, frames, result } of runsOf<LcsInput>(lcs)) {
+      const last = frames[frames.length - 1]
+      expect(last.at).toBe('done')
+      const traceFrames = frames.filter((f) => f.at === 'trace')
+      expect(traceFrames.length).toBeGreaterThanOrEqual(1)
+      const path = cellsWith(traceFrames[traceFrames.length - 1], 'found')
+      const [r, c] = path[path.length - 1]
+      expect(r === 0 || c === 0).toBe(true)
+      expect(path[0]).toEqual([input.a.length, input.b.length])
+      expect(traceFrames.length).toBeLessThanOrEqual(input.a.length + input.b.length + 1)
+      expect(grid(last).rows[input.a.length][input.b.length]).toBe(result)
+    }
+  })
+
+  it('the guided preset uses every rule and stays short', () => {
+    const { frames } = lcs.run(lcs.input.presets[0].value)
+    expect(new Set(frames.map((f) => f.at))).toEqual(new Set(Object.keys(lcs.anchors)))
+    expect(frames.length).toBeLessThanOrEqual(50)
+  })
+
+  it('rejects non-letters and upper-cases the words', () => {
+    expect(lcs.input.parse({ a: 'ab1', b: 'abc' }).ok).toBe(false)
+    expect(lcs.input.parse({ a: 'a b', b: 'abc' }).ok).toBe(false)
+    expect(lcs.input.parse({ a: 'abc', b: 'bcd' })).toEqual({ ok: true, value: { a: 'ABC', b: 'BCD' } })
+  })
+})
+
+// ===========================================================================
 // content/topics/dynamic-programming.json
 // ===========================================================================
 
@@ -479,6 +609,8 @@ describe('content/topics/dynamic-programming.json', () => {
       'dynamic-programming/climb-stairs': climb,
       'dynamic-programming/unique-paths': paths,
       'dynamic-programming/coin-change': coin,
+      'dynamic-programming/knapsack': knapsack,
+      'dynamic-programming/lcs': lcs,
     }
     for (const track of lesson.stage.tracks as Array<{ tracer: string; preset?: number; predict?: { tags: string[] } }>) {
       const tracer = byId[track.tracer]

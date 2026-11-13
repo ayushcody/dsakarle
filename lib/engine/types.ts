@@ -314,6 +314,11 @@ export interface TracerInput<I> {
   presets: Array<{ label: string; value: I }>
   /** Deterministic random input for the "Random" button and tests. */
   random(seed: number): I
+  /**
+   * Number of distinct valid inputs, when that is small (e.g. N-Queens takes only n = 4..6).
+   * The test harness's "random(seed) varies" check asks for at most this many. Omit otherwise.
+   */
+  space?: number
   limits: InputLimits
 }
 

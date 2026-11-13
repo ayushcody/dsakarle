@@ -20,20 +20,16 @@ import validParens from '@/lib/tracers/stacks/valid-parentheses'
 import type { ValidParenthesesInput } from '@/lib/tracers/stacks/valid-parentheses'
 import nextGreater from '@/lib/tracers/stacks/next-greater'
 import type { NextGreaterInput } from '@/lib/tracers/stacks/next-greater'
+import largestRect from '@/lib/tracers/stacks/largest-rectangle'
+import type { LargestRectangleInput } from '@/lib/tracers/stacks/largest-rectangle'
 import type { AnyTracer, ArrayScene, Frame, Scene, StackScene } from '@/lib/engine/types'
 
-const tracers: AnyTracer[] = [pushPop, validParens, nextGreater]
+const tracers: AnyTracer[] = [pushPop, validParens, nextGreater, largestRect]
 
 /** Every stack scene inside a scene (composites included). */
 function stacksIn(scene: Scene): StackScene[] {
   if (scene.kind === 'stack') return [scene]
   if (scene.kind === 'composite') return scene.parts.flatMap((p) => stacksIn(p.scene))
-  return []
-}
-
-function arraysIn(scene: Scene): ArrayScene[] {
-  if (scene.kind === 'array') return [scene]
-  if (scene.kind === 'composite') return scene.parts.flatMap((p) => arraysIn(p.scene))
   return []
 }
 
@@ -535,13 +531,13 @@ describe('content/topics/stacks.json', () => {
     expect(lesson.slug).toBe('stacks')
   })
 
-  it('has three tracks on the three tracers, each asking predict tags its guided run really emits', () => {
-    expect(lesson.stage.tracks.map((t) => t.tracer)).toEqual(['stacks/push-pop', 'stacks/valid-parentheses', 'stacks/next-greater'])
+  it('has a track per tracer, each asking predict tags its guided run really emits', () => {
+    expect(lesson.stage.tracks.map((t) => t.tracer)).toEqual(['stacks/push-pop', 'stacks/valid-parentheses', 'stacks/next-greater', 'stacks/largest-rectangle'])
     for (const track of lesson.stage.tracks) {
       const tracer = byId.get(track.tracer)!
       const preset = tracer.input.presets[track.preset ?? 0]
       const emitted = tracer.run(preset.value).frames.flatMap((f) => (f.predict ? [f.predict.tag] : []))
-      expect(track.predict!.max).toBeLessThanOrEqual(3)
+      expect(track.predict!.max).toBeLessThanOrEqual(4)
       for (const tag of track.predict!.tags) expect(emitted, `${track.id}: tag ${tag} in the guided run`).toContain(tag)
     }
   })
@@ -613,5 +609,102 @@ describe('content/topics/stacks.json', () => {
     expect(lesson.practice.length).toBeGreaterThanOrEqual(6)
     expect(lesson.practice.length).toBeLessThanOrEqual(8)
     expect(new Set(lesson.practice.map((p) => p.difficulty)).size).toBe(3)
+  })
+})
+
+// ===========================================================================
+// stacks/largest-rectangle
+// ===========================================================================
+
+function lrParts(frame: Frame): { bars: ArrayScene; stack: StackScene } {
+  if (frame.scene.kind !== 'composite') throw new Error('expected a composite scene')
+  const [a, b] = frame.scene.parts.map((p) => p.scene)
+  if (a.kind !== 'array' || b.kind !== 'stack') throw new Error('expected heights, stack')
+  return { bars: a, stack: b }
+}
+
+describe('stacks/largest-rectangle: default preset', () => {
+  const input = largestRect.input.presets[0].value as LargestRectangleInput
+  const { frames, result } = largestRect.run(input)
+
+  it('is the LeetCode 84 example: area 10', () => {
+    expect(input.heights).toEqual([2, 1, 5, 6, 2, 3])
+    expect(result).toBe(10)
+  })
+
+  it('stays within the guided frame budget and uses every anchor', () => {
+    expect(frames.length).toBeGreaterThanOrEqual(15)
+    expect(frames.length).toBeLessThanOrEqual(40)
+    expect(new Set(frames.map((f) => f.at))).toEqual(new Set(Object.keys(largestRect.anchors)))
+  })
+
+  it('the 5 x 2 rectangle is measured with window over bars 2..3 and marked found at the end', () => {
+    const measure = frames.find((f) => f.at === 'measure' && /= 10/.test(f.say))!
+    expect(lrParts(measure).bars.window).toEqual({ start: 2, end: 3 })
+    const last = frames[frames.length - 1]
+    expect(last.at).toBe('done')
+    expect(lrParts(last).bars.window).toEqual({ start: 2, end: 3 })
+    expect(lrParts(last).bars.marks).toEqual(expect.arrayContaining([{ index: 2, role: 'found' }, { index: 3, role: 'found' }]))
+  })
+})
+
+describe('stacks/largest-rectangle: invariants', () => {
+  it('heights never fall from bottom to top of the stack', () => {
+    for (const { input, frames } of allRuns<LargestRectangleInput>(largestRect)) {
+      for (const frame of frames) {
+        const hs = lrParts(frame).stack.items.map((it) => {
+          const m = /^bar (\d+) · (\d+)$/.exec(String(it))
+          if (!m) throw new Error(`unexpected item ${it}`)
+          expect(input.heights[Number(m[1])]).toBe(Number(m[2]))
+          return Number(m[2])
+        })
+        for (let k = 1; k < hs.length; k++) expect(hs[k]).toBeGreaterThanOrEqual(hs[k - 1])
+      }
+    }
+  })
+
+  it('handles zeros, a single bar and equal bars', () => {
+    expect(largestRect.run({ heights: [0] }).result).toBe(0)
+    expect(largestRect.run({ heights: [7] }).result).toBe(7)
+    expect(largestRect.run({ heights: [4, 4, 4] }).result).toBe(12)
+    expect(largestRect.run({ heights: [2, 0, 2] }).result).toBe(2)
+  })
+})
+
+describe('stacks/largest-rectangle: predicts', () => {
+  it('push-or-pop matches the next frame, and rect-width matches the measured width', () => {
+    const seen = new Set<string>()
+    for (const { frames } of allRuns<LargestRectangleInput>(largestRect)) {
+      frames.forEach((frame, i) => {
+        const p = frame.predict
+        if (!p) return
+        seen.add(p.tag)
+        const next = frames[i + 1]
+        if (p.tag === 'push-or-pop') {
+          expect(frame.at).toBe('compare')
+          expect(next.at).toBe(p.answer === 'Pop' ? 'pop' : 'push')
+        } else {
+          expect(p.tag).toBe('rect-width')
+          expect(next.at).toBe('measure')
+          expect(next.say).toContain(`Width ${p.answer} `)
+          expect(new Set(p.options).size).toBe(p.options!.length)
+        }
+      })
+    }
+    expect(seen).toEqual(new Set(['push-or-pop', 'rect-width']))
+  })
+})
+
+describe('stacks/largest-rectangle: input rules and lesson wiring', () => {
+  it('rejects heights above 9 with a friendly message', () => {
+    const r = largestRect.input.parse({ heights: '2, 10' })
+    expect(r.ok).toBe(false)
+  })
+
+  it('the stacks lesson has a largest-rectangle track', () => {
+    const file = fileURLToPath(new URL('../../content/topics/stacks.json', import.meta.url))
+    const lesson = JSON.parse(fs.readFileSync(file, 'utf8')) as LessonV2
+    const track = lesson.stage.tracks.find((t) => t.tracer === 'stacks/largest-rectangle')
+    expect(track?.predict?.tags).toEqual(['push-or-pop', 'rect-width'])
   })
 })

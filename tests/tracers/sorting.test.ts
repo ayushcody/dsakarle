@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest'
 import insertion from '@/lib/tracers/sorting/insertion-sort'
 import merge from '@/lib/tracers/sorting/merge-sort'
 import quick from '@/lib/tracers/sorting/quick-sort'
+import heapSort from '@/lib/tracers/sorting/heap-sort'
 import type { SortInput } from '@/lib/tracers/sorting/shared'
 import type { AnyTracer, ArrayScene, Frame } from '@/lib/engine/types'
 
@@ -536,5 +537,33 @@ describe('sorting/quick-sort: predicts tell the truth', () => {
   it('asks on the default preset', () => {
     const tags = new Set(quick.run(quick.input.presets[0].value).frames.flatMap((f) => (f.predict ? [f.predict.tag] : [])))
     expect(tags).toEqual(new Set(['swap-or-not']))
+  })
+})
+
+// ===========================================================================
+// sorting/heap-sort
+// ===========================================================================
+
+describe('sorting/heap-sort', () => {
+  const heap = heapSort
+  const guided = heap.run(heap.input.presets[0].value)
+
+  it('guided preset is 20-45 frames and uses every anchor', () => {
+    expect(guided.frames.length).toBeGreaterThanOrEqual(20)
+    expect(guided.frames.length).toBeLessThanOrEqual(45)
+    expect(new Set(guided.frames.map((f) => f.at)).size).toBe(Object.keys(heap.anchors).length)
+  })
+
+  it('sorts every run, shrinks the heap once per extract and stays under the frame cap', () => {
+    for (const { input, frames, result } of runs(heap)) {
+      expect(result).toEqual([...input.nums].sort((a, b) => a - b))
+      expect(count(frames, 'extract')).toBe(input.nums.length - 1)
+      expect(count(frames, 'shrink')).toBe(input.nums.length - 1)
+      expect(frames.length).toBeLessThan(400)
+    }
+  })
+
+  it('rejects more than 8 numbers kindly', () => {
+    expect(heap.input.parse({ nums: '1,2,3,4,5,6,7,8,9' })).toMatchObject({ ok: false, error: expect.stringMatching(/at most 8/) })
   })
 })

@@ -7,6 +7,8 @@
 import { describe, expect, it } from 'vitest'
 import factorial from '@/lib/tracers/recursion/factorial'
 import type { FactorialInput } from '@/lib/tracers/recursion/factorial'
+import nQueens from '@/lib/tracers/recursion/n-queens'
+import type { NQueensInput } from '@/lib/tracers/recursion/n-queens'
 import subsets from '@/lib/tracers/recursion/subsets'
 import type { SubsetsInput } from '@/lib/tracers/recursion/subsets'
 import type { ArrayScene, CallTreeScene, Frame, Scene } from '@/lib/engine/types'
@@ -362,5 +364,50 @@ describe('recursion/subsets: input', () => {
     const neg = ss.parse({ ...base, limit: '-1' })
     expect(neg.ok).toBe(false)
     expect(ss.parse({ nums: '[3, -2]', limit: '1' })).toEqual({ ok: true, value: { nums: [3, -2], limit: 1 } })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// recursion/n-queens
+// ---------------------------------------------------------------------------
+
+describe('recursion/n-queens', () => {
+  const nq = nQueens.input
+  const all: NQueensInput[] = [4, 5, 6].map((n) => ({ n }))
+
+  it('finds the classic first solutions', () => {
+    expect(nQueens.run({ n: 4 }).result).toEqual([1, 3, 0, 2])
+    expect(nQueens.run({ n: 5 }).result).toEqual([0, 2, 4, 1, 3])
+    expect(nQueens.run({ n: 6 }).result).toEqual([1, 3, 5, 0, 2, 4])
+  })
+
+  it('the 4-queens preset shows a backtrack and every n stays under the frame cap', () => {
+    expect(nQueens.run({ n: 4 }).frames.some((f) => f.at === 'unplace')).toBe(true)
+    for (const input of all) {
+      const { frames: fr, result } = nQueens.run(input)
+      expect(fr.length, JSON.stringify(input)).toBeLessThanOrEqual(400)
+      expect(result, JSON.stringify(input)).toEqual(nQueens.reference(input))
+      expect(fr[fr.length - 1].at).toBe('done')
+    }
+  })
+
+  it('predicts tell the truth', () => {
+    for (const input of all) {
+      const { frames } = nQueens.run(input)
+      frames.forEach((f, i) => {
+        const next = frames[i + 1]
+        if (!f.predict) return
+        if (f.predict.tag === 'safe-or-attacked') {
+          expect(f.predict.answer === 'Safe' ? 'place' : 'conflict', JSON.stringify(input)).toBe(next.at)
+        } else {
+          expect(f.predict.answer === 'Backtrack to the row above', JSON.stringify(input)).toBe(next.at === 'unplace')
+        }
+      })
+    }
+  })
+
+  it('rejects out-of-range input with friendly errors', () => {
+    expect(nq.parse({ n: '3' }).ok).toBe(false)
+    expect(nq.parse({ n: '7' }).ok).toBe(false)
   })
 })

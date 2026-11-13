@@ -262,6 +262,31 @@
           ],
           "max": 1
         }
+      },
+      {
+        "id": "dijkstra",
+        "label": "Dijkstra: cheapest route first",
+        "tracer": "graphs/dijkstra",
+        "predict": {
+          "tags": [
+            "next-settled",
+            "improves"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "union-find",
+        "label": "Union-Find: who is connected?",
+        "tracer": "graphs/union-find",
+        "predict": {
+          "tags": [
+            "find-root",
+            "connected",
+            "bigger-root"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true
@@ -538,7 +563,7 @@
       "title": "Network Delay Time",
       "url": "https://leetcode.com/problems/network-delay-time/",
       "difficulty": "medium",
-      "insight": "Edges have weights, so counting hops is not enough. This needs Dijkstra's algorithm, which is not taught here yet, so come back to it later."
+      "insight": "Edges have weights, so counting hops is not enough. Settle the closest unsettled node, relax its roads, and the answer is the largest distance (or -1 if some node is never reached)."
     },
     {
       "title": "Sort Items by Groups Respecting Dependencies",

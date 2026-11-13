@@ -14,6 +14,8 @@ import jumpGame from '@/lib/tracers/greedy/jump-game'
 import type { JumpGameInput } from '@/lib/tracers/greedy/jump-game'
 import scheduling from '@/lib/tracers/greedy/interval-scheduling'
 import type { IntervalSchedulingInput } from '@/lib/tracers/greedy/interval-scheduling'
+import merge from '@/lib/tracers/greedy/merge-intervals'
+import type { MergeIntervalsInput } from '@/lib/tracers/greedy/merge-intervals'
 import type { AnyTracer, ArrayScene, Frame } from '@/lib/engine/types'
 
 function arrayScene(frame: Frame): ArrayScene {
@@ -380,6 +382,7 @@ describe('content/topics/greedy.json', () => {
   const byId = new Map<string, AnyTracer>([
     [jumpGame.id, jumpGame],
     [scheduling.id, scheduling],
+    [merge.id, merge],
   ])
 
   it('is a valid v2 lesson', () => {
@@ -387,8 +390,8 @@ describe('content/topics/greedy.json', () => {
     expect(lesson.slug).toBe('greedy')
   })
 
-  it('has two tracks, each asking predict tags its guided run really emits', () => {
-    expect(lesson.stage.tracks.map((t) => t.tracer)).toEqual(['greedy/interval-scheduling', 'greedy/jump-game'])
+  it('has three tracks, each asking predict tags its guided run really emits', () => {
+    expect(lesson.stage.tracks.map((t) => t.tracer)).toEqual(['greedy/interval-scheduling', 'greedy/jump-game', 'greedy/merge-intervals'])
     for (const track of lesson.stage.tracks) {
       const tracer = byId.get(track.tracer)!
       const { frames } = tracer.run(tracer.input.presets[track.preset ?? 0].value)
@@ -440,5 +443,40 @@ describe('content/topics/greedy.json', () => {
     for (let a = 1; a <= amount; a++) best[a] = Math.min(...coins.filter((c) => c <= a).map((c) => best[a - c] + 1))
     expect([greedy, best[amount]]).toEqual([3, 2])
     expect(JSON.stringify(lesson)).toMatch(/4 \+ 1 \+ 1 = 3 coins/)
+  })
+})
+
+// ===========================================================================
+// greedy/merge-intervals
+// ===========================================================================
+
+const mInput = merge.input
+const mDefault = mInput.presets[0].value as MergeIntervalsInput
+
+describe('greedy/merge-intervals', () => {
+  it('default preset: sorts, takes the first, extends once, pushes twice (12 frames)', () => {
+    const { frames, result } = merge.run(mDefault)
+    expect(frames.map((f) => f.at)).toEqual(['sort', 'sort', 'start', 'check', 'extend', 'check', 'push', 'check', 'push', 'check', 'extend', 'done'])
+    expect(result).toEqual([[1, 6], [8, 10], [15, 20]])
+  })
+
+  it('touching intervals merge (LeetCode 56)', () => {
+    expect(merge.run({ intervals: [[1, 2], [2, 3]] }).result).toEqual([[1, 3]])
+    expect(merge.run(mInput.presets[1].value as MergeIntervalsInput).result).toEqual([[1, 4], [6, 7]])
+  })
+
+  it('a contained interval does not shrink the end', () => {
+    expect(merge.run({ intervals: [[1, 10], [2, 3]] }).result).toEqual([[1, 10]])
+  })
+
+  it('merge-or-new predict answers match the next frame', () => {
+    for (let seed = 1; seed <= 200; seed++) {
+      const { frames } = merge.run(mInput.random(seed))
+      frames.forEach((f, k) => {
+        if (!f.predict) return
+        expect(f.predict.tag).toBe('merge-or-new')
+        expect(f.predict.answer).toBe(frames[k + 1].at === 'extend' ? 'Merge it' : 'Start a new one')
+      })
+    }
   })
 })
