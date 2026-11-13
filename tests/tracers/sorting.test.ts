@@ -11,6 +11,8 @@ import insertion from '@/lib/tracers/sorting/insertion-sort'
 import merge from '@/lib/tracers/sorting/merge-sort'
 import quick from '@/lib/tracers/sorting/quick-sort'
 import heapSort from '@/lib/tracers/sorting/heap-sort'
+import bubble from '@/lib/tracers/sorting/bubble-sort'
+import selection from '@/lib/tracers/sorting/selection-sort'
 import type { SortInput } from '@/lib/tracers/sorting/shared'
 import type { AnyTracer, ArrayScene, Frame } from '@/lib/engine/types'
 
@@ -565,5 +567,86 @@ describe('sorting/heap-sort', () => {
 
   it('rejects more than 8 numbers kindly', () => {
     expect(heap.input.parse({ nums: '1,2,3,4,5,6,7,8,9' })).toMatchObject({ ok: false, error: expect.stringMatching(/at most 8/) })
+  })
+})
+
+// ===========================================================================
+// sorting/bubble-sort and sorting/selection-sort
+// ===========================================================================
+
+describe('sorting/bubble-sort', () => {
+  const guided = bubble.run(bubble.input.presets[0].value)
+
+  it('guided preset is 15-45 frames, uses every anchor and exits early', () => {
+    expect(guided.frames.length).toBeGreaterThanOrEqual(15)
+    expect(guided.frames.length).toBeLessThanOrEqual(45)
+    expect(new Set(guided.frames.map((f) => f.at)).size).toBe(Object.keys(bubble.anchors).length)
+  })
+
+  it('stops after one pass on sorted input', () => {
+    const { frames, result } = bubble.run({ nums: [1, 2, 3, 4, 5, 6] })
+    expect(result).toEqual([1, 2, 3, 4, 5, 6])
+    expect(count(frames, 'pass')).toBe(1)
+    expect(count(frames, 'compare')).toBe(5)
+    expect(count(frames, 'swap')).toBe(0)
+    expect(count(frames, 'early')).toBe(1)
+  })
+
+  it('swaps once per inversion and stays under the frame cap', () => {
+    for (const { input, frames, result } of runs(bubble)) {
+      expect(result).toEqual([...input.nums].sort((a, b) => a - b))
+      let inversions = 0
+      input.nums.forEach((x, i) => input.nums.slice(i + 1).forEach((y) => { if (x > y) inversions++ }))
+      expect(count(frames, 'swap')).toBe(inversions)
+      expect(frames.length).toBeLessThan(400)
+    }
+  })
+
+  it('predict answers match the next frame', () => {
+    for (const { frames } of runs(bubble)) {
+      frames.forEach((frame, i) => {
+        const p = frame.predict
+        if (!p) return
+        const next = frames[i + 1]
+        if (p.tag === 'swap-or-not') expect(next.at === 'swap').toBe(p.answer === 'Swap them')
+        else expect(next.at).toBe(p.answer === 'Yes, stop now' ? 'early' : 'pass')
+      })
+    }
+  })
+
+  it('rejects more than 8 numbers kindly', () => {
+    expect(bubble.input.parse({ nums: '1,2,3,4,5,6,7,8,9' })).toMatchObject({ ok: false, error: expect.stringMatching(/at most 8/) })
+  })
+})
+
+describe('sorting/selection-sort', () => {
+  const guided = selection.run(selection.input.presets[0].value)
+
+  it('guided preset is 15-45 frames and uses every anchor', () => {
+    expect(guided.frames.length).toBeGreaterThanOrEqual(15)
+    expect(guided.frames.length).toBeLessThanOrEqual(45)
+    expect(new Set(guided.frames.map((f) => f.at)).size).toBe(Object.keys(selection.anchors).length)
+  })
+
+  it('does n-1 swaps and n(n-1)/2 scans, and stays under the frame cap', () => {
+    for (const { input, frames, result } of runs(selection)) {
+      const n = input.nums.length
+      expect(result).toEqual([...input.nums].sort((a, b) => a - b))
+      expect(count(frames, 'swap')).toBe(n - 1)
+      expect(count(frames, 'scan')).toBe((n * (n - 1)) / 2)
+      expect(frames.length).toBeLessThan(400)
+    }
+  })
+
+  it('predict answers match the next frame', () => {
+    for (const { frames } of runs(selection)) {
+      frames.forEach((frame, i) => {
+        if (frame.predict) expect(frames[i + 1].at === 'newmin').toBe(frame.predict.answer === 'New minimum')
+      })
+    }
+  })
+
+  it('rejects more than 8 numbers kindly', () => {
+    expect(selection.input.parse({ nums: '1,2,3,4,5,6,7,8,9' })).toMatchObject({ ok: false, error: expect.stringMatching(/at most 8/) })
   })
 })

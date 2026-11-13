@@ -40,3 +40,6 @@ next-env.d.ts
 *.pages
 *.zip
 *.html
+
+# Python bytecode from compiling content/code
+__pycache__/

@@ -106,6 +106,29 @@
   "stage": {
     "tracks": [
       {
+        "id": "bubble",
+        "label": "Bubble sort",
+        "tracer": "sorting/bubble-sort",
+        "predict": {
+          "tags": [
+            "swap-or-not",
+            "sorted-yet"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "selection",
+        "label": "Selection sort",
+        "tracer": "sorting/selection-sort",
+        "predict": {
+          "tags": [
+            "new-min"
+          ],
+          "max": 3
+        }
+      },
+      {
         "id": "insertion",
         "label": "Insertion sort",
         "tracer": "sorting/insertion-sort",

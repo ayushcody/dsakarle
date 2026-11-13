@@ -13,6 +13,7 @@ import dijkstra from '@/lib/tracers/graphs/dijkstra'
 import type { DijkstraInput } from '@/lib/tracers/graphs/dijkstra'
 import unionFind from '@/lib/tracers/graphs/union-find'
 import type { UnionFindInput } from '@/lib/tracers/graphs/union-find'
+import kruskal from '@/lib/tracers/graphs/kruskal'
 import topoSort from '@/lib/tracers/graphs/topo-sort'
 import type { TopoSortInput } from '@/lib/tracers/graphs/topo-sort'
 import { MAX_NODES, MIN_NODES, POSITIONS, graphNodes } from '@/lib/tracers/graphs/common'
@@ -631,5 +632,22 @@ describe('graphs/union-find: predicts and parsing', () => {
     expect(base.edges).toBe('0-1, 2-3, 0-2, 3-4, 1-4, 5-4')
     expect(uf.parse({ ...base, edges: '0-9' }).ok).toBe(false)
     expect(uf.parse({ ...base, edges: '1-1' }).ok).toBe(false)
+  })
+})
+
+describe('graphs/kruskal', () => {
+  it('sums the cheapest spanning tree, or forest when not connected', () => {
+    expect(kruskal.run(kruskal.input.presets[0].value).result).toBe(13)
+    expect(kruskal.run(kruskal.input.presets[2].value).result).toBe(9)
+  })
+
+  it('answers every take-or-skip predict like the next frames show', () => {
+    for (const preset of kruskal.input.presets) {
+      const { frames } = kruskal.run(preset.value)
+      frames.forEach((f, i) => {
+        if (!f.predict) return
+        expect(frames[i + 2].at).toBe(f.predict.answer === 'Take it' ? 'take' : 'skip')
+      })
+    }
   })
 })

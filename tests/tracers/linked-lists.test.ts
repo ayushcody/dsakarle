@@ -17,6 +17,8 @@ import traverse from '@/lib/tracers/linked-lists/traverse'
 import insertAfter from '@/lib/tracers/linked-lists/insert-after'
 import del from '@/lib/tracers/linked-lists/delete'
 import reverse from '@/lib/tracers/linked-lists/reverse'
+import mergeSorted from '@/lib/tracers/linked-lists/merge-sorted'
+import type { MergeSortedInput } from '@/lib/tracers/linked-lists/merge-sorted'
 import type { AnyTracer, Frame, LinkedListScene } from '@/lib/engine/types'
 
 const tracers: AnyTracer[] = [traverse, insertAfter, del, reverse]
@@ -506,19 +508,20 @@ describe('linked-list inputs', () => {
 
 describe('content/topics/linked-lists.json', () => {
   const lesson = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../../content/topics/linked-lists.json', import.meta.url)), 'utf8')) as LessonV2
-  const byId = new Map(tracers.map((t) => [t.id as string, t]))
+  const byId = new Map([...tracers, mergeSorted as AnyTracer].map((t) => [t.id as string, t]))
 
   it('is a valid v2 lesson', () => {
     expect(lessonV2Schema.safeParse(lesson).success).toBe(true)
     expect(lesson.slug).toBe('linked-lists')
   })
 
-  it('has four tracks on the four tracers, each asking predict tags its guided run really emits', () => {
+  it('has a track per tracer (traverse, insert, delete, reverse, merge), each asking predict tags its guided run really emits', () => {
     expect(lesson.stage.tracks.map((t) => t.tracer)).toEqual([
       'linked-lists/traverse',
       'linked-lists/insert-after',
       'linked-lists/delete',
       'linked-lists/reverse',
+      'linked-lists/merge-sorted',
     ])
     for (const track of lesson.stage.tracks) {
       const tracer = byId.get(track.tracer)!
@@ -557,3 +560,108 @@ describe('content/topics/linked-lists.json', () => {
     expect(reverseExample?.code).toBe('linked-lists/reverse')
   })
 })
+
+// ---------------------------------------------------------------------------
+// merge-sorted (composite of three linked-list scenes)
+// ---------------------------------------------------------------------------
+
+describe('linked-lists/merge-sorted', () => {
+  const ms = mergeSorted.input
+  const inputs = (): MergeSortedInput[] => [
+    ...ms.presets.map((p) => p.value as MergeSortedInput),
+    ...Array.from({ length: 200 }, (_, i) => ms.random(i + 1) as MergeSortedInput),
+  ]
+  const parts = (frame: Frame): LinkedListScene[] => {
+    if (frame.scene.kind !== 'composite') throw new Error('expected composite')
+    return frame.scene.parts.map((p) => {
+      if (p.scene.kind !== 'linked-list') throw new Error('expected linked lists')
+      return p.scene
+    })
+  }
+
+  it('the default preset merges 1,3,5 and 2,4,6 in 19 frames, leftover from B', () => {
+    const { frames, result } = mergeSorted.run(ms.presets[0].value)
+    expect(result).toEqual([1, 2, 3, 4, 5, 6])
+    expect(frames).toHaveLength(19)
+    const count = (at: string): number => frames.filter((f) => f.at === at).length
+    expect([count('compare'), count('attach'), count('advance'), count('stop'), count('leftover'), count('done')]).toEqual([5, 5, 5, 1, 1, 1])
+    expect(frames[frames.length - 1].say).toMatch(/1 → 2 → 3 → 4 → 5 → 6/)
+  })
+
+  it('ties go to A', () => {
+    const { frames, result } = mergeSorted.run({ a: [1, 2, 4], b: [1, 3, 4] })
+    expect(result).toEqual([1, 1, 2, 3, 4, 4])
+    expect(frames.find((f) => f.at === 'compare')!.predict?.answer).toBe('From list A')
+  })
+
+  it('every frame is a valid three-list scene; merged is a chain from dummy that ends in null', () => {
+    for (const input of inputs()) {
+      const { frames } = mergeSorted.run(input)
+      frames.forEach((frame, i) => {
+        const where = `${JSON.stringify(input)} frame ${i} (${frame.at})`
+        const scenes = parts(frame)
+        expect(scenes).toHaveLength(3)
+        for (const scene of scenes) {
+          const ids = new Set(scene.nodes.map((n) => n.id))
+          expect(ids.size, `${where}: duplicate ids`).toBe(scene.nodes.length)
+          for (const l of scene.links) {
+            expect(ids.has(l.from), where).toBe(true)
+            if (l.to !== null) expect(ids.has(l.to), where).toBe(true)
+          }
+          for (const p of scene.pointers ?? []) if (p.target !== null) expect(ids.has(p.target), `${where}: pointer ${p.name}`).toBe(true)
+          for (const m of scene.marks ?? []) expect(ids.has(m.id), `${where}: mark`).toBe(true)
+        }
+        const merged = scenes[2]
+        const start = frame.at === 'done' ? 'm0' : 'd'
+        const chain = walk(merged, start)
+        expect(chain, `${where}: merged chain covers every node`).toHaveLength(merged.nodes.length)
+      })
+      const last = frames[frames.length - 1]
+      expect(parts(last)[2].nodes.map((n) => n.value)).toEqual(mergeSorted.reference(input))
+    }
+  })
+
+  it('which-next predicts match what attach does; leftover-list predicts match the leftover', () => {
+    let which = 0
+    let left = 0
+    for (const input of inputs()) {
+      const { frames } = mergeSorted.run(input)
+      frames.forEach((frame, i) => {
+        const p = frame.predict
+        if (!p) return
+        const next = frames[i + 1]
+        if (p.tag === 'which-next') {
+          which++
+          expect(next.at).toBe('attach')
+          const before = frame.vars as { a: number; b: number }
+          expect(p.answer).toBe(before.a <= before.b ? 'From list A' : 'From list B')
+          expect(next.vars.tail).not.toBeUndefined()
+          const aMoved = pointerOf(next, 0, 'a') !== pointerOf(frame, 0, 'a')
+          expect(p.answer === 'From list A').toBe(aMoved)
+        } else {
+          left++
+          expect(p.tag).toBe('leftover-list')
+          expect(next.at).toBe('leftover')
+          const aLeft = pointerOf(frame, 0, 'a') !== null
+          expect(p.answer).toBe(aLeft ? 'From list A' : 'From list B')
+        }
+      })
+    }
+    expect(which).toBeGreaterThan(100)
+    expect(left).toBeGreaterThan(100)
+  })
+
+  it('rejects unsorted, empty and oversize lists kindly', () => {
+    expect(ms.parse({ a: '3, 1', b: '2' })).toMatchObject({ ok: false, field: 'a', error: expect.stringMatching(/sorted.*1 comes after 3/) })
+    expect(ms.parse({ a: '1', b: '' })).toMatchObject({ ok: false, field: 'b' })
+    expect(ms.parse({ a: '1,2,3,4,5,6', b: '1' })).toMatchObject({ ok: false, field: 'a', error: expect.stringMatching(/at most 5/) })
+    expect(ms.parse({ a: '[1, 1, 2]', b: '−3 0' })).toEqual({ ok: true, value: { a: [1, 1, 2], b: [-3, 0] } })
+  })
+})
+
+function pointerOf(frame: Frame, part: number, name: string): string | null | undefined {
+  if (frame.scene.kind !== 'composite') throw new Error('expected composite')
+  const s = frame.scene.parts[part].scene
+  if (s.kind !== 'linked-list') throw new Error('expected linked list')
+  return s.pointers?.find((p) => p.name === name)?.target
+}

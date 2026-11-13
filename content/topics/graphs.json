@@ -287,6 +287,17 @@
           ],
           "max": 4
         }
+      },
+      {
+        "id": "kruskal",
+        "label": "Kruskal: cheapest edges, no cycles",
+        "tracer": "graphs/kruskal",
+        "predict": {
+          "tags": [
+            "take-or-skip"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true

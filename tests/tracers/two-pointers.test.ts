@@ -9,6 +9,7 @@ import pairSum from '@/lib/tracers/two-pointers/pair-sum'
 import type { PairSumInput } from '@/lib/tracers/two-pointers/pair-sum'
 import dedupe from '@/lib/tracers/two-pointers/dedupe'
 import type { DedupeInput } from '@/lib/tracers/two-pointers/dedupe'
+import container from '@/lib/tracers/two-pointers/container-water'
 import type { Frame } from '@/lib/engine/types'
 
 // ===========================================================================
@@ -340,5 +341,47 @@ describe('two-pointers/dedupe: input rules', () => {
     })
     expect(runs.some((r) => r.k < r.n)).toBe(true)
     expect(runs.some((r) => r.k === r.n)).toBe(true)
+  })
+})
+
+// ===========================================================================
+// two-pointers/container-water
+// ===========================================================================
+
+describe('two-pointers/container-water', () => {
+  const t = container
+  const runs = [
+    ...t.input.presets.map((p) => p.value),
+    ...Array.from({ length: 200 }, (_, i) => t.input.random(i + 1)),
+  ].map((value) => ({ input: value, frames: t.run(value).frames }))
+
+  it('gives the classic answers for the presets', () => {
+    expect(t.input.presets.map((p) => t.run(p.value).result)).toEqual([49, 1, 16])
+  })
+
+  it('guided preset has 15 to 45 frames and uses every anchor', () => {
+    const frames = t.run(t.input.presets[0].value).frames
+    expect(frames.length).toBeGreaterThanOrEqual(15)
+    expect(frames.length).toBeLessThanOrEqual(45)
+    expect(new Set(frames.map((f) => f.at))).toEqual(new Set(Object.keys(t.anchors)))
+  })
+
+  it('predict answers are true in the next frame', () => {
+    for (const { frames } of runs) {
+      frames.forEach((f, i) => {
+        if (f.predict?.tag === 'which-pointer-moves') {
+          expect(frames[i + 1].at).toBe(f.predict.answer === 'Move left →' ? 'move-left' : 'move-right')
+        }
+        if (f.predict?.tag === 'new-best') {
+          expect(Number(frames[i + 1].vars.best) > Number(f.vars.best)).toBe(f.predict.answer === 'Yes')
+        }
+      })
+    }
+  })
+
+  it('rejects bad input kindly', () => {
+    expect(t.input.parse({ heights: '5' }).ok).toBe(false)
+    expect(t.input.parse({ heights: '1, 2, 99' }).ok).toBe(false)
+    expect(t.input.parse({ heights: '1, x' }).ok).toBe(false)
   })
 })

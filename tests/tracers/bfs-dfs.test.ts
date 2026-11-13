@@ -8,6 +8,7 @@
  *   - input rules specific to each tracer
  *   - the lesson file wires up to these tracers
  */
+import islands from '@/lib/tracers/bfs-dfs/islands'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -464,15 +465,15 @@ describe('bfs-dfs/dfs-graph: input rules', () => {
 
 describe('content/topics/bfs-dfs.json', () => {
   const lesson = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../../content/topics/bfs-dfs.json', import.meta.url)), 'utf8')) as LessonV2
-  const byId = new Map<string, AnyTracer>([bfsGrid, dfsGraph].map((t) => [t.id as string, t]))
+  const byId = new Map<string, AnyTracer>([bfsGrid, dfsGraph, islands].map((t) => [t.id as string, t]))
 
   it('is a valid v2 lesson', () => {
     expect(lessonV2Schema.safeParse(lesson).success).toBe(true)
     expect(lesson.slug).toBe('bfs-dfs')
   })
 
-  it('has two tracks on the two tracers, each asking predict tags its guided run really emits', () => {
-    expect(lesson.stage.tracks.map((t) => t.tracer)).toEqual(['bfs-dfs/bfs-grid', 'bfs-dfs/dfs-graph'])
+  it('has a track per tracer, each asking predict tags its guided run really emits', () => {
+    expect(lesson.stage.tracks.map((t) => t.tracer)).toEqual(['bfs-dfs/bfs-grid', 'bfs-dfs/dfs-graph', 'bfs-dfs/islands'])
     for (const track of lesson.stage.tracks) {
       const tracer = byId.get(track.tracer)!
       const preset = tracer.input.presets[track.preset ?? 0]
@@ -503,6 +504,32 @@ describe('content/topics/bfs-dfs.json', () => {
         const [r, col] = m![2].split(',').map(Number)
         expect(r >= 0 && r < grid.rows.length && col >= 0 && col < grid.rows[0].length, c.target).toBe(true)
       }
+    }
+  })
+})
+
+describe('bfs-dfs/islands', () => {
+  const run = (rows: string[]) => islands.run({ rows })
+
+  it('counts islands and keeps diagonals apart', () => {
+    expect(run(['1010', '0101', '1010']).result).toBe(6)
+    expect(run(['111', '101', '111']).result).toBe(1)
+    expect(run(['000', '000']).result).toBe(0)
+  })
+
+  it('answers every predict like the next frame shows', () => {
+    for (const preset of islands.input.presets) {
+      const { frames } = islands.run(preset.value)
+      frames.forEach((f, i) => {
+        if (!f.predict) return
+        const next = frames[i + 1]
+        if (f.predict.tag === 'new-island') {
+          expect(next.at).toBe(f.predict.answer === 'New island' ? 'island' : 'counted')
+        } else {
+          expect(next.at).toBe('visit')
+          expect(next.vars.cur).toBe(f.predict.answer)
+        }
+      })
     }
   })
 })

@@ -210,6 +210,28 @@
           ],
           "max": 4
         }
+      },
+      {
+        "id": "edit-distance",
+        "label": "Edit distance: insert, delete or replace",
+        "tracer": "dynamic-programming/edit-distance",
+        "predict": {
+          "tags": [
+            "copy-or-edit"
+          ],
+          "max": 4
+        }
+      },
+      {
+        "id": "lis",
+        "label": "LIS: the longest climb",
+        "tracer": "dynamic-programming/lis",
+        "predict": {
+          "tags": [
+            "can-extend"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true

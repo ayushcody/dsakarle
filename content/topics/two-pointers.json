@@ -121,6 +121,18 @@
           ],
           "max": 3
         }
+      },
+      {
+        "id": "container",
+        "label": "Container with most water",
+        "tracer": "two-pointers/container-water",
+        "predict": {
+          "tags": [
+            "which-pointer-moves",
+            "new-best"
+          ],
+          "max": 4
+        }
       }
     ],
     "playground": true
