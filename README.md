@@ -8,6 +8,26 @@ DSA Karle teaches each idea in the same order. You see a picture of it, step thr
 
 **Live site:** https://dsakarle.vercel.app
 
+![DSA Karle home page: "Watch algorithms think." beside a live sliding-window walkthrough](.github/screenshots/home.png)
+
+---
+
+## A look inside
+
+**Predict, then watch.** The walkthrough stops at decisions and asks for your guess.
+
+![Sliding Window walkthrough paused on a predict question: "Is this a new best?"](.github/screenshots/lesson-walkthrough.png)
+
+| | |
+|---|---|
+| ![Linked Lists lesson with the path sidebar on the left and lesson contents on the right](.github/screenshots/lesson.png) | ![The four learning paths with progress](.github/screenshots/paths.png) |
+| **Lessons** read like a calm course page: path contents on the left, lesson contents on the right. | **Paths** group the 23 lessons into four tracks with progress. |
+| ![Pattern Gym question with feedback and a review link](.github/screenshots/gym.png) | ![BFS on a grid in dark mode, with the queue and the rules panel](.github/screenshots/walkthrough-dark.png) |
+| **Pattern Gym** trains the "which pattern is this?" reflex. | **Dark mode**, here with BFS spreading across a grid. |
+
+<p align="center"><img src=".github/screenshots/mobile.png" alt="Binary Search walkthrough on a phone" width="320"></p>
+<p align="center"><em>Works on phones too.</em></p>
+
 ---
 
 ## What you can do
