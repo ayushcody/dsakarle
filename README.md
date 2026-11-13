@@ -36,6 +36,7 @@ DSA Karle teaches each idea in the same order. You see a picture of it, step thr
 - **Watch it run.** Every lesson has an interactive walkthrough driven by the real algorithm, not hand-drawn slides. Step with `←` / `→`, play, pause and scrub, and see the matching line light up in each language.
 - **Predict the next move.** The walkthrough pauses at key decisions ("Expand or shrink?", "Which pointer moves?") and asks for your guess before it shows you.
 - **Try your own input.** Type your own array, string, grid or graph and watch the same algorithm run on it.
+- **Open the visualizer.** The `/visualize` page lists every algorithm on the site (65 of them) as a standalone playground. Search it, filter by path, or press **Surprise me**.
 - **Recognise the pattern.** Each lesson ends with "reach for it when / not this when" clues and recognition questions. The **Pattern Gym** mixes them across all lessons, and questions you missed come back more often.
 - **Practise for real.** Each lesson has worked examples and an assignment of LeetCode problems. The Practice page collects all of them, and every link points to a real, free problem.
 - **Track progress.** Mark lessons complete, see per-path progress on the dashboard, and pick up where you left off. Progress is stored in your own browser; there are no accounts.
@@ -61,6 +62,7 @@ Every lesson has the same sections:
 | `/` | Home, with a live walkthrough you can step through |
 | `/paths`, `/paths/[id]` | All paths, and one path's sections and lessons |
 | `/learn/[slug]` | A lesson |
+| `/visualize`, `/visualize/[topic]/[algo]` | Every algorithm as a standalone visualization with its own playground and code |
 | `/gym` | Pattern Gym: mixed "which pattern is this?" drills |
 | `/practice` | Every practice problem, filterable by pattern, difficulty and solved status |
 | `/map` | How the ideas connect (prerequisites and related topics) |

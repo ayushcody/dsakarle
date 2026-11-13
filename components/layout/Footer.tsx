@@ -17,6 +17,7 @@ export default function Footer() {
     {
       title: 'Practice',
       links: [
+        { label: 'Algorithm visualizer', href: '/visualize' },
         { label: 'Practice problems', href: '/practice' },
         { label: 'Pattern gym', href: '/gym' },
         { label: 'Pattern map', href: '/map' },
