@@ -6,7 +6,7 @@ DSA Karle teaches each idea in the same order. You see a picture of it, step thr
 
 *Karle* is Hindi for "do it". The site is built around doing, not just reading.
 
-**Live site:** https://dsakarle.vercel.app
+**Live site:** https://dsakarle.ayushchougula.in
 
 ![DSA Karle home page: "Watch algorithms think." beside a live sliding-window walkthrough](.github/screenshots/home.png)
 
