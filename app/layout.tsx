@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { fontVariables } from './fonts';
 import { Providers } from './providers';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dsakarle.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: 'DSA Karle',
   description:
     'Learn data structures and algorithms by watching them run: visual, step-through lessons you can scrub, predict and try on your own input.',

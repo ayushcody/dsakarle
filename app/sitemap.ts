@@ -1,9 +1,8 @@
 import type { MetadataRoute } from 'next'
 
 import { LESSONS, PATHS } from '@/lib/curriculum'
+import { SITE_URL } from '@/lib/site'
 import { visualEntries } from '@/lib/visualize'
-
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dsakarle.vercel.app').replace(/\/+$/, '')
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPaths = ['/', '/paths', '/visualize', '/dashboard', '/gym', '/map', '/practice', '/about']
